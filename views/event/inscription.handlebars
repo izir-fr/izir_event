@@ -1,0 +1,704 @@
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-sm-4">
+			<div class="row">
+				<div class="col-sm-12">
+					{{#if results.event.docs.img}}
+						<img src="{{results.event.docs.img.[0]}}" alt="{{results.event.name}}" class="img-fluid">
+					{{else}}
+						<img src="/img/thumb.png" alt="{{results.event.name}}" class="img-fluid">
+					{{/if}}
+						<ul>
+							<li><strong>Lieu :</strong> {{results.event.adresse.ville}} {{results.event.adresse.codePostal}}</li>
+						</ul>
+
+					{{#each results.event.epreuves}}
+					<ul class="spacer-sm-top">
+						<li><strong>Epreuve :</strong> {{this.name}}</li>
+						<li><strong>Discipline :</strong> {{this.discipline}}</li>
+						<li><strong>Date :</strong> {{this.dateDebut.jourDebut}}/{{this.dateDebut.moisDebut}}/{{this.dateDebut.anneeDebut}} à {{this.dateDebut.heureDebut}}h{{this.dateDebut.minuteDebut}}</li>
+						<li><strong>Distance :</strong> {{this.distance}}Km</li>
+						<li><strong>Denivelé + :</strong> {{this.denivele}} mètres</li>
+						<li><strong>Nombre de participants maximum:</strong> {{this.placesDispo}}</li>
+						<li><strong>Tarif:</strong> {{this.tarif}}€</li> 
+					</ul>
+					{{/each}}
+				</div>
+			</div>			
+		</div>
+
+		<!--formulaire d'inscription block-->
+		<div class="col-sm-8 spacer-md-top" id="divForm">
+			
+			<div class="sticky-top">
+				<h1 class="text-lowercase text-center spacer-md-bottom">Inscription {{results.event.name}}</h1>	
+				
+	    		<div class="row">
+	    			<div class="col-3 text-center">
+	    				<strong class="txt-dark-blue" id="header-epreuve">1. Epreuve</strong>
+	    			</div>
+	    			<div class="col-3 text-center">
+	    				<strong class="text-secondary" id="header-participant">2. Participant</strong>
+	    			</div>
+	    			<div class="col-3 text-center">
+	    				<strong class="text-secondary" id="header-confirmation">3. Confirmation</strong>
+	    			</div>
+	    			<div class="col-3 text-center spacer-sm-bottom">
+	    				<strong class="text-secondary" id="header-paiement">4. Paiement</strong>
+	    			</div>
+	    		</div>
+
+				<!--formulaire d'inscription-->
+				<form method="post" action="/event/pre-inscription/{{results.event.id}}" id="checkout-form" class="">
+					<input type="hidden" value="{{results.eventPrice}}" name="chargeAmount">
+					<input type="hidden" value="{{results.event.name}}" name="eventName">
+					<input type="hidden" value="{{results.event.certificat_required}}" name="certificat_required">
+
+					<!--Step 1. epreuve-->
+					<div class="row" id="step-epreuve">
+				    	<div class="col-12">
+				    		<div class="row">
+				    			<div class="col-12">
+									<table class="table spacer-sm-top">
+										<thead class="bg-dark-blue txt-white">
+											<tr>
+											  <th class="text-center">Produit</th>
+											  <th class="text-center">Quantité</th>
+											  <th class="text-center">Prix unitaire</th>
+											  <th class="text-center">Total TTC</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td class="bg-light" colspan="4"><strong>EPREUVES</strong></td>
+											</tr>
+											{{#each disponibility}}
+												{{#if this.active}}
+											    <tr class="epreuve-validation">
+											    	<td>
+											    		<p>{{this.name}}</p>
+											    		<input name="ref" type="hidden" value="{{this.name}}" >
+											    	</td>
+											    	<td class="text-right">
+											    		<input class="form-control epreuveInput quantityInput input epreuveQuantityValidation" name="quantity" type="number" value="0"  min="0" max="1">
+											    	</td>
+											    	<td class="text-center">
+											    		<span class="tarifView">{{this.tarif}}</span> €
+											    		<input class="tarifInput " name="tarif" type="hidden" value="{{this.tarif}}" min="0"  step=".01" required>
+											    	</td>
+											    	<td class="text-center subtotal">
+											    		<span class="subtotalView">{{this.tarif}}</span> €
+											    		<input class="subtotalInput option" type="hidden" name="subtotal" value="{{this.tarif}}" min="0"  step=".01" required>
+											    	</td>
+											    </tr>
+											    {{else}}
+											    <tr class="epreuve-validation">
+											    	<td>
+											    		<p>{{this.name}} <span class="badge badge-danger">Epreuve complète</span></p>
+											    		<input name="ref" type="hidden" value="{{this.name}}">
+											    	</td>
+											    	<td class="text-right">
+											    		<input class="form-control" name="quantity-control" type="number" value="0"  min="0" max="0" disabled>
+											    		<!--db server hidden input to 0 -->
+											    		<input class="form-control epreuveInput quantityInput input epreuveQuantityValidation" name="quantity" type="hidden" value="0"  min="0" max="0">
+											    	</td>
+											    	<td class="text-center">
+											    		<span class="tarifView">{{this.tarif}}</span> €
+											    		<input class="tarifInput " name="tarif" type="hidden" value="{{this.tarif}}" min="0"  step=".01" required>
+											    	</td>
+											    	<td class="text-center subtotal">
+											    		<span class="subtotalView">{{this.tarif}}</span> €
+											    		<input class="subtotalInput option" type="hidden" name="subtotal" value="{{this.tarif}}" min="0"  step=".01" required>
+											    	</td>
+											    </tr>										    
+											    {{/if}}
+										    {{/each}}
+										    {{#if results.event.options}}
+											    <tr>
+													<td class="bg-light" colspan="4"><strong>OPTIONS</strong></td>
+												</tr>
+											    {{#each results.event.options}}
+											    <tr>
+											    	<td>
+											    		<p>{{this.reference}}</p>
+											    		<input name="ref" type="hidden" value="{{this.reference}}" >
+											    	</td>
+											    	<td class="text-right">
+											    		<input class="form-control quantityInput input" name="quantity" type="number" value="0"  min="0">
+											    	</td>
+											    	<td class="text-center">
+											    		<span class="tarifView">{{this.prix}}</span> €
+											    		<input class="tarifInput " name="tarif" type="hidden" value="{{this.prix}}" min="0"  step=".01" required>
+											    	</td>
+											    	<td class="text-center subtotal">
+											    		<span class="subtotalView">0</span> €
+											    		<input class="subtotalInput option " type="hidden" name="subtotal" value="0"  min="0"  step=".01" required>
+											    	</td>
+											    </tr>
+											    {{/each}}
+											{{/if}}
+											{{#if results.event.dons}}
+										    <tr>
+												<td class="bg-light" colspan="4"><strong>DONS</strong></td>
+											</tr>							    
+										    
+										    <tr>
+										    	<td>
+										    		<p>Battons-nous pour la même cause, faites un don !</p>
+										    		<input name="ref" type="hidden" value="Don" >
+										    	</td>
+										    	<td class="text-center">
+										    		<p>1</p>
+										    		<input class="form-control quantityInput" name="quantity" type="hidden" value="1"  min="0"  max="1">
+										    	</td>
+										    	<td class="text-center">
+										    		<div class="input-group">
+										    			<input class="form-control tarifInput input don" name="tarif" type="number" value="0" min="0"  step=".01" required>
+										    			<span class="input-group-addon tarifView">€</span>
+										    		</div>
+										    	</td>
+										    	<td class="text-center subtotal">
+										    		<span class="subtotalView">0</span> €
+										    		<input class="subtotalInput option " type="hidden" name="subtotal" value="0"  min="0"  step=".01" required>
+										    	</td>
+										    </tr>							    
+										    {{/if}}
+											<tr class="table-dark">
+										    	<td colspan="3">
+										    		<strong>Total de l'inscription</strong>
+										    	</td>
+										    	<td class="text-center" id="total-ttc">
+										    		<strong><span id="totalview">{{results.event.epreuves.[0].tarif}}</span> €</strong>
+										    		<input id="totalInput" name="total" type="hidden" value="{{results.event.epreuves.[0].tarif}}" min="0"  step=".01" required>
+										    	</td>
+										    </tr>
+										</tbody>
+									</table>			    				
+				    			</div>
+				    		</div>
+							<div class="row">
+								<div class="col-6 text-center">
+									<a class="btn btn-outline-primary" href="/event/{{results.event.id}}">Détails de l'évènement</a>
+								</div>
+								<div class="col-6 text-center">
+									<a class="btn btn-secondary" href="#step-participant" id="epreuve-form-submit">Suivant ></a>
+								</div>
+							</div>	
+				    	</div>
+					</div>
+
+					<!--Step 2. Participant-->
+					<div id="step-participant" class="hidde">
+						<div class="row">
+							<div class="col-sm-12">
+								<div class="form-check alert alert-warning">
+									<label class="form-check-label">
+										<input class="form-check-input" type="checkbox" name="newParticipant"> Inscrire à cette épreuve une autre personne que <strong>{{user.surname}} {{user.name}}</strong>
+									</label>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-12 text-center">
+								<p class="alert alert-dark"><i class="fa fa-arrow-down" aria-hidden="true"></i> <strong>Informations</strong></p>
+							</div>
+						</div>
+						<div class="row">
+					    	<div class="col-sm-6">
+					    		<div class="form-group">
+					        		<label>Nom *</label>
+					        		<input type="text" class="form-control" placeholder="Nom" name="surname" value="{{user.surname}}" required>
+					        	</div>
+					    	</div>
+					    	<div class="col-sm-6">
+					    		<div class="form-group">
+					        		<label>Prénom *</label>
+					        		<input type="text" class="form-control" placeholder="Prénom" name="name" value="{{user.name}}" required>
+					        	</div>
+					    	</div>
+					    </div>
+					    <div class="row">
+					    	<div class="col-sm-6">
+								<div class="form-group">
+									<label>Email *</label>
+									<input type="email" class="form-control" placeholder="Email" name="email"  value="{{user.email}}" required>
+								</div>
+					    	</div>
+					    	<div class="col-sm-6">
+								<div class="form-group">
+									<label for="sex">Je suis *</label>
+									<select class="form-control" name="sex" id="sex" required>
+										<option value="{{user.sex}}" selected>{{user.sex}}</option>
+										<option value="Homme">Homme</option>
+										<option value="Femme">Femme</option>
+									</select>
+								</div>
+					    	</div>
+					    </div>
+					    <div class="row">
+					    	<div class="col-12">
+						        <div class="form-group">
+						          <label>Date de naissance (jour/mois/année)*</label>
+						          <div class="row">
+						            <div class="col-4">
+						              <select class="form-control" name="jourNaissance" id="jourNaissance" required>
+						                <option value="{{jourNaissance}}" selected>{{jourNaissance}}</option>
+						                {{#each date_list.day}}
+						               		<option value="{{this.value}}">{{this.value}}</option>
+						                {{/each}}
+						              </select>
+						            </div>
+						            <div class="col-4">
+						              <select class="form-control" name="moisNaissance" id="moisNaissance" required>
+						                <option value="{{moisNaissance}}" selected>{{moisNaissance}}</option>
+						                {{#each date_list.month}}
+						               		<option value="{{this.value}}">{{this.value}}</option>
+						                {{/each}}
+						              </select>
+						            </div>
+						            <div class="col-4">
+						            	<input class="form-control" type="number" placeholder="2018"  min="1900" step="1" value="{{anneeNaissance}}" name="anneeNaissance" required>
+						            </div>
+						          </div>
+						        </div>
+					    	</div>
+					    </div>
+					    <div class="row">
+					    	<div class="col-sm-4">
+					    		<div class="form-group">
+									<label>Team / Club</label>
+									<input type="text" class="form-control" placeholder="Team / Club" name="team"  value="{{user.team}}">
+								</div>
+					    	</div>
+					    	<div class="col-sm-4">
+					    		<div class="form-group">
+									<label>N° de licence</label>
+									<input type="text" class="form-control" placeholder="#Numéro de License" name="numLicence"  value="{{user.numLicence}}">
+								</div>
+					    	</div>
+					    	<div class="col-sm-4">
+								<div class="form-group">
+									<label for="categorie">Catégorie *</label>
+									<select class="form-control" name="categorie" id="categorie" required>
+										<option value="{{user.categorie}}" selected>{{user.categorie}}</option>
+										{{#each category_list}}
+						               		<option value="{{this.short}} - {{this.name}}">{{this.short}} - {{this.name}}</option>
+						                {{/each}}
+									</select>
+								</div>
+					    	</div>
+					    </div>
+						<div class="row">
+					    	<div class="col-sm-12">
+								<div class="form-group">
+									<label>Adresse ligne 1 *</label>
+									<input type="text" class="form-control" placeholder="ex: 9 rue Albert Camus" name="adresse1"  value="{{user.adresse1}}" required>
+								</div>
+								<div class="form-group">
+									<label>Adresse ligne 2</label>
+									<input type="text" class="form-control" placeholder="ex: Appt 103" name="adresse2"  value="{{user.adresse2}}">
+								</div>
+								<div class="form-group">
+									<label>Code postal *</label>
+									<input type="text" class="form-control" placeholder="ex: 56300" name="codePostal"  value="{{user.codePostal}}" required>
+								</div>
+								<div class="form-group">
+									<label>Ville *</label>
+									<input type="text" class="form-control" placeholder="ex: Pontivy" name="city"  value="{{user.city}}" required>
+								</div>
+							</div>
+					    </div>
+						
+						<!--Certificat Medical-->
+						{{#if results.event.certificat_required}}
+							<div class="row">
+								<div class="col-12 spacer-sm-top text-center">
+									<p class="alert alert-dark"><i class="fa fa-arrow-down" aria-hidden="true"></i> <strong>Certificat Medical</strong></p>
+								</div>
+							</div>
+
+						    {{#if user.certificat.file}}
+						    <div class="row " id="old_certificat">
+						    	<div class="col-12 mx-auto">
+						    		<div class="alert alert-warning text-center">
+							    		<p><strong>Vous avez déjà un certificat médical d'enregistrer, valide jusqu'au {{user.certificat.expiration_month}}/{{user.certificat.expiration_year}}</strong></p>
+							        	<a href="{{user.certificat.file}}" class="spacer-sm-top spacer-sm-bottom btn btn-warning" target="_blank">Voir mon certificat</a>
+							        	<a href="/user/certificat/{{user.id}}" class="spacer-sm-top spacer-sm-bottom btn btn-outline-dark spacer-sm-left">Changer mon certificat</a>					    			
+						    		</div>
+						    	</div>
+						    </div>
+						    {{else}}
+							<div class="row">
+								<div class="col-12">
+								    <div class="form-group">
+										<div class="col-sm-12 spacer-sm-top">
+											<label>Ajouter le certificat medical*<em class="legend"> .pdf , .jpg et .png uniquement, 1 pièce jointe</em></label>
+										</div>
+							        </div>							
+								</div>
+							</div>					    
+						    {{/if}}	
+
+						    <div class="row">
+								<div class="col-sm-12 spacer-sm-bottom">
+									<span id="certificatsButton"> 
+										<a href="#" id="upload_certificats_opener">Ajouter des images</a>
+									</span>
+						        </div>				    	
+						    </div>			        
+
+							<div class="row">
+								<div class="col-12">
+							        <div id="uploaded_certificats">
+							        	<input class='form-control certificats' name='certificats' value='{{user.certificat.file}}' type='hidden'>
+							        </div>							
+								</div>
+							</div>
+
+							<div class="row">
+
+								{{#if user.certificat.file}}
+								<div id="certificatCheckbox" class="col-sm-12 hidde"></div>
+								{{else}}
+								<div id="certificatCheckbox" class="col-sm-12"></div>
+								{{/if}}
+
+							</div>
+							<div class="row">
+								<div class="col-12">
+									<div class="form-check alert alert-light">
+										<label class="form-check-label">
+
+											{{#if user.certificat.file}}
+											<input class="form-check-input" type="checkbox" name="certificatCondition" id="certificatCondition" required>
+											{{else}}
+											<input class="form-check-input" type="checkbox" name="certificatCondition" id="certificatCondition" required disabled>
+											{{/if}}
+
+											<p>Je déclare sur l'honneur que le certificat transmis est authentique et valide. Je décharge ainsi la société REF SPORT PONTIVY et l'organisateur de toute responsabilité liée à celui-ci.</p>
+										</label>
+									</div>								
+								</div>
+							</div>
+						{{/if}}
+
+						<div class="row">
+							<div class="col-6 text-center">
+								<a class="btn btn-outline-primary" href="#step-epreuve" id="epreuve-form-back">< Retour</a>
+							</div>
+							<div class="col-6 text-center">
+								<a class="btn btn-secondary" href="#step-confirmation" id="participant-form-submit">Suivant ></a>
+							</div>
+						</div>
+					</div>
+
+					<!--Step 3. confirmation-->
+					<div id="step-confirmation" class="hidde">
+						<div class="row">
+							<div class="col-12 spacer-sm-top text-center">
+								<p class="alert alert-dark"><i class="fa fa-arrow-down" aria-hidden="true"></i> <strong>Epreuve & Options</strong></p>
+							</div>
+						</div>
+						
+						<div class="row">
+							<div class="col-10 mx-auto">
+								<div class="row bg-dark-blue txt-white">
+									<div class="col-3 spacer-sm-top spacer-sm-bottom">Produit</div>
+									<div class="col-3 spacer-sm-top spacer-sm-bottom">Quantité</div>
+									<div class="col-3 spacer-sm-top spacer-sm-bottom">Prix</div>
+									<div class="col-3 spacer-sm-top spacer-sm-bottom">Total</div>
+								</div>
+								<div id="confirmation-epreuve"></div>
+								<div class="row bg-light">
+									<div class="col-9 spacer-sm-top spacer-sm-bottom"><strong>TOTAL</strong></div>
+									<div class="col-3 spacer-sm-top spacer-sm-bottom" id="confirmation-total"></div>
+								</div>							
+							</div>
+						</div>
+
+
+						<div class="row">
+							<div class="col-12 spacer-sm-top text-center">
+								<p class="alert alert-dark">
+									<i class="fa fa-arrow-down" aria-hidden="true"></i> <strong>Participant</strong>
+								</p>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-12">
+								<ul class="spacer-sm-left">
+									<li class="text-capitalize ">nom : <span id="confirmation-nom"></span></li>
+									<li class="text-capitalize">prénom : <span id="confirmation-prenom"></span></li>
+									<li class="text-lowercase">email : <span id="confirmation-email"></span></li>
+									<li class="text-capitalize">date de naissance  : <span id="confirmation-date"></span></li>
+									<li class="text-capitalize">team : <span id="confirmation-team"></span></li>
+									<li class="text-capitalize">sex : <span id="confirmation-sex"></span></li>
+									<li class="text-capitalize">numéro de licence : <span id="confirmation-licence"></span></li>
+									<li class="text-capitalize">categorie : <span id="confirmation-categorie"></span></li>
+									<li class="text-capitalize">adresse 1 : <span id="confirmation-adresse1"></span></li>
+									<li class="text-capitalize">adresse 2 : <span id="confirmation-adresse2"></span></li>
+									<li class="text-capitalize">code postal : <span id="confirmation-codePostal"></span></li>
+									<li class="text-capitalize">ville : <span id="confirmation-city"></span></li>
+								</ul>
+							</div>
+						</div>
+				    	<div class="row">
+					    	<div class="col-sm-12">
+								<div class="form-check alert alert-light">
+									<label class="form-check-label">
+										<input class="form-check-input" type="checkbox" name="CGV" id="cgv" required> <p>J'ai lu les conditions générales de vente et j'y adhère sans réserve. <a href="/info/cgv">(Lire les Conditions générales de vente)</a></strong></p>
+									</label>
+								</div>
+							</div>
+				    	</div>					
+						<div class="row">
+							<div class="col-6 text-center">
+								<a class="btn btn-outline-primary" href="#step-participant" id="participant-form-back">< Modifier</a>
+							</div>
+							<div class="col-6 text-center">
+								<button type="submit" class="btn btn-danger" id="checkout">Valider > </button>
+							</div>
+						</div>
+					</div>
+
+					<!--Légende form-->
+					<div class="row">
+						<div class="col-12">
+							<p class="legend"><br><em>* Champs obligatoire</em></p>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script src="//widget.cloudinary.com/global/all.js" type="text/javascript"></script>
+<script src="/js/files-uploader.js" type="text/javascript"></script>
+<script src="/js/cart.js" type="text/javascript"></script>
+<script>
+$(function(){
+	//FORM VALIDATION START
+	var newParticipant = $('input[name=newParticipant]')
+	var nom = $('input[name=surname]') 
+	var prenom = $('input[name=name]') 
+	var email = $('input[name=email]') 
+	var jourNaissance = $('#jourNaissance')
+	var moisNaissance = $('#moisNaissance')
+	var anneeNaissance  = $('input[name=anneeNaissance]')
+	var team = $('input[name=team]') 
+	var sex = $('#sex') 
+	var numLicence = $('input[name=numLicence]')
+	var categorie = $('#categorie')
+	var event = $('input[name=id]')
+	var adresse1 = $('input[name=adresse1]') 
+	var adresse2= $('input[name=adresse2]') 
+	var codePostal = $('input[name=codePostal]') 
+	var city = $('input[name=city]')
+
+	//Step 1 to 2
+	$('#epreuve-form-submit').on('click', function(e){
+		//limitation à 1 epreuve /inscription
+		var validation = 0
+		$('.epreuve-validation').each((key, val)=>{
+			if(parseInt($($($($('.epreuve-validation')[key]).children()[1]).children()[0]).val()) !== 0){
+				validation++
+			}
+		})
+
+		if(validation === 0) {
+			alert('Vous devez vous inscrire à une épreuve')
+			e.preventDefault()
+		} else if (validation > 1 ){
+			alert("Vous ne pouvez vous inscrire qu'à une épreuve à la fois")
+			e.preventDefault()
+		} else {
+			$('#header-epreuve').removeClass('txt-dark-blue').addClass('text-secondary')
+			$('#header-participant').removeClass('text-secondary').addClass('txt-dark-blue')
+			$('#step-epreuve').addClass('hidde')
+			$('#step-participant').removeClass('hidde')			
+		}
+	})
+
+	//Step 2 to 1
+	$('#epreuve-form-back').on('click', function(e) {
+		$('#header-participant').removeClass('txt-dark-blue').addClass('text-secondary')
+		$('#header-epreuve').removeClass('text-secondary').addClass('txt-dark-blue')
+		$('#step-participant').addClass('hidde')
+		$('#step-epreuve').removeClass('hidde')	
+	});
+
+	//Step 2 new participant
+	newParticipant.on('click', function(){
+		if(newParticipant.is(':checked') ){
+		    	nom.val('')
+				prenom.val('')
+				email.val('')
+				jourNaissance.val('')
+				moisNaissance.val('')
+				anneeNaissance.val('')
+				team.val('')
+				sex.val("")
+				numLicence.val('')
+				categorie.val("")
+				event.val('')
+				adresse1.val('')
+				adresse2.val('')
+				codePostal.val('')
+				city.val('')
+				$('#old_certificat').addClass('hidde')
+				$('input[name=certificats]').val('')
+		}
+		if(! newParticipant.is(':checked') ){
+		    	nom.val('{{user.surname}}')
+				prenom.val('{{user.name}}')
+				email.val('{{user.email}}')
+				jourNaissance.val('{{jourNaissance}}')
+				moisNaissance.val('{{moisNaissance}}')
+				anneeNaissance.val('{{anneeNaissance}}')
+				team.val('{{user.team}}')
+				sex.val('{{user.sex}}')
+				categorie.val('{{user.categorie}}')
+				adresse1.val('{{user.adresse1}}')
+				adresse2.val('{{user.adresse2}}')
+				codePostal.val('{{user.codePostal}}')
+				city.val('{{user.city}}')
+				$('#old_certificat').removeClass('hidde')
+				$('input[name=certificats]').val('{{user.certificat.file}}')
+		}
+	})
+
+	//Step 2 to 3
+	$('#participant-form-submit').on('click', function(e){
+		//default var
+		var formValidation = false, 
+			certificatValidation = false,
+			formToComplete = (field)=>{
+				field.addClass('border border-danger')
+				alert('Merci de compléter tous les champs obligatoires notés avec "*"')
+			}
+		//borders init
+		$('input').removeClass('border border-danger')
+		$($('#confirmation-epreuve').children()).remove()
+
+		//FORM VALIDATION 
+		if(nom.val() === ""){
+			formToComplete(nom)
+		} else if(prenom.val() === ""){
+			formToComplete(prenom)
+		} else if(email.val() === ""){
+			formToComplete(email)
+		} else if(sex.val() === ""){
+			formToComplete(sex)
+		} else if(jourNaissance.val() === ""){
+			formToComplete(jourNaissance)
+		} else if(moisNaissance.val() === ""){
+			formToComplete(moisNaissance)
+		} else if(anneeNaissance.val() === ""){
+			formToComplete(anneeNaissance)
+		} else if(categorie.val() === ""){
+			formToComplete(categorie)
+		} else if(adresse1.val() === ""){
+			formToComplete(adresse1)
+		} else if(codePostal.val() === ""){
+			formToComplete(codePostal)
+		} else if(city.val() === ""){
+			formToComplete(city)
+		} else {
+			formValidation = true
+		}
+
+		if(formValidation === true){
+			//CERTIFICAT VALIDATION
+			if($('input[name=certificat_required]').val() === "false"){
+				certificatValidation = true
+			} else if($('.certificats').length === 0 || $('.certificats').val() === ""){
+				certificatValidation = false
+				alert("Merci d'ajouter un certificat medical valide pour continuer votre inscription")//console.log(certificatValidation)
+			} else if($('input[name=certificatCondition]').is(':checked') === false){
+				certificatValidation = false
+				alert("Merci de cocher la case de déclaration d'authenticité et de validité  du certificat médical")
+			} else {
+				certificatValidation = $('input[name=certificatCondition]').is(':checked')
+			}
+		}
+
+		if( formValidation === false || certificatValidation === false ){
+			e.preventDefault()
+		} else{
+			//confirmation épreuves
+			$('.subtotalView').each((key, val)=>{
+				if(parseInt($($('.subtotalView')[key]).text()) > 0){
+					var produit = $($($($($('.subtotalView')[key]).parent()).parent()).children()[0]).text(),
+						qty  = $($($($($($('.subtotalView')[key]).parent()).parent()).children()[1]).children()[0]).val(),
+						price  = $($($($($('.subtotalView')[key]).parent()).parent()).children()[2]).text(),
+						subTotal  = $($($($($('.subtotalView')[key]).parent()).parent()).children()[3]).text();
+
+					$('#confirmation-epreuve').append(
+						'<div class="row">'+
+							'<div class="col-3 spacer-sm-top spacer-sm-bottom">' + produit + '</div>' +
+							'<div class="col-3 spacer-sm-top spacer-sm-bottom">' + qty + '</div>' +
+							'<div class="col-3 spacer-sm-top spacer-sm-bottom">' + price + '</div>' +
+							'<div class="col-3 spacer-sm-top spacer-sm-bottom">' + subTotal + '</div>' +
+						'</div>'
+					)
+					$('#confirmation-total').text($('#total-ttc').text())
+				}
+			})
+			//Confirmation data
+			$('#confirmation-nom').text(nom.val())
+			$('#confirmation-prenom').text(prenom.val())
+			$('#confirmation-email').text(email.val())
+			$('#confirmation-date').text(jourNaissance.val() + '/' + moisNaissance.val() + '/' + anneeNaissance.val())
+			$('#confirmation-team').text(team.val())
+			$('#confirmation-sex').text(sex.val())
+			$('#confirmation-licence').text(numLicence.val())
+			$('#confirmation-categorie').text(categorie.val())
+			$('#confirmation-adresse1').text(adresse1.val())
+			$('#confirmation-adresse2').text(adresse2.val())
+			$('#confirmation-codePostal').text(codePostal.val())
+			$('#confirmation-city').text(city.val())
+
+
+			//Action
+			$('#header-participant').removeClass('txt-dark-blue').addClass('text-secondary')
+			$('#header-confirmation').removeClass('text-secondary').addClass('txt-dark-blue')
+			$('#step-participant').addClass('hidde')
+			$('#step-confirmation').removeClass('hidde')			
+		}	
+
+	})
+
+	//Step 3 to 2
+	$('#participant-form-back').on('click', function(e) {
+		$('#header-confirmation').removeClass('txt-dark-blue').addClass('text-secondary')
+		$('#header-epreuve').removeClass('text-secondary').addClass('txt-dark-blue')
+		$('#step-confirmation').addClass('hidde')
+		$('#step-participant').removeClass('hidde')	
+	});	
+
+	//Step 3 to 4
+	$('#checkout').on('click', function(e){
+		//CGV
+		if($('input[name=CGV]').is(':checked') === false){
+			e.preventDefault()
+			alert("Merci de cocher la case d'acceptation des conditions générales de vente")
+		}
+	})
+
+	//if( "{{results.participants.length}}" * 1 >= "{{results.event.epreuves.[0].placesDispo}}" * 1 ){
+	//	$('#checkout-form').remove()
+	//	$('#divForm').append('<div class="col-sm-12"><p class="alert alert-danger">Cette épreuve est complète</p></div>')
+	//}
+
+	//Date config
+	var dateNow = new Date(Date.now())
+	var dateLimite = new Date(Number("{{results.event.inscriptionCloture.anneeCloture}}"),Number("{{results.event.inscriptionCloture.moisCloture}}") - 1,Number("{{results.event.inscriptionCloture.jourCloture}}"),Number('{{results.event.inscriptionCloture.heureCloture}}') ,Number('{{results.event.inscriptionCloture.minuteCloture}}'))
+
+	if (dateNow > dateLimite ) {
+		$('#checkout-form').remove()
+		$('#divForm').append('<div class="col-sm-12"><p class="alert alert-danger">La date limite de cette épreuve dépassée</p></div>')
+	}
+	// form end
+})
+</script>

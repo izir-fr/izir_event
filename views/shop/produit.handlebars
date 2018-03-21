@@ -1,0 +1,64 @@
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-12 spacer-sm-top">
+			<nav aria-label="breadcrumb ">
+			  <ol class="breadcrumb">
+			    <li class="breadcrumb-item"><a href="/">Accueil</a></li>
+			    <li class="breadcrumb-item"><a href="/Catalogue/">Catalogue</a></li>
+			    <li class="breadcrumb-item active" aria-current="page">{{product.name}}</li>
+			    <li class="float-right"><a href="/catalogue/panier/"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Panier  <span class="badge badge-dark">{{session.cart.totalQty}}</span> </a></li>	
+			  </ol>
+			</nav>
+		</div>
+	</div>
+</div>
+<div class="container-fluid">
+	<div class="row spacer-md-top">
+		<div class="col-md-6">
+			<div class="row spacer-xs-bottom">
+				<div class="col-12">
+					<img src="{{product.images.0.url}}" alt="{{product.name}}" class="img img-fluid">
+				</div>
+			</div>
+			<div class="row spacer-sm-bottom">
+				{{#each product.images}}
+					{{#if @first}}
+					{{else}}
+					<div class="col-sm-6 col-md-4">
+						<img src="{{this.url}}" alt="{{../this.name}}" class="img img-fluid">
+					</div>	
+					{{/if}}
+				{{/each}}
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="border sticky-top">
+				<div class="row ">
+					<div class="col-12 spacer-xs-top spacer-xs-bottom text-center">
+						<h1>{{product.name}}</h1>	
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-12 spacer-xs-bottom text-center">
+						<a href="/catalogue/add/{{product.id}}" class="btn btn-outline-primary" role="button">Ajouter au devis</a>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-12 spacer-xs-bottom spacer-sm-left">
+						<span class="text-secondary">{{product.ref}}</span>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-12 spacer-xs-bottom spacer-sm-left">
+						<span>{{product.categorie}} | {{product.brand}}</span>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-12 spacer-xs-bottom spacer-sm-left">
+						<span>{{product.description}}</span>
+					</div>
+				</div>		
+			</div>
+		</div>
+	</div>
+</div>

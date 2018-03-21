@@ -1,0 +1,169 @@
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-sm-4 spacer-md-top">
+			<div class="row">
+				<div class="col-sm-12">
+					{{#if data.order.event.docs.img}}
+						<img src="{{data.order.event.docs.img.[0]}}" alt="{{data.order.event.name}}" class="img-fluid">
+					{{else}}
+						<img src="/img/thumb.png" alt="{{data.order.event.name}}" class="img-fluid">
+					{{/if}}
+						<ul>
+							<li><strong>Lieu :</strong> {{data.order.event.adresse.ville}} {{data.order.event.adresse.codePostal}}</li>
+						</ul>
+					{{#each data.order.event.epreuves}}
+					<ul class="spacer-sm-top">
+						<li><strong>Epreuve :</strong> {{this.name}}</li>
+						<li><strong>Discipline :</strong> {{this.discipline}}</li>
+						<li><strong>Date :</strong> {{this.dateDebut.jourDebut}}/{{this.dateDebut.moisDebut}}/{{this.dateDebut.anneeDebut}} à {{this.dateDebut.heureDebut}}h{{this.dateDebut.minuteDebut}}</li>
+						<li><strong>Distance :</strong> {{this.distance}}Km</li>
+						<li><strong>Denivelé + :</strong> {{this.denivele}} mètres</li>
+						<li><strong>Nombre de participants maximum:</strong> {{this.placesDispo}}</li>
+						<li><strong>Tarif:</strong> {{this.tarif}}€</li> 
+					</ul>
+					{{/each}}
+					<ul>
+						<li class="text-center"><a class="btn btn-outline-primary spacer-sm-top" href="/event/{{data.order.event.id}}" target="_blank">Détails de l'évènement</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-8 spacer-md-top" id="divForm">
+			<h1 class="text-lowercase text-center spacer-md-bottom">Inscription {{data.order.event.name}}</h1>
+    		<div class="row">
+    			<div class="col-3 text-center">
+    				<strong class="text-secondary" id="header-epreuve">1. Epreuve</strong>
+    			</div>
+    			<div class="col-3 text-center">
+    				<strong class="text-secondary" id="header-participant">2. Participant</strong>
+    			</div>
+    			<div class="col-3 text-center">
+    				<strong class="text-secondary" id="header-confirmation">3. Confirmation</strong>
+    			</div>
+    			<div class="col-3 text-center spacer-sm-bottom">
+    				<strong class="txt-dark-blue" id="header-paiement">4. Paiement</strong>
+    			</div>
+    		</div>
+			<form method="post" action="/event/checkout/{{data.order.id}}" id="checkout-form">
+			    <div class="row">
+			    	<div class="col-sm-12">
+						<table class="table spacer-sm-top">
+							<thead class="bg-dark-blue txt-white">
+								<tr>
+								  <th class="text-center">Produit</th>
+								  <th class="text-center">Quantité</th>
+								  <th class="text-center">Prix unitaire</th>
+								  <th class="text-center">Total TTC</th>
+								</tr>
+							</thead>
+							<tbody>
+							    {{#each data.order.produits}}
+							    <tr>
+							    	<td>
+							    		<strong>{{this.produitsRef}}</strong>
+							    	</td>
+							    	<td class="text-right">
+							    		<span>{{this.produitsQuantite}}</span>
+							    	</td>
+							    	<td class="text-center">
+							    		<span>{{this.produitsPrix}}</span> €
+							    	</td>
+							    	<td class="text-center subtotal">
+							    		<span>{{this.produitsSubTotal}} €</span>
+							    	</td>
+							    </tr>
+							    {{/each}}
+							    {{#if data.order.event.paiement}}
+							    <tr>
+							    	<td>
+							    		<strong>Frais de paiement en ligne</strong>
+							    	</td>
+							    	<td class="text-right">
+							    		<span>1</span>
+							    	</td>
+							    	<td class="text-center">
+							    		<span>0,50</span> €
+							    	</td>
+							    	<td class="text-center subtotal">
+							    		<span>0,50 €</span>
+							    	</td>
+							    </tr>
+							    {{/if}}							    
+								<tr class="table-dark">
+							    	<td>
+							    		<strong>Total de l'inscription</strong>
+							    	</td>
+							    	<td></td>
+							    	<td></td>
+							    	<td class="text-center" id="total-ttc">
+							    		{{#if data.order.event.paiement}}
+											<span id="totalview"></span>
+							    		{{else}}
+							    			<span><strong>{{data.order.orderAmount}}</strong></span>
+										{{/if}}
+							    	</td>
+							    </tr>
+							</tbody>
+						</table>   	
+			    	</div>
+					<input type="hidden" name="stripe" value="{{data.stripe}}">
+					<input type="hidden" name="event" value="{{data.order.event.name}}">
+					<!--
+					<button type="submit">Payer</button>
+					-->
+				</div>
+				<div class="row">
+				  <div class="col-12">				
+					<!-- PAIEMENT-->
+					{{#if data.order.event.paiement}}
+						{{#if data.order.paiement.captured}}
+						    <div class="alert alert-warning spacer-sm-top">
+						      <p>Votre inscription a déjà été payée.</p>
+						      <p>Votre référence de paiement est : {{data.order.paiement.id}}</p>
+						      <p>Pour toute question relative à votre inscription, merci de contacter le service client via le chat en bas de l'écran.</p>
+						      <p>Pour toute question relative à l'épreuve, merci de contacter le l'organisateur de celle-ci.</p>
+						      <p>Merci de votre compréhension.</p>
+						    </div>    							
+						{{else}}
+							<span class="text-right">
+							    <script 
+						    		src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+						    		input-type="submit"
+						    		data-label="Payer l'inscription"
+						    		data-email="{{data.order.participant.email}}"
+						    		data-key="{{data.stripeFrontKey}}"
+						    		data-amount="{{data.stripe}}"
+						    		data-name="event.izir"
+						    		data-description="{{data.order.eventName}}"
+						    		data-locale="auto"
+						    		data-currency="EUR"
+						    		>	
+							    </script>									
+							</span>
+						    <div class="text-center spacer-sm-top spacer-sm-bottom bg-light">
+						      <img class="img-fluid spacer-sm-top" src="/img/rect3737.png" alt="Paiement sécurisé" width="50" height="50">
+						      <p class="spacer-sm-top spacer-sm-bottom "><strong>Paiement sécurisé</strong><span class=""> par stripe.com</span></p>
+						    </div> 								
+						{{/if}}
+				    {{else}}
+					    <div class="col-12 alert alert-warning spacer-sm-top">
+					      <p>Votre pré-inscription a bien été prise en compte.</p>
+					      <p>Vous ne pouvez pas payer votre inscription car l'organisateur n'a pas activé cette fonctionnalité. L'organisateur vous demandera donc de payer les {{data.order.orderAmount}} € votre inscription lors du retrait de votre dossard.</p>
+					      <p>Merci de votre compréhension.</p>
+					    </div>
+					{{/if}}
+					</div>  
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<script>
+$(function(){
+	//STRIPE
+	var stripeButton = $('.stripe-button-el')
+
+	//calcul du prix avec frais de dossier
+	$('#totalview').html( '<strong>' + ({{data.order.orderAmount}}*1 + 0.50) + ' € </strong>')
+})	
+</script>

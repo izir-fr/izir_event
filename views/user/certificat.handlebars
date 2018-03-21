@@ -1,0 +1,62 @@
+<div class="header container-fluid">
+	<div class="jumbotron">
+		<h1>Certificat</h1>
+	</div>
+</div>
+<div class="container" id="certificat_upload_page">
+	{{#if errors}}
+	      {{#each errors}}
+	        <div class="alert alert-danger">{{msg}}</div>
+	      {{/each}}
+	{{/if}}
+	<form method="post" action="/user/certificat/{{user.id}}">
+	    <!-- VALIDITE-->
+	    <div class="row">
+	    	<div class="col-6 mx-auto">
+	    		<h2>Date de validité du certificat</h2>
+	    	</div>
+	    </div>
+	    <div class="row">
+	    	<div class="col-6 mx-auto spacer-sm-bottom">
+				<div class="form-inline spacer-md-top">
+					<div class="input-group">
+						<div class="input-group-addon">Mois *</div>
+						<input type="number" class="form-control" placeholder="1" name="month" value="{{user.certificat.expiration_month}}" min="1" max="12" step="1" required>
+					</div>
+					<div class="input-group">
+						<div class="input-group-addon">Année *</div>
+						<input type="number" class="form-control" placeholder="2018" name="year" value="{{user.certificat.expiration_year}}" min="2018" step="1" required>
+					</div>
+				</div>	    		
+	    	</div>
+	    </div>
+	    {{#if user.certificat.file}}
+	    <div class="row alert alert-warning" id="old_certificat">
+	    	<div class="col-6 mx-auto spacer-sm-top">
+	    		<p><strong>Vous avez déjà un certificat d'enregistrer</strong></p>
+	        	<a href="{{user.certificat.file}}" class="spacer-sm-top spacer-sm-bottom btn btn-warning" target="_blank">Voir mon certificat</a>
+	    	</div>
+	    </div>
+	    {{/if}}	
+	    <div class="row">
+	        <div class="col-6 mx-auto spacer-sm-top">
+	          <span id="certificatButton">
+	            <a href="#" id="upload_certificats_opener">Ajouter le certificat >> </a>
+	          </span>
+	        </div>
+	        <div id="uploaded_certificats">
+	        	<input class='form-control certificats' name='certificats' value='{{user.certificat.file}}' type='hidden'>
+	          <!-- IMAGES UPLOADED -->
+	        </div>	    	
+	    </div>
+	    <div class="row">
+	    	<div class="col-6 mx-auto">
+	    		<button type="submit" class="btn btn-default spacer-md-top">Enregistrer</button>
+	    	</div>
+	    </div>
+	</form>
+	<p class="legend"><br><em>* Champs obligatoire</em></p>
+</div>
+
+<script src="//widget.cloudinary.com/global/all.js" type="text/javascript"></script>
+<script src="/js/files-uploader.js" type="text/javascript"></script>

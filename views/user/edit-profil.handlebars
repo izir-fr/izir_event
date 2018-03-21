@@ -1,0 +1,109 @@
+<div class="header container-fluid">
+	<div class="jumbotron">
+		<h1>Mise à jour du profil</h1>
+	</div>
+</div>
+<div class="container">
+	{{#if errors}}
+	      {{#each errors}}
+	        <div class="alert alert-danger">{{msg}}</div>
+	      {{/each}}
+	{{/if}}
+	<form method="post" action="/user/edit-profil/{{user.id}}">
+		<h2 class="spacer-md-top">Vos infos</h2>
+		<div class="form-group">
+			<label>Nom *</label>
+			<input type="text" class="form-control" placeholder="Nome" name="surname" value="{{user.surname}}" required>
+		</div>
+		<div class="form-group">
+			<label>Prénom *</label>
+			<input type="text" class="form-control" placeholder="Prénom" name="name" value="{{user.name}}" required>
+		</div>
+		<div class="form-group">
+			<label>Pseudo *</label>
+			<input type="text" class="form-control" placeholder="Username" name="username"  value="{{user.username}}" required>
+		</div>
+        <div class="form-group">
+          <label>Date de naissance (jour/mois/année)*</label>
+          <div class="row">
+            <div class="col-4">
+              <select class="form-control" name="jourNaissance" required>
+                <option value="{{data.jourNaissance}}" selected>{{data.jourNaissance}}</option>
+                {{#each date_list.day}}
+					<option value="{{this.value}}">{{this.value}}</option>
+                {{/each}}
+              </select>
+            </div>
+            <div class="col-4">
+              <select class="form-control" name="moisNaissance" required>
+                <option value="{{data.moisNaissance}}" selected>{{data.moisNaissance}}</option>
+                {{#each date_list.month}}
+					<option value="{{this.value}}">{{this.value}}</option>
+                {{/each}}
+              </select>
+            </div>
+            <div class="col-4">
+            	<input class="form-control" type="number" placeholder="2018"  min="1900" step="1" value="{{data.anneeNaissance}}" name="anneeNaissance" required>
+            </div>
+          </div>
+        </div>
+		<div class="form-group">
+			<label for="sex">Je suis</label>
+			<select class="form-control" name="sex">
+				<option value="{{user.sex}}" selected>{{user.sex}}</option>
+				<option value="Homme">Homme</option>
+				<option value="Femme">Femme</option>
+			</select>
+		</div>
+		<div class="form-group">
+			<label>Team / Club</label>
+			<input type="text" class="form-control" placeholder="team" name="team"  value="{{user.team}}">
+		</div>
+		<div class="form-group">
+			<label>N° de licence</label>
+			<input type="text" class="form-control" placeholder="numLicense" name="numLicence"  value="{{user.numLicence}}">
+		</div>
+		<div class="form-group">
+			<label for="categorie">Catégorie</label>
+			<select class="form-control" name="categorie">
+				<option value="{{user.categorie}}" selected>{{user.categorie}}</option>
+				{{#each category_list}}
+					<option value="{{this.short}} - {{this.name}}">{{this.short}} - {{this.name}}</option>
+                {{/each}}
+			</select>
+		</div>
+		<h2 class="spacer-md-top">Coordonnée</h2>
+		<h3 class="spacer-md-top">Adresse</h3>
+		<div class="form-group">
+			<label>Adresse ligne 1</label>
+			<input type="text" class="form-control" placeholder="ex: 9 rue Albert Camus" name="adresse1"  value="{{user.adresse1}}">
+		</div>
+		<div class="form-group">
+			<label>Adresse ligne 2</label>
+			<input type="text" class="form-control" placeholder="ex: Appt 103" name="adresse2"  value="{{user.adresse2}}">
+		</div>
+		<div class="form-group">
+			<label>Code postal</label>
+			<input type="text" class="form-control" placeholder="ex: 56300" name="codePostal"  value="{{user.codePostal}}">
+		</div>
+		<div class="form-group">
+			<label>Ville</label>
+			<input type="text" class="form-control" placeholder="ex: Pontivy" name="city"  value="{{user.city}}">
+		</div>
+		<h3 class="spacer-md-top">Contact</h3>
+		<div class="form-group">
+			<label>Email *</label>
+			<input type="email" class="form-control" placeholder="Email" name="email"  value="{{user.email}}" required>
+		</div>
+		<div class="form-group">
+			<label>Téléphone Fix</label>
+			<input type="text" class="form-control" placeholder="02.00.00.00.00" name="foneFix"  value="{{user.foneFix}}">
+		</div>
+		<div class="form-group">
+			<label>Téléphone port.</label>
+			<input type="text" class="form-control" placeholder="06.00.00.00.00" name="fonePort"  value="{{user.fonePort}}">
+		</div>
+	  <button type="submit" class="btn btn-default">Mettre à jour</button>
+	</form>
+	<p class="legend"><br><em>* Champs obligatoire</em></p>
+</div>

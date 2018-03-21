@@ -1,0 +1,76 @@
+<div class="header container-fluid">
+	<div class="jumbotron">
+		<h1>Gérer mes épreuves</h1>
+	</div>
+</div>
+<div class="container-fluid">
+	{{#if event}}
+	<table class="table">
+		<thead class="table bg-dark-blue text-white">
+			<tr>
+			  <th class="text-center">Evènements</th>
+			  <th class="text-center">Options</th>
+			  <th class="text-center">Lieux</th>
+			  <th class="text-center">Epreuves</th>
+			  <th class="text-center">Places</th>
+			  <th class="text-center">Dates / heures</th>
+			  <th class="text-center">Disciplines</th>
+			  <th class="text-center">Distances</th>
+			</tr>
+		</thead>
+		<tbody class="text-center">
+			{{#each event}}
+				<tr >
+					<td class="bg-light">
+						<strong>{{this.name}}</strong>
+
+					</td>
+					<td class="bg-light">
+						{{#if this.paiement}}
+							<i class="fa fa-credit-card-alt text-success spacer-xs-left" aria-hidden="true" title="le paiement en ligne est accepté"></i>
+						{{else}}
+							<i class="fa fa-credit-card-alt text-muted spacer-xs-left" aria-hidden="true" title="le paiement en ligne n'est pas accepté"></i>
+						{{/if}}
+						{{#if this.certificat_required}}
+							<i class="fa fa-file text-success spacer-xs-left" title="le certificat médical est requis pour s'inscrire"></i>
+						{{else}}
+							<i class="fa fa-file text-muted spacer-xs-left" title="le certificat médical n'est pas requis pour s'inscrire"></i>
+						{{/if}}										
+						{{#if this.dons}}
+							<i class="fa fa-gratipay text-success spacer-xs-left" aria-hidden="true" title="L'événement accepte les dons"></i>
+						{{else}}
+							<i class="fa fa-gratipay text-muted spacer-xs-left" aria-hidden="true" title="L'événement n'accepte pas les dons"></i>
+						{{/if}}						
+					</td>
+					<td class="bg-light">{{this.adresse.ville}}</td>
+					<td class="bg-light text-center">
+						<i class="fa fa-chevron-circle-down txt-light-blue" aria-hidden="true"></i>
+					</td>
+					<td colspan="4" class="bg-light text-right text-capitalize">
+						<a href="/event/{{this.id}}" class="spacer-sm-right"><i class="fa fa-eye spacer-xs-right"></i>Voir</strong></a> <a href="/event/edit/{{this.id}}" class="spacer-sm-right"><i class="fa fa-pencil spacer-xs-right"></i>Modifier</strong></a> <a href="/user/gerer/{{this.id}}" class="spacer-sm-right"><i class="fa fa-users spacer-xs-right"></i>Inscriptions</strong></a> <a href="/user/file/{{this.id}}.csv"><i class="fa fa-file spacer-xs-right"></i>Excel - GmCAP</a>
+					</td>
+				</tr>
+				{{#each this.epreuves}}
+			    <tr>
+			    	<td colspan="3"></td>
+			    	<td>{{this.name}}</td>
+			    	<td>{{this.placesDispo}}</td>
+			    	<td>{{this.dateDebut.jourDebut}}/{{this.dateDebut.moisDebut}}/{{this.dateDebut.anneeDebut}} {{this.dateDebut.heureDebut}}h{{this.dateDebut.minuteDebut}}</td>
+			    	<td>{{this.discipline}}</td>
+			    	<td>{{this.distance}} Km</td>
+			    </tr>
+
+			    {{/each}}
+			    <tr>
+			    	<td colspan="8">
+			    		<span class="legend"><i class="fa fa-link spacer-xs-right txt-light-blue" aria-hidden="true"></i><strong>Lien pour les inscriptions : </strong><a href="/event/{{this.id}}" target="_blank">https://event.izir.fr/event/{{this.id}}</a> <strong>partagez moi sur </strong><a href="https://facebook.com" rel="nofollow" target="_blank"><i class="fa fa-facebook-official" aria-hidden="true"></i></a> <a href="https://twitter.com" rel="nofollow" target="_blank"><i class="fa fa-twitter-square" aria-hidden="true"></i></a></span>
+			    	</td>
+			    </tr>			    
+			{{/each}}
+		{{else}}
+			<p class="alert alert-danger">Vous n'avez pas encore créé d'épreuve</p>
+			<a href="/event/post-event" class="btn btn-default">Créer maintenant</a>
+		{{/if}}	
+		</tbody>
+	</table>
+</div>

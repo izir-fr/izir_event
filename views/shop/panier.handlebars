@@ -1,0 +1,141 @@
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-12 spacer-sm-top">
+			<nav aria-label="breadcrumb ">
+			  <ol class="breadcrumb">
+			    <li class="breadcrumb-item"><a href="/">Accueil</a></li>
+			    <li class="breadcrumb-item"><a href="/Catalogue/">Catalogue</a></li>
+			    <li class="breadcrumb-item active" aria-current="page">Panier</li>
+			  </ol>
+			</nav>
+		</div>
+	</div>
+</div>
+<div class="container">
+	<div class="row">
+		<div class="col-12 spacer-md-top">
+			<h1>Panier</h1>
+		</div>
+	</div>
+	<div class="row spacer-md-top spacer-md-bottom">
+		<div class="col-md-7">
+			<div class="row">
+				<div class="col-12 border border-top-0 border-right-0 border-left-0 border-dark spacer-sm-bottom spacer-xs-top">
+					<strong class="text-uppercase ">{{session.cart.totalQty}} produits</strong>
+				</div>
+			</div>
+			{{#if products}}
+				{{#each products}}		
+				<div class="row border border-bottom align-items-center">
+					<div class="col-4">
+						<img src="{{this.item.images.0.url}}" alt="" class="img img-fluid align-middle">
+					</div>					
+					<div class="col-8">
+						<div class="row">
+							<div class="col-12 spacer-xs-top">
+								<a href="/catalogue/produit/{{this.item._id}}"><strong>{{this.item.name}}</strong></a>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-12 spacer-xs-top spacer-xs-bottom">
+								<span class="text-secondary">Prix Unitaire : <strong class="text-danger"> {{this.item.price}}€</strong></span>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-12">
+								<span class="text-secondary">Référence : {{this.item.ref}}</span>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-12">
+								<span class="text-secondary">Quantité : {{this.qty}}</span>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-12 spacer-xs-top spacer-xs-bottom">
+								<span>Total produit: {{this.price}}€</span>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-12">
+								<span class="d-block border border-bottom-0 border-right-0 border-left-0 border-dark">
+									<strong class="d-block text-center spacer-xs-top ">Modifier la quantité</strong>
+								</span>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-12 spacer-xs-bottom text-secondary text-center ">
+								<div class="row">
+									<div class="col-12">
+										<div class="inline-block">
+											<a href="/catalogue/reduce-by-x/{{this.item._id}}?remove=10" class="spacer-xs-top spacer-xs-bottom btn btn-outline-secondary btn-sm"><i class="fa fa-minus" aria-hidden="true"></i> 10</a>
+											<a href="/catalogue/reduce-by-one/{{this.item._id}}" class="spacer-xs-top spacer-xs-bottom btn btn-outline-secondary btn-sm"><i class="fa fa-minus" aria-hidden="true"></i> 1</a>
+											<a href="/catalogue/increase-by-one/{{this.item._id}}" class="spacer-xs-top spacer-xs-bottom btn btn-outline-secondary btn-sm spacer-sm-left"><i class="fa fa-plus" aria-hidden="true"></i> 1</a>
+											<a href="/catalogue/increase-by-x/{{this.item._id}}?add=10" class="spacer-xs-top spacer-xs-bottom btn btn-outline-secondary btn-sm"><i class="fa fa-plus" aria-hidden="true"></i> 10</a>
+											<a href="/catalogue/remove/{{this.item._id}}" class="spacer-xs-top spacer-xs-bottom btn btn-outline-secondary btn-sm spacer-sm-left"><i class="fa fa-trash-o" aria-hidden="true"></i> Supprimer</a>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>			
+				{{/each}}
+			{{else}}
+				<p>Il n'y pas de produits dans le panier</p>
+			{{/if}}
+		</div>
+		<div class="col-md-4 ml-md-auto">
+			<div class="row sticky-top">
+				<div class="col-12 bg-light">
+					<div class="row">
+						<div class="col-12 border border-top-0 border-right-0 border-left-0 border-dark spacer-sm-bottom spacer-xs-top">
+							<strong class="text-uppercase ">récapitulatif du devis</strong>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-12">
+							<span class="d-block spacer-sm-top spacer-sm-bottom">
+								<div class="row">
+									<div class="col-8">
+										<strong>Total Produit</strong>
+									</div>
+									<div class="col-4 text-right">
+										<strong>{{totalPrice}}€</strong>
+									</div>
+								</div>
+							</span>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-12">
+							<span class="d-block spacer-sm-top spacer-sm-bottom">
+								<div class="row">
+									<div class="col-8">
+										<strong>Estimation des frais de port</strong>
+									</div>
+									<div class="col-4 text-right">
+										<strong>GRATUIT</strong>
+									</div>
+								</div>
+							</span>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-12">
+							<span class="d-block spacer-sm-top spacer-sm-bottom border border-dark border-bottom-0 border-right-0 border-left-0"><strong class="d-block spacer-sm-top">Total : {{totalPrice}}€</strong></span>
+						</div>
+					</div>
+					{{#if products}}
+					<div class="row">
+						<div class="col-12 spacer-sm-bottom text-center">
+							<span class="text-danger font-weight-bold d-block spacer-xs-bottom">Envie d'un meilleur prix ?</span>
+							<a href="" class="btn btn-secondary d-block text-uppercase" role="button"><strong>Demander votre devis</strong></a>
+						</div>
+					</div>
+					{{/if}}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

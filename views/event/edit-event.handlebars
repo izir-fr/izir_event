@@ -1,0 +1,632 @@
+<div class="header container-fluid">
+  <div class="jumbotron">
+    <h1>Modifier un évènement</h1>
+  </div>
+</div>
+<div class="container-fluid">
+  <div class="row">
+  {{#if errors}}
+        {{#each errors}}
+          <div class="alert alert-danger">{{msg}}</div>
+        {{/each}}
+  {{/if}}
+  </div>
+  <div class="row">
+    <div class="col-sm-12">
+      <form method="post" action="/event/edit/{{event.id}}" accept-charset="UTF-8">
+        <div class="row">
+          <div class="col-sm-12 spacer-md-top">
+            <h2>Détails de l'évènement</h2>
+            <div class="form-group spacer-sm-top">
+              <label>Nom de l'évènement *</label>
+              <input type="text" class="form-control" placeholder="ex: Marathon de Paris" value="{{event.name}}" name="name" required>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="form-group">
+              <label>Description *</label><br>
+              <textarea name="description" class="form-control" cols="30" rows="10" placeholder="Description de l'évènement" required>{{event.description}}</textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- ADRESSE-->        
+        <div id="map"></div>
+        <div class="row spacer-sm-top">
+          <div class="col-sm-4">
+            <div class="form-group" id="address">
+              <label class="label">Adresse actuelle</label>
+              <p>{{event.adresse.adresse1}} <br>
+                {{event.adresse.adresse2}} <br>
+                {{event.adresse.ville}} <br>
+                {{event.adresse.region}} <br>
+                {{event.adresse.codePostal}} <br>
+                {{event.adresse.pays}} <br>
+              </p>
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div id="locationField" class="form-group">
+              <label for="autocomplete">Rechercher une nouvelle adresse pour l'évènement*</label>
+              <input id="autocomplete" placeholder="Rechercher l'adresse de l'évènement" onFocus="geolocate()" type="text" class="form-control">
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <label>Nouvelle adresse</label>
+            <input type='hidden' class="field form-control" id="street_number" name="adresse1" value="{{event.adresse.adresse1}}">
+            <input type='hidden' class="field form-control" id="route" name="adresse2" value="{{event.adresse.adresse2}}">
+            <input type='hidden' class="field form-control" id="locality" name="ville" value="{{event.adresse.ville}}">
+            <input type='hidden' class="field form-control" id="administrative_area_level_1" name="region" value="{{event.adresse.region}}">
+            <input type='hidden' class="field form-control" id="postal_code" placeholder="1" name="codePostal" value="{{event.adresse.codePostal}}">
+            <input type='hidden' class="field form-control" id="country" name="pays" value="{{event.adresse.pays}}"> 
+          </div>
+          <input type="hidden" name="latitude" id="latitude" value="{{event.adresse.latitude}}">
+          <input type="hidden" name="longitude" id="longitude" value="{{event.adresse.longitude}}">
+        </div>
+        
+        <!-- PERMANENCE DES INSCRIPTIONS -->
+        <div class="row spacer-sm-top">
+          <div class="col-sm-12">
+            <h2>Permanence des inscriptions</h2>
+          </div>
+          <div class="col-sm-12 spacer-xs-top">
+            <div class="input-group">
+              <label class="label input-group-addon">Email</label>
+              <input type="text" class=" ield form-control" name="email" placeholder="email@organisation.ici" value="{{event.permanence.email}}">
+              <label class="label input-group-addon ">Téléphone</label>
+              <input type="text" class=" ield form-control" name="telephone" placeholder="00.00.00.00.00" value="{{event.permanence.telephone}}">
+            </div>
+            <div class="input-group spacer-xs-top">
+              <label class="label input-group-addon ">Site Internet</label>
+              <input type="text" class=" ield form-control" name="siteWeb" placeholder="http://siteWeb.fr" value="{{event.permanence.siteWeb}}">
+            </div>
+            <div class="input-group spacer-xs-top">
+              <label class="label input-group-addon ">Page Facebook</label>
+              <input type="text" class=" ield form-control" name="facebook" placeholder="http://facebook.com" value="{{event.permanence.facebook}}">
+            </div>     
+          </div>
+        </div>        
+
+        <!-- CLOTURE DES INSCRIPTIONS -->
+        <div class="row spacer-md-top">
+          <div class="col-sm-12">
+            <h2>Clôture des incriptions</h2>
+          </div>
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label>Jour (jour/mois/année)*</label>
+              <div class="row">
+                <div class="col-4">
+                  <select class="form-control" name="jourCloture" required>
+                    <option value="{{event.inscriptionCloture.jourCloture}}" selected>{{event.inscriptionCloture.jourCloture}}</option>
+                    {{#each date_list.day}}
+                      <option value="{{this.value}}">{{this.value}}</option>
+                    {{/each}}
+                  </select>
+                </div>
+                <div class="col-4">
+                  <select class="form-control" name="moisCloture" required>
+                    <option value="{{event.inscriptionCloture.moisCloture}}" selected>{{event.inscriptionCloture.moisCloture}}</option>
+                    {{#each date_list.month}}
+                      <option value="{{this.value}}">{{this.value}}</option>
+                    {{/each}}
+                  </select>
+                </div>
+                <div class="col-4">
+                  <select class="form-control" name="anneeCloture" required>
+                    <option value="{{event.inscriptionCloture.anneeCloture}}" selected>{{event.inscriptionCloture.anneeCloture}}</option>
+                    {{#each date_list.year}}
+                      <option value="{{this.value}}">{{this.value}}</option>
+                    {{/each}}
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-1">
+            <span></span>  
+          </div>
+          <div class="col-sm-5">
+            <div class="form-group" required>
+              <label>Heure (heure/minute) *</label>
+              <div class="row">
+                <div class="col-6">
+                  <select class="form-control" name="heureCloture" required>
+                    <option value="{{event.inscriptionCloture.heureCloture}}" selected>{{event.inscriptionCloture.heureCloture}}</option>
+                    {{#each date_list.hour}}
+                      <option value="{{this.value}}">{{this.value}}</option>
+                    {{/each}}
+                  </select>
+                </div>
+                <div class="col-6">
+                  <select class="form-control" name="minuteCloture" required>
+                    <option value="{{event.inscriptionCloture.minuteCloture}}" selected>{{event.inscriptionCloture.minuteCloture}}</option>
+                    <option value="00">00</option>
+                    <option value="15">15</option>
+                    <option value="30">30</option>
+                    <option value="45">45</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- PAIEMENT ACCEPTED-->
+        <div class="row spacer-sm-top">
+          <div class="col-sm-12 alert alert-warning">
+            <div class="col-sm-12 spacer-sm-top">
+              {{#if event.paiement}}
+              <input type="checkbox" class="form-check-input" name="paiement" id="paiement" checked>
+              {{else}}
+              <input type="checkbox" class="form-check-input" name="paiement" id="paiement">
+              {{/if}}
+              <p>Autorisez-vous les paiements en ligne ?</p>
+              <em class="legend">
+                <p>En cochant cette case les participants pourront payer et finaliser leurs inscriptions à vos épreuves directement en ligne. Sinon, ils ne pourront que se pré-inscrire à votre évènement. </p>
+                <p>Les frais de dossier de 0,50€ seront réglés lors de l' inscription par le participant si celui-ci choisi de régler en ligne. Les inscriptions sont sans frais pour l'organisation.</p>
+                <p>Les fonds sont reversés à l'organisation, 15 jours après la date de clôture des inscriptions.</p>
+              </em>
+            </div>
+          </div>
+        </div>
+
+        <!-- DONS-->
+        <div class="row spacer-sm-top">
+          <div class="col-sm-12 alert alert-warning">
+            <div class="col-sm-12 spacer-sm-top">
+              {{#if event.dons}}
+              <input type="checkbox" class="form-check-input" name="dons" id="dons" checked>
+              {{else}}
+              <input type="checkbox" class="form-check-input" name="dons" id="dons">
+              {{/if}}
+              <p>Cet évènement récolte-t-il des dons ?</p><p><em class="legend"> En cochant cette case les participants pourront réaliser un don ou une promesse de don (s'ils ne payent pas leur sincription en ligne), en plus de leur inscription à l'épreuve.</em></p>
+            </div>    
+          </div>
+        </div>
+
+        <!-- Certificats medicaux-->
+        <div class="row spacer-sm-top">
+          <div class="col-sm-12 alert alert-warning">
+            <div class="col-sm-12 spacer-sm-top">
+              {{#if event.certificat_required}}
+              <input type="checkbox" class="form-check-input" name="certificat_required" id="certificat_required" checked>
+              {{else}}
+              <input type="checkbox" class="form-check-input" name="certificat_required" id="certificat_required">
+              {{/if}}
+              <p>Cet évènement requiert-il les certificats medicaux des participants ?</p><p><em class="legend"> En cochant cette case les participants devront joindre un certificat medical lors de leur inscription à l'épreuve.</em></p>
+            </div>    
+          </div>
+        </div>
+        
+        <!-- FILES-->
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="form-group">
+              <div class="col-sm-12">
+                <label><strong>Ajouter des photos, logos, images</strong><em class="legend spacer-md-top"> .jpg, .png et .pdf , uniquement, 3 photos maximum</em></label>
+              </div>
+            </div>
+            <div id="uploaded_images" class="spacer-sm-top">
+              {{#each event.docs.img}}
+                <img src="{{this}}" alt="{{event.name}}" class="img-thumbnail">
+                <input class='form-control img' name='img' value='{{this}}' type='hidden'>
+              {{/each}}
+            </div>
+            <div class="col-sm-12 spacer-sm-top">
+              <span id="imagesButton" >
+                <a href="#" id="upload_images_opener">Ajouter des images</a>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="form-group">
+              <div class="col-sm-12 spacer-sm-top">
+                <label><strong>Ajouter le règlement de l'épreuve</strong><em class="legend "> .pdf , .jpg et .png uniquement, 1 pièce jointe</em></label>
+              </div>
+            </div>
+            <div id="uploaded_legales" >
+              {{#each event.docs.legales}}
+                <a class="legales" href="{{this}}" target="_blank">Voir le règlement</a>
+                <input class='form-control legales' name='legales' value='{{this}}' type='hidden'>
+              {{/each}}
+            </div>
+            <div class="col-sm-12 spacer-sm-top">
+              <span id="legalesButton" > 
+                <a href="#" id="upload_legales_opener">Ajouter des images</a>
+              </span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- EPREUVES-->
+        <div class="row spacer-md-top">
+          <div class="col-sm-12">
+            <h2>Détails de l'épreuve</h2>
+          </div>
+        </div>
+        <div>
+          {{#each event.epreuves}}
+          <div id="epreuveFrom">
+            <div>
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="form-group ">
+                    <div class="row">
+                      <div class="col-sm-11">
+                        <div class="form-group spacer-sm-top">
+                          <label>Nom de l'épreuve *</label>
+                          <input type="text" class="form-control" placeholder="ex: 15km, adultes, femmes, ..." value="{{name}}" name="displayEventName" required disabled>
+                          <input type="hidden" class="form-control" placeholder="ex: 15km, adultes, femmes, ..." value="{{name}}" name="epreuveName" required>
+                        </div>
+                      </div>
+                      <div class="col-sm-1">
+                        <span class="badge badge-danger delete-epreuve">X</span>
+                      </div> 
+                    </div>
+                    <div class="row">
+                      <div class="col-sm-12">
+                        <div class="form-group">
+                          <label>Description de l'épreuve</label><br>
+                          <textarea name="epreuveDescription" class="form-control" cols="30" rows="10" placeholder="Description de l'épreuve">{{description}}</textarea>
+                        </div>
+                      </div>
+                    </div>
+                    <label class="spacer-sm-top">Discipline *</label>
+                    <select name="discipline" class="form-control" required>
+                      <option value="{{this.discipline}}" selected>{{this.discipline}}</option>
+                      {{#each ../discipline_list}}
+                        <option value="{{this.name}}">{{this.name}}</option>
+                      {{/each}}
+                    </select>
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <div class="form-group">
+                    <label>Date de début (jour/mois/année) *</label>
+                    <div class="row">
+                      <div class="col-4">
+                        <select class="form-control" name="jourDebut" required>
+                          <option value="{{this.dateDebut.jourDebut}}" selected>{{this.dateDebut.jourDebut}}</option>
+                          {{#each ../date_list.day}}
+                            <option value="{{this.value}}">{{this.value}}</option>
+                          {{/each}}
+                        </select>
+                      </div>
+                      <div class="col-4">
+                        <select class="form-control" name="moisDebut" required>
+                          <option value="{{this.dateDebut.moisDebut}}" selected>{{this.dateDebut.moisDebut}}</option>
+                          {{#each ../date_list.month}}
+                            <option value="{{this.value}}">{{this.value}}</option>
+                          {{/each}}
+                        </select>
+                      </div>
+                      <div class="col-4">
+                        <select class="form-control" name="anneeDebut" required>
+                          <option value="{{this.dateDebut.anneeDebut}}" selected>{{this.dateDebut.anneeDebut}}</option>
+                          {{#each ../date_list.year}}
+                            <option value="{{this.value}}">{{this.value}}</option>
+                          {{/each}}
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-1">
+                  <span></span>  
+                </div>
+                <div class="col-sm-5">
+                  <div class="form-group" required>
+                    <label>Heure de début (heure/minute) *</label>
+                    <div class="row">
+                      <div class="col-6">
+                        <select class="form-control" name="heureDebut" required>
+                          <option value="{{dateDebut.heureDebut}}" selected>{{dateDebut.heureDebut}}</option>
+                          {{#each ../date_list.hour}}
+                            <option value="{{this.value}}">{{this.value}}</option>
+                          {{/each}}
+                        </select>
+                      </div>
+                      <div class="col-6">
+                        <select class="form-control" name="minuteDebut" required>
+                          <option value="{{dateDebut.minuteDebut}}" selected>{{dateDebut.minuteDebut}}</option>
+                          <option value="00">00</option>
+                          <option value="15">15</option>
+                          <option value="30">30</option>
+                          <option value="45">45</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-3">
+                  <div class="form-group">
+                    <label>Prix de l'inscription *</label>
+                      <div class="input-group">
+                        <input type="number" class="form-control" placeholder="0" name="tarif" min="00" step=".01"  value="{{tarif}}"required>
+                        <div class="input-group-addon">€</div>
+                      </div>
+                  </div>
+                </div>
+                <div class="col-sm-3">
+                  <div class="form-group">
+                    <label>Distance *</label>
+                    <div class="input-group">
+                      <input type="number" class="form-control" placeholder="0" name="distance" min="00" step=".01"  value="{{distance}}"required>
+                      <div class="input-group-addon">Km</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-3">
+                  <div class="form-group">
+                    <label>Dénivele +</label>
+                    <div class="input-group">
+                      <input type="number" class="form-control" placeholder="0" name="denivele" min="00" value="{{denivele}}">
+                      <div class="input-group-addon">m</div>
+                    </div>
+                  </div>
+                </div>                
+                <div class="col-sm-3">
+                  <div class="form-group">
+                    <label>Nombre de participants maxi *</em></label>
+                    <input type="number" class="form-control" placeholder="1" name="placesDispo" value="{{placesDispo}}" required>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <input type="hidden" name="epreuve_id" value="true">
+          </div>
+          {{/each}}
+          <!-- copie de epreuve form aspiré et cleaner par le JS-->
+          <div id="epreuveBlankFrom">
+            <div>
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="form-group ">
+                    <div class="row">
+                      <div class="col-sm-11">
+                        <div class="form-group spacer-sm-top">
+                          <label>Nom de l'épreuve *</label>
+                          <input type="text" class="form-control" placeholder="ex: 15km, adultes, femmes, ..." value="" name="epreuveName" required>
+                        </div>
+                      </div>
+                      <div class="col-sm-1">
+                        <span class="badge badge-danger delete-epreuve">X</span>
+                      </div> 
+                    </div>
+                    <div class="row">
+                      <div class="col-sm-12">
+                        <div class="form-group">
+                          <label>Description de l'épreuve</label><br>
+                          <textarea name="epreuveDescription" class="form-control" cols="30" rows="10" placeholder="Description de l'épreuve"></textarea>
+                        </div>
+                      </div>
+                    </div>
+                    <label class="spacer-sm-top">Discipline *</label>
+                    <select name="discipline" class="form-control" required>
+                      {{#each discipline_list}}
+                        <option value="{{this.name}}">{{this.name}}</option>
+                      {{/each}}
+                    </select>
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <div class="form-group">
+                    <label>Date de début (jour/mois/année) *</label>
+                    <div class="row">
+                      <div class="col-4">
+                        <select class="form-control" name="jourDebut" required>
+                          {{#each date_list.day}}
+                            <option value="{{this.value}}">{{this.value}}</option>
+                          {{/each}}
+                        </select>
+                      </div>
+                      <div class="col-4">
+                        <select class="form-control" name="moisDebut" required>
+                          {{#each date_list.month}}
+                            <option value="{{this.value}}">{{this.value}}</option>
+                          {{/each}}
+                        </select>
+                      </div>
+                      <div class="col-4">
+                        <select class="form-control" name="anneeDebut" required>
+                          {{#each date_list.year}}
+                            <option value="{{this.value}}">{{this.value}}</option>
+                          {{/each}}
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-1">
+                  <span></span>  
+                </div>
+                <div class="col-sm-5">
+                  <div class="form-group" required>
+                    <label>Heure de début (heure/minute) *</label>
+                    <div class="row">
+                      <div class="col-6">
+                        <select class="form-control" name="heureDebut" required>
+                          {{#each date_list.hour}}
+                            <option value="{{this.value}}">{{this.value}}</option>
+                          {{/each}}
+                        </select>
+                      </div>
+                      <div class="col-6">
+                        <select class="form-control" name="minuteDebut" required>
+                          <option value="00">00</option>
+                          <option value="15">15</option>
+                          <option value="30" selected="selected">30</option>
+                          <option value="45">45</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-3">
+                  <div class="form-group">
+                    <label>Prix de l'inscription *</label>
+                      <div class="input-group">
+                        <input type="number" class="form-control" placeholder="0" name="tarif" min="00" step=".01" required>
+                        <div class="input-group-addon">€</div>
+                      </div>
+                  </div>
+                </div>
+                <div class="col-sm-3">
+                  <div class="form-group">
+                    <label>Distance *</label>
+                    <div class="input-group">
+                      <input type="number" class="form-control" placeholder="0" name="distance" min="00" step=".01" required>
+                      <div class="input-group-addon">Km</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-3">
+                  <div class="form-group">
+                    <label>Dénivele +</label>
+                    <div class="input-group">
+                      <input type="number" class="form-control" placeholder="0" name="denivele" min="00">
+                      <div class="input-group-addon">m</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-3">
+                  <div class="form-group">
+                    <label>Nombre de participants maxi *</em></label>
+                    <input type="number" class="form-control" placeholder="1" name="placesDispo" required>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <input type="hidden" name="epreuve_id" value="true">
+          </div> 
+          <div id="epreuveAdd"></div>
+        </div>
+        <div class="row" id="epreuveButton">
+          <div class="col-sm-12 spacer-sm-top">
+            <div class="col-sm-12">
+              <div class="row">
+                <div class="col-sm-12">
+                  <button class="btn btn-default" id="addEpreuve">Ajouter une épreuve</button>
+                </div>
+              </div>              
+            </div>
+          </div>      
+        </div>
+
+        <!-- OPTIONS -->
+        <div class="row spacer-sm-top">
+          <div class="col-sm-12">
+            <h2>Options de l'évènement</h2>
+          </div>
+          <!-- Option Form-->
+          {{#each event.options}}
+          <div class="col-sm-12 option spacer-sm-top" id="optionFrom">
+            <div class="row" >
+              <div class="col-sm-11">
+                <div class="row">
+                  <div  class="col-sm-9">
+                    <div class="form-group">
+                      <label>Nom de l'options *</label>
+                      <input type="text" class="form-control" placeholder="ex: navette" name="optionsRef" value="{{reference}}" required>
+                    </div>
+                  </div>
+                  <div class="col-sm-3">
+                    <div class="form-group">
+                      <label>Prix de l'option *</label>
+                      <div class="input-group">
+                        <input type="number" class="form-control" placeholder="1" name="optionsPrix" value="{{prix}}" required>
+                        <div class="input-group-addon">€</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-1">
+                <span class="badge badge-danger delete-option">X</span>
+              </div>
+            </div>
+            <input type="hidden" name="option_id" value="true">
+          </div>
+          {{/each}}
+          <!-- copie de option form aspiré et cleaner par le JS-->
+          <div class="col-sm-12 option spacer-sm-top" id="optionBlankFrom">
+            <div class="row" >
+              <div class="col-sm-11">
+                <div class="row">
+                  <div  class="col-sm-9">
+                    <div class="form-group">
+                      <label>Nom de l'options *</label>
+                      <input type="text" class="form-control" placeholder="ex: navette" name="optionsRef" required>
+                    </div>
+                  </div>
+                  <div class="col-sm-3">
+                    <div class="form-group">
+                      <label>Prix de l'option *</label>
+                      <div class="input-group">
+                        <input type="number" class="form-control" placeholder="1" name="optionsPrix" value="" required>
+                        <div class="input-group-addon">€</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-1">
+                <span class="badge badge-danger delete-option">X</span>
+              </div>
+            </div>
+            <input type="hidden" name="option_id" value="true">
+          </div>
+          <div class="col-sm-12 option" id="optionAdd"></div>
+          <div class="col-sm-12 spacer-sm-top" id="option_add">
+            <div class="col-sm-12">
+              <div class="row" >
+                <div class="col-sm-12">
+                  <button class="btn btn-default" id="addOption">Ajouter une option</button>
+                </div>
+              </div>              
+            </div>
+          </div>
+        </div>
+
+        <!-- CGV -->    
+        <div class="row">
+          <div class="col-12 spacer-md-top ">
+            <div class="form-check spacer-sm-left">
+              <input class="form-check-input " type="checkbox" name="CGV" id="CGV" required>
+              <p>J'ai lu les conditions générales de vente et j'y adhère sans réserve. <a href="/info/cgv">(Lire les Conditions générales de vente)</a></p>
+            </div>
+          </div>
+        </div>
+        <button id="submitButton" type="submit" class="btn btn-danger spacer-sm-top">Modifier l'évènement</button>
+      </form>
+      <p class="legend"><br><em>* Champs obligatoire</em></p>      
+    </div>
+  </div>
+</div>
+
+<script src="//widget.cloudinary.com/global/all.js" type="text/javascript"></script>
+<script src="/js/files-uploader.js" type="text/javascript"></script>
+<script src="/js/event-config.js" type="text/javascript"></script>
+<script type="text/javascript">
+$(function(){
+  //affichage de la nouvelle adresse
+  $('input#autocomplete').change(function(){
+    $('input[name=adresse1]').attr({'type':'text'})
+    $('input[name=adresse2]').attr({'type':'text'})
+    $('input[name=ville]').attr({'type':'text'})
+    $('input[name=region]').attr({'type':'text'})
+    $('input[name=codePostal]').attr({'type':'text'})
+    $('input[name=pays]').attr({'type':'text'})
+  })
+})
+</script>

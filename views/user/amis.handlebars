@@ -1,0 +1,43 @@
+<div class="header container-fluid">
+	<div class="jumbotron">
+		<h1>Inviter des amis</h1>
+	</div>
+</div>
+<div class="container-fluid">
+	{{#if errors}}
+	      {{#each errors}}
+	        <div class="alert alert-danger">{{msg}}</div>
+	      {{/each}}
+	{{/if}}
+	<form method="post" action="/user/amis/{{user.id}}">
+	    <!-- MESSAGE-->
+	    <div class="row">
+	      <div class="col-sm-12">
+	        <div class="form-group spacer-sm-top">
+	          <label>Messages pour mes amis *</label><br>
+	          <textarea name="description" id="" class="form-control" cols="30" rows="10" placeholder="Description de l'évènement" required>Bonjour les amis, connaissez-vous ce site pour vous inscrire à vos épreuves sportives et gérer les inscriptions de vos évènements : running, triathlon, vélo ... En plus, les frais de dossier ne sont que de 0,50€ pour le participant, ce qui en fait la plateforme la moins cher. Alors fonce sur => https://event.izir.fr</textarea>
+	        </div>        
+	      </div>
+	    </div>
+		<div class="form-group">
+			<label>Email *</label>
+			<input type="email" class="form-control" placeholder="Email" name="email"  value="" required>
+		</div>
+		<span id="friends_add" class="btn btn-outline-primary">Ajoute un ami</span>
+	  	<button type="submit" class="btn btn-default">Inviter</button>
+	</form>
+	<p class="legend"><br><em>* Champs obligatoire</em></p>
+</div>
+<script>
+	$(()=>{
+		$('#friends_add').on('click',()=>{
+			var emailForm = 
+			'<div class="form-group">' +
+				'<label>Email *</label>' +
+				'<input type="email" class="form-control" placeholder="Email" name="email"  value="">' +
+			'</div>'
+
+			$(emailForm).insertBefore($('#friends_add'))
+		})
+	})
+</script>

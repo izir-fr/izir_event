@@ -1,0 +1,58 @@
+<div class="header container-fluid">
+	<div class="jumbotron">
+		<h1>Toutes mes inscriptions</h1>
+	</div>
+</div>
+<div class="container-fluid">
+	{{#if orders}}
+	<div class="row">
+		<div class="col-12">
+			<table class="table">
+				<thead class="bg-dark-blue txt-white">
+					<tr>
+						<th>Date</th>
+						<th>N° inscription</th>
+						<th>Evènement</th>
+						<th>Participant</th>
+						<th>Lieu</th>
+						<th>Statut</th>
+						<th>N° Paiement</th>
+						<th>Action</th>
+					</tr>
+				</thead>
+				<tbody>
+					{{#each orders}}
+					    <tr class="text-lowercase">
+					    	<td>{{date this.created_at}}</td>
+					    	<td>{{this.id}}</td>
+					    	<td><strong><a href="/event/{{this.event.id}}">{{this.event.name}}</strong></a></td>
+					    	<td><strong>{{this.participant.nom}}</strong> {{this.participant.prenom}}</td>
+					    	<td>{{this.event.adresse.codePostal}} {{this.event.adresse.ville}}</td>
+					    	<td><strong>{{this.statut}}</strong></td>
+					    	<td>{{this.paiement.id}}</td>
+					    	{{#if this.paiement.captured}}
+							<td><strong><a href="/event/checkout/{{this.id}}">Details</a></strong></td>
+					    	{{else}}
+					    	<td><strong><a href="/event/checkout/{{this.id}}">Payer</a></strong> / <strong><a href="/event/checkout/{{this.id}}">Voir</a></strong></td>
+					    	{{/if}}
+					    </tr>
+					{{/each}}
+				</tbody>
+			</table>
+		
+		</div>
+	</div>
+	
+
+	{{else}}
+	<div class="row">
+		<div class="col-12">
+			<p class="alert alert-danger">Vous ne vous êtes pas encore inscrit à une épreuve</p>
+		</div>
+	</div>
+	{{/if}}
+	<div class="row">
+		<div class="col-12 text-center spacer-sm-bottom">
+			<a href="/event/finder" class="btn btn-default">Trouver une épreuve maintenant</a>
+		</div>
+	</div>

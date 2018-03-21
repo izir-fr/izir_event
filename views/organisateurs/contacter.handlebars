@@ -1,0 +1,34 @@
+<div class="header container-fluid">
+	<div class="jumbotron">
+		<h1>Contacter {{data.participant.prenom}} {{data.participant.nom}}</h1>
+	</div>
+</div>
+<div class="container-fluid">
+	{{#if errors}}
+	      {{#each errors}}
+	        <div class="alert alert-danger">{{msg}}</div>
+	      {{/each}}
+	{{/if}}
+	<form method="post" action="/user/contacter/{{data.id}}">
+		<input type="hidden" value="{{data.event.id}}" name="event_id">
+		<input type="hidden" value="{{data.participant.email}}" name="email_participant">
+		<input type="hidden" value="{{data.participant.prenom}}" name="prenom_participant">
+		<input type="hidden" value="{{data.participant.nom}}" name="nom_participant">
+		<input type="hidden" value="{{data.eventName}}" name="event_name">
+	    <!-- MESSAGE-->
+	    <div class="row">
+	      <div class="col-sm-12">
+	        <div class="form-group spacer-sm-top">
+	          <label>Messages pour le participant *</label><br>
+	          <textarea name="description" id="" class="form-control" cols="30" rows="10" placeholder="Description de l'évènement" required>Bonjour, nous avons constaté que votre inscription pour l'événement "{{data.eventName}}" à {{data.event.adresse.ville}} le {{data.event.epreuves.[0].dateDebut.jourDebut}}/{{data.event.epreuves.[0].dateDebut.moisDebut}}/{{data.event.epreuves.[0].dateDebut.anneeDebut}} n'est pas complète. Merci de ...</textarea>
+	        </div>        
+	      </div>
+	    </div>
+		<div class="form-group">
+			<label>Email de réponse *</label>
+			<input type="email" class="form-control" placeholder="votre@mail.ici" name="email_organisateur"  value="{{user.email}}" required>
+		</div>
+	  	<button type="submit" class="btn btn-default">Envoyer</button>
+	</form>
+	<p class="legend"><br><em>* Champs obligatoire</em></p>
+</div>

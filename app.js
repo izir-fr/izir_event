@@ -49,8 +49,8 @@ app.use(redirectToHTTPS([/localhost:3000/]));
 var hbs = exphbs.create({
   defaultLayout:'layout',
   helpers: {
-      date: (val)=>{ return val.getDate() + '/' + (parseInt(val.getMonth())+1) + '/' + val.getFullYear() }
-  }
+      date: (val) => { return val.getDate() + '/' + (parseInt(val.getMonth())+1) + '/' + val.getFullYear() }
+    }
 });
 
 app.engine('handlebars', hbs.engine);

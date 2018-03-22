@@ -80,7 +80,11 @@
 											    		<input name="ref" type="hidden" value="{{this.name}}" >
 											    	</td>
 											    	<td class="text-right">
-											    		<input class="form-control epreuveInput quantityInput input epreuveQuantityValidation" name="quantity" type="number" value="0"  min="0" max="1">
+											    		<select class="quantity w-100 custom-select epreuveInput quantityInput input epreuveQuantityValidation" name="quantity" name="quantity" >
+															<option value="0" selected>0</option>
+															<option value="1">1</option>
+														</select>
+											    		<!--<input class="form-control epreuveInput quantityInput input epreuveQuantityValidation" name="quantity" type="number" value="0"  min="0" max="1">-->
 											    	</td>
 											    	<td class="text-center">
 											    		<span class="tarifView">{{this.tarif}}</span> €
@@ -100,7 +104,7 @@
 											    	<td class="text-right">
 											    		<input class="form-control" name="quantity-control" type="number" value="0"  min="0" max="0" disabled>
 											    		<!--db server hidden input to 0 -->
-											    		<input class="form-control epreuveInput quantityInput input epreuveQuantityValidation" name="quantity" type="hidden" value="0"  min="0" max="0">
+											    		<input class="quantity form-control epreuveInput quantityInput input epreuveQuantityValidation" name="quantity" type="hidden" value="0"  min="0" max="0">
 											    	</td>
 											    	<td class="text-center">
 											    		<span class="tarifView">{{this.tarif}}</span> €
@@ -124,7 +128,7 @@
 											    		<input name="ref" type="hidden" value="{{this.reference}}" >
 											    	</td>
 											    	<td class="text-right">
-											    		<input class="form-control quantityInput input" name="quantity" type="number" value="0"  min="0">
+											    		<input class="quantity form-control quantityInput input" name="quantity" type="number" value="0"  min="0">
 											    	</td>
 											    	<td class="text-center">
 											    		<span class="tarifView">{{this.prix}}</span> €
@@ -149,7 +153,7 @@
 										    	</td>
 										    	<td class="text-center">
 										    		<p>1</p>
-										    		<input class="form-control quantityInput" name="quantity" type="hidden" value="1"  min="0"  max="1">
+										    		<input class="quantity form-control quantityInput" name="quantity" type="hidden" value="1"  min="0"  max="1">
 										    	</td>
 										    	<td class="text-center">
 										    		<div class="input-group">

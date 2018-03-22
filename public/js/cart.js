@@ -6,7 +6,7 @@ $(function(){
 	//event subtotal
 		for(var i = 0 ; i < $('.quantityInput').length; i++) {
 			//calcul subtotal
-			var subtotal = ($('input[name=tarif]')[i].value*1) * ($('input[name=quantity]')[i].value*1)
+			var subtotal = ($('input[name=tarif]')[i].value*1) * ($('.quantity')[i].value*1)
 			$('.subtotalView')[i].textContent = subtotal
 			$('input[name=subtotal]')[i].value = subtotal
 		}
@@ -26,8 +26,8 @@ $(function(){
 
 	function totalEpreuve(){
 		var totalEpreuveQt = []
-		for(var i = 0; i < $('input[name=quantity].epreuveInput').length; i++){
-			totalEpreuveQt.push($('input[name=quantity].epreuveInput')[i].value*1)
+		for(var i = 0; i < $('.epreuveInput').length; i++){
+			totalEpreuveQt.push($('.epreuveInput')[i].value*1)
 		}
 		for (var i = 0; i < totalEpreuveQt.length; i++) {
 			epreuveQt += totalEpreuveQt[i]

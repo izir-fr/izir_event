@@ -122,6 +122,14 @@ app.use('/user', users);
 app.use('/event', events);
 app.use('/catalogue', cart);
 
+// FOREST SET UP
+app.use(require('forest-express-mongoose').init({
+  modelsDir: __dirname + '/models',  // Your models directory.
+  envSecret: process.env.FOREST_ENV_SECRET,
+  authSecret: process.env.FOREST_AUTH_SECRET,
+  mongoose: require('mongoose') // The database connection.
+}));
+
 //404
 app.use(function(req, res, next){
   res.status(404);
@@ -151,14 +159,3 @@ app.listen(app.get('port'), function(){
 	console.log('app on : localhost:' + app.get('port'));
   console.log('==========>');
 });
-
-// FOREST SET UP
-app.use(
-  Liana
-    .init({
-      modelsDir: __dirname + '/models',  // Your models directory.
-      envSecret: process.env.FOREST_ENV_SECRET, //process.env.FOREST_ENV_SECRET,
-      authSecret: process.env.FOREST_AUTH_SECRET, //process.env.FOREST_AUTH_SECRET,
-      mongoose: require('mongoose') // The database connection.
-  })
-);

@@ -354,7 +354,7 @@ router.post('/post-event', function(req, res){
 router.get('/edit/:id', ensureAuthenticated, function(req, res){
 	Event.findOne({_id: req.params.id}, function (err, event) {
 		var event = event
-		var adminId = "5971b08e8fb2911ad069ac88"
+		var adminId = process.env.ADMIN
 		var eventUserId = String(event.author)
 
 		if (req.user.id === eventUserId || req.user.id === adminId) { //propriétaire ou ADMIN

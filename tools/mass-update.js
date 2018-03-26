@@ -4,7 +4,7 @@ var Event = require('../models/event');
 var Order = require('../models/order');
 var User = require('../models/user');
 
-var query = { user : '5971b08e8fb2911ad069ac88' }//solo admin for test
+var query = { user : process.env.ADMIN }//solo admin for test
 
 module.exports = Order.find( query ,(err,res)=>{
   res.forEach((res)=>{

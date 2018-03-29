@@ -28,6 +28,14 @@ var UserSchema = mongoose.Schema({
 		file : { type: String},
 		updated: { type: Date }
 	},
+	
+	//Comptabilité
+	code_etablissement: { type: Number },
+	code_guichet: { type: Number },
+	numero_de_compte: { type: Number },
+	cle_RIB: { type: Number },
+
+	//log
 	created_at : { type: Date, required: true, default: Date.now },
 	updated: { type: Date }//updated: { type: String }
 });

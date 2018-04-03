@@ -678,4 +678,37 @@ router.post('/contacter/:id', function(req, res){
 	});
 })
 
+router.get('/comptabilite/:id', ensureAuthenticated, function(req, res){
+	res.render('user/comptabilite');
+})
+
+router.post('/comptabilite/:id', function(req, res){
+
+	try {
+		var updateUser = {
+			code_etablissement : Number(req.body.code_etablissement),
+			code_guichet : Number(req.body.code_guichet),
+			numero_de_compte : Number(req.body.numero_de_compte),
+			cle_RIB : Number(req.body.cle_RIB),
+			updated: new Date()
+		};
+	} catch(err) {
+		req.flash('error', err);
+		res.redirect('/user/comptabilite/' + req.user.id);
+	}
+
+	console.log(updateUser)
+
+	User.findByIdAndUpdate(req.user.id, updateUser, function(err, user){
+		if(err) {
+			req.flash('error', 'Une erreur est survenue lors de la mise à jour de votre RIB');
+			res.redirect('/user/comptabilite/' + req.user.id);
+		} else {
+			req.flash('success_msg', 'Votre RIB a été mis à jour');
+			res.redirect('/user/profil/' + req.user.id +'/');			
+		}
+	});	
+
+})
+
 module.exports = router;

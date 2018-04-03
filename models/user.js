@@ -17,7 +17,6 @@ var UserSchema = mongoose.Schema({
 	adresse2: { type: String },
 	codePostal : { type: String },
 	city: { type: String },
-	email: { type: String },
 	foneFix: { type: String },
 	fonePort: { type: String },
 	resetPasswordToken: { type: String },

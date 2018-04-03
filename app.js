@@ -26,13 +26,14 @@ var async = require('async'),
 var credentials = require('./routes/credentials')
 
 // MongoDB
+mongoose.Promise = require('bluebird');
 var mongoose = mongoose.connect(credentials.mLab, { useMongoClient: true });
 
 // Routes
 var routes = require('./routes/index'),
-	users = require('./routes/user'),
-	events = require('./routes/event'),
-  cart = require('./routes/cart');
+  	users = require('./routes/user'),
+  	events = require('./routes/event'),
+    cart = require('./routes/cart');
 
 //cutom modules
 var cronConfig = require('./custom_modules/cron');

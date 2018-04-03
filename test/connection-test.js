@@ -7,9 +7,9 @@ var chai = require('chai'),
 chai.use(chaiHttp);
 
 // run API test
-describe("index GET test check", () => {
+describe("Test pages return 200", () => {
 
-  it("#GET /index", (done) => {
+  it.skip("#GET /index", (done) => {
 
     chai.request('http://localhost:3000')
       .get('/')

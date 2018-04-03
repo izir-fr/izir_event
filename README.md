@@ -1,5 +1,3 @@
-[![Build Status](https://travis-ci.org/izir-fr/www.svg?branch=master)](https://travis-ci.org/izir-fr/www)
-
 # Event Izir App
 
 This app use Node.js, Express, Passport and Mongoose.

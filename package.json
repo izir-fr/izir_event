@@ -44,7 +44,7 @@
     "passport": "*",
     "passport-http": "*",
     "passport-local": "*",
-    "pm2": "^2.9.1",
+    "pm2": "^2.10.2",
     "request": "^2.83.0",
     "sib-api-v3-sdk": "^3.0.4",
     "stripe": "^4.24.0",
@@ -53,6 +53,8 @@
   "devDependencies": {
     "chai": "^4.1.2",
     "chai-http": "^3.0.0",
-    "mocha": "^5.0.4"
+    "mocha": "^5.0.4",
+    "sinon": "^4.5.0",
+    "sinon-mongoose": "^2.1.1"
   }
 }

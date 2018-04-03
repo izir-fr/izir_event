@@ -1,0 +1,58 @@
+<div class="header container-fluid">
+	<div class="jumbotron">
+		<h1>Comptabilité</h1>
+	</div>
+</div>
+<div class="container" id="certificat_upload_page">
+	{{#if errors}}
+	      {{#each errors}}
+	        <div class="alert alert-danger">{{msg}}</div>
+	      {{/each}}
+	{{/if}}
+	<form method="post" action="/user/comptabilite/{{user.id}}">
+	    <!-- VALIDITE-->
+	    <div class="row">
+	    	<div class="col-12">
+	    		<h2>RIB</h2>
+	    	</div>
+	    </div>
+	    <div class="row">
+	    	<div class="col-12 mx-auto spacer-sm-bottom spacer-sm-top">
+				<div class="input-group">
+					<div class="input-group-addon">Code établissement *</div>
+					<input type="number" class="form-control"  name="code_etablissement" value="{{user.code_etablissement}}" min="0" step="1" required>
+				</div>
+			</div>
+		</div>
+	    <div class="row">
+	    	<div class="col-12 mx-auto spacer-sm-bottom">					
+				<div class="input-group">
+					<div class="input-group-addon">Code Guichet *</div>
+					<input type="number" class="form-control" name="code_guichet" value="{{user.code_guichet}}" min="0" step="1" required>
+				</div>    		
+	    	</div>
+	    </div>
+	    <div class="row">
+	    	<div class="col-12 mx-auto spacer-sm-bottom">					
+				<div class="input-group">
+					<div class="input-group-addon">Numéro de compte *</div>
+					<input type="number" class="form-control" name="numero_de_compte" value="{{user.numero_de_compte}}" min="0" step="1" required>
+				</div>    		
+	    	</div>
+	    </div>
+	    <div class="row">
+	    	<div class="col-12 mx-auto spacer-sm-bottom">					
+				<div class="input-group">
+					<div class="input-group-addon">Clé RIB *</div>
+					<input type="number" class="form-control" name="cle_RIB" value="{{user.cle_RIB}}" min="0" step="1" required>
+				</div>    		
+	    	</div>
+	    </div>
+	    <div class="row">
+	    	<div class="col-12">
+	    		<button type="submit" class="btn btn-default spacer-sm-top">Enregistrer</button>
+	    	</div>
+	    </div>
+	</form>
+	<p class="legend"><br><em>* Champs obligatoire, pour faire les reversements des sommes collectées, nous avons besoin de votre RIB</em></p>
+</div>

@@ -17,7 +17,6 @@ var UserSchema = mongoose.Schema({
 	adresse2: { type: String },
 	codePostal : { type: String },
 	city: { type: String },
-	email: { type: String },
 	foneFix: { type: String },
 	fonePort: { type: String },
 	resetPasswordToken: { type: String },
@@ -28,6 +27,14 @@ var UserSchema = mongoose.Schema({
 		file : { type: String},
 		updated: { type: Date }
 	},
+
+	//Comptabilité
+	code_etablissement: { type: Number },
+	code_guichet: { type: Number },
+	numero_de_compte: { type: Number },
+	cle_RIB: { type: Number },
+
+	//log
 	created_at : { type: Date, required: true, default: Date.now },
 	updated: { type: Date }//updated: { type: String }
 });

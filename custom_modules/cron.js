@@ -5,7 +5,7 @@ var cron = require("cron"),
     os = require('os');
 
 // Credentials
-var credentials = require('../routes/credentials');
+var credentials = require('../app/config/credentials');
 
 // Cloudinary
 cloudinary.config(credentials.cloudinaryCredits)

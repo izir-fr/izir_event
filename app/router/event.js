@@ -12,12 +12,12 @@ var async = require('async'),
 	urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 // Credentials
-var credentials = require('../routes/credentials')
+var credentials = require('../config/credentials')
 
 //custom modules
-var catList = require('../custom_modules/lists/category-list'),
-	dateList = require('../custom_modules/lists/date-list'),
-	disList = require('../custom_modules/lists/discipline-list');
+var catList = require('../../custom_modules/lists/category-list'),
+	dateList = require('../../custom_modules/lists/date-list'),
+	disList = require('../../custom_modules/lists/discipline-list');
 
 console.log('stripe key : ' + credentials.stripeKey.serveur)
 //STRIPE
@@ -317,7 +317,7 @@ router.get('/finder', (req, res) => {
 						discipline_list : disList
 					}
 
-				res.render('event/finder', data);				
+				res.render('partials/event/finder', data);				
 		})
 	});
 });
@@ -325,7 +325,7 @@ router.get('/finder', (req, res) => {
 //Ajouter un évènement GET
 router.get('/post-event', ensureAuthenticated, function(req, res){
 	var user = req.user
-	res.render('event/post-event', { date_list : dateList, category_list : catList, discipline_list : disList });
+	res.render('partials/event/post-event', { date_list : dateList, category_list : catList, discipline_list : disList });
 });
 
 //Ajouter un évènement POST
@@ -358,9 +358,9 @@ router.get('/edit/:id', ensureAuthenticated, function(req, res){
 		var eventUserId = String(event.author)
 
 		if (req.user.id === eventUserId || req.user.id === adminId) { //propriétaire ou ADMIN
-			res.render('event/edit-event', {event : event, date_list : dateList, category_list : catList, discipline_list : disList})//si la personne est bien la propriétaire
+			res.render('partials/event/edit-event', {event : event, date_list : dateList, category_list : catList, discipline_list : disList})//si la personne est bien la propriétaire
 		} else {
-			res.redirect('/event/finder')//sinon res.render('event/finder')
+			res.redirect('/event/finder')//sinon res.render('partials/event/finder')
 		}
 	})
 });
@@ -394,7 +394,7 @@ router.get('/:id', function(req, res){
 	    }
 	}, function(err, results) {
 		var event = results
-		res.render('event/event-detail', event);
+		res.render('partials/event/event-detail', event);
 	});	
 })
 
@@ -489,7 +489,7 @@ router.get('/inscription/:id', ensureAuthenticated, function(req, res){
 					discipline_list : disList
 				}
 
-		res.render('event/inscription', data);
+		res.render('partials/event/inscription', data);
 	});	
 });
 
@@ -599,7 +599,7 @@ router.get('/checkout/:id', ensureAuthenticated,function(req, res){
 			stripeFrontKey : credentials.stripeKey.front
 		}
 		//console.log(data)
-		res.render('event/checkout', {data : data})
+		res.render('partials/event/checkout', {data : data})
 	})
 })
 

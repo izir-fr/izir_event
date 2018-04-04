@@ -12,7 +12,7 @@ var async = require('async'),
 	json2csv = require('json2csv');
 
 // Credentials
-var credentials = require('../routes/credentials');
+var credentials = require('../config/credentials');
 
 // Models
 var	Event = require('../models/event'),
@@ -21,8 +21,8 @@ var	Event = require('../models/event'),
 	urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 //custom modules
-var catList = require('../custom_modules/lists/category-list'),
-	dateList = require('../custom_modules/lists/date-list');
+var catList = require('../../custom_modules/lists/category-list'),
+	dateList = require('../../custom_modules/lists/date-list');
 
 var ensureAuthenticated = (req, res, next) => {
 	if(req.isAuthenticated()){
@@ -47,7 +47,7 @@ START APP =>
 
 // Register
 router.get('/register', function(req, res){
-	res.render('user/register');
+	res.render('partials/user/register');
 });
 
 // Login
@@ -55,7 +55,7 @@ router.get('/login', function(req, res){
 	if(req.user){
 		res.redirect('profil/' + req.user.id +'/');
 	} else {
-		res.render('user/login');
+		res.render('partials/user/login');
 	}
 	
 });
@@ -66,12 +66,12 @@ router.get('/profil', ensureAuthenticated, urlencodedParser, function(req, res){
 	res.redirect('/user/profil/' + user.id +'/');
 });
 router.get('/profil/:id', ensureAuthenticated, urlencodedParser, function(req, res){
-		res.render('user/profil');
+		res.render('partials/user/profil');
 });
 
 //Lost Password GET
 router.get('/password-forgot', function(req, res){
-	res.render('user/password-forgot');
+	res.render('partials/user/password-forgot');
 });
 
 // Register User
@@ -86,7 +86,7 @@ router.post('/register', function(req, res){
 		var password = req.body.password;
 		var password2 = req.body.password2;
 	} catch (err) {
-		res.render('user/register', {error : err});
+		res.render('partials/user/register', {error : err});
 	}
 
 	var tests = [
@@ -117,7 +117,7 @@ router.post('/register', function(req, res){
 	var createAction = (errors)=>{
 		if(errors){
 			//console.log(errors)
-			res.render('user/register', {error : errors});
+			res.render('partials/user/register', {error : errors});
 		} else {
 			var newUser = new User({
 				name: name,
@@ -266,7 +266,7 @@ router.get('/reset/:token', function(req, res){
 	    } else {
 	    	var data = {user: user, resetPasswordToken: user.resetPasswordToken};
 	    	console.log(data)
-			res.render('user/reset', data);
+			res.render('partials/user/reset', data);
 		} 
   	});
 });
@@ -294,7 +294,7 @@ router.post('/reset/:token', function(req, res) {
 		var errors = req.validationErrors();
 
 		if(errors){
-			res.render('reset',{
+			res.render('partials/reset',{
 				error : errors
 		})} else {
 	        user.password = hash
@@ -356,7 +356,7 @@ router.get('/edit-profil/:id',ensureAuthenticated, function(req, res){
 			//console.log(user)
 
 			//console.log(data)
-			res.render('user/edit-profil', { data : data,  date_list : dateList, category_list : catList })
+			res.render('partials/user/edit-profil', { data : data,  date_list : dateList, category_list : catList })
 		})
 	} else {
 		res.redirect('/user/profil/' + req.user.id +'/')
@@ -405,7 +405,7 @@ router.post('/edit-profil/:id', function(req, res){
 router.get('/inscriptions/:id',ensureAuthenticated, function(req, res){
 	Order.find({user: req.user.id}).populate('event').exec(function(err, orders){
 		var orders = orders
-		res.render('user/recap-inscriptions', {orders : orders})
+		res.render('partials/user/recap-inscriptions', {orders : orders})
 	})
 });
 
@@ -413,7 +413,7 @@ router.get('/inscriptions/:id',ensureAuthenticated, function(req, res){
 router.get('/epreuves/:id',ensureAuthenticated, function(req, res){
 	Event.find({author: req.user.id}, function (err, event) {
 		var event = event
-		res.render('organisateurs/event-list', {event : event})
+		res.render('partials/organisateurs/event-list', {event : event})
 	})
 });
 
@@ -428,7 +428,7 @@ router.get('/gerer/:id', ensureAuthenticated, function(req, res){
 	    }
 	}, function(err, results) {
 		var event = results
-		res.render('organisateurs/gerer', event);
+		res.render('partials/organisateurs/gerer', event);
 	});	
 })
 
@@ -561,7 +561,7 @@ router.get('/file/:id.csv', ensureAuthenticated, function(req, res){
 
 //Inviter des amis
 router.get('/certificat/:id', ensureAuthenticated, function(req, res){
-	res.render('user/certificat');
+	res.render('partials/user/certificat');
 })
 
 router.post('/certificat/:id', function(req, res){
@@ -601,7 +601,7 @@ router.post('/certificat/:id', function(req, res){
 
 //Inviter des amis
 router.get('/amis', ensureAuthenticated, function(req, res){
-	res.render('user/amis');
+	res.render('partials/user/amis');
 })
 
 //Inviter des amis
@@ -648,10 +648,10 @@ router.get('/logout', function(req, res){
 router.get('/contacter/:id', ensureAuthenticated, function(req, res){
 	Order.findById(req.params.id).populate('event').exec((err, data)=>{
 		if(err) {
-			res.render('user/profil/' + req.user.id, {error : errors});
+			res.render('partials/user/profil/' + req.user.id, {error : errors});
 		} else {
 			var data = {data}
-			res.render('organisateurs/contacter', data);			
+			res.render('partials/organisateurs/contacter', data);			
 		}
 	})
 })
@@ -679,7 +679,7 @@ router.post('/contacter/:id', function(req, res){
 })
 
 router.get('/comptabilite/:id', ensureAuthenticated, function(req, res){
-	res.render('user/comptabilite');
+	res.render('partials/user/comptabilite');
 })
 
 router.post('/comptabilite/:id', function(req, res){

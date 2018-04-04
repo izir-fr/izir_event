@@ -23,17 +23,17 @@ var async = require('async'),
     MongoStore = require('connect-mongo')(session);
 
 // Credentials
-var credentials = require('./routes/credentials')
+var credentials = require('./app/config/credentials')
 
 // MongoDB
 mongoose.Promise = require('bluebird');
 var mongoose = mongoose.connect(credentials.mLab, { useMongoClient: true });
 
-// Routes
-var routes = require('./routes/index'),
-  	users = require('./routes/user'),
-  	events = require('./routes/event'),
-    cart = require('./routes/cart');
+// Router
+var cms = require('./app/router/cms'),
+  	users = require('./app/router/user'),
+  	events = require('./app/router/event'),
+    cart = require('./app/router/cart');
 
 //cutom modules
 var cronConfig = require('./custom_modules/cron');
@@ -48,14 +48,16 @@ app.use(redirectToHTTPS([/localhost:3000/]));
 
 // Handlebars
 var hbs = exphbs.create({
-  defaultLayout:'layout',
+  defaultLayout:'main',
+  layoutsDir:'app/views/layouts',
+  partialsDir:'app/views/partials',
   helpers: {
       date: (val) => { return val.getDate() + '/' + (parseInt(val.getMonth())+1) + '/' + val.getFullYear() }
     }
 });
 
 app.engine('handlebars', hbs.engine);
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname, '/app/views/'));
 app.set('view engine', 'handlebars');
 
 // BodyParser Middleware
@@ -68,7 +70,7 @@ app.use(cookieParser());
 app.use(helmet())
 
 // Set Static Folder
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'assets/public')));
 
 // Express Session
 app.use(session({
@@ -118,14 +120,14 @@ app.use(function (req, res, next) {
   next();
 });
 
-app.use('/', routes);
+app.use('/', cms);
 app.use('/user', users);
 app.use('/event', events);
 app.use('/catalogue', cart);
 
 // FOREST SET UP
 app.use(require('forest-express-mongoose').init({
-  modelsDir: __dirname + '/models',  // Your models directory.
+  modelsDir: __dirname + '/app/models',  // Your models directory.
   envSecret: process.env.FOREST_ENV_SECRET,
   authSecret: process.env.FOREST_AUTH_SECRET,
   mongoose: require('mongoose') // The database connection.
@@ -137,7 +139,7 @@ app.use(function(req, res, next){
 
   // respond with html page
   if (req.accepts('html')) {
-    res.render('404', { url: req.url });
+    res.render('partials/404', { url: req.url });
     return;
   }
 

@@ -7,7 +7,7 @@ var Product = require('../models/product'),
 router.get('/', (req, res)=>{
 	Product.find({published: {$ne: false}})
 		.exec(function(err, products){
-			res.render('shop/catalogue', {products: products})
+			res.render('partials/shop/catalogue', {products: products})
 		})
 })
 
@@ -77,7 +77,7 @@ router.get('/produit/:id',(req,res)=>{
 	Product.findById(req.params.id,(err, produit)=>{
 		var produit = produit
 		if(produit.published) {
-			res.render('shop/produit', {product : produit})			
+			res.render('partials/shop/produit', {product : produit})			
 		} else {
 			res.redirect('/catalogue/')
 		}
@@ -87,10 +87,10 @@ router.get('/produit/:id',(req,res)=>{
 
 router.get('/panier',(req, res)=>{
 	if(!req.session.cart){
-		return res.render('shop/panier', {products: null})
+		return res.render('partials/shop/panier', {products: null})
 	}
 	var cart = new Cart(req.session.cart)
-	res.render('shop/panier', {products: cart.generateArray(), totalPrice: cart.totalPrice})
+	res.render('partials/shop/panier', {products: cart.generateArray(), totalPrice: cart.totalPrice})
 })
 
 module.exports = router;

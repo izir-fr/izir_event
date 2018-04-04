@@ -5,7 +5,7 @@ var expect = chai.expect;
 var mongoose = require('mongoose');
 require('sinon-mongoose');
 
-var User = require('../models/user.js');
+var User = require('../app/models/user.js');
 
 describe("Get all user", () => {
 

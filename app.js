@@ -31,9 +31,11 @@ var mongoose = mongoose.connect(credentials.mLab, { useMongoClient: true });
 
 // Router
 var cms = require('./app/router/cms'),
-  	users = require('./app/router/user'),
+  	users = require('./app/router/userRoutes'),
   	events = require('./app/router/event'),
-    cart = require('./app/router/cart');
+    cart = require('./app/router/cart'),
+    registration = require('./app/router/registration'),
+    organisateur = require('./app/router/organisateur');
 
 //cutom modules
 var cronConfig = require('./custom_modules/cron');
@@ -124,6 +126,8 @@ app.use('/', cms);
 app.use('/user', users);
 app.use('/event', events);
 app.use('/catalogue', cart);
+app.use('/inscription', registration);
+app.use('/organisateur', organisateur);
 
 // FOREST SET UP
 app.use(require('forest-express-mongoose').init({

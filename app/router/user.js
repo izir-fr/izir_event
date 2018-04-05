@@ -16,7 +16,7 @@ var credentials = require('../config/credentials');
 
 // Models
 var	Event = require('../models/event'),
-	Order = require('../models/order'),
+	Registration = require('../models/registration'),
 	User = require('../models/user'),
 	urlencodedParser = bodyParser.urlencoded({ extended: false });
 
@@ -403,9 +403,9 @@ router.post('/edit-profil/:id', function(req, res){
 
 //Vue des inscriptions
 router.get('/inscriptions/:id',ensureAuthenticated, function(req, res){
-	Order.find({user: req.user.id}).populate('event').exec(function(err, orders){
-		var orders = orders
-		res.render('partials/user/recap-inscriptions', {orders : orders})
+	Registration.find({user: req.user.id}).populate('event').exec(function(err, registrations){
+		var registrations = registrations
+		res.render('partials/user/recap-inscriptions', {registrations : registrations})
 	})
 });
 
@@ -424,7 +424,7 @@ router.get('/gerer/:id', ensureAuthenticated, function(req, res){
 	    	Event.findById(req.params.id).exec(next)
 	    },
 	    participants: function(next) {
-	        Order.find({event: req.params.id}).populate('user').exec(next)
+	        Registration.find({event: req.params.id}).populate('user').exec(next)
 	    }
 	}, function(err, results) {
 		var event = results
@@ -439,7 +439,7 @@ router.get('/file/:id.csv', ensureAuthenticated, function(req, res){
 	    	Event.findById(req.params.id).exec(next)
 	    },
 	    participants: function(next) {
-	        Order.find({event: req.params.id}).populate('user').exec(next)
+	        Registration.find({event: req.params.id}).populate('user').exec(next)
 	    }
 	}, function(err, results) {
 		var event = results.participants
@@ -646,7 +646,7 @@ router.get('/logout', function(req, res){
 
 //Contacter par email un participant
 router.get('/contacter/:id', ensureAuthenticated, function(req, res){
-	Order.findById(req.params.id).populate('event').exec((err, data)=>{
+	Registration.findById(req.params.id).populate('event').exec((err, data)=>{
 		if(err) {
 			res.render('partials/user/profil/' + req.user.id, {error : errors});
 		} else {

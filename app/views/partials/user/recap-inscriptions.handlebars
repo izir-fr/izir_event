@@ -4,7 +4,7 @@
 	</div>
 </div>
 <div class="container-fluid">
-	{{#if orders}}
+	{{#if registrations}}
 	<div class="row">
 		<div class="col-12">
 			<table class="table">
@@ -21,7 +21,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					{{#each orders}}
+					{{#each registrations }}
 					    <tr class="text-lowercase">
 					    	<td>{{date this.created_at}}</td>
 					    	<td>{{this.id}}</td>

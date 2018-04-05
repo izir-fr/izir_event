@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 // Event Schema
-var orderSchema = mongoose.Schema({
+var registrationSchema = mongoose.Schema({
 	user: { type: Schema.ObjectId, ref:'User', required: true },
 	event : { type: Schema.ObjectId, ref:'Event', required: true },
 	eventName : { type: String },
@@ -52,4 +52,4 @@ var orderSchema = mongoose.Schema({
 	updated: { type: Date }
 });
 
-var Order = module.exports = mongoose.model('Order', orderSchema);
+var Registration = module.exports = mongoose.model('Registration', registrationSchema);

@@ -28,7 +28,7 @@ var smtpTransport = nodemailer.createTransport(credentials.smtpCredits);
 
 //Mongoose Models
 var Event = require('../models/event');
-var Order = require('../models/order');
+var Registration = require('../models/registration');
 var User = require('../models/user');
 
 //Date
@@ -274,7 +274,7 @@ router.get('/finder', (req, res) => {
 			    	Event.find().exec(next)
 			    },
 			    participants: (next) => {
-			        Order.find().exec(next)
+			        Registration.find().exec(next)
 			    }
 			}, (err, results) => {
 				var eventFromIzir = results.event
@@ -390,7 +390,7 @@ router.get('/:id', function(req, res){
 	    	Event.findById(req.params.id).exec(next)
 	    },
 	    participants: function(next) {
-	        Order.find({event: req.params.id}).populate('user').exec(next)
+	        Registration.find({event: req.params.id}).populate('user').exec(next)
 	    }
 	}, function(err, results) {
 		var event = results
@@ -405,7 +405,7 @@ router.get('/inscription/:id', ensureAuthenticated, function(req, res){
 	    	Event.findById(req.params.id).exec(next)
 	    },
 	    participants: function(next) {
-	        Order.find({event: req.params.id}).exec(next)
+	        Registration.find({event: req.params.id}).exec(next)
 	    }
 	}, function(err, results) {
 		var jourNaissance,
@@ -526,7 +526,7 @@ router.post('/pre-inscription/:id', function(req, res){
 	//console.log(produits)
 
 	//création de la pré-commande
-	var order = new Order ({
+	var registration = new Registration ({
 	        		user : req.user.id,//user
 					event : req.params.id,//event
 					eventName : req.body.eventName,
@@ -552,30 +552,30 @@ router.post('/pre-inscription/:id', function(req, res){
 					},
 					updated: new Date()
 				});
-	//console.log(order)
+	//console.log(registration)
 	
 	//enregistrement de la pré-commande
-	order.save(function(err, order){
+	registration.save(function(err, registration){
 		if(err) throw err;
 
 		//Configuration du mail
 		var mailOptions = {
-			to: order.participant.email,
+			to: registration.participant.email,
 			from: 'Nicolas de izir.fr <event@izir.fr>',
-			subject: 'Confirmation de pré-inscription N° ' + order.id + 'à ' + order.eventName,
+			subject: 'Confirmation de pré-inscription N° ' + registration.id + 'à ' + registration.eventName,
 			text: 'Bonjour,\n\n' +
-			'vous venez de vous pré-inscrire à l\'épreuve ' + order.eventName +' .\n\n' +
+			'vous venez de vous pré-inscrire à l\'épreuve ' + registration.eventName +' .\n\n' +
 			'Voici les informations sur le participant transmises à l\'organisateur : \n\n' +
-			' - Nom : ' + order.participant.nom + '.\n' +
-			' - Prénom : ' + order.participant.prenom + '.\n' +
-			' - Email : ' + order.participant.email + '.\n\n' +
-			' - Date de naissance : ' + order.participant.dateNaissance + '.\n' +
-			' - Team : ' + order.participant.team + '.\n' +
-			' - Sex : ' + order.participant.sex + '.\n' +
-			' - Numéro de Licence : ' + order.participant.numLicence + '.\n' +
-			' - Categorie : ' + order.participant.categorie + '.\n' +
-			' - Adresse : ' + order.participant.adresse1 + ' ' + order.participant.adresse2 + ' ' + order.participant.codePostal + ' ' + order.participant.city + '.\n\n' +
-			'Pour le bien de l\'organisation et afin de garantir votre inscription, n\'oubliez pas d\'effectuer votre règlement en ligne en suivant ce lien http://event.izir.fr/event/checkout/' + order.id + '\n\n' +
+			' - Nom : ' + registration.participant.nom + '.\n' +
+			' - Prénom : ' + registration.participant.prenom + '.\n' +
+			' - Email : ' + registration.participant.email + '.\n\n' +
+			' - Date de naissance : ' + registration.participant.dateNaissance + '.\n' +
+			' - Team : ' + registration.participant.team + '.\n' +
+			' - Sex : ' + registration.participant.sex + '.\n' +
+			' - Numéro de Licence : ' + registration.participant.numLicence + '.\n' +
+			' - Categorie : ' + registration.participant.categorie + '.\n' +
+			' - Adresse : ' + registration.participant.adresse1 + ' ' + registration.participant.adresse2 + ' ' + registration.participant.codePostal + ' ' + registration.participant.city + '.\n\n' +
+			'Pour le bien de l\'organisation et afin de garantir votre inscription, n\'oubliez pas d\'effectuer votre règlement en ligne en suivant ce lien http://event.izir.fr/event/checkout/' + registration.id + '\n\n' +
 			'Bonne course !\n\n' +
 			'Nicolas de izir.fr'
 			}
@@ -583,19 +583,19 @@ router.post('/pre-inscription/:id', function(req, res){
 		smtpTransport.sendMail(mailOptions);
 
 		req.flash('success_msg', 'Votre pré-inscription à bien été prise en compte');
-		res.redirect('/event/checkout/' + order.id)
+		res.redirect('/event/checkout/' + registration.id)
 	});
 	
 });
 
 //Paiement d'une commande GET
 router.get('/checkout/:id', ensureAuthenticated,function(req, res){
-	Order.find({_id: req.params.id}).populate('event').exec(function(err, order){
-		var order = order
-		//console.log(order)
+	Registration.find({_id: req.params.id}).populate('event').exec(function(err, registration){
+		var registration = registration
+		//console.log(registration )
 		var data = {
-			order: order[0],
-			stripe : parseInt(order[0].orderAmount * 100 + 50),
+			registration: registration[0],
+			stripe : parseInt(registration[0].orderAmount * 100 + 50),
 			stripeFrontKey : credentials.stripeKey.front
 		}
 		//console.log(data)
@@ -624,8 +624,8 @@ router.post('/checkout/:id', function(req, res){
             req.flash('error', 'Une erreure est survenue lors du paiement')
         } else {
 
-        	//UPDATE order.statut : "payé" + paiementCaptured
-        	Order.update({_id : req.params.id},
+        	//UPDATE registration.statut : "payé" + paiementCaptured
+        	Registration.update({_id : req.params.id},
         		{$set : {
         			"statut" : "inscrit",
         			"paiement": { 

@@ -35,7 +35,7 @@ var cms = require('./app/router/cms'),
   	events = require('./app/router/event'),
     cart = require('./app/router/cart'),
     registration = require('./app/router/registration'),
-    organisateur = require('./app/router/organisateur');
+    organisateur = require('./app/router/organisateurRoutes');
 
 //cutom modules
 var cronConfig = require('./custom_modules/cron');

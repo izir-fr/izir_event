@@ -72,11 +72,11 @@
                 <h3><i class="fa fa-user-circle"></i> Participant</h3>
                 <ul>
                   <li class="spacer-xs-top"><a href="/event/finder">S'incrire à une épreuve</a></li>
-                  <li><a class="spacer-xs-top" href="/user/inscriptions/{{user.id}}/">Mes inscriptions</a></li>
+                  <li><a class="spacer-xs-top" href="/inscription/{{user.id}}/">Mes inscriptions</a></li>
                   <li><a class="spacer-xs-top" href="http://www.runnerbreizh.fr/coureur.php?CoureurNom={{user.surname}}&CoureurPrenom={{user.name}}" target="_blank">Mes classements</a></li>
                   <li><a class="spacer-xs-top" href="/user/certificat/{{user.id}}/">Mon certificat médical</a></li>
                   <li><a class="spacer-xs-top" href="/user/amis">Inviter des amis</a></li>
-                  <li><a href="/user/edit-profil/{{user.id}}/">Editer mon profil</a></li>
+                  <li><a href="/user/profil/edit/{{user.id}}/">Editer mon profil</a></li>
                   <li><a href="/user/password-forgot">Mot de passe</a></li>
                 </ul>
               </div>
@@ -84,8 +84,8 @@
                 <h3 class=""><i class="fa fa-calendar-check-o" ></i></i> Organisateur</h3>
                 <ul>
                   <li class="spacer-xs-top"><a href="/event/post-event">Ajouter un évènement</a></li>
-                  <li><a href="/user/epreuves/{{user.id}}">Mes évènements</a></li>
-                  <li><a href="/user/comptabilite/{{user.id}}">Comptabilité</a></li>
+                  <li><a href="/organisateur/epreuves">Mes évènements</a></li>
+                  <li><a href="/organisateur/comptabilite/{{user.id}}">Comptabilité</a></li>
                 </ul>
               </div>
             </div>

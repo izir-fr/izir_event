@@ -29,12 +29,13 @@ var EventSchema = mongoose.Schema({
 				moisDebut: { type: Number },
 				anneeDebut: { type: Number },
 				heureDebut: { type: Number },
-				minuteDebut: { type: Number },	
+				minuteDebut: { type: Number }
 			},		
 			tarif : { type: Number },
 			distance : { type: Number },
 			denivele : { type: Number },
 			placesDispo : { type: Number },
+			date_debut : { type: Date }
 		},
 	],
 	docs : {
@@ -44,21 +45,22 @@ var EventSchema = mongoose.Schema({
 	options : [
 		{
 			reference: { type: String },
-			prix: { type: Number },
+			prix: { type: Number }
 		},
 	],
+	date_cloture : { type: Date},
 	inscriptionCloture : {
 		jourCloture: { type: Number },
 		moisCloture: { type: Number },
 		anneeCloture: { type: Number },
 		heureCloture: { type: Number },
-		minuteCloture: { type: Number },	
+		minuteCloture: { type: Number }
 	},
 	permanence :{
 		email: { type: String },
 		telephone: { type: String },
 		siteWeb: { type: String },
-		facebook: { type: String },
+		facebook: { type: String }
 	},
 	funds_repaid: { type: Boolean, default: false },
 	source :  { type: String },

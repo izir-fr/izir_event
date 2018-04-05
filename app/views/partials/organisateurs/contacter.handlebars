@@ -9,7 +9,7 @@
 	        <div class="alert alert-danger">{{msg}}</div>
 	      {{/each}}
 	{{/if}}
-	<form method="post" action="/user/contacter/{{data.id}}">
+	<form method="post" action="/organisateur/contacter/{{data.id}}">
 		<input type="hidden" value="{{data.event.id}}" name="event_id">
 		<input type="hidden" value="{{data.participant.email}}" name="email_participant">
 		<input type="hidden" value="{{data.participant.prenom}}" name="prenom_participant">

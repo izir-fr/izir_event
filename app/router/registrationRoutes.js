@@ -20,27 +20,27 @@ var ensureAuthenticated = (req, res, next) => {
 }
 
 // Get a pre-inscription form
-router.get('/recap/user/:id', ensureAuthenticated, registrationCtrl.getPreinscription );
+router.get('/recap/user/:id', ensureAuthenticated, registrationCtrl.getRecapUser  );
 
 // Post a pre-inscription
-router.get('/recap/organisateur/:id', ensureAuthenticated, registrationCtrl.postPreinscription )
+router.get('/recap/organisateur/:id', ensureAuthenticated, registrationCtrl.getRecapOrganisateur )
 
 // Get checkout form
-router.get('/file/excel/:id', ensureAuthenticated, registrationCtrl.getCheckout )
+router.get('/file/excel/:id', ensureAuthenticated, registrationCtrl.getFileExcell )
 
 // Post a checkout
-router.get('/file/gmcap/:id', ensureAuthenticated, registrationCtrl.postCheckout )
+router.get('/file/gmcap/:id', ensureAuthenticated, registrationCtrl.getFileGmcap )
 
 // Get user all inscription recap
-router.get('/pre-inscription/:id', ensureAuthenticated, registrationCtrl.getRecapUser );
+router.get('/pre-inscription/:id', ensureAuthenticated, registrationCtrl.getPreinscription);
 
 // Get organisateur a recap
-router.post('/pre-inscription/:id', registrationCtrl.getRecapOrganisateur );
+router.post('/pre-inscription/:id', registrationCtrl.postPreinscription );
 
 // Get a file excell
-router.get('/checkout/:id', ensureAuthenticated, registrationCtrl.getFileExcell )
+router.get('/checkout/:id', ensureAuthenticated, registrationCtrl.getCheckout )
 
 // Get a file GmCAP
-router.post('/checkout/:id', registrationCtrl.getFileGmcap )
+router.post('/checkout/:id', registrationCtrl.postCheckout )
 
 module.exports = router;

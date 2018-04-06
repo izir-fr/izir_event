@@ -1,7 +1,5 @@
 var express = require('express'),
 	router = express.Router(),
-	//passport = require('passport'),
-	//LocalStrategy = require('passport-local').Strategy,
 	bodyParser = require('body-parser'),
 	urlencodedParser = bodyParser.urlencoded({ extended: false });
 

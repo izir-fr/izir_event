@@ -34,7 +34,7 @@ var cms = require('./app/router/cmsRoutes'),
   	users = require('./app/router/userRoutes'),
   	events = require('./app/router/eventRoutes'),
     cart = require('./app/router/cart'),
-    registration = require('./app/router/registration'),
+    registration = require('./app/router/registrationRoutes'),
     organisateur = require('./app/router/organisateurRoutes');
 
 //cutom modules

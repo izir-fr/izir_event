@@ -1,5 +1,6 @@
 var async = require('async'),
 	bodyParser = require('body-parser'),
+	Promise = require('bluebird'),
 	bcrypt = require('bcryptjs'),
 	crypto = require('crypto'),
 	express = require('express'),
@@ -7,18 +8,32 @@ var async = require('async'),
 	LocalStrategy = require('passport-local').Strategy,
 	router = express.Router(),
 	SibApiV3Sdk = require('sib-api-v3-sdk'),
+	mongoose = require('mongoose'),
 	nodemailer = require('nodemailer'),
+	path = require('path'),
 	passport = require('passport'),
-	json2csv = require('json2csv');
+	request = require("request"),
+	json2csv = require('json2csv'),
+	urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 // Credentials
 var credentials = require('../config/credentials');
 
+//custom modules
+var catList = require('../../custom_modules/lists/category-list'),
+	dateList = require('../../custom_modules/lists/date-list'),
+	disList = require('../../custom_modules/lists/discipline-list');
+
+console.log('stripe key : ' + credentials.stripeKey.serveur)
+//STRIPE
+var stripe = require('stripe')(credentials.stripeKey.serveur);
+//Email config
+var smtpTransport = nodemailer.createTransport(credentials.smtpCredits);
+
 // Models
 var	Event = require('../models/event'),
 	Registration = require('../models/registration'),
-	User = require('../models/user'),
-	urlencodedParser = bodyParser.urlencoded({ extended: false });
+	User = require('../models/user');
 
 //custom modules
 var catList = require('../../custom_modules/lists/category-list'),
@@ -316,6 +331,273 @@ router.get('/file/gmcap/:id', ensureAuthenticated, function(req, res){
 	    	res.redirect('/user/gerer/' + req.user.id );
 		}
 	});	
+})
+
+
+//inscription à un évènement GET
+router.get('/pre-inscription/:id', ensureAuthenticated, function(req, res){
+	async.parallel({
+	    event: function(next) {
+	    	Event.findById(req.params.id).exec(next)
+	    },
+	    participants: function(next) {
+	        Registration.find({event: req.params.id}).exec(next)
+	    }
+	}, function(err, results) {
+		var jourNaissance,
+			moisNaissance,
+			anneeNaissance,
+			produisParticipant = results.participants,
+			maxParticipant = results.event.epreuves
+			allProduits = [],
+			uniqueProduit = [];
+			
+
+		if(req.user.birthday !== ""){
+			try{
+				jourNaissance = req.user.birthday.split('/')[0]
+				moisNaissance = req.user.birthday.split('/')[1]
+				anneeNaissance = req.user.birthday.split('/')[2]	
+			} catch(err){
+				jourNaissance = ""
+				moisNaissance = ""
+				anneeNaissance = ""
+			}
+			
+		} else {
+			jourNaissance = ""
+			moisNaissance = ""
+			anneeNaissance = ""
+		}
+
+		////Single epreuve init participants
+		maxParticipant.forEach((val)=>{
+			var epreuve = {
+				name : val.name,
+				max : val.placesDispo,
+				quantity : 0,
+				tarif : val.tarif,
+				active : true
+			}
+			uniqueProduit.push(epreuve)
+		})		
+
+		//allProduits create
+		produisParticipant.forEach((val)=>{
+			var details = val.produits
+			details.forEach((val)=>{
+				if(val.produitsSubTotal > 0){
+					allProduits.push(val.produitsRef)
+				}
+			})
+		})
+
+		//uniqueProduit calc
+		allProduits.forEach((val)=>{
+			var unique = uniqueProduit.find((element)=>{
+				if (element.name === val){
+					return true
+				}
+			})
+			if(unique !== undefined){
+				uniqueProduit.forEach((single)=>{
+					if(single.name === val){
+						single.quantity = single.quantity+1
+					}
+				})
+			}
+		})
+
+		uniqueProduit.forEach((val)=>{
+			if(val.quantity >= val.max){
+				val.active = false
+			}
+		})
+
+		var data = {
+					results : results,
+					jourNaissance : jourNaissance,
+					moisNaissance : moisNaissance,
+					anneeNaissance : anneeNaissance,
+					disponibility : uniqueProduit,
+					date_list : dateList,
+					category_list : catList,
+					discipline_list : disList
+				}
+
+		res.render('partials/registration/pre-inscription', data);
+	});	
+});
+
+//inscription à un évènement POST
+router.post('/pre-inscription/:id', function(req, res){
+	var produits = [],
+	ref = req.body.ref,
+	tarif = req.body.tarif,
+	quantity = req.body.quantity,
+	subtotal = req.body.subtotal
+	//console.log(ref)
+
+	//ajout des produits dans la commande
+	if(subtotal.constructor === Array) {
+		for(var i = 0; i < ref.length; i++) {
+			//console.log(ref[i])
+			var option = {
+				produitsRef : ref[i],
+				produitsPrix : tarif[i],
+				produitsQuantite : quantity[i],
+				produitsSubTotal : subtotal[i]
+			}
+			produits.push(option)
+		}
+	} else {
+		var option = {
+			produitsRef : ref,
+			produitsPrix : tarif,
+			produitsQuantite : quantity,
+			produitsSubTotal : subtotal
+		}
+		produits.push(option)
+	}
+	//console.log(produits)
+
+	//création de la pré-commande
+	var registration = new Registration ({
+	        		user : req.user.id,//user
+					event : req.params.id,//event
+					eventName : req.body.eventName,
+					participant: {
+						nom : req.body.surname,
+						prenom : req.body.name,
+						email : req.body.email,
+						sex : req.body.sex,
+						dateNaissance: req.body.jourNaissance + '/' + req.body.moisNaissance + '/' + req.body.anneeNaissance,
+						team : req.body.team,
+						numLicence : req.body.numLicence,
+						categorie : req.body.categorie,
+						adresse1 : req.body.adresse1,
+						adresse2 : req.body.adresse2,
+						codePostal : req.body.codePostal,
+						city : req.body.city 
+					},
+					produits : produits,//toute le pack
+					orderAmount : req.body.total,
+					statut : "pré-inscrit",
+					docs : {
+						certificat : req.body.certificats,
+					},
+					updated: new Date()
+				});
+	//console.log(registration)
+	
+	//enregistrement de la pré-commande
+	registration.save(function(err, registration){
+		if(err) throw err;
+
+		//Configuration du mail
+		var mailOptions = {
+			to: registration.participant.email,
+			from: 'Nicolas de izir.fr <event@izir.fr>',
+			subject: 'Confirmation de pré-inscription N° ' + registration.id + 'à ' + registration.eventName,
+			text: 'Bonjour,\n\n' +
+			'vous venez de vous pré-inscrire à l\'épreuve ' + registration.eventName +' .\n\n' +
+			'Voici les informations sur le participant transmises à l\'organisateur : \n\n' +
+			' - Nom : ' + registration.participant.nom + '.\n' +
+			' - Prénom : ' + registration.participant.prenom + '.\n' +
+			' - Email : ' + registration.participant.email + '.\n\n' +
+			' - Date de naissance : ' + registration.participant.dateNaissance + '.\n' +
+			' - Team : ' + registration.participant.team + '.\n' +
+			' - Sex : ' + registration.participant.sex + '.\n' +
+			' - Numéro de Licence : ' + registration.participant.numLicence + '.\n' +
+			' - Categorie : ' + registration.participant.categorie + '.\n' +
+			' - Adresse : ' + registration.participant.adresse1 + ' ' + registration.participant.adresse2 + ' ' + registration.participant.codePostal + ' ' + registration.participant.city + '.\n\n' +
+			'Pour le bien de l\'organisation et afin de garantir votre inscription, n\'oubliez pas d\'effectuer votre règlement en ligne en suivant ce lien http://event.izir.fr/event/checkout/' + registration.id + '\n\n' +
+			'Bonne course !\n\n' +
+			'Nicolas de izir.fr'
+			}
+		//envoie du mail
+		smtpTransport.sendMail(mailOptions);
+
+		req.flash('success_msg', 'Votre pré-inscription à bien été prise en compte');
+		res.redirect('/inscription/checkout/' + registration.id)
+	});
+	
+});
+
+//Paiement d'une commande GET
+router.get('/checkout/:id', ensureAuthenticated,function(req, res){
+	Registration.find({_id: req.params.id}).populate('event').exec(function(err, registration){
+		var registration = registration
+		//console.log(registration )
+		var data = {
+			registration: registration[0],
+			stripe : parseInt(registration[0].orderAmount * 100 + 50),
+			stripeFrontKey : credentials.stripeKey.front
+		}
+		//console.log(data)
+		res.render('partials/registration/checkout', {data : data})
+	})
+})
+
+//Paiement d'une commande POST
+router.post('/checkout/:id', function(req, res){
+	var stripeCheckout = {
+		amount: req.body.stripe,
+		currency: 'eur',
+		description: req.body.event,
+		source: req.body.stripeToken
+	}
+	//console.log(stripeCheckout)
+
+	//STIPE
+	var charge = stripe.charges.create(
+		stripeCheckout,
+    function(err, charge) {
+    	//console.log(charge)
+    	
+        if (err) {
+        	res.redirect('/user/profil/')
+            req.flash('error', 'Une erreure est survenue lors du paiement')
+        } else {
+
+        	//UPDATE registration.statut : "payé" + paiementCaptured
+        	Registration.update({_id : req.params.id},
+        		{$set : {
+        			"statut" : "inscrit",
+        			"paiement": { 
+        				"amount" : charge.amount,
+						"captured": charge.captured,
+						"id" : charge.id,
+						"object" : charge.object,
+						"date" : charge.created
+						}
+        		}}, function(err, user){
+				if(err) {
+					res.redirect('/user/profil/')
+					req.flash('error', 'Une erreure est survenue lors du paiement')
+				} else {
+					//console.log(user)
+					//EMAIL NOTIFICATION
+					smtpTransport
+					var mailOptions = {
+						to: req.user.email,
+						from: 'Event Izir <event@izir.fr>',
+						subject: 'Confirmation de paiement et d\'inscription N° ' + req.params.id + ' à l\'épreuve ' + req.body.event,
+						text: 	'Nous avons le plaisir de vous confirmer que votre paiement a bien été pris en compte. \n\n' + 
+								'Vous venez donc de finaliser votre incription N°' + req.params.id + ' pour l\'épreuve suivante : ' + req.body.event +'.\n\n' + 
+								'Vous pouvez à tout moment consulter vos inscriptions en suivant ce lien http://event.izir.fr/user/inscriptions/' + req.user.id + '\n\n' +
+								'Bonne course !\n\n' +
+								'Nicolas de izir.fr'
+					};
+					smtpTransport.sendMail(mailOptions);
+
+					//REDIRECTION
+			        res.redirect('/inscription/recap/' + req.user.id + '/')
+			        req.flash('success_msg', 'Votre paiement à bien été pris en compte');
+				}
+			});	
+        }	
+	})	
 })
 
 module.exports = router;

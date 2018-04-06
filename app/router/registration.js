@@ -34,7 +34,7 @@ var ensureAuthenticated = (req, res, next) => {
 }
 
 //Vue des inscriptions
-router.get('/:id',ensureAuthenticated, function(req, res){
+router.get('/recap/:id',ensureAuthenticated, function(req, res){
 	Registration.find({user: req.user.id}).populate('event').exec(function(err, registrations){
 		var registrations = registrations
 		res.render('partials/registration/recap', {registrations : registrations})
@@ -74,14 +74,20 @@ router.get('/file/excel/:id', ensureAuthenticated, function(req, res){
 				certificat,
 				categorie,
 				cleanNaissance,
-				anneeNaissance;
+				anneeNaissance,
+				moisNaissance,
+				joursNaissance;
 
 			cleanNaissance = val.participant.dateNaissance.split('/')
 
 			if(cleanNaissance.length > 0) {
 				anneeNaissance = cleanNaissance[2]
+				moisNaissance = cleanNaissance[1]
+				joursNaissance = cleanNaissance[0]
 			} else {
 				anneeNaissance = cleanNaissance
+				moisNaissance = ""
+				joursNaissance = ""
 			}
 
 			var courses = []
@@ -152,7 +158,9 @@ router.get('/file/excel/:id', ensureAuthenticated, function(req, res){
 				NUMERO : '' ,
 				HANDICAP : '',
 				LICENCE : val.participant.numLicence,
-				NAISSANCE : anneeNaissance,
+				ANNEE_NAISSANCE : anneeNaissance,
+				MOIS_NAISSANCE : moisNaissance,
+				JOURS_NAISSANCE : joursNaissance,
 				CATEGORIE : categorie,
 				TEMPS : '',
 				CLUB : val.participant.team,
@@ -168,7 +176,7 @@ router.get('/file/excel/:id', ensureAuthenticated, function(req, res){
 			})
 		})
 
-		var fields = ['NOM','PRENOM','ADRESSE1','ADRESSE2','CODE','VILLE','ETAT','PAYS','EMAIL','TEL','SEXE','NUMERO','HANDICAP','LICENCE','NAISSANCE','CATEGORIE','TEMPS','CLUB','CODECLUB','ORGANISME','NATION','COURSE','DISTANCE','PAYE','INVITE','ENVOICLASST','CERTIF MEDICAL'];
+		var fields = ['NOM','PRENOM','ADRESSE1','ADRESSE2','CODE','VILLE','ETAT','PAYS','EMAIL','TEL','SEXE','NUMERO','HANDICAP','LICENCE','ANNEE_NAISSANCE','MOIS_NAISSANCE','JOURS_NAISSANCE','CATEGORIE','TEMPS','CLUB','CODECLUB','ORGANISME','NATION','COURSE','DISTANCE','PAYE','INVITE','ENVOICLASST','CERTIF MEDICAL'];
 
 		try {
 			var csv = json2csv({ data: inscriptions, fields: fields, unwindPath: ['COURSE'], del : ';', quotes : ''});

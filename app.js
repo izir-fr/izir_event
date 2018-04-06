@@ -33,7 +33,7 @@ var mongoose = mongoose.connect(credentials.mLab, { useMongoClient: true });
 var cms = require('./app/router/cmsRoutes'),
   	users = require('./app/router/userRoutes'),
   	events = require('./app/router/eventRoutes'),
-    cart = require('./app/router/cart'),
+    cart = require('./app/router/cartRoutes'),
     registration = require('./app/router/registrationRoutes'),
     organisateur = require('./app/router/organisateurRoutes');
 

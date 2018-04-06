@@ -58,10 +58,9 @@ var registrationCtrl = {
 				moisNaissance,
 				anneeNaissance,
 				produisParticipant = results.participants,
-				maxParticipant = results.event.epreuves
+				maxParticipant = results.event.epreuves,
 				allProduits = [],
-				uniqueProduit = [];
-				
+				uniqueProduit = [];	
 
 			if(req.user.birthday !== ""){
 				try{

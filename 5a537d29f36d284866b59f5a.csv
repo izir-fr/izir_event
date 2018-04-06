@@ -1,0 +1,14 @@
+NOM;PRENOM;ADRESSE1;ADRESSE2;CODE;VILLE;ETAT;PAYS;EMAIL;TEL;SEXE;NUMERO;HANDICAP;LICENCE;ANNEE_NAISSANCE;MOIS_NAISSANCE;JOURS_NAISSANCE;CATEGORIE;TEMPS;CLUB;CODECLUB;ORGANISME;NATION;COURSE;DISTANCE;PAYE;INVITE;ENVOICLASST;CERTIF MEDICAL
+jouanno;nicolas;35 rue albert de mun;;56300;Pontivy;;;nicolas.j@izir.fr;;Homme;;;;1987;10;31;8;;;;;;trail 12km;;O;N;N;N
+jouanno;nicolas;35 rue albert de mun;;56300;Pontivy;;;nicolas.j@izir.fr;;Homme;;;;1987;10;31;8;;;;;;trail 12km;;O;N;N;N
+jouanno;nicolas;35 rue albert de mun;;56300;Pontivy;;;nicolas.j@izir.fr;;Homme;;;;1987;10;31;8;;;;;;trail 23 km;;O;N;N;O
+jouanno;nicolas;35 rue albert de mun;;56300;Pontivy;;;nicolas.j@izir.fr;;Homme;;;;1987;10;31;8;;;;;;trail 12km;;N;N;N;N
+jouanno;nicolas;35 rue albert de mun;;56300;Pontivy;;;nicolas.j@izir.fr;;Homme;;;;1987;10;31;8;;;;;;trail 12km;;N;N;N;O
+jouanno;nicolas;35 rue albert de mun;;56300;Pontivy;;;nicolas.j@izir.fr;;Homme;;;;1987;10;31;8;;izir;;;;trail 12km;;N;N;N;O
+jouanno;nicolas;35 rue albert de mun;;56300;Pontivy;;;nicolas.j@izir.fr;;Homme;;;;1987;10;31;8;;izir;;;;trail 12km;;O;N;N;O
+jouanno;nicolas;35 rue albert de mun;;56300;Pontivy;;;nicolas.j@izir.fr;;Homme;;;;1987;10;31;8;;izir;;;;trail 12km;;N;N;N;O
+jouanno;nicolas;35 rue albert de mun;;56300;Pontivy;;;nicolas.j@izir.fr;;Homme;;;;1987;10;31;8;;izir;;;;trail 12km;;N;N;N;O
+JOJO;nicolas;35 rue albert de mun;;56300;Pontivy;;;nicolas.j@izir.fr;;Homme;;;;1987;10;31;8;;izir;;;;trail 12km;;O;N;N;O
+jouanno;nicolas;35 rue albert de mun;;56300;Pontivy;;;nicolas.j@izir.fr;;Homme;;;;1987;10;31;8;;;;;;trail 12km;;N;N;N;O
+jouanno TEST;nicolas;35 rue albert de mun;;56300;Pontivy;;;nicolas.j@izir.fr;;Homme;;;;1987;10;31;8;;izir;;;;trail 12km;;N;N;N;O
+jouanno;nicolas;35 rue albert de mun;;56300;Pontivy;;;nicolas.j@izir.fr;;Homme;;;;1987;10;31;8;;izir;;;;trail 23 km;;O;N;N;O

@@ -81,10 +81,10 @@ var organsisateurCtrl = {
 
 		try {
 			var updateUser = {
-				code_etablissement : Number(req.body.code_etablissement),
-				code_guichet : Number(req.body.code_guichet),
-				numero_de_compte : Number(req.body.numero_de_compte),
-				cle_RIB : Number(req.body.cle_RIB),
+				code_etablissement : req.body.code_etablissement,
+				code_guichet : req.body.code_guichet,
+				numero_de_compte : req.body.numero_de_compte,
+				cle_RIB : req.body.cle_RIB,
 				updated: new Date()
 			};
 		} catch(err) {

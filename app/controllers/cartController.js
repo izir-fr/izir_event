@@ -6,14 +6,14 @@ var Product = require('../models/product'),
 
 var cartCtrl = {
 	// Get add to cart a product
-	getAddToCart : (req, res)=>{
+	getAllProduct : (req, res)=>{
 		Product.find({published: {$ne: false}})
 			.exec(function(err, products){
 				res.render('partials/shop/catalogue', {products: products})
 			})
 	},
 	// Get reduce product cart quantity by one
-	getReduceByOne : (req, res)=>{
+	getAddToCart : (req, res)=>{
 		var productId = req.params.id
 		var cart = new Cart(req.session.cart ? req.session.cart : {items: {}})
 
@@ -28,7 +28,7 @@ var cartCtrl = {
 		})
 	},
 	// Get increase product cart quantity by one
-	getIncreaseByOne : (req, res)=>{
+	getReduceByOne : (req, res)=>{
 		var productId = req.params.id
 		var cart = new Cart(req.session.cart ? req.session.cart : {})
 
@@ -37,7 +37,7 @@ var cartCtrl = {
 		res.redirect('/catalogue/panier')
 	},
 	// Get reduce product cart quantity by X
-	getReduceByX : (req, res)=>{
+	getIncreaseByOne : (req, res)=>{
 		var productId = req.params.id
 		var cart = new Cart(req.session.cart ? req.session.cart : {})
 
@@ -46,7 +46,7 @@ var cartCtrl = {
 		res.redirect('/catalogue/panier')
 	},
 	// Get increase product cart quantity by X
-	getIncreaseByX : (req, res)=>{
+	getReduceByX : (req, res)=>{
 		var productId = req.params.id
 		var qtyX = req.query.remove * 1
 		var cart = new Cart(req.session.cart ? req.session.cart : {})
@@ -56,7 +56,7 @@ var cartCtrl = {
 		res.redirect('/catalogue/panier')
 	},
 	// Get remove a product in cart
-	getRemoveProductCart : (req, res)=>{
+	getIncreaseByX : (req, res)=>{
 		var productId = req.params.id
 		var qtyX = req.query.add * 1
 		var cart = new Cart(req.session.cart ? req.session.cart : {})
@@ -66,7 +66,7 @@ var cartCtrl = {
 		res.redirect('/catalogue/panier')
 	},
 	// Get a product
-	getProduct : (req, res)=>{
+	getRemoveProductCart : (req, res)=>{
 		var productId = req.params.id
 		var cart = new Cart(req.session.cart ? req.session.cart : {})
 
@@ -75,7 +75,7 @@ var cartCtrl = {
 		res.redirect('/catalogue/panier')
 	},
 	// Get cart
-	getCart : (req,res)=>{
+	getProduct : (req,res)=>{
 		Product.findById(req.params.id,(err, produit)=>{
 			var produit = produit
 			if(produit.published) {
@@ -87,7 +87,7 @@ var cartCtrl = {
 		})
 	},
 	// Get all product
-	getAllProduct : (req, res)=>{
+	getCart : (req, res)=>{
 		if(!req.session.cart){
 			return res.render('partials/shop/panier', {products: null})
 		}

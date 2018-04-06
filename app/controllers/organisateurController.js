@@ -68,7 +68,7 @@ var organsisateurCtrl = {
 				req.flash('success_msg', 'Votre message a bien été envoyé à ' + req.body.prenom_participant + ' ' + req.body.nom_participant);
 			}	
 			req.flash('success_msg', 'Votre message a bien été envoyé à ' + req.body.prenom_participant + ' ' + req.body.nom_participant);
-			res.redirect('/user/gerer/' + event);
+			res.redirect('/inscription/recap/organisateur/' + event);
 			done(err, 'done');
 		});
 	},

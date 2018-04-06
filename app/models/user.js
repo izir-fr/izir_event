@@ -29,10 +29,10 @@ var UserSchema = mongoose.Schema({
 	},
 
 	//Comptabilité
-	code_etablissement: { type: Number },
-	code_guichet: { type: Number },
-	numero_de_compte: { type: Number },
-	cle_RIB: { type: Number },
+	code_etablissement: { type: String },
+	code_guichet: { type: String },
+	numero_de_compte: { type: String },
+	cle_RIB: { type: String },
 
 	//log
 	created_at : { type: Date, required: true, default: Date.now },

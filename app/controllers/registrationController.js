@@ -323,7 +323,7 @@ var registrationCtrl = {
 		    }
 		}, function(err, results) {
 			var event = results
-			res.render('partials/organisateurs/recap-organisateur', event);
+			res.render('partials/registration/recap-organisateur', event);
 		});	
 	},
 	// Get a file excell

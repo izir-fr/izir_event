@@ -120,10 +120,10 @@
 		
 			<div class="col-lg-2 md-12 text-lg-right text-xs-center text-sm-center text-md-center margin-top-md-down event-source">
 			{{#if this.source}}
-				<a  href="/event/post-event" class="event-disable"><button class="btn btn-outline-warning ">Ouvrir aux<br> inscriptions</button></a>
+				<a  href="/event/create" class="event-disable"><button class="btn btn-outline-warning ">Ouvrir aux<br> inscriptions</button></a>
 			{{else}}
 				<a class="btn btn-outline-primary spacer-xs-bottom" href="/event/{{this.id}}">Plus d'infos > </a>
-				<a class="btn btn-danger spacer-xs-bottom" href="/event/inscription/{{this.id}}">S'inscrire >></a>
+				<a class="btn btn-danger spacer-xs-bottom" href="/event/pre-inscription/{{this.id}}">S'inscrire >></a>
 			{{/if}}			
 			</div>
 		
@@ -138,7 +138,7 @@
 		<div class="row spacer-sm-top alert alert-warning text-center">
 			<div class="col-sm-12">
 				<p>Votre évènement n'est pas dans le calendrier ou n'est pas ouverte aux inscriptions ?</p>
-				<a href="/event/post-event"><button class="btn btn-default bottom-spacer-xs-top spacer-sm-bottom"><i class="fa fa-plus"></i> Ajouter un évènement</button></a>
+				<a href="/event/create"><button class="btn btn-default bottom-spacer-xs-top spacer-sm-bottom"><i class="fa fa-plus"></i> Ajouter un évènement</button></a>
 			</div>
 
 	    </div>

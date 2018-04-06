@@ -323,13 +323,13 @@ router.get('/finder', (req, res) => {
 });
 
 //Ajouter un évènement GET
-router.get('/post-event', ensureAuthenticated, function(req, res){
+router.get('/create', ensureAuthenticated, function(req, res){
 	var user = req.user
-	res.render('partials/event/post-event', { date_list : dateList, category_list : catList, discipline_list : disList });
+	res.render('partials/event/create-event', { date_list : dateList, category_list : catList, discipline_list : disList });
 });
 
 //Ajouter un évènement POST
-router.post('/post-event', function(req, res){
+router.post('/create', function(req, res){
 	//////EVENT CONSTRUCTOR//////
 	var epreuves = epreuveConstructor(req)
 	var options = optionConstructor(req)
@@ -399,7 +399,7 @@ router.get('/:id', function(req, res){
 })
 
 //inscription à un évènement GET
-router.get('/inscription/:id', ensureAuthenticated, function(req, res){
+router.get('/pre-inscription/:id', ensureAuthenticated, function(req, res){
 	async.parallel({
 	    event: function(next) {
 	    	Event.findById(req.params.id).exec(next)
@@ -489,7 +489,7 @@ router.get('/inscription/:id', ensureAuthenticated, function(req, res){
 					discipline_list : disList
 				}
 
-		res.render('partials/event/inscription', data);
+		res.render('partials/event/pre-inscription', data);
 	});	
 });
 

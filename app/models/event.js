@@ -51,6 +51,7 @@ var EventSchema = mongoose.Schema({
 		},
 	],
 	date_cloture_inscription : { type: Date},
+	/*
 	inscriptionCloture : {
 		jourCloture: { type: Number },
 		moisCloture: { type: Number },
@@ -58,6 +59,7 @@ var EventSchema = mongoose.Schema({
 		heureCloture: { type: Number },
 		minuteCloture: { type: Number }
 	},
+	*/
 	permanence :{
 		email: { type: String },
 		telephone: { type: String },

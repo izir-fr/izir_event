@@ -8,16 +8,11 @@ var	Event = require('../models/event'),
 	Registration = require('../models/registration'),
 	User = require('../models/user');
 
+// Controllers
 var registrationCtrl = require('../controllers/registrationController')
 
-var ensureAuthenticated = (req, res, next) => {
-	if(req.isAuthenticated()){
-		return next();
-	} else {
-		//req.flash('error_msg','You are not logged in');
-		res.redirect('/user/login');
-	}
-}
+// Custom Modules
+var ensureAuthenticated = require('../../custom_modules/app/router/ensureAuthenticated')
 
 // Get a pre-inscription form
 router.get('/recap/user/:id', ensureAuthenticated, registrationCtrl.getRecapUser  );

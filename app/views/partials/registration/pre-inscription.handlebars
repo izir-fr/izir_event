@@ -16,7 +16,7 @@
 					<ul class="spacer-sm-top">
 						<li><strong>Epreuve :</strong> {{this.name}}</li>
 						<li><strong>Discipline :</strong> {{this.discipline}}</li>
-						<li><strong>Date :</strong> {{this.dateDebut.jourDebut}}/{{this.dateDebut.moisDebut}}/{{this.dateDebut.anneeDebut}} à {{this.dateDebut.heureDebut}}h{{this.dateDebut.minuteDebut}}</li>
+						<li><strong>Date :</strong> {{date this.date_debut}} à {{dateHours this.date_debut}}h{{dateMinutes this.date_debut}}</li>
 						<li><strong>Distance :</strong> {{this.distance}}Km</li>
 						<li><strong>Denivelé + :</strong> {{this.denivele}} mètres</li>
 						<li><strong>Nombre de participants maximum:</strong> {{this.placesDispo}}</li>
@@ -697,11 +697,12 @@ $(function(){
 
 	//Date config
 	var dateNow = new Date(Date.now())
-	var dateLimite = new Date(Number("{{results.event.inscriptionCloture.anneeCloture}}"),Number("{{results.event.inscriptionCloture.moisCloture}}") - 1,Number("{{results.event.inscriptionCloture.jourCloture}}"),Number('{{results.event.inscriptionCloture.heureCloture}}') ,Number('{{results.event.inscriptionCloture.minuteCloture}}'))
+	var dateLimite = new Date( '{{results.event.date_cloture_inscription}}')
+	console.log(dateLimite)
 
 	if (dateNow > dateLimite ) {
 		$('#checkout-form').remove()
-		$('#divForm').append('<div class="col-sm-12"><p class="alert alert-danger">La date limite de cette épreuve dépassée</p></div>')
+		$('#divForm').append('<div class="col-sm-12"><p class="alert alert-danger">La date limite d\'inscription à cette épreuve dépassée</p></div>')
 	}
 	// form end
 })

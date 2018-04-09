@@ -22,15 +22,6 @@ var	Event = require('../models/event'),
 var catList = require('../../custom_modules/lists/category-list'),
 	dateList = require('../../custom_modules/lists/date-list');
 
-var ensureAuthenticated = (req, res, next) => {
-	if(req.isAuthenticated()){
-		return next();
-	} else {
-		//req.flash('error_msg','You are not logged in');
-		res.redirect('/user/login');
-	}
-}
-
 //Controllers
 var organsisateurCtrl = {
 	// Get all épreuves

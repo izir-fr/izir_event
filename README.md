@@ -49,3 +49,8 @@ $ git add .
 $ git commit -am "make it better"
 $ git push heroku master
 ```
+
+
+## Documentation
+
+lien > https://docs.google.com/document/d/1v63mgHyK6nESz71GDc6esFcnBG5lCrJIlnRbhm0VbE4/edit?usp=sharing

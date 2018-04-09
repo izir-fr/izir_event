@@ -34,15 +34,6 @@ var	Event = require('../models/event'),
 	Registration = require('../models/registration'),
 	User = require('../models/user');
 
-var ensureAuthenticated = (req, res, next) => {
-	if(req.isAuthenticated()){
-		return next();
-	} else {
-		//req.flash('error_msg','You are not logged in');
-		res.redirect('/user/login');
-	}
-}
-
 var registrationCtrl = {
 	// Get a pre-inscription form
 	getPreinscription : function(req, res){

@@ -2,7 +2,7 @@
 	<div class="row">
 		<div class="col-12">
 			<span class="d-block spacer-xs-left bg-light spacer-sm-top spacer-sm-bottom">
-				<h1 class="text-center" id="event-details-header">{{event.name}}</h1>
+				<h1 class="text-center" id="event-details-header">{{result.event.name}}</h1>
 			</span>
 		</div>
 	</div>
@@ -19,7 +19,7 @@
 					<div id="event-detail-slider">
 						<div id="carouselExampleControls" class="carousel slide spacer-xs-top" data-ride="carousel">
 						  <div class="carousel-inner">
-						   {{#each event.docs.img}}
+						   {{#each result.event.docs.img}}
 						   	{{#if @first}}
 						    <div class="carousel-item active">
 						    {{else}}
@@ -46,35 +46,35 @@
 				<div class="col-md-4 spacer-sm-top">
 					<h3 class="border-bottom-box">Adresse</h3>
 					<p>
-					{{event.adresse.adresse1}}<br>
-					{{event.adresse.adresse2}}<br>
-					{{event.adresse.codePostal}} {{event.adresse.ville}}<br>
-					{{event.adresse.region}}<br>
-					{{event.adresse.pays}}
+					{{result.event.adresse.adresse1}}<br>
+					{{result.event.adresse.adresse2}}<br>
+					{{result.event.adresse.codePostal}} {{result.event.adresse.ville}}<br>
+					{{result.event.adresse.region}}<br>
+					{{result.event.adresse.pays}}
 					</p>
-					<input type="hidden" name="latitude" id="latitude" value="{{event.adresse.latitude}}">
-			        <input type="hidden" name="longitude" id="longitude" value="{{event.adresse.longitude}}">
+					<input type="hidden" name="latitude" id="latitude" value="{{result.event.adresse.latitude}}">
+			        <input type="hidden" name="longitude" id="longitude" value="{{result.event.adresse.longitude}}">
 				</div>
 				<div class="col-md-4 spacer-sm-top">
 					<h3 class="border-bottom-box">Permanence</h3>
 					<ul>
-						{{#if event.permanence.email}}
-						<li><strong>Email :</strong> {{event.permanence.email}}</li>
+						{{#if result.event.permanence.email}}
+						<li><strong>Email :</strong> {{result.event.permanence.email}}</li>
 						{{else}}
 						<li><strong>Email :</strong> NC</li>
 						{{/if}}
-						{{#if event.permanence.telephone}}
-						<li><strong>Téléphone :</strong> {{event.permanence.telephone}}</li>
+						{{#if result.event.permanence.telephone}}
+						<li><strong>Téléphone :</strong> {{result.event.permanence.telephone}}</li>
 						{{else}}
 						<li><strong>Téléphone :</strong> NC</li>
 						{{/if}}
-						{{#if event.permanence.siteWeb}}
-						<li><strong>Site Internet : </strong><a href="{{event.permanence.siteWeb}}" target="_blank" rel="nofollow">{{event.permanence.siteWeb}}</a></li>
+						{{#if result.event.permanence.siteWeb}}
+						<li><strong>Site Internet : </strong><a href="{{result.event.permanence.siteWeb}}" target="_blank" rel="nofollow">{{result.event.permanence.siteWeb}}</a></li>
 						{{else}}
 						<li><strong>Site Internet : </strong>NC</li>
 						{{/if}}
-						{{#if event.permanence.facebook}}
-						<li><strong>Page Facebook : </strong><a href="{{event.permanence.facebook}}" target="_blank" rel="nofollow">{{event.permanence.facebook}}</a></li>
+						{{#if result.event.permanence.facebook}}
+						<li><strong>Page Facebook : </strong><a href="{{result.event.permanence.facebook}}" target="_blank" rel="nofollow">{{result.event.permanence.facebook}}</a></li>
 						{{else}}
 						<li><strong>Page Facebook :</strong> NC</li>
 						{{/if}}
@@ -85,7 +85,7 @@
 			<div class="row spacer-sm-top">
 				<div class="col-12">
 					<h3 class="border-bottom-box">Présentation</h3>
-					<p class="text-lowercase text-justify">{{event.description}}</p>
+					<p class="text-lowercase text-justify">{{result.event.description}}</p>
 				</div>
 			</div>
 
@@ -97,11 +97,11 @@
 			</div>
 			<div class="row">
 				<div class="col-12">
-					{{#each event.epreuves}}
+					{{#each result.event.epreuves}}
 					<div class="row spacer-sm-top">
 						<div class="col-12 bg-light">
 							<h4 class="spacer-sm-top text-lowercase">{{this.name}}</h4>
-							 <span class="badge badge-light"><i class="fa fa-calendar-check-o" > </i> {{this.dateDebut.jourDebut}}/{{this.dateDebut.moisDebut}}/{{this.dateDebut.anneeDebut}} à {{this.dateDebut.heureDebut}}h{{this.dateDebut.minuteDebut}}</span>
+							 <span class="badge badge-light"><i class="fa fa-calendar-check-o" > </i> {{date this.date_debut}} à {{dateHours this.date_debut}}h{{dateMinutes this.date_debut}}</span>
 							{{#if description}}
 							<p class="text-lowercase text-justify spacer-sm-top">{{this.description}}</p>
 							{{/if}}
@@ -127,11 +127,11 @@
 							  <th>Team</th>
 							  <th>Catégorie</th>
 							  <th>Sexe</th>
-							  <th>Epreuve</th>
+							  <!--<th>Epreuve</th>-->
 							</tr>
 						</thead>
 						<tbody>
-							{{#each participants}}
+							{{#each result.participants}}
 							    <tr>
 							    	<td class="text-uppercase"><strong>{{this.participant.nom}}</strong></td>
 							    	<td class="text-capitalize">{{this.participant.prenom}}</td>
@@ -152,30 +152,30 @@
 					<div class="row border-bottom-box">
 						<div class="col-12">
 							<p>
-							{{#if event.paiement}}
+							{{#if result.event.paiement}}
 								<i class="fa fa-credit-card-alt text-success spacer-xs-left" aria-hidden="true" title="le paiement en ligne est accepté"></i>
 							{{else}}
 								<i class="fa fa-credit-card-alt text-muted spacer-xs-left" aria-hidden="true" title="le paiement en ligne n'est pas accepté"></i>
 							{{/if}}
-							{{#if event.certificat_required}}
+							{{#if result.event.certificat_required}}
 								<i class="fa fa-file text-success spacer-xs-left" title="le certificat médical est requis pour s'inscrire"></i>
 							{{else}}
 								<i class="fa fa-file text-muted spacer-xs-left" title="le certificat médical n'est pas requis pour s'inscrire"></i>
 							{{/if}}										
-							{{#if event.dons}}
+							{{#if result.event.dons}}
 								<i class="fa fa-gratipay text-success spacer-xs-left" aria-hidden="true" title="L'événement accepte les dons"></i>
 							{{else}}
 								<i class="fa fa-gratipay text-muted spacer-xs-left" aria-hidden="true" title="L'événement n'accepte pas les dons"></i>
 							{{/if}}
 								<strong class="spacer-sm-left">
 									<a href="/event/{{this.id}}">
-										<span class="text-capitalize city"><i class="fa fa-map-marker" aria-hidden="true"></i> {{event.adresse.codePostal}} {{event.adresse.ville}} </span>
+										<span class="text-capitalize city"><i class="fa fa-map-marker" aria-hidden="true"></i> {{result.event.adresse.codePostal}} {{result.event.adresse.ville}} </span>
 									</a>
 								</strong>
 							</p>						
 						</div>
 					</div>
-					{{#each event.epreuves}}
+					{{#each result.event.epreuves}}
 					<div class="row">
 						<div class="col-12">
 							<p><strong>{{this.name}} - {{this.distance}}km : </strong> {{this.tarif}}€</p>
@@ -183,11 +183,11 @@
 					</div>
 					{{/each}}
 					<!-- OPTIONS -->
-					{{#if event.options}}
+					{{#if result.event.options}}
 					<div class="row border-top-box">
 						<div class="col-12">
 							<strong>Options</strong>
-							{{#each event.options}}
+							{{#each result.event.options}}
 							<p>{{this.reference}} <span class="badge badge-danger">Tarif: {{this.prix}}€</span></p>
 							{{/each}}
 						</div>						
@@ -196,21 +196,21 @@
 					<!--
 					<div class="row">
 						<div class="col-12">
-							<p><strong>{{participants.length}} / {{event.epreuves.[0].placesDispo}} participants</strong> inscrits pour cette épreuve</p>
+							<p><strong>{{participants.length}} / {{result.event.epreuves.[0].placesDispo}} participants</strong> inscrits pour cette épreuve</p>
 						</div>
 					</div>
 				-->
 					<div class="row border-top-box">
 						<div class="col-12">
 							<p>
-								<strong>Clôture des inscriptions: </strong><span class="badge badge-warning" id="date-info">le {{event.inscriptionCloture.jourCloture}}/{{event.inscriptionCloture.moisCloture}}/{{event.inscriptionCloture.anneeCloture}} à {{event.inscriptionCloture.heureCloture}}h{{event.inscriptionCloture.minuteCloture}}</span>
+								<strong>Clôture des inscriptions: </strong><span class="badge badge-warning" id="date-info">le {{dateDay result.event.date_cloture_inscription}}/{{dateMonth result.event.date_cloture_inscription}}/{{dateFullYear result.event.date_cloture_inscription}} à {{dateHours result.event.date_cloture_inscription}}h{{dateMinutes result.event.date_cloture_inscription}}</span>
 							</p>
 						</div>
 					</div>
 					<div class="row border-top-box">
 						<div class="col-12">
-						{{#if event.docs.legales.[0]}}
-							<p>Règlement de l'épreuve : <strong><a href="{{event.docs.legales.[0]}}" target="_blank">télécharger</a></p></strong>
+						{{#if result.event.docs.legales.[0]}}
+							<p>Règlement de l'épreuve : <strong><a href="{{result.event.docs.legales.[0]}}" target="_blank">télécharger</a></p></strong>
 							{{else}}
 							<p>Règlement de l'épreuve : <strong>NON FOURNI</strong></p>
 						{{/if}}
@@ -218,8 +218,8 @@
 					</div>
 					<div class="row border-top-box" id="inscriptionButton">
 						<div class="col-12">
-							<a class="btn btn-danger spacer-xs-top d-block" href="/inscription/pre-inscription/{{event.id}}">
-								{{#if event.paiement}}
+							<a class="btn btn-danger spacer-xs-top d-block" href="/inscription/pre-inscription/{{result.event.id}}">
+								{{#if result.event.paiement}}
 									S'inscrire
 								{{else}}
 									Se pré-inscrire
@@ -235,15 +235,14 @@
 				</div>
 			</div>
 		</div>
-	<input type="hidden" value="/inscriptionCloture.heureCloture/inscriptionCloture.minuteCloture">	
 </div>
 <script>
 $(function(){
 	//Date config
 	var dateNow = new Date(Date.now())
-	var dateLimite = new Date(Number("{{event.inscriptionCloture.anneeCloture}}"),Number("{{event.inscriptionCloture.moisCloture}}") - 1,Number("{{event.inscriptionCloture.jourCloture}}"),Number('{{event.inscriptionCloture.heureCloture}}') ,Number('{{event.inscriptionCloture.minuteCloture}}'))
+	var eventDate = new Date('{{result.event.date_cloture_inscription}}')
 
-	if (dateNow > dateLimite ) {
+	if (dateNow > eventDate ) {
 		$('#inscriptionButton').remove()
 		$('#date-info').text('Les inscriptions sont cloturées').addClass('badge-danger').removeClass('badge-warning')
 	}

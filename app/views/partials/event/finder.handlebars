@@ -99,7 +99,7 @@
 						{{#each this.epreuves}}
 						<div class="row">
 							<div class=" col-sm-12 col-sm-5 col-md-4 text-sm-left">
-								<span class="badge badge-light date"><i class="fa fa-calendar-check-o" ></i> {{this.dateDebut.jourDebut}}/{{this.dateDebut.moisDebut}}/{{this.dateDebut.anneeDebut}} à {{this.dateDebut.heureDebut}}h{{this.dateDebut.minuteDebut}}</span>
+								<span class="badge badge-light date"><i class="fa fa-calendar-check-o" ></i> {{date this.date_debut}} à {{dateHours this.date_debut}}h{{dateMinutes this.date_debut}}</span>
 							</div>
 							<div class="col-sm-7 col-md-8 spacer-xs-bottom">
 								<i class="fa fa-chevron-right" aria-hidden="true"></i><span class="badge badge-light text-capitalize discipline">{{this.discipline}}</span> <span class="badge badge-light text-lowercase"><strong>{{this.name}}</strong></span> <span class="badge badge-light region">{{this.adresse.region}}</span>  <span class="badge badge-light distance"> {{this.distance}}Km</span>  <span class="badge badge-light denivele">d+  {{this.denivele}}m</span>  
@@ -112,7 +112,7 @@
 								</span> 
 							</div>
 						</div>
-						<input type="hidden" name="filtre-mois" value="{{this.dateDebut.moisDebut}}">
+						<input type="hidden" name="filtre-mois" value="{{dateMonth this.date_debut}}">
 						{{/each}}								
 					</div>
 				</div>							
@@ -127,9 +127,9 @@
 			{{/if}}			
 			</div>
 		
-			<input type="hidden" name="order-jour" value="{{this.epreuves.[0].dateDebut.jourDebut}}">
-			<input type="hidden" name="order-mois" value="{{this.epreuves.[0].dateDebut.moisDebut}}">
-			<input type="hidden" name="order-annee" value="{{this.epreuves.[0].dateDebut.anneeDebut}}">	
+			<input type="hidden" name="order-jour" value="{{dateDay this.epreuves.[0].date_debut}}">
+			<input type="hidden" name="order-mois" value="{{dateMonth this.epreuves.[0].date_debut}}">
+			<input type="hidden" name="order-annee" value="{{dateFullYear this.epreuves.[0].date_debut}}">	
 		</div>		
 	{{/each}}
 	</div>

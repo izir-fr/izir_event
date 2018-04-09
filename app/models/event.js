@@ -24,13 +24,15 @@ var EventSchema = mongoose.Schema({
 			name: { type: String },
 			discipline: { type: String },
 			description: { type: String },
+			/*
 			dateDebut : {
 				jourDebut: { type: Number },
 				moisDebut: { type: Number },
 				anneeDebut: { type: Number },
 				heureDebut: { type: Number },
 				minuteDebut: { type: Number }
-			},		
+			},	
+			*/	
 			tarif : { type: Number },
 			distance : { type: Number },
 			denivele : { type: Number },
@@ -48,7 +50,7 @@ var EventSchema = mongoose.Schema({
 			prix: { type: Number }
 		},
 	],
-	date_cloture : { type: Date},
+	date_cloture_inscription : { type: Date},
 	inscriptionCloture : {
 		jourCloture: { type: Number },
 		moisCloture: { type: Number },

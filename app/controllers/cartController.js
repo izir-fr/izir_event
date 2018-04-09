@@ -9,7 +9,7 @@ var cartCtrl = {
 	getAllProduct : (req, res)=>{
 		Product.find({published: {$ne: false}})
 			.exec(function(err, products){
-				res.render('partials/shop/catalogue', {products: products})
+				res.render('partials/cart/catalogue', {products: products})
 			})
 	},
 	// Get reduce product cart quantity by one
@@ -75,7 +75,7 @@ var cartCtrl = {
 		res.redirect('/catalogue/panier')
 	},
 	// Get cart
-	getProduct : (req,res)=>{
+	getProductById : (req,res)=>{
 		Product.findById(req.params.id,(err, produit)=>{
 			var produit = produit
 			if(produit.published) {
@@ -92,7 +92,7 @@ var cartCtrl = {
 			return res.render('partials/shop/panier', {products: null})
 		}
 		var cart = new Cart(req.session.cart)
-		res.render('partials/shop/panier', {products: cart.generateArray(), totalPrice: cart.totalPrice})
+		res.render('partials/cart/panier', {products: cart.generateArray(), totalPrice: cart.totalPrice})
 	}
 }
 

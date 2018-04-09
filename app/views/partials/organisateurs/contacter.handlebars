@@ -20,7 +20,7 @@
 	      <div class="col-sm-12">
 	        <div class="form-group spacer-sm-top">
 	          <label>Messages pour le participant *</label><br>
-	          <textarea name="description" id="" class="form-control" cols="30" rows="10" placeholder="Description de l'évènement" required>Bonjour, nous avons constaté que votre inscription pour l'événement "{{data.eventName}}" à {{data.event.adresse.ville}} le {{data.event.epreuves.[0].dateDebut.jourDebut}}/{{data.event.epreuves.[0].dateDebut.moisDebut}}/{{data.event.epreuves.[0].dateDebut.anneeDebut}} n'est pas complète. Merci de ...</textarea>
+	          <textarea name="description" id="" class="form-control" cols="30" rows="10" placeholder="Description de l'évènement" required>Bonjour, nous avons constaté que votre inscription pour l'événement "{{data.eventName}}" à {{data.event.adresse.ville}} le {{date data.event.epreuves.[0].date_debut}} n'est pas complète. Merci de ...</textarea>
 	        </div>        
 	      </div>
 	    </div>

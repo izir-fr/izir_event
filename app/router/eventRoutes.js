@@ -11,18 +11,12 @@ var User = require('../models/user');
 //Controller
 var eventCtrl = require('../controllers/eventController')
 
+// Custom Modules
+var ensureAuthenticated = require('../../custom_modules/app/router/ensureAuthenticated')
+
 /*==========
 START APP =>
 ==========*/
-
-function ensureAuthenticated (req, res, next){
-	if(req.isAuthenticated()){
-		return next();
-	} else {
-		//req.flash('error_msg','You are not logged in');
-		res.redirect('/user/login');
-	}
-}
 
 // Get all event
 router.get('/finder', eventCtrl.getAllEvent );

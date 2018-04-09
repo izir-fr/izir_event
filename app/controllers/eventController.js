@@ -13,6 +13,7 @@ var async = require('async'),
 var catList = require('../../custom_modules/lists/category-list'),
 	dateList = require('../../custom_modules/lists/date-list'),
 	disList = require('../../custom_modules/lists/discipline-list');
+var dateDisplayer = require('../../custom_modules/app/router/dateDisplayer');
 
 // Models
 var Event = require('../models/event');
@@ -25,15 +26,6 @@ var dateNow = new Date(Date.now())
 /*==========
 START APP =>
 ==========*/
-
-function ensureAuthenticated (req, res, next){
-	if(req.isAuthenticated()){
-		return next();
-	} else {
-		//req.flash('error_msg','You are not logged in');
-		res.redirect('/user/login');
-	}
-}
 
 //////EPREUVES//////
 function epreuveConstructor(req, res, next) {
@@ -63,13 +55,7 @@ function epreuveConstructor(req, res, next) {
 				name : name[i], //req.body.epreuveName,
 				discipline : discipline[i], //req.body.discipline,
 				description : description[i], //req.body.epreuveDescription,
-				dateDebut : {
-					jourDebut : jourDebut[i], //req.body.jourDebut,
-					moisDebut : moisDebut[i], //req.body.moisDebut,
-					anneeDebut : anneeDebut[i], //req.body.anneeDebut,
-					heureDebut : heureDebut[i], //req.body.heureDebut,
-					minuteDebut : minuteDebut[i], //req.body.minuteDebut,	
-				},		
+				date_debut : new Date(Date.UTC(anneeDebut[i], (moisDebut[i] - 1 ), jourDebut[i] , heureDebut[i], minuteDebut[i])),		
 				tarif : tarif[i], //req.body.tarif,
 				distance : distance[i], //req.body.distance,
 				denivele : denivele[i], //req.body.denivele,
@@ -83,13 +69,7 @@ function epreuveConstructor(req, res, next) {
 			name : name, //req.body.epreuveName,
 			discipline : discipline, //req.body.discipline,
 			description : description, //req.body.epreuveDescription,
-			dateDebut : {
-				jourDebut : jourDebut, //req.body.jourDebut,
-				moisDebut : moisDebut, //req.body.moisDebut,
-				anneeDebut : anneeDebut, //req.body.anneeDebut,
-				heureDebut : heureDebut, //req.body.heureDebut,
-				minuteDebut : minuteDebut, //req.body.minuteDebut,	
-			},		
+			date_debut : new Date(Date.UTC(anneeDebut, (moisDebut - 1 ), jourDebut , heureDebut, minuteDebut)),		
 			tarif : tarif, //req.body.tarif,
 			distance : distance, //req.body.distance,
 			denivele : denivele, //req.body.denivele,
@@ -159,13 +139,7 @@ function eventConstructor(req, epreuves, options, res, next){
 			legales: req.body.legales,
 		},
 		options : options,
-		inscriptionCloture : {
-			jourCloture: req.body.jourCloture,
-			moisCloture: req.body.moisCloture,
-			anneeCloture: req.body.anneeCloture,
-			heureCloture: req.body.heureCloture,
-			minuteCloture: req.body.minuteCloture,
-		},
+		date_cloture_inscription : new Date(Date.UTC(req.body.anneeCloture, (req.body.moisCloture - 1 ) , req.body.jourCloture, req.body.heureCloture, req.body.minuteCloture)),
 		permanence :{
 			email: req.body.email,
 			telephone: req.body.telephone,
@@ -174,6 +148,7 @@ function eventConstructor(req, epreuves, options, res, next){
 		},
 		updated: new Date()
 	}
+
 	return event
 }
 
@@ -206,7 +181,7 @@ var eventCtrl = {
 				}catch (err) { reject(err)}
 			})
 		}
-
+		
 		var api1 = loadJsonSync(apis[0]),
 			api2 = loadJsonSync(apis[1]),
 			api3 = loadJsonSync(apis[2])
@@ -232,26 +207,22 @@ var eventCtrl = {
 							    name: val.eventName,
 							    description: val.description,
 							    epreuves: 
-								    [
-								        {
-								            tarif: tarif,
-								            discipline: discipline ,
-								            name: val.eventName,
-								            dateDebut: {
-								                anneeDebut: val.date.split('/')[2],
-								                moisDebut: val.date.split('/')[1],
-								                jourDebut: val.date.split('/')[0]
-								            },
-								            source : "externe"
-								        }		
-								    ],
-						   		 adresse:
-							     	{
-										ville: val.lieu
-							       	},
+								    [ {
+							            tarif: tarif,
+							            discipline: discipline ,
+							            name: val.eventName,
+							            date_debut: new Date ( Date.UTC( val.date.split('/')[2], val.date.split('/')[1] - 1 , val.date.split('/')[0] ) ),
+							            source : "externe"
+							        } ],
+						   		adresse: {
+									ville: val.lieu
+						       	},
 							    source : "externe"
-						   		}					
-							allItems.push(item)						
+						   	}
+
+						   	if(item.epreuves[0].date_debut > dateNow){
+						   		allItems.push(item)	
+						   	}				
 						}
 					})
 				})	
@@ -260,7 +231,7 @@ var eventCtrl = {
 			.then((json)=>{			
 				async.parallel({
 				    event: (next) => {
-				    	Event.find().exec(next)
+				    	Event.find( { epreuves : { $elemMatch : { date_debut : { $gte: dateNow } } } } ).exec(next)
 				    },
 				    participants: (next) => {
 				        Registration.find().exec(next)
@@ -269,10 +240,7 @@ var eventCtrl = {
 					var eventFromIzir = results.event
 
 					eventFromIzir.forEach((val)=>{
-						var eventDate = new Date(val.epreuves[0].dateDebut.anneeDebut, val.epreuves[0].dateDebut.moisDebut - 1 , val.epreuves[0].dateDebut.jourDebut)
-						if(eventDate > dateNow) {
-							allEvents.push(val)
-						}
+						allEvents.push(val)
 					})
 
 					json.forEach((val)=>{
@@ -286,28 +254,25 @@ var eventCtrl = {
 						var search = allEvents.find(doublon)
 
 						if(search === undefined){
-							var eventDate = new Date(val.epreuves[0].dateDebut.anneeDebut, val.epreuves[0].dateDebut.moisDebut - 1 , val.epreuves[0].dateDebut.jourDebut)
-							if(eventDate > dateNow) {
-								allEvents.push(val)
-							}						
+							allEvents.push(val)					
 						}
 					})
 
 					allEvents.sort(function(a, b){
-						return new Date(a.epreuves[0].dateDebut.anneeDebut, a.epreuves[0].dateDebut.moisDebut - 1 , a.epreuves[0].dateDebut.jourDebut) - new Date(b.epreuves[0].dateDebut.anneeDebut, b.epreuves[0].dateDebut.moisDebut - 1 , b.epreuves[0].dateDebut.jourDebut)
+						return a.epreuves[0].date_debut - b.epreuves[0].date_debut
 					})
 
-					data = {
-							data: {
-								event: allEvents,
-								participants : results.participants
-							},
-							date_list : dateList,
-							discipline_list : disList
-						}
+					var data = {
+						data: {
+							event: allEvents,
+							participants : results.participants
+						},
+						date_list : dateList,
+						discipline_list : disList
+					}
 
 					res.render('partials/event/finder', data);				
-			})
+				})
 		});
 	},
 	// Get create event page
@@ -325,7 +290,7 @@ var eventCtrl = {
 		var newEvent = new Event(
 			event
 		)	
-		console.log(newEvent)
+		//console.log(newEvent)
 
 		//AJOUT DE L'EVENT A LA BDD
 		Event.createEvent(newEvent, function(err, user){
@@ -375,9 +340,8 @@ var eventCtrl = {
 		    participants: function(next) {
 		        Registration.find({event: req.params.id}).populate('user').exec(next)
 		    }
-		}, function(err, results) {
-			var event = results
-			res.render('partials/event/event-detail', event);
+		}, function(err, result) {
+			res.render('partials/event/event-detail', {result : result});
 		});	
 	}
 }

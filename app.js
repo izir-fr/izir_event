@@ -54,7 +54,12 @@ var hbs = exphbs.create({
   layoutsDir:'app/views/layouts',
   partialsDir:'app/views/partials',
   helpers: {
-      date: (val) => { return val.getDate() + '/' + (parseInt(val.getMonth())+1) + '/' + val.getFullYear() }
+      date: (val) => { return val.getDate() + '/' + (parseInt(val.getMonth())+1) + '/' + val.getFullYear() },
+      dateFullYear: (val) => { return val.getUTCFullYear() },
+      dateMonth: (val) => { return ( val.getUTCMonth() + 1 )},
+      dateDay: (val) => { return val.getUTCDate() },
+      dateHours: (val) => { return val.getUTCHours() },
+      dateMinutes: (val) => { return val.getUTCMinutes() }    
     }
 });
 

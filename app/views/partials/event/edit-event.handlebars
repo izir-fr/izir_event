@@ -100,7 +100,7 @@
               <div class="row">
                 <div class="col-4">
                   <select class="form-control" name="jourCloture" required>
-                    <option value="{{event.inscriptionCloture.jourCloture}}" selected>{{event.inscriptionCloture.jourCloture}}</option>
+                    <option value="{{dateDay event.date_cloture_inscription}}" selected>{{dateDay event.date_cloture_inscription}}</option>
                     {{#each date_list.day}}
                       <option value="{{this.value}}">{{this.value}}</option>
                     {{/each}}
@@ -108,7 +108,7 @@
                 </div>
                 <div class="col-4">
                   <select class="form-control" name="moisCloture" required>
-                    <option value="{{event.inscriptionCloture.moisCloture}}" selected>{{event.inscriptionCloture.moisCloture}}</option>
+                    <option value="{{dateMonth event.date_cloture_inscription}}" selected>{{dateMonth event.date_cloture_inscription}}</option>
                     {{#each date_list.month}}
                       <option value="{{this.value}}">{{this.value}}</option>
                     {{/each}}
@@ -116,7 +116,7 @@
                 </div>
                 <div class="col-4">
                   <select class="form-control" name="anneeCloture" required>
-                    <option value="{{event.inscriptionCloture.anneeCloture}}" selected>{{event.inscriptionCloture.anneeCloture}}</option>
+                    <option value="{{dateFullYear event.date_cloture_inscription}}" selected>{{dateFullYear event.date_cloture_inscription}}</option>
                     {{#each date_list.year}}
                       <option value="{{this.value}}">{{this.value}}</option>
                     {{/each}}
@@ -134,7 +134,7 @@
               <div class="row">
                 <div class="col-6">
                   <select class="form-control" name="heureCloture" required>
-                    <option value="{{event.inscriptionCloture.heureCloture}}" selected>{{event.inscriptionCloture.heureCloture}}</option>
+                    <option value="{{dateHours event.date_cloture_inscription}}" selected>{{dateHours event.date_cloture_inscription}}</option>
                     {{#each date_list.hour}}
                       <option value="{{this.value}}">{{this.value}}</option>
                     {{/each}}
@@ -142,7 +142,7 @@
                 </div>
                 <div class="col-6">
                   <select class="form-control" name="minuteCloture" required>
-                    <option value="{{event.inscriptionCloture.minuteCloture}}" selected>{{event.inscriptionCloture.minuteCloture}}</option>
+                    <option value="{{dateMinutes event.date_cloture_inscription}}" selected>{{dateMinutes event.date_cloture_inscription}}</option>
                     <option value="00">00</option>
                     <option value="15">15</option>
                     <option value="30">30</option>
@@ -292,7 +292,7 @@
                     <div class="row">
                       <div class="col-4">
                         <select class="form-control" name="jourDebut" required>
-                          <option value="{{this.dateDebut.jourDebut}}" selected>{{this.dateDebut.jourDebut}}</option>
+                          <option value="{{dateDay this.date_debut}}" selected>{{dateDay this.date_debut}}</option>
                           {{#each ../date_list.day}}
                             <option value="{{this.value}}">{{this.value}}</option>
                           {{/each}}
@@ -300,7 +300,7 @@
                       </div>
                       <div class="col-4">
                         <select class="form-control" name="moisDebut" required>
-                          <option value="{{this.dateDebut.moisDebut}}" selected>{{this.dateDebut.moisDebut}}</option>
+                          <option value="{{dateMonth this.date_debut}}" selected>{{ dateMonth this.date_debut}}</option>
                           {{#each ../date_list.month}}
                             <option value="{{this.value}}">{{this.value}}</option>
                           {{/each}}
@@ -308,7 +308,7 @@
                       </div>
                       <div class="col-4">
                         <select class="form-control" name="anneeDebut" required>
-                          <option value="{{this.dateDebut.anneeDebut}}" selected>{{this.dateDebut.anneeDebut}}</option>
+                          <option value="{{dateFullYear this.date_debut}}" selected>{{dateFullYear this.date_debut}}</option>
                           {{#each ../date_list.year}}
                             <option value="{{this.value}}">{{this.value}}</option>
                           {{/each}}
@@ -326,7 +326,7 @@
                     <div class="row">
                       <div class="col-6">
                         <select class="form-control" name="heureDebut" required>
-                          <option value="{{dateDebut.heureDebut}}" selected>{{dateDebut.heureDebut}}</option>
+                          <option value="{{dateHours this.date_debut}}" selected>{{dateHours this.date_debut}}</option>
                           {{#each ../date_list.hour}}
                             <option value="{{this.value}}">{{this.value}}</option>
                           {{/each}}
@@ -334,7 +334,7 @@
                       </div>
                       <div class="col-6">
                         <select class="form-control" name="minuteDebut" required>
-                          <option value="{{dateDebut.minuteDebut}}" selected>{{dateDebut.minuteDebut}}</option>
+                          <option value="{{dateMinutes this.date_debut}}" selected>{{dateMinutes this.date_debut}}</option>
                           <option value="00">00</option>
                           <option value="15">15</option>
                           <option value="30">30</option>

@@ -30,7 +30,7 @@ router.get('/increase-by-x/:id', cartCtrl.getIncreaseByX )
 router.get('/remove/:id', cartCtrl.getRemoveProductCart )
 
 // Get cart
-router.get('/produit/:id', cartCtrl.getProduct )
+router.get('/produit/:id', cartCtrl.getProductById )
 
 // Get all product
 router.get('/panier', cartCtrl.getCart )

@@ -504,7 +504,7 @@ $(function(){
 	$('#epreuve-form-submit').on('click', function(e){
 		//limitation à 1 epreuve /inscription
 		var validation = 0
-		$('.epreuve-validation').each((key, val)=>{
+		$('.epreuve-validation').each(function(key, val){
 			if(parseInt($($($($('.epreuve-validation')[key]).children()[1]).children()[0]).val()) !== 0){
 				validation++
 			}
@@ -577,7 +577,7 @@ $(function(){
 		//default var
 		var formValidation = false, 
 			certificatValidation = false,
-			formToComplete = (field)=>{
+			function formToComplete (field){
 				field.addClass('border border-danger')
 				alert('Merci de compléter tous les champs obligatoires notés avec "*"')
 			}
@@ -631,7 +631,7 @@ $(function(){
 			e.preventDefault()
 		} else{
 			//confirmation épreuves
-			$('.subtotalView').each((key, val)=>{
+			$('.subtotalView').each( function(key, val){
 				if(parseInt($($('.subtotalView')[key]).text()) > 0){
 					var produit = $($($($($('.subtotalView')[key]).parent()).parent()).children()[0]).text(),
 						qty  = $($($($($($('.subtotalView')[key]).parent()).parent()).children()[1]).children()[0]).val(),

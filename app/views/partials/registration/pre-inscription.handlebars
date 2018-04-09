@@ -507,6 +507,7 @@ $(function(){
 		$('.epreuve-validation').each(function(key, val){
 			if(parseInt($($($($('.epreuve-validation')[key]).children()[1]).children()[0]).val()) !== 0){
 				validation++
+				console.log(validation)
 			}
 		})
 
@@ -577,7 +578,7 @@ $(function(){
 		//default var
 		var formValidation = false, 
 			certificatValidation = false,
-			function formToComplete (field){
+			formToComplete = (field)=>{
 				field.addClass('border border-danger')
 				alert('Merci de compléter tous les champs obligatoires notés avec "*"')
 			}
@@ -631,7 +632,7 @@ $(function(){
 			e.preventDefault()
 		} else{
 			//confirmation épreuves
-			$('.subtotalView').each( function(key, val){
+			$('.subtotalView').each(function(key, val){
 				if(parseInt($($('.subtotalView')[key]).text()) > 0){
 					var produit = $($($($($('.subtotalView')[key]).parent()).parent()).children()[0]).text(),
 						qty  = $($($($($($('.subtotalView')[key]).parent()).parent()).children()[1]).children()[0]).val(),

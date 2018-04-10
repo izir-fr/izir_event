@@ -210,7 +210,7 @@ var registrationCtrl = {
 				' - Numéro de Licence : ' + registration.participant.numLicence + '.\n' +
 				' - Categorie : ' + registration.participant.categorie + '.\n' +
 				' - Adresse : ' + registration.participant.adresse1 + ' ' + registration.participant.adresse2 + ' ' + registration.participant.codePostal + ' ' + registration.participant.city + '.\n\n' +
-				'Pour le bien de l\'organisation et afin de garantir votre inscription, n\'oubliez pas d\'effectuer votre règlement en ligne en suivant ce lien http://event.izir.fr/event/checkout/' + registration.id + '\n\n' +
+				'Pour le bien de l\'organisation et afin de garantir votre inscription, n\'oubliez pas d\'effectuer votre règlement en ligne en suivant ce lien http://event.izir.fr/inscription/checkout/' + registration.id + '\n\n' +
 				'Bonne course !\n\n' +
 				'Nicolas de izir.fr'
 				}
@@ -282,7 +282,7 @@ var registrationCtrl = {
 							subject: 'Confirmation de paiement et d\'inscription N° ' + req.params.id + ' à l\'épreuve ' + req.body.event,
 							text: 	'Nous avons le plaisir de vous confirmer que votre paiement a bien été pris en compte. \n\n' + 
 									'Vous venez donc de finaliser votre incription N°' + req.params.id + ' pour l\'épreuve suivante : ' + req.body.event +'.\n\n' + 
-									'Vous pouvez à tout moment consulter vos inscriptions en suivant ce lien http://event.izir.fr/user/inscriptions/' + req.user.id + '\n\n' +
+									'Vous pouvez à tout moment consulter vos inscriptions en suivant ce lien http://event.izir.fr/inscription/recap/user/' + req.user.id + '\n\n' +
 									'Bonne course !\n\n' +
 									'Nicolas de izir.fr'
 						};

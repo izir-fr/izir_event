@@ -1,4 +1,4 @@
-const webpack = require('webpack')
+const webpack = require('webpack');
 const path = require('path');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -6,10 +6,9 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 let config_watch, config_devtool, config_output, config_entry, config_mode
 
-const env = ( process.env.mode === 'production' )
-// const dist = path.resolve(__dirname, 'www');
+const env = ( process.env.NODE_ENV === 'production' )
 
-if(env === true){
+if(env){
    config_mode = 'production'   
    config_watch = false
    config_devtool = false
@@ -33,6 +32,7 @@ if(env === true){
       publicPath: '/js/'
    }   
 }
+
 
 let config = {
    entry: config_entry,
@@ -59,6 +59,13 @@ let config = {
       ]
    },
    plugins: [
+      new webpack.ProvidePlugin({
+         jQuery: 'jquery',
+         $: 'jquery',
+         jquery: 'jquery',
+         'window.jQuery': 'jquery',
+         Popper: ['popper.js', 'default']
+     })
    ]
 }
 

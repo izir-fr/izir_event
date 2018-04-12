@@ -1,7 +1,5 @@
-import $ from 'jquery'
-
 var init = () => {
-  console.log($('#logo') + '!!')
+  console.log('app.js successfull loaded')
 }
 
 export default init

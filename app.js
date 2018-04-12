@@ -44,21 +44,25 @@ var cms = require('./app/router/cmsRoutes'),
 //cutom modules
 var cronConfig = require('./custom_modules/cron');
 
-// Webpack
-var webpack = require('webpack')
-var webpackConfig = require('./webpack.config')
-var compiler = webpack(webpackConfig)
-var webpackDevMiddleware = require('webpack-dev-middleware')
-var webpackHotMiddleware = require('webpack-hot-middleware')
-app.use(webpackDevMiddleware(compiler, {
-    publicPath: webpackConfig.output.publicPath,
-    stats: {colors: true},
-    reload: true,
-    inline: true,
-    // headers: {'Access-Control-Allow-Origin': '*'}
-  })
-)
-app.use(webpackHotMiddleware(compiler))
+console.log(process.env.LOCAL)
+
+if(process.env.LOCAL === true) {
+  // Webpack
+  var webpack = require('webpack')
+  var webpackConfig = require('./webpack.config')
+  var compiler = webpack(webpackConfig)
+  var webpackDevMiddleware = require('webpack-dev-middleware')
+  var webpackHotMiddleware = require('webpack-hot-middleware')
+  app.use(webpackDevMiddleware(compiler, {
+      publicPath: webpackConfig.output.publicPath,
+      stats: {colors: true},
+      reload: true,
+      inline: true,
+      // headers: {'Access-Control-Allow-Origin': '*'}
+    })
+  )
+  app.use(webpackHotMiddleware(compiler))  
+}
 
 // morgan
 app.use(morgan('dev'))

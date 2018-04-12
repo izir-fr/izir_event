@@ -5,7 +5,6 @@
   "main": "app.js",
   "scripts": {
     "start": "node ./node_modules/.bin/pm2 start app.js -i 1 --attach",
-    "dev": "webpack --mode=development",
     "build": "webpack --mode=production",
     "test": "./node_modules/.bin/mocha"
   },
@@ -54,20 +53,27 @@
     "vicopo": "^1.1.8"
   },
   "devDependencies": {
+    "@babel/core": "^7.0.0-beta.44",
+    "@babel/preset-env": "^7.0.0-beta.44",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
-    "babel-loader": "^7.1.4",
+    "babel-eslint": "^8.2.2",
+    "babel-loader": "^8.0.0-beta.2",
     "babel-preset-env": "^1.6.1",
     "babel-preset-react": "^6.24.1",
+    "babel-preset-react-hmre": "^1.1.1",
     "chai": "^4.1.2",
     "chai-http": "^3.0.0",
+    "clean-webpack-plugin": "^0.1.19",
     "eslint": "^4.19.1",
     "eslint-config-standard": "^11.0.0",
     "eslint-loader": "^2.0.0",
     "eslint-plugin-import": "^2.10.0",
     "eslint-plugin-node": "^6.0.1",
     "eslint-plugin-promise": "^3.7.0",
+    "eslint-plugin-react": "^7.7.0",
     "eslint-plugin-standard": "^3.0.1",
+    "html-webpack-plugin": "^3.2.0",
     "mocha": "^5.0.4",
     "react": "^16.3.1",
     "react-dom": "^16.3.1",
@@ -76,6 +82,8 @@
     "uglifyjs-webpack-plugin": "^1.2.4",
     "webpack": "^4.5.0",
     "webpack-cli": "^2.0.14",
-    "webpack-dev-server": "^3.1.3"
+    "webpack-dev-middleware": "^3.1.2",
+    "webpack-dev-server": "^3.1.3",
+    "webpack-hot-middleware": "^2.22.0"
   }
 }

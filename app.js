@@ -22,6 +22,10 @@ var async = require('async'),
     url = require('url'),
     MongoStore = require('connect-mongo')(session);
 
+// Init App
+var app = express();
+var port = 3000
+
 // Credentials
 var credentials = require('./app/config/credentials')
 
@@ -40,13 +44,28 @@ var cms = require('./app/router/cmsRoutes'),
 //cutom modules
 var cronConfig = require('./custom_modules/cron');
 
-// Init App
-var app = express();
+// Webpack
+var webpack = require('webpack')
+var webpackConfig = require('./webpack.config')
+var compiler = webpack(webpackConfig)
+var webpackDevMiddleware = require('webpack-dev-middleware')
+var webpackHotMiddleware = require('webpack-hot-middleware')
+app.use(webpackDevMiddleware(compiler, {
+    publicPath: webpackConfig.output.publicPath,
+    stats: {colors: true},
+    reload: true,
+    inline: true,
+    // headers: {'Access-Control-Allow-Origin': '*'}
+  })
+)
+app.use(webpackHotMiddleware(compiler))
+
+// morgan
 app.use(morgan('dev'))
 
 // Http to Https
 var redirectToHTTPS = require('express-http-to-https').redirectToHTTPS
-app.use(redirectToHTTPS([/localhost:3000/]));
+app.use(redirectToHTTPS([/localhost:(\d{4})/]));
 
 // Handlebars
 var hbs = exphbs.create({
@@ -54,7 +73,7 @@ var hbs = exphbs.create({
   layoutsDir:'app/views/layouts',
   partialsDir:'app/views/partials',
   helpers: {
-      date: (val) => { return val.getDate() + '/' + (parseInt(val.getMonth())+1) + '/' + val.getFullYear() },
+      date: (val) => { return val.getDate() + '/' + (parseInt(val.getMonth()) + 1 ) + '/' + val.getFullYear() },
       dateFullYear: (val) => { return val.getUTCFullYear() },
       dateMonth: (val) => { return ( val.getUTCMonth() + 1 )},
       dateDay: (val) => { return val.getUTCDate() },
@@ -163,7 +182,7 @@ app.use(function(req, res, next){
 });
 
 // Set Port
-app.set('port', (process.env.PORT || 3000));
+app.set('port', (process.env.PORT || port));
 
 app.listen(app.get('port'), function(){
   console.log('mongoose connect : ' + credentials.mLab);

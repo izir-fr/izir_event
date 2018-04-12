@@ -1,5 +1,5 @@
 var init = () => {
-  console.log('app.js successfull loaded !!')
+  console.log('app.js successfull loaded !')
 }
 
 export default init()

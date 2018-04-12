@@ -8,6 +8,7 @@ let config_watch, config_devtool, config_output, config_entry, config_mode
 let config
 
 const env = ( process.env.NODE_ENV === 'production' )
+const local = ( process.env.LOCAL === 'true' )
 
 if(env){
    config_mode = 'production'   
@@ -34,7 +35,7 @@ if(env){
    }   
 }
 
-if (process.env.LOCAL === 'true' || process.env.NODE_ENV === 'production') {
+if (local || env) {
    config = {
       entry: config_entry,
       output: config_output,

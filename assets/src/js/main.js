@@ -5,6 +5,6 @@ import './components/google-maps'
 import './components/registration-cart'
 import './components/registration-participant-validation'
 
-if (module.hot && process.env.LOCAL === true) {
+if (module.hot) {
   module.hot.accept()
 }

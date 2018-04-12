@@ -44,9 +44,7 @@ var cms = require('./app/router/cmsRoutes'),
 //cutom modules
 var cronConfig = require('./custom_modules/cron');
 
-console.log(process.env.LOCAL)
-
-if(process.env.LOCAL === true) {
+if(process.env.LOCAL === 'true') {
   // Webpack
   var webpack = require('webpack')
   var webpackConfig = require('./webpack.config')

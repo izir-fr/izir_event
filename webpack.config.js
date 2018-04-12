@@ -34,7 +34,7 @@ if(env){
    }   
 }
 
-if (process.env.LOCAL === true || process.env.NODE_ENV === 'production') {
+if (process.env.LOCAL === 'true' || process.env.NODE_ENV === 'production') {
    config = {
       entry: config_entry,
       output: config_output,

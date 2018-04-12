@@ -37,4 +37,4 @@ var headerLogo = () => {
   })
 }
 
-export default headerLogo
+export default headerLogo()

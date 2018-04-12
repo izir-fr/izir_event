@@ -109,4 +109,4 @@ var googleMap = () => {
   })
 }
 
-export default googleMap
+export default googleMap()

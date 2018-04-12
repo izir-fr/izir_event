@@ -9,4 +9,4 @@ var gsc = () => {
   })(window, document, '_gscq', 'script', '//widgets.getsitecontrol.com/49714/script.js')
 }
 
-export default gsc
+export default gsc()

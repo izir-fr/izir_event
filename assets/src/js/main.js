@@ -1,20 +1,10 @@
-import init from './components/init'
-import gsc from './components/getSiteControl'
-import headerLogo from './components/header-logo'
-import googleMap from './components/google-maps'
-
-init()
-gsc()
-headerLogo()
-googleMap()
+import './components/init'
+import './components/getSiteControl'
+import './components/header-logo'
+import './components/google-maps'
+import './components/registration-cart'
+import './components/registration-participant-validation'
 
 if (module.hot) {
-  module.hot.accept(init, function () {
-  })
-  module.hot.accept(gsc, function () {
-  })
-  module.hot.accept(headerLogo, function () {
-  })
-  module.hot.accept(googleMap, function () {
-  })
+  module.hot.accept()
 }

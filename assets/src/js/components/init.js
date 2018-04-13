@@ -1,5 +1,5 @@
-var init = ()=>{
-	console.log($('#logo'))
+var init = () => {
+  console.log('app.js successfull loaded !')
 }
 
-export default init
+export default init()

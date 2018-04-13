@@ -29,11 +29,21 @@
 					    	<td><strong>{{this.participant.nom}}</strong> {{this.participant.prenom}}</td>
 					    	<td>{{this.event.adresse.codePostal}} {{this.event.adresse.ville}}</td>
 					    	<td><strong>{{this.statut}}</strong></td>
-					    	<td>{{this.paiement.id}}</td>
+					    	<td>
+					    		{{#if this.paiement.other_captured}}
+					    			<span>Paiement validé manuellement</span>
+					    		{{else}}
+					    			{{this.paiement.id}}
+					    		{{/if}}
+					    	</td>
 					    	{{#if this.paiement.captured}}
-							<td><strong><a href="/inscription/checkout/{{this.id}}">Details</a></strong></td>
+								<td><strong><a href="/inscription/checkout/{{this.id}}">Details</a></strong></td>
 					    	{{else}}
-					    	<td><strong><a href="/inscription/checkout/{{this.id}}">Payer</a></strong> / <strong><a href="/inscription/checkout/{{this.id}}">Voir</a></strong></td>
+						    	{{#if this.paiement.other_captured}}
+						    	<td><strong><a href="/inscription/checkout/{{this.id}}">Details</a></strong></td>
+						    	{{else}}
+						    	<td><strong><a href="/inscription/checkout/{{this.id}}">Payer</a></strong> / <strong><a href="/inscription/checkout/{{this.id}}">Voir</a></strong></td>
+						    	{{/if}}
 					    	{{/if}}
 					    </tr>
 					{{/each}}

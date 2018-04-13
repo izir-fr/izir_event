@@ -46,7 +46,9 @@ var registrationSchema = mongoose.Schema({
 		id : { type: String },
 		object : { type: String },
 		date : { type: Number },
-		captured : { type : Boolean, default: false }
+		captured : { type : Boolean, default: false },
+		other : { type : Boolean, default: false },
+		other_captured : { type : Boolean, default: false }
 	},
 	created_at : { type: Date, required: true, default: Date.now },
 	updated: { type: Date }

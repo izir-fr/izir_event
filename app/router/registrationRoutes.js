@@ -35,6 +35,12 @@ router.post('/pre-inscription/:id', registrationCtrl.postPreinscription );
 // Get a file excell
 router.get('/checkout/:id', ensureAuthenticated, registrationCtrl.getCheckout )
 
+// Get a other paiement
+router.get('/checkout/:id/other-paiement', ensureAuthenticated, registrationCtrl.getOtherPaiement )
+
+// Get a other paiement captured
+router.get('/checkout/:id/other-captured', ensureAuthenticated, registrationCtrl.getOtherCaptured )
+
 // Get a file GmCAP
 router.post('/checkout/:id', registrationCtrl.postCheckout )
 

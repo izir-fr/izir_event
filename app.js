@@ -31,7 +31,7 @@ var credentials = require('./app/config/credentials')
 
 // MongoDB
 mongoose.Promise = require('bluebird');
-var mongoose = mongoose.connect(credentials.mLab, { useMongoClient: true });
+var mongoose = mongoose.connect(credentials.mLab);
 
 // Router
 var cms = require('./app/router/cmsRoutes'),
@@ -106,7 +106,7 @@ app.use(session({
     saveUninitialized: true,
     resave: true,
     store : new MongoStore({
-      mongooseConnection: mongoose 
+      url: credentials.mLab
     }),
     cookie : {
       maxAge: 180 * 60 * 1000

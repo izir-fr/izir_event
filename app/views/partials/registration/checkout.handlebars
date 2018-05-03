@@ -113,63 +113,64 @@
           -->
         </div>
         <div class="row">
-          <div class="col-12">        
-          <!-- PAIEMENT-->
-          {{#if data.registration.event.paiement}}
-            {{#if data.registration.paiement.captured}}
-              <div class="alert alert-warning spacer-sm-top">
-                <p>Votre inscription a déjà été payée.</p>
+          <div class="col-12">  
+            <div class="alert alert-warning spacer-sm-top">      
+            <!-- PAIEMENT-->
+            {{#if data.registration.event.paiement}}
+              {{#if data.registration.paiement.captured}}
+                <p>Votre inscription est finalisée, aucune action n'est requise de votre part.</p>
                 <p>Votre référence de paiement est : {{data.registration.paiement.id}}</p>
                 <p>Pour toute question relative à votre inscription, merci de contacter le service client via le chat en bas de l'écran.</p>
                 <p>Pour toute question relative à l'épreuve, merci de contacter le l'organisateur de celle-ci.</p>
-                <p>Merci de votre compréhension.</p>
-              </div>                  
-            {{else}}
-              {{#if data.registration.paiement.other}}
-                {{#if data.registration.paiement.other_captured}}
-                  <p>L'organisateur à bien reçus votre paiement, l'inscription est finalisée</p>
-                {{else}}
-                  <p class="spacer-sm-bottom"><strong>Vous avez choisi un paiement par chèque / espèce pour valider votre inscription.</strong> Ce règlement sera à envoyer à l'adresse de la permanance de l'organisation de l'évènement (si le delai postal le permet) ou à donner en main propre au guichet de l'organisation lorsque que vous vous présenterez à l'évènement. L'organisateur validera votre inscription après réception de son paiement.</p>
-                {{/if}}
-                <p>Pour toute question relative à votre inscription, merci de contacter le service client via le chat en bas de l'écran.</p>
-                <p>Pour toute question relative à l'épreuve, merci de contacter le l'organisateur de celle-ci.</p>
-                <p>Merci de votre compréhension.</p>  
+                <p>Merci de votre compréhension.</p>              
               {{else}}
-              <div class="row">
-                <div class="col-6">
-                  <a href="/inscription/checkout/{{data.registration.id}}/other-paiement" class="btn btn-secondary d-block spacer-xs-top" id="other-checkout">Paiement par chèque / espèce *</a>
-                </div>
-                <div class="col-6">
-                  <script 
-                    src="https://checkout.stripe.com/checkout.js" class="stripe-button"
-                    input-type="submit"
-                    data-label="Paiment par CB"
-                    data-email="{{data.registration.participant.email}}"
-                    data-key="{{data.stripeFrontKey}}"
-                    data-amount="{{data.stripe}}"
-                    data-name="event.izir"
-                    data-description="{{data.registration.eventName}}"
-                    data-locale="auto"
-                    data-currency="EUR"
-                    > 
-                  </script>                    
-                </div>
+                {{#if data.registration.paiement.other_captured}}
+                  <p>L'organisateur à bien reçus votre paiement, l'inscription est finalisée, aucune action supplémenatire n'est requise de votre part.</p>
+                  <p>Pour toute question relative à votre inscription, merci de contacter le service client via le chat en bas de l'écran.</p>
+                  <p>Pour toute question relative à l'épreuve, merci de contacter le l'organisateur de celle-ci.</p>
+                  <p>Merci de votre compréhension.</p>                  
+                {{else}}              
+                  {{#if data.registration.paiement.other}}
+                    <p class="spacer-sm-bottom"><strong>Vous avez choisi un paiement par chèque / espèce pour valider votre inscription.</strong> Ce règlement sera à envoyer à l'adresse de la permanance de l'organisation de l'évènement (si le delai postal le permet) ou à donner en main propre au guichet de l'organisation lorsque que vous vous présenterez à l'évènement. L'organisateur validera votre inscription après réception de son paiement.</p>
+                  {{else}}
+                    <div class="row">
+                      <div class="col-6">
+                        <a href="/inscription/checkout/{{data.registration.id}}/other-paiement" class="btn btn-secondary d-block spacer-xs-top" id="other-checkout">Paiement par chèque / espèce *</a>
+                      </div>
+                      <div class="col-6">
+
+                        <script 
+                          src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                          input-type="submit"
+                          data-label="Paiment par CB"
+                          data-email="{{data.registration.participant.email}}"
+                          data-key="{{data.stripeFrontKey}}"
+                          data-amount="{{data.stripe}}"
+                          data-name="event.izir"
+                          data-description="{{data.registration.eventName}}"
+                          data-locale="auto"
+                          data-currency="EUR"
+                          > 
+                        </script>                    
+                      </div>
+                    </div>
+                    <div class="text-center spacer-sm-top spacer-sm-bottom bg-light">
+                      <img class="img-fluid spacer-sm-top" src="/img/rect3737.png" alt="Paiement sécurisé" width="50" height="50">
+                      <p class="spacer-sm-top spacer-sm-bottom "><strong>Paiement sécurisé</strong><span class=""> par stripe.com</span></p>
+                      <p class="spacer-sm-bottom"><strong>* paiement par chèque / espèce :</strong> Ce règlement sera à envoyer à l'adresse de la permanance de l'organisation de l'évènement (si le delai postal le permet) ou à donner en main propre au guichet de l'organisation lorsque que vous vous présenterez à l'évènement. L'organisateur validera votre inscription après réception de son paiement.</p>
+                    </div>
+                  {{/if}}
+                {{/if}}
+              {{/if}}
+            {{else}}
+              <div class="col-12 alert alert-warning spacer-sm-top">
+                <p>Votre inscription a bien été prise en compte.</p>
+                <p>Vous ne pouvez pas payer votre inscription car l'organisateur n'a pas activé cette fonctionnalité. L'organisateur vous demandera donc de payer les {{data.registration.orderAmount}} € votre inscription lors du retrait de votre dossard.</p>
+                <p>Merci de votre compréhension.</p>
               </div>
-              <div class="text-center spacer-sm-top spacer-sm-bottom bg-light">
-                <img class="img-fluid spacer-sm-top" src="/img/rect3737.png" alt="Paiement sécurisé" width="50" height="50">
-                <p class="spacer-sm-top spacer-sm-bottom "><strong>Paiement sécurisé</strong><span class=""> par stripe.com</span></p>
-                <p class="spacer-sm-bottom"><strong>* paiement par chèque / espèce :</strong> Ce règlement sera à envoyer à l'adresse de la permanance de l'organisation de l'évènement (si le delai postal le permet) ou à donner en main propre au guichet de l'organisation lorsque que vous vous présenterez à l'évènement. L'organisateur validera votre inscription après réception de son paiement.</p>
-              </div>
-              {{/if}}               
             {{/if}}
-          {{else}}
-            <div class="col-12 alert alert-warning spacer-sm-top">
-              <p>Votre pré-inscription a bien été prise en compte.</p>
-              <p>Vous ne pouvez pas payer votre inscription car l'organisateur n'a pas activé cette fonctionnalité. L'organisateur vous demandera donc de payer les {{data.registration.orderAmount}} € votre inscription lors du retrait de votre dossard.</p>
-              <p>Merci de votre compréhension.</p>
             </div>
-          {{/if}}
-          </div>  
+          </div>
         </div>
       </form>
     </div>

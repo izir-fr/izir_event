@@ -115,15 +115,15 @@ var registrationCtrl = {
       })
 
       var data = {
-            results : results,
-            jourNaissance : jourNaissance,
-            moisNaissance : moisNaissance,
-            anneeNaissance : anneeNaissance,
-            disponibility : uniqueProduit,
-            date_list : dateList,
-            category_list : catList,
-            discipline_list : disList
-          }
+        results : results,
+        jourNaissance : jourNaissance,
+        moisNaissance : moisNaissance,
+        anneeNaissance : anneeNaissance,
+        disponibility : uniqueProduit,
+        date_list : dateList,
+        category_list : catList,
+        discipline_list : disList
+      }
 
       res.render('partials/registration/pre-inscription', data);
     }); 
@@ -162,31 +162,31 @@ var registrationCtrl = {
 
     //création de la pré-commande
     var registration = new Registration ({
-                user : req.user.id,//user
-            event : req.params.id,//event
-            eventName : req.body.eventName,
-            participant: {
-              nom : req.body.surname,
-              prenom : req.body.name,
-              email : req.body.email,
-              sex : req.body.sex,
-              dateNaissance: req.body.jourNaissance + '/' + req.body.moisNaissance + '/' + req.body.anneeNaissance,
-              team : req.body.team,
-              numLicence : req.body.numLicence,
-              categorie : req.body.categorie,
-              adresse1 : req.body.adresse1,
-              adresse2 : req.body.adresse2,
-              codePostal : req.body.codePostal,
-              city : req.body.city 
-            },
-            produits : produits,//toute le pack
-            orderAmount : req.body.total,
-            statut : "pré-inscrit",
-            docs : {
-              certificat : req.body.certificats,
-            },
-            updated: new Date()
-          });
+      user : req.user.id,//user
+      event : req.params.id,//event
+      eventName : req.body.eventName,
+      participant: {
+        nom : req.body.surname,
+        prenom : req.body.name,
+        email : req.body.email,
+        sex : req.body.sex,
+        dateNaissance: req.body.jourNaissance + '/' + req.body.moisNaissance + '/' + req.body.anneeNaissance,
+        team : req.body.team,
+        numLicence : req.body.numLicence,
+        categorie : req.body.categorie,
+        adresse1 : req.body.adresse1,
+        adresse2 : req.body.adresse2,
+        codePostal : req.body.codePostal,
+        city : req.body.city 
+      },
+      produits : produits,//toute le pack
+      orderAmount : req.body.total,
+      statut : "pré-inscrit",
+      docs : {
+        certificat : req.body.certificats,
+      },
+      updated: new Date()
+    });
     //console.log(registration)
     
     //enregistrement de la pré-commande
@@ -196,11 +196,11 @@ var registrationCtrl = {
       //Configuration du mail
       var mailOptions = {
         to: registration.participant.email,
-        from: 'Nicolas de izir.fr <event@izir.fr>',
-        subject: 'Confirmation de pré-inscription N° ' + registration.id + 'à ' + registration.eventName,
+        from: 'Event Izir <event@izir.fr>',
+        subject: 'Récapitulatif d\'inscription N°' + registration.id,
         text: 'Bonjour,\n\n' +
-        'vous venez de vous pré-inscrire à l\'épreuve ' + registration.eventName +' .\n\n' +
-        'Voici les informations sur le participant transmises à l\'organisateur : \n\n' +
+        'vous venez de saisir les informations suivantes pour vous inscrire à l\'épreuve ' + registration.eventName + ' .\n\n' +
+        'Voici les informations sur le participant qui sont transmises à l\'organisateur : \n\n' +
         ' - Nom : ' + registration.participant.nom + '.\n' +
         ' - Prénom : ' + registration.participant.prenom + '.\n' +
         ' - Email : ' + registration.participant.email + '.\n\n' +
@@ -210,14 +210,15 @@ var registrationCtrl = {
         ' - Numéro de Licence : ' + registration.participant.numLicence + '.\n' +
         ' - Categorie : ' + registration.participant.categorie + '.\n' +
         ' - Adresse : ' + registration.participant.adresse1 + ' ' + registration.participant.adresse2 + ' ' + registration.participant.codePostal + ' ' + registration.participant.city + '.\n\n' +
-        'Pour le bien de l\'organisation et afin de garantir votre inscription, n\'oubliez pas d\'effectuer votre règlement en ligne en suivant ce lien http://event.izir.fr/inscription/checkout/' + registration.id + '\n\n' +
+        'Pour valider votre inscription, si ce n\'est déjà fait, n\'oubliez pas d\'effectuer votre règlement en ligne en suivant ce lien http://event.izir.fr/inscription/checkout/' + registration.id + '\n\n' +
+        'Vous pouvez à tout moment consulter le statut de vos inscriptions en suivant ce lien http://event.izir.fr/inscription/recap/user/' + req.user.id + '\n\n' +
         'Bonne course !\n\n' +
         'Nicolas de izir.fr'
         }
       //envoie du mail
       smtpTransport.sendMail(mailOptions);
 
-      req.flash('success_msg', 'Votre pré-inscription à bien été prise en compte');
+      req.flash('success_msg', 'Vos informations d\'inscription ont bien été prises en compte');
       res.redirect('/inscription/checkout/' + registration.id)
     });
     
@@ -245,11 +246,37 @@ var registrationCtrl = {
       function(err, user) {
         if(err) {
           res.redirect('/user/profil/')
-          req.flash('error', 'Une erreure est survenue lors du paiement')
+          req.flash('error', 'Une erreur est survenue lors du paiement')
         } else {
-          //REDIRECTION
-          res.redirect('/inscription/checkout/' + id )
-          req.flash('success_msg', 'Votre paiement à bien été pris en compte');
+          Registration.find({_id: id}).populate('event').exec(function(err, registrations){
+            if(err) {
+              res.redirect('/user/profil/')
+              req.flash('error', 'Une erreur est survenue lors de l\'envoie du mail de confirmation')
+            } else {
+              var permanence = registrations[0].event.permanence
+              var userEmail = registrations[0].participant.email
+              var val = registrations[0]
+              // send permanance email
+              var mailOptions = {
+                to: userEmail,
+                from: 'Event Izir <event@izir.fr>',
+                subject: 'Récapitulatif de paiement de l\'inscription N°' + id,
+                text:   'Nous avons le plaisir de vous confirmer que votre demande d\'inscription a bien été prise en compte. \n\n' +
+                    'Vous avez choisi le mode de paiement "chèque / espèce". De ce fait, la validation de votre inscription est réalisée manuelement par l\'organisateur. Celui-ci validera votre inscription lors de son paiement. Le paiement de votre inscription est à réaliser directement à l\'organisateur, ce qui lui permettera de valider votre inscription dès sa réception. \n\n' +
+                    'Le paiement est réalisable: \n' +
+                    '- sur le lieu de l\'épreuve, le jour de celle-ci.\n' +
+                    '- voie postale si celui-ci vous le permet (à voir avec la permanance de l\'organisation par email: ' + permanence.email + ' ou par téléphone: ' + permanence.telephone + ') \n\n' +
+                    'Nous vous invitons donc à vous rapprochez de l\'organisateur pour finaliser votre incription N°' + id + ' pour l\'épreuve suivante : ' + val.eventName +'.\n\n' + 
+                    'Vous pouvez à tout moment consulter le statut de vos inscriptions en suivant ce lien http://event.izir.fr/inscription/recap/user/' + val.user + '\n\n' +
+                    'Bonne course !\n\n' +
+                    'Nicolas de izir.fr'
+              }
+              smtpTransport.sendMail(mailOptions)
+              // REDIRECTION
+              res.redirect('/inscription/checkout/' + id )
+              req.flash('success_msg', 'Votre inscription à bien été prise en compte et est en attente de paiement');
+            }
+          })
         }
       }
     );   
@@ -259,7 +286,7 @@ var registrationCtrl = {
     // do somthings
     Registration.update(
       {_id : id},
-      {$set : { 'paiement': {'other_captured': true }, 'updated': new Date(Date.now()), 'statut': 'inscrit' } },
+      {$set : { 'paiement': {'other_captured': true, 'other': true }, 'updated': new Date(Date.now()), 'statut': 'inscrit' } },
       function(err, val) {
 
         Registration.findById(id, (err, val)=>{
@@ -272,17 +299,17 @@ var registrationCtrl = {
             var mailOptions = {
               to: val.participant.email,
               from: 'Event Izir <event@izir.fr>',
-              subject: 'Confirmation de paiement et d\'inscription N° ' + id + ' à l\'épreuve ' + val.eventName,
-              text:   'Nous avons le plaisir de vous confirmer que votre paiement a bien été pris en compte. \n\n' + 
-                  'Vous venez donc de finaliser votre incription N°' + id + ' pour l\'épreuve suivante : ' + val.eventName +'.\n\n' + 
-                  'Vous pouvez à tout moment consulter vos inscriptions en suivant ce lien http://event.izir.fr/inscription/recap/user/' + val.user + '\n\n' +
+              subject: 'Confirmation de paiement et de validation de l\'inscription N° ' + id,
+              text:   'Nous avons le plaisir de vous confirmer que votre paiement a bien été pris en compte et que votre inscription N°' + id + ' est validée. \n\n' + 
+                  'Vous venez donc de finaliser votre incription N°' + id + ' pour l\'épreuve suivante : ' + val.eventName + '.\n\n' + 
+                  'Vous pouvez à tout moment consulter le statut de vos inscriptions en suivant ce lien http://event.izir.fr/inscription/recap/user/' + val.user + '\n\n' +
                   'Bonne course !\n\n' +
                   'Nicolas de izir.fr'
             };
             smtpTransport.sendMail(mailOptions);
             //REDIRECTION
             res.redirect('/inscription/recap/organisateur/' + val.event )
-            req.flash('success_msg', 'L\'inscription N°' + id + ' est mis à jour avec un paiement guichet (chèque / espèces)');
+            req.flash('success_msg', 'L\'inscription N°' + id + ' est mise à jour avec un paiement guichet (chèque / espèces) et validée');
           }
         })
       }
@@ -332,18 +359,18 @@ var registrationCtrl = {
             var mailOptions = {
               to: req.user.email,
               from: 'Event Izir <event@izir.fr>',
-              subject: 'Confirmation de paiement et d\'inscription N° ' + req.params.id + ' à l\'épreuve ' + req.body.event,
-              text:   'Nous avons le plaisir de vous confirmer que votre paiement a bien été pris en compte. \n\n' + 
-                  'Vous venez donc de finaliser votre incription N°' + req.params.id + ' pour l\'épreuve suivante : ' + req.body.event +'.\n\n' + 
-                  'Vous pouvez à tout moment consulter vos inscriptions en suivant ce lien http://event.izir.fr/inscription/recap/user/' + req.user.id + '\n\n' +
+              subject: 'Confirmation de paiement et de validation de l\'inscription N° ' + req.params.id,
+              text:   'Nous avons le plaisir de vous confirmer que votre paiement a bien été pris en compte et que votre inscription N°' + req.params.id + ' est validée. \n\n' + 
+                  'Vous venez donc de finaliser votre incription N°' + req.params.id + ' pour l\'épreuve suivante : ' + req.body.event + '.\n\n' + 
+                  'Vous pouvez à tout moment consulter le statut de vos inscriptions en suivant ce lien http://event.izir.fr/inscription/recap/user/' + req.user.id + '\n\n' +
                   'Bonne course !\n\n' +
                   'Nicolas de izir.fr'
             };
             smtpTransport.sendMail(mailOptions);
 
             //REDIRECTION
-                res.redirect('/inscription/recap/user/' + req.user.id + '/')
-                req.flash('success_msg', 'Votre paiement à bien été pris en compte');
+            res.redirect('/inscription/recap/user/' + req.user.id + '/')
+            req.flash('success_msg', 'Votre paiement à bien été pris en compte et votre inscription validée');
           }
         }); 
           } 
@@ -363,7 +390,7 @@ var registrationCtrl = {
           Event.findById(req.params.id).exec(next)
         },
         participants: function(next) {
-            Registration.find({event: req.params.id}).populate('user').exec(next)
+          Registration.find({event: req.params.id}).populate('user').exec(next)
         }
     }, function(err, results) {
       var event = results
@@ -411,10 +438,12 @@ var registrationCtrl = {
           }
         })
 
-        if(val.paiement.captured === true){
-          paiement = "O"
+        if (val.paiement.captured === true){
+          paiement = "CB"
+        } else if (val.paiement.other_captured === true) {
+          paiement = "AUTRE"
         } else {
-          paiement = "N"
+          paiement = "NON"
         }
 
         if(val.docs.certificat === null || val.docs.certificat === undefined || val.docs.certificat === ""){
@@ -534,12 +563,14 @@ var registrationCtrl = {
 
         var courses = []
         val.produits.forEach((val)=>{
-          if(val.produitsQuantite > 0 && val.produitsRef !== "don"){
+          if (val.produitsQuantite > 0 && val.produitsRef !== "don"){
             courses.push(val.produitsRef)
           }
         })
 
-        if(val.paiement.captured === true){
+        if (val.paiement.captured === true){
+          paiement = "O"
+        } else if (val.paiement.other_captured === true) {
           paiement = "O"
         } else {
           paiement = "N"
@@ -547,11 +578,11 @@ var registrationCtrl = {
 
         if(val.docs.certificat === null || val.docs.certificat === undefined || val.docs.certificat === ""){
           certificat = "N"
-        }  else {
+        } else {
           certificat = "O"
         }
         
-        if(val.participant.categorie === "EA - École d'Athlétisme" ){
+        if (val.participant.categorie === "EA - École d'Athlétisme" ) {
           categorie = 1 //EA
         } else if (val.participant.categorie === "PO - Poussins") {
           categorie = 2 //PO

@@ -1,68 +1,132 @@
 <div class="header container-fluid">
-	<div class="jumbotron">
-		<h1>Toutes mes inscriptions</h1>
-	</div>
+  <div class="jumbotron">
+    <h1>Toutes mes inscriptions</h1>
+  </div>
 </div>
 <div class="container-fluid">
-	{{#if registrations}}
-	<div class="row">
-		<div class="col-12">
-			<table class="table">
-				<thead class="bg-dark-blue txt-white">
-					<tr>
-						<th>Date</th>
-						<th>N° inscription</th>
-						<th>Evènement</th>
-						<th>Participant</th>
-						<th>Lieu</th>
-						<th>Statut</th>
-						<th>N° Paiement</th>
-						<th>Action</th>
-					</tr>
-				</thead>
-				<tbody>
-					{{#each registrations }}
-					    <tr class="text-lowercase">
-					    	<td>{{date this.created_at}}</td>
-					    	<td>{{this.id}}</td>
-					    	<td><strong><a href="/event/{{this.event.id}}">{{this.event.name}}</strong></a></td>
-					    	<td><strong>{{this.participant.nom}}</strong> {{this.participant.prenom}}</td>
-					    	<td>{{this.event.adresse.codePostal}} {{this.event.adresse.ville}}</td>
-					    	<td><strong>{{this.statut}}</strong></td>
-					    	<td>
-					    		{{#if this.paiement.other_captured}}
-					    			<span>Paiement validé manuellement</span>
-					    		{{else}}
-					    			{{this.paiement.id}}
-					    		{{/if}}
-					    	</td>
-					    	{{#if this.paiement.captured}}
-								<td><strong><a href="/inscription/checkout/{{this.id}}">Details</a></strong></td>
-					    	{{else}}
-						    	{{#if this.paiement.other_captured}}
-						    	<td><strong><a href="/inscription/checkout/{{this.id}}">Details</a></strong></td>
-						    	{{else}}
-						    	<td><strong><a href="/inscription/checkout/{{this.id}}">Payer</a></strong> / <strong><a href="/inscription/checkout/{{this.id}}">Voir</a></strong></td>
-						    	{{/if}}
-					    	{{/if}}
-					    </tr>
-					{{/each}}
-				</tbody>
-			</table>
-		
-		</div>
-	</div>
-	
-
-	{{else}}
-	<div class="row">
-		<div class="col-12">
-			<p class="alert alert-danger">Vous ne vous êtes pas encore inscrit à une épreuve</p>
-		</div>
-	</div>
-	{{/if}}
-	<div class="row">
-		<div class="col-12 text-center spacer-sm-bottom">
-			<a href="/event/finder" class="btn btn-default">Trouver une épreuve maintenant</a>
-		</div>
-	</div>
+  {{#if registrations}}
+  <div class="row">
+    <div class="col-12">
+      <table class="table">
+        <thead class="bg-dark-blue txt-white">
+          <tr class="text-center">
+            <th>Dossier</th>
+            <th>Participant</th>
+            <th>Evènement</th>
+            <th>Paiement</th>
+            <th>Docs</th>            
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each registrations}}
+            <tr class="text-lowercase">
+              <td>
+                <strong>
+                {{#if this.paiement.captured}}
+                  <span class="text-uppercase">complet</span>
+                  <i class="fa fa-check text-success" aria-hidden="true"></i>
+                {{else}}
+                  {{#if this.paiement.other_captured}}
+                    <span class="text-uppercase">complet</span>
+                    <i class="fa fa-check text-success" aria-hidden="true"></i>
+                  {{else}}
+                    {{#if this.paiement.other}}
+                      <span class="text-uppercase">en attente <i class="fa fa-check text-warning" aria-hidden="true"></i></span>
+                      <br>
+                      <span class="text-warning">de réception du paiement par l'organisation</span>
+                    {{else}}
+                      <span class="text-uppercase">Non finalisée</span>
+                      <br>
+                      <span><a class="text-danger" href="/inscription/checkout/{{this.id}}">En attente de paiement</a></span>
+                    {{/if}}
+                  {{/if}}
+                {{/if}}
+                </strong>
+                <br>
+                <span class="text-secondary">du: {{date this.created_at}}</span>
+                <br>
+                <span class="text-secondary text-uppercase">n°: {{this.id}}</span>
+              </td>
+              <td>
+                <strong>{{this.participant.nom}}</strong> {{this.participant.prenom}}
+                <br>
+                <span class="text-secondary">{{this.participant.sex}}</span>
+                <br>
+                <span class="text-secondary">{{this.participant.dateNaissance}}</span>
+                <br>
+                <span class="text-secondary">{{this.participant.team}}</span>
+              </td>
+              <td>
+                <strong><a href="/event/{{this.event.id}}">{{this.event.name}}</a></strong>
+                <br>
+                <span class="text-secondary">{{this.event.adresse.codePostal}} {{this.event.adresse.ville}}</span>
+              </td>
+              <td>
+                
+                {{#if this.paiement.captured}}
+                  Méthode : CB
+                  <br>
+                  <span class="text-secondary">N°: {{this.paiement.id}}</span>
+                {{else}}
+                  {{#if this.paiement.other_captured}}
+                    Méthode : Chèque / Espèce 
+                  {{else}}
+                    {{#if this.paiement.other}}
+                      Méthode : Chèque / Espèce
+                      <br>
+                      <span class="text-secondary">Paiement en direct à l'organisation</span>
+                    {{else}}
+                      Non Payé
+                    {{/if}}
+                  {{/if}}             
+                {{/if}}
+              </td>
+              <td>
+                {{#if this.docs.certificat}}
+                  <a href="{{this.docs.certificat}}" target="_blank"><i class="fa fa-file text-success" aria-hidden="true"></i></a>
+                {{else}}
+                  <i class="fa fa-file text-muted" aria-hidden="true"></i>
+                {{/if}}
+              </td>               
+              <td>
+                <span class="text-center">
+                  <a href="/inscription/checkout/{{this.id}}" class="spacer-xs-right"><i class="fa fa-eye" aria-hidden="true"></i></a>
+                  {{#if this.paiement.captured}}
+                    <i class="fa fa-credit-card-alt text-muted" aria-hidden="true"></i>
+                  {{else}}
+                    {{#if this.paiement.other_captured}}
+                      <i class="fa fa-credit-card-alt text-muted" aria-hidden="true"></i>
+                    {{else}}
+                      {{#if this.paiement.other}}
+                      <a class="text-danger" href="/inscription/checkout/{{this.id}}">
+                        <i class="fa fa-credit-card-alt text-warning" aria-hidden="true"></i> 
+                      </a>
+                      {{else}}
+                        <a class="text-danger" href="/inscription/checkout/{{this.id}}">
+                          <i class="fa fa-credit-card-alt text-danger" aria-hidden="true"></i>  
+                        </a>                      
+                      {{/if}}  
+                    {{/if}}             
+                  {{/if}}
+                </span>
+              </td>
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    
+    </div>
+  </div>
+  {{else}}
+  <div class="row">
+    <div class="col-12">
+      <p class="alert alert-danger">Vous ne vous êtes pas encore inscrit à une épreuve</p>
+    </div>
+  </div>
+  {{/if}}
+  <div class="row">
+    <div class="col-12 text-center spacer-sm-bottom">
+      <a href="/event/finder" class="btn btn-default">Trouver une épreuve maintenant</a>
+    </div>
+  </div>

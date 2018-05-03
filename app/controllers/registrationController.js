@@ -390,7 +390,14 @@ var registrationCtrl = {
           Event.findById(req.params.id).exec(next)
         },
         participants: function(next) {
-          Registration.find({event: req.params.id}).populate('user').exec(next)
+          if (req.query.epreuve && req.query.epreuve !== 'Toutes') {
+            Registration
+              .find({ event: req.params.id, produits : { $elemMatch: { produitsRef: req.query.epreuve , produitsQuantite: {$ne: 0 } } } } )
+              .populate('user')
+              .exec(next)
+          } else {
+            Registration.find({event: req.params.id}).populate('user').exec(next)
+          }
         }
     }, function(err, results) {
       var event = results

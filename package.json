@@ -47,7 +47,7 @@
     "passport-local": "*",
     "pm2": "^2.10.3",
     "request": "^2.85.0",
-    "sib-api-v3-sdk": "^3.0.0",
+    "sib-api-v3-sdk": "github:sendinblue/APIv3-nodejs-library",
     "stripe": "^4.25.0",
     "vicopo": "^1.1.8"
   },

@@ -19,7 +19,8 @@
             <h2>Détails de l'évènement</h2>
             <div class="form-group spacer-sm-top">
               <label>Nom de l'évènement *</label>
-              <input type="text" class="form-control" placeholder="ex: Marathon de Paris" value="{{event.name}}" name="name" required>
+              <input type="text" class="form-control" placeholder="ex: Marathon de Paris" value="{{event.name}}" disabled>
+              <input type="hidden" class="form-control" value="{{event.name}}" name="name" required>
             </div>
           </div>
         </div>

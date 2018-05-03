@@ -317,7 +317,7 @@
 						{{#if results.event.certificat_required}}
 							<div class="row">
 								<div class="col-12 spacer-sm-top text-center">
-									<p class="alert alert-dark"><i class="fa fa-arrow-down" aria-hidden="true"></i> <strong>Certificat Medical</strong></p>
+									<p class="alert alert-dark"><i class="fa fa-arrow-down" aria-hidden="true"></i> <strong>Certificat Medical - Licence</strong></p>
 								</div>
 							</div>
 
@@ -325,9 +325,9 @@
 						    <div class="row " id="old_certificat">
 						    	<div class="col-12 mx-auto">
 						    		<div class="alert alert-warning text-center">
-							    		<p><strong>Vous avez déjà un certificat médical d'enregistrer, valide jusqu'au {{user.certificat.expiration_month}}/{{user.certificat.expiration_year}}</strong></p>
-							        	<a href="{{user.certificat.file}}" class="spacer-sm-top spacer-sm-bottom btn btn-warning" target="_blank">Voir mon certificat</a>
-							        	<a href="/user/certificat/{{user.id}}" class="spacer-sm-top spacer-sm-bottom btn btn-outline-dark spacer-sm-left">Changer mon certificat</a>					    			
+							    		<p><strong>Vous avez déjà un certificat médical (ou une licence) d'enregistré, valide jusqu'au {{user.certificat.expiration_month}}/{{user.certificat.expiration_year}}</strong></p>
+							        	<a href="{{user.certificat.file}}" class="spacer-sm-top spacer-sm-bottom btn btn-warning" target="_blank">Voir mon document</a>
+							        	<a href="/user/certificat/{{user.id}}" class="spacer-sm-top spacer-sm-bottom btn btn-outline-dark spacer-sm-left">Changer mon document</a>					    			
 						    		</div>
 						    	</div>
 						    </div>

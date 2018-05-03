@@ -10,10 +10,7 @@
 			<tr>
 			  <th class="text-center">Evènements</th>
 			  <th class="text-center">Options</th>
-			  <th class="text-center">Lieux</th>
-			  <th class="text-center">Epreuves</th>
 			  <th class="text-center">Places</th>
-			  <th class="text-center">Dates / heures</th>
 			  <th class="text-center">Disciplines</th>
 			  <th class="text-center">Distances</th>
 			</tr>
@@ -23,7 +20,8 @@
 				<tr >
 					<td class="bg-light">
 						<strong>{{this.name}}</strong>
-
+						<br>
+						<span class="text-secondary">{{this.adresse.ville}}</span>
 					</td>
 					<td class="bg-light">
 						{{#if this.paiement}}
@@ -42,7 +40,6 @@
 							<i class="fa fa-gratipay text-muted spacer-xs-left" aria-hidden="true" title="L'événement n'accepte pas les dons"></i>
 						{{/if}}						
 					</td>
-					<td class="bg-light">{{this.adresse.ville}}</td>
 					<td class="bg-light text-center">
 						<i class="fa fa-chevron-circle-down txt-light-blue" aria-hidden="true"></i>
 					</td>
@@ -52,10 +49,8 @@
 				</tr>
 				{{#each this.epreuves}}
 			    <tr>
-			    	<td colspan="3"></td>
-			    	<td>{{this.name}}</td>
+			    	<td colspan="2" class="text-left"><span class="d-block w-50 text-center spacer-sm-left">{{this.name}} - {{date this.date_debut}} {{dateHours this.date_debut}}h{{dateMinutes this.date_debut}}</span></td>
 			    	<td>{{this.placesDispo}}</td>
-			    	<td>{{date this.date_debut}} {{dateHours this.date_debut}}h{{dateMinutes this.date_debut}}</td>
 			    	<td>{{this.discipline}}</td>
 			    	<td>{{this.distance}} Km</td>
 			    </tr>

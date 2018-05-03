@@ -112,11 +112,20 @@ function optionConstructor(req, res, next){
 	return options
 }
 
+function reqBolleanTest(value){
+	if(value === "on") {
+		return true
+	} else {
+		return false
+	}
+}
+
 //////EVENTS//////
 function eventConstructor(req, epreuves, options, res, next){
 	var epreuves = epreuves,
-	options = options,
-	event =	{
+	options = options;
+
+	var event =	{
 		name: req.body.name,
 		author: req.user.id,
 		adresse : {
@@ -130,9 +139,9 @@ function eventConstructor(req, epreuves, options, res, next){
 			longitude: req.body.longitude,
 		},
 		description: req.body.description,
-		dons : req.body.dons,
-		certificat_required : req.body.certificat_required,
-		paiement : req.body.paiement,
+		dons : reqBolleanTest(req.body.dons),
+		certificat_required : reqBolleanTest(req.body.certificat_required),
+		paiement : reqBolleanTest(req.body.paiement),
 		epreuves : epreuves,
 		docs : {
 			img: req.body.img,

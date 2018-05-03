@@ -5,7 +5,7 @@
 </div>
 <div class="container-fluid">
   <div class="row">
-    <div class="col-6 text-center spacer-xs-top">
+    <div class="col-12 text-center">
       <strong class="spacer-sm-right text-capitalize">{{event.name}} :</strong>
       <a href="/event/{{event.id}}" class="spacer-sm-right"><i class="fa fa-eye spacer-xs-right"></i>Voir</strong></a>
       <a href="/event/edit/{{event.id}}" class="spacer-sm-right"><i class="fa fa-pencil spacer-xs-right"></i>Modifier</strong></a>
@@ -14,7 +14,9 @@
       <a href="/inscription/file/excel/{{event.id}}" class="spacer-sm-right"><i class="fa fa-file spacer-xs-right"></i>Excel</a>
       <a href="/organisateur/epreuves"><i class="fa fa-undo spacer-xs-right" aria-hidden="true"></i>Retour</a>
     </div>
-    <div class="col-6">
+  </div>
+  <div class="row">
+    <div class="col-lg-12 spacer-sm-top">
       <p class="alert alert-success text-center">
         <a href="/inscription/pre-inscription/{{event.id}}" class="btn btn-danger spacer-sm-right">Ajouter un participant</a>
         <i class="fa fa-users spacer-xs-right"></i><span id="participants_number">{{participants.length}}</span> Inscrits
@@ -22,8 +24,24 @@
         <i class="fa fa-folder-open spacer-xs-right spacer-sm-left"></i><span id="dossier_complet">0</span> Dossiers complets
       </p>
     </div>
-
-    
+  </div>
+  <div class="row">
+    <div class="col-12 spacer-xs-top">
+      <span class="text-muted d-block w-100"><strong>Filtrer par épreuve</strong></span>
+      <form id="org-dashboard-filter" class="row">
+        <div class="col-9">
+          <select class="form-control" id="epreuve-filter" name="epreuve">
+            <option>Toutes</option>
+            {{#each event.epreuves}}
+              <option>{{this.name}}</option>
+            {{/each}}
+          </select>             
+        </div>
+        <div class="col-3">
+          <button type="submit" class="btn btn-secondary d-block w-100">Filtrer</button> 
+        </div>         
+      </form>
+    </div>   
   </div>
   <div class="row">
     <div class="col-12 spacer-sm-top">

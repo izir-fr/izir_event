@@ -118,6 +118,23 @@
 				<div class="col-sm-12">
 					<h3 class="border-bottom-box">Liste des participants</h3>
 				</div>
+
+		    <div class="col-12 spacer-xs-top">
+		      <span class="text-muted d-block w-100"><strong>Filtrer par épreuve</strong></span>
+		      <form id="org-dashboard-filter" class="row" action="#inscrits">
+		        <div class="col-9">
+		          <select class="form-control" id="epreuve-filter" name="epreuve">
+		            <option>Toutes</option>
+		            {{#each result.event.epreuves}}
+		              <option>{{this.name}}</option>
+		            {{/each}}
+		          </select>             
+		        </div>
+		        <div class="col-3">
+		          <button type="submit" class="btn btn-secondary d-block w-100">Filtrer</button> 
+		        </div>         
+		      </form>
+		    </div>   			
 				<div class="col-sm-12 spacer-sm-top">
 					<table class="table">
 						<thead>

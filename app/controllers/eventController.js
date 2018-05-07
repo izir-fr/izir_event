@@ -186,12 +186,20 @@ var loadJsonSync = (element) => {
 }
 
 // event finder
-var eventFinderForm = (res, city, month, discipline, activate, queries) => {
-  var allEvents = [], apisData, finderResult, allItems = [];
+var eventFinderForm = (req, res) => {
+  var allEvents = [], apisData, finderResult, allItems = [], citySearch;
   var api1 = loadJsonSync(apis[0])
   var api2 = loadJsonSync(apis[1])
   var api3 = loadJsonSync(apis[2])
-  var citySearch = city.toLowerCase()
+  var month = req.query.month
+  var discipline = req.query.discipline
+  var activate = req.query.activate
+
+  if (req.query.city) {
+    citySearch = req.query.city.toLowerCase()
+  } else {
+    citySearch = ''
+  }
 
   Promise
     .all([api1, api2,api3])
@@ -231,13 +239,17 @@ var eventFinderForm = (res, city, month, discipline, activate, queries) => {
                 // date query filter
                 if ( month === '') {
                   if (item.epreuves[0].date_debut > dateNow) {
+                    if( discipline )
                     allItems.push(item) 
                   }
                 } else {
-                  if (item.epreuves[0].date_debut.getMonth() === month - 1) {
+                  if (item.epreuves[0].date_debut.getMonth() === ( month - 1) ) {
+                    if( discipline )
                     allItems.push(item) 
                   }
                 }                
+              } else {
+                allItems.push(item)
               }
             }
           })
@@ -249,7 +261,7 @@ var eventFinderForm = (res, city, month, discipline, activate, queries) => {
       var queryDate, queryDiscipline
       // date query
       if(month !== '') {
-        queryDate = { date_debut : { $gte: new Date(dateNow.getFullYear(), month - 1, 1), $lt: new Date(dateNow.getFullYear(), month, 1) } }
+        queryDate = { date_debut : { $gte: new Date(dateNow.getFullYear(),( month - 1 ), 1), $lt: new Date(dateNow.getFullYear(), month, 1) } }
       } else {
         queryDate = { date_debut : { $gte: dateNow } }
       }
@@ -302,8 +314,7 @@ var eventFinderForm = (res, city, month, discipline, activate, queries) => {
               event: allEvents
             },
             date_list : dateList,
-            discipline_list : disList,
-            queries: queries
+            discipline_list : disList
           }
           res.render('partials/event/finder', finderResult)
         })
@@ -313,14 +324,11 @@ var eventFinderForm = (res, city, month, discipline, activate, queries) => {
 var eventCtrl = {
   // Get all event
   getAllEvent : (req, res) => {
-    var city = req.query.city
-    var month = req.query.month
-    var discipline = req.query.discipline
-    var activate = req.query.activate
-    var queries = req.query
-
-    eventFinderForm(res, city, month, discipline, activate, queries)
-    
+    if(req.query.month === undefined || req.query.city === undefined || req.query.activate === undefined || req.query.discipline === undefined) {
+      res.redirect('/event/finder?city=&month=&discipline=&activate=')
+    } else {
+      eventFinderForm(req, res)
+    }
   },
   // Get create event page
   getCreateEvent : function(req, res){

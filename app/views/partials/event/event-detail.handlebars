@@ -126,7 +126,7 @@
 		          <select class="form-control" id="epreuve-filter" name="epreuve">
 		            <option>Toutes</option>
 		            {{#each result.event.epreuves}}
-		              <option>{{this.name}}</option>
+		              <option value="{{this.name}}">{{this.name}}</option>
 		            {{/each}}
 		          </select>             
 		        </div>

@@ -1,147 +1,191 @@
 <div class="header container-fluid">
-	<div class="jumbotron">
-		<h1>Calendrier</h1>
-		<p class="text-light"><strong>Votre prochaine épreuve commence ici</strong></p>
-	</div>
-</div>
-<div class="container">	
-	<!-- ALL FILTERS-->
-	<div class="row ">
-		<div class="col-10 mx-auto text-center">
-			<h4><i class="fa fa-search spacer-sm-top" aria-hidden="true"></i> Trouver votre prochaine épreuve :</h4>
-			<span id="moisFilter"> <i class="fa fa-chevron-down" aria-hidden="true"> </i> Mois</span>
-			<span id="disciplineFilter"> <i class="fa fa-chevron-up" aria-hidden="true"></i> Discipline</span>
-			<span id="cityForm"> <i class="fa fa-chevron-down" aria-hidden="true"></i> Lieu</span>
-		</div>
-	</div>
+  <div class="jumbotron">
+    <h1 class="spacer-lg-top">Votre prochaine épreuve sportive commence ici</h1>
+    <div class="row">
+      <div class="col-8 mx-auto spacer-xs-top">
+        <form id="all-event-filter bg-light text-capitalize" action="">
+          <div class="input-group bg-light">
+            <div class="input-group-prepend mb-2">
+              <div class="input-group-text spacer-xs-top"><i class="fa fa-search spacer-sm-top spacer-sm-left spacer-sm-right " aria-hidden="true"></i></div>
+            </div>
+            <input id="lieuFilter" name="city" type="text" class="form-control" placeholder="Recherche par ville ...">
+            <div class="input-group-append mb-2">
+              <button type="submit" class="btn btn-default spacer-xs-top spacer--bottom spacer-sm-right spacer-sm-left">Rechercher</button>
+            </div>
+          </div>
+          <div class="row">
+            <div id="eventSearchBar" class="col-4">
+              <div class="input-group spacer-sm-top">
+                <select class="form-control" id="exampleFormControlSelect1" name="month">
+                  <option value="">Mois</option>
+                  {{#each date_list.month}}
+                    <option value="{{this.value}}">{{this.name}}</option>
+                  {{/each}}
+                </select>
+              </div>             
+            </div>
+            <div id="eventSearchBar" class="col-4">
+              <div class="input-group spacer-sm-top">
+                <select class="form-control" id="exampleFormControlSelect1" name="discipline">
+                  <option value="">Discipline</option>
+                  {{#each discipline_list}}
+                    <option value="{{this.name}}">{{this.name}}</option>
+                  {{/each}}
+                </select>
+              </div>             
+            </div>
+            <div id="eventSearchBar" class="col-4 spacer-lg-bottom">
+              <div class="input-group spacer-sm-top">
+                <select class="form-control" id="exampleFormControlSelect1" name="activate">
+                  <option value="">Tout le calendrier</option>
+                  <option value="on">Inscriptions ouvertes</option>
+                </select>
+              </div>             
+            </div>
+          </div>
+        </form>
+      </div>       
+    </div>
+  </div>
 
-	<!-- MONTH FILTER-->
+</div>
+<div class="container"> 
+<!--   
+  <div class="row ">
+    <div class="col-10 mx-auto text-center">
+      <h4><i class="fa fa-search spacer-sm-top" aria-hidden="true"></i> Trouver votre prochaine épreuve :</h4>
+      <span id="moisFilter"> <i class="fa fa-chevron-down" aria-hidden="true"> </i> Mois</span>
+      <span id="disciplineFilter"> <i class="fa fa-chevron-up" aria-hidden="true"></i> Discipline</span>
+      <span id="cityForm"> <i class="fa fa-chevron-down" aria-hidden="true"></i> Lieu</span>
+    </div>
+  </div>
+
     <div id="moisOptions" class="row spacer-xs-top text-center">
-    	<div class="col-sm-12">
-    		<ul>
-				<li class="moisOption badge badge-primary all" selected><input type="hidden" value="0">Tous les mois</li>
-				{{#each date_list.month}}
-					<li class="moisOption badge badge-secondary"><input type="hidden" value="{{this.value}}">{{this.name}}</li>
-				{{/each}}
-			</ul>
-    	</div>
+      <div class="col-sm-12">
+        <ul>
+        <li class="moisOption badge badge-primary all" selected><input type="hidden" value="0">Tous les mois</li>
+        {{#each date_list.month}}
+          <li class="moisOption badge badge-secondary"><input type="hidden" value="{{this.value}}">{{this.name}}</li>
+        {{/each}}
+      </ul>
+      </div>
     </div>
-	<!-- DISCIPLINE FILTER-->
     <div id="disciplineOptions" class="row hidde text-center">
-    	<div class="col-sm-12">
-    		<ul>
-    			<li class="disciplineOption badge badge-primary all" selected>Toutes les disciplines</li>
-    			{{#each discipline_list}}
-					<li class="disciplineOption badge badge-secondary">{{this.name}}</li>
-    			{{/each}}
-			</ul>		    		
-    	</div>
+      <div class="col-sm-12">
+        <ul>
+          <li class="disciplineOption badge badge-primary all" selected>Toutes les disciplines</li>
+          {{#each discipline_list}}
+          <li class="disciplineOption badge badge-secondary">{{this.name}}</li>
+          {{/each}}
+      </ul>           
+      </div>
 
     </div>
-	
-	<!-- CITY FILTER-->
-	<div class="row text-center">
-		<div class=" col-md-6 col-lg-9" id="cityFilter">
-			<input id="lieuFilter" name="lieuFilter" type="text" class="form-control" placeholder="Recherche par ville ...">
-		</div>
-		<div class=" col-md-6 col-lg-3 spacer-xs-top" id="inscription-ouverte" >
-			<span class="alert alert-dark">
-				<i class="fa fa-filter spacer-xs-right" aria-hidden="true"></i>Inscriptions Ouvertes
-				<i class="fa fa-check text-success hidde" aria-hidden="true"></i>
-				<i class="fa fa-times text-danger" aria-hidden="true"></i>
-				<input type="checkbox" name="inscriptions-open" id="checkbox-inscriptions-open" class="hidde">
-			</span>	
-		</div>
-	</div>
-	
-	<div id="events" class="spacer-sm-top">
-	{{#each data.event}}
-		<div class="row bg-light index spacer-xs-top block-shadow event align-items-center">
-			<div class="col-sm-12  col-md-3">
-				<div class="row spacer-sm-top">
-					<div class="col-sm-12 text-xs-center text-sm-center text-md-left">
-						<p>
-							{{#if this.source}}
-								<span class="text-uppercase text-center eventName"><strong>{{this.name}}</strong></span>
-							{{else}}
-								<a href="/event/{{this.id}}">
-									<span class="text-uppercase text-center eventName"><strong>{{this.name}}</strong></span>
-								</a>
-							{{/if}}
-						</p>
-						<p>
-							{{#if this.paiement}}
-								<i class="fa fa-credit-card-alt text-success spacer-xs-left" aria-hidden="true" title="le paiement en ligne est accepté"></i>
-							{{else}}
-								<i class="fa fa-credit-card-alt text-muted spacer-xs-left" aria-hidden="true" title="le paiement en ligne n'est pas accepté"></i>
-							{{/if}}
-							{{#if this.certificat_required}}
-								<i class="fa fa-file text-success spacer-xs-left" title="le certificat médical est requis pour s'inscrire"></i>
-							{{else}}
-								<i class="fa fa-file text-muted spacer-xs-left" title="le certificat médical n'est pas requis pour s'inscrire"></i>
-							{{/if}}										
-							{{#if this.dons}}
-								<i class="fa fa-gratipay text-success spacer-xs-left" aria-hidden="true" title="L'événement accepte les dons"></i>
-							{{else}}
-								<i class="fa fa-gratipay text-muted spacer-xs-left" aria-hidden="true" title="L'événement n'accepte pas les dons"></i>
-							{{/if}}	
-						</p>
-						<p>
-							<span class="badge badge-warning text-capitalize city"> <i class="fa fa-map-marker" aria-hidden="true"></i> {{this.adresse.ville}}</span>
-						</p>
-					</div>
-				</div>	
-			</div>
+  
+  <div class="row text-center">
+    <div class=" col-md-6 col-lg-9" id="cityFilter">
+      <input id="lieuFilter" name="lieuFilter" type="text" class="form-control" placeholder="Recherche par ville ...">
+    </div>
+    <div class=" col-md-6 col-lg-3 spacer-xs-top" id="inscription-ouverte" >
+      <span class="alert alert-dark">
+        <i class="fa fa-filter spacer-xs-right" aria-hidden="true"></i>Inscriptions Ouvertes
+        <i class="fa fa-check text-success hidde" aria-hidden="true"></i>
+        <i class="fa fa-times text-danger" aria-hidden="true"></i>
+        <input type="checkbox" name="inscriptions-open" id="checkbox-inscriptions-open" class="hidde">
+      </span> 
+    </div>
+  </div> -->
+  
+  <div id="events" class="spacer-sm-top">
+    <span class="d-flex">
+      <h2 class="spacer-sm-bottom">Calendrier </h2><span class="text-muted spacer-xs-top spacer-sm-left">({{data.event.length}} résultats)</span>
+    </span>
+    {{#each data.event}}
+    <div class="row bg-light index spacer-xs-top block-shadow event align-items-center">
+      <div class="col-sm-12  col-md-3">
+        <div class="row spacer-sm-top">
+          <div class="col-sm-12 text-xs-center text-sm-center text-md-left">
+            <p>
+              {{#if this.source}}
+                <span class="text-uppercase text-center eventName"><strong>{{this.name}}</strong></span>
+              {{else}}
+                <a href="/event/{{this.id}}">
+                  <span class="text-uppercase text-center eventName"><strong>{{this.name}}</strong></span>
+                </a>
+              {{/if}}
+            </p>
+            <p>
+              {{#if this.paiement}}
+                <i class="fa fa-credit-card-alt text-success spacer-xs-left" aria-hidden="true" title="le paiement en ligne est accepté"></i>
+              {{else}}
+                <i class="fa fa-credit-card-alt text-muted spacer-xs-left" aria-hidden="true" title="le paiement en ligne n'est pas accepté"></i>
+              {{/if}}
+              {{#if this.certificat_required}}
+                <i class="fa fa-file text-success spacer-xs-left" title="le certificat médical est requis pour s'inscrire"></i>
+              {{else}}
+                <i class="fa fa-file text-muted spacer-xs-left" title="le certificat médical n'est pas requis pour s'inscrire"></i>
+              {{/if}}                   
+              {{#if this.dons}}
+                <i class="fa fa-gratipay text-success spacer-xs-left" aria-hidden="true" title="L'événement accepte les dons"></i>
+              {{else}}
+                <i class="fa fa-gratipay text-muted spacer-xs-left" aria-hidden="true" title="L'événement n'accepte pas les dons"></i>
+              {{/if}} 
+            </p>
+            <p>
+              <span class="badge badge-warning text-capitalize city"> <i class="fa fa-map-marker" aria-hidden="true"></i> {{this.adresse.ville}}</span>
+            </p>
+          </div>
+        </div>  
+      </div>
 
-			<div class="col-sm-12 col-md-7 spacer-xs-top">
-				<div class="row">
-					<div class="col-sm-12 spacer-xs-bottom">
-						{{#each this.epreuves}}
-						<div class="row">
-							<div class=" col-sm-12 col-sm-5 col-md-4 text-sm-left">
-								<span class="badge badge-light date"><i class="fa fa-calendar-check-o" ></i> {{date this.date_debut}} à {{dateHours this.date_debut}}h{{dateMinutes this.date_debut}}</span>
-							</div>
-							<div class="col-sm-7 col-md-8 spacer-xs-bottom">
-								<i class="fa fa-chevron-right" aria-hidden="true"></i><span class="badge badge-light text-capitalize discipline">{{this.discipline}}</span> <span class="badge badge-light text-lowercase"><strong>{{this.name}}</strong></span> <span class="badge badge-light region">{{this.adresse.region}}</span>  <span class="badge badge-light distance"> {{this.distance}}Km</span>  <span class="badge badge-light denivele">d+  {{this.denivele}}m</span>  
-								<span class="txt-dark-blue tarif">
-									{{#if this.source}}
-										{{this.tarif}}
-									{{else}}
-										{{this.tarif}}€
-									{{/if}}						
-								</span> 
-							</div>
-						</div>
-						<input type="hidden" name="filtre-mois" value="{{dateMonth this.date_debut}}">
-						{{/each}}								
-					</div>
-				</div>							
-			</div>
-		
-			<div class="col-lg-2 md-12 text-lg-right text-xs-center text-sm-center text-md-center margin-top-md-down event-source">
-			{{#if this.source}}
-				<a  href="/event/create" class="event-disable"><button class="btn btn-outline-warning ">Ouvrir aux<br> inscriptions</button></a>
-			{{else}}
-				<a class="btn btn-outline-primary spacer-xs-bottom" href="/event/{{this.id}}">Plus d'infos > </a>
-				<a class="btn btn-danger spacer-xs-bottom" href="/inscription/pre-inscription/{{this.id}}">S'inscrire >></a>
-			{{/if}}			
-			</div>
-		
-			<input type="hidden" name="order-jour" value="{{dateDay this.epreuves.[0].date_debut}}">
-			<input type="hidden" name="order-mois" value="{{dateMonth this.epreuves.[0].date_debut}}">
-			<input type="hidden" name="order-annee" value="{{dateFullYear this.epreuves.[0].date_debut}}">	
-		</div>		
-	{{/each}}
-	</div>
-	
+      <div class="col-sm-12 col-md-7 spacer-xs-top">
+        <div class="row">
+          <div class="col-sm-12 spacer-xs-bottom">
+            {{#each this.epreuves}}
+            <div class="row">
+              <div class=" col-sm-12 col-sm-5 col-md-4 text-sm-left">
+                <span class="badge badge-light date"><i class="fa fa-calendar-check-o" ></i> {{date this.date_debut}} à {{dateHours this.date_debut}}h{{dateMinutes this.date_debut}}</span>
+              </div>
+              <div class="col-sm-7 col-md-8 spacer-xs-bottom">
+                <i class="fa fa-chevron-right" aria-hidden="true"></i><span class="badge badge-light text-capitalize discipline">{{this.discipline}}</span> <span class="badge badge-light text-lowercase"><strong>{{this.name}}</strong></span> <span class="badge badge-light region">{{this.adresse.region}}</span>  <span class="badge badge-light distance"> {{this.distance}}Km</span>  <span class="badge badge-light denivele">d+  {{this.denivele}}m</span>  
+                <span class="txt-dark-blue tarif">
+                  {{#if this.source}}
+                    {{this.tarif}}
+                  {{else}}
+                    {{this.tarif}}€
+                  {{/if}}           
+                </span> 
+              </div>
+            </div>
+            <input type="hidden" name="filtre-mois" value="{{dateMonth this.date_debut}}">
+            {{/each}}               
+          </div>
+        </div>              
+      </div>
+    
+      <div class="col-lg-2 md-12 text-lg-right text-xs-center text-sm-center text-md-center margin-top-md-down event-source">
+      {{#if this.source}}
+        <a  href="/event/create" class="event-disable"><button class="btn btn-outline-warning ">Ouvrir aux<br> inscriptions</button></a>
+      {{else}}
+        <a class="btn btn-outline-primary spacer-xs-bottom" href="/event/{{this.id}}">Plus d'infos > </a>
+        <a class="btn btn-danger spacer-xs-bottom" href="/inscription/pre-inscription/{{this.id}}">S'inscrire >></a>
+      {{/if}}     
+      </div>
+    
+      <input type="hidden" name="order-jour" value="{{dateDay this.epreuves.[0].date_debut}}">
+      <input type="hidden" name="order-mois" value="{{dateMonth this.epreuves.[0].date_debut}}">
+      <input type="hidden" name="order-annee" value="{{dateFullYear this.epreuves.[0].date_debut}}">  
+    </div>    
+  {{/each}}
+  </div>
+  
 
-		<div class="row spacer-sm-top alert alert-warning text-center">
-			<div class="col-sm-12">
-				<p>Votre évènement n'est pas dans le calendrier ou n'est pas ouverte aux inscriptions ?</p>
-				<a href="/event/create"><button class="btn btn-default bottom-spacer-xs-top spacer-sm-bottom"><i class="fa fa-plus"></i> Ajouter un évènement</button></a>
-			</div>
+    <div class="row spacer-sm-top alert alert-warning text-center">
+      <div class="col-sm-12">
+        <p>Votre évènement n'est pas dans le calendrier ou n'est pas ouverte aux inscriptions ?</p>
+        <a href="/event/create"><button class="btn btn-default bottom-spacer-xs-top spacer-sm-bottom"><i class="fa fa-plus"></i> Ajouter un évènement</button></a>
+      </div>
 
-	    </div>
+      </div>
 
 </div>
-<script src="/js/finder-search.js"></script>

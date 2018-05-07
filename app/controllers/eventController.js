@@ -255,7 +255,12 @@ var eventFinderForm = (req, res) => {
           })
         })
       }
-      return allItems
+
+      if(discipline !== ''){
+        return allItems.filter(element => element.epreuves[0].discipline.toLowerCase() === discipline.toLowerCase())
+      } else {
+        return allItems
+      }
     })
     .then((json) => {
       var queryDate, queryDiscipline
@@ -314,7 +319,8 @@ var eventFinderForm = (req, res) => {
               event: allEvents
             },
             date_list : dateList,
-            discipline_list : disList
+            discipline_list : disList,
+            queries: req.query
           }
           res.render('partials/event/finder', finderResult)
         })

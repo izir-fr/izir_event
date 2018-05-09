@@ -98,7 +98,9 @@ var googleMap = () => {
             center: geolocation,
             radius: position.coords.accuracy
           })
-          autocomplete.setBounds(circle.getBounds())
+          if (circle !== undefined) {
+            autocomplete.setBounds(circle.getBounds())
+          }
         })
       }
     }

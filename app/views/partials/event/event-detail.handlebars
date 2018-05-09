@@ -253,15 +253,4 @@
 			</div>
 		</div>
 </div>
-<script>
-$(function(){
-	//Date config
-	var dateNow = new Date(Date.now())
-	var eventDate = new Date('{{result.event.date_cloture_inscription}}')
-
-	if (dateNow > eventDate ) {
-		$('#inscriptionButton').remove()
-		$('#date-info').text('Les inscriptions sont cloturées').addClass('badge-danger').removeClass('badge-warning')
-	}
-})
-</script>
+<input type="hidden" value="{{result.event.date_cloture_inscription}}" name="dateClotureInscription">

@@ -96,11 +96,7 @@
                     <td></td>
                     <td></td>
                     <td class="text-center" id="total-ttc">
-                      {{#if data.registration.event.paiement}}
-                      <span id="totalview"></span>
-                      {{else}}
-                        <span><strong>{{data.registration.orderAmount}}</strong></span>
-                    {{/if}}
+                      <span id="totalview"><strong>{{data.orderAmount}} €</strong></span>
                     </td>
                   </tr>
               </tbody>
@@ -176,9 +172,3 @@
     </div>
   </div>
 </div>
-<script>
-$(function(){
-  // calcul du prix avec frais de dossier
-  $('#totalview').html( '<strong>' + ({{data.registration.orderAmount}}*1 + 0.50) + ' € </strong>')
-})  
-</script>

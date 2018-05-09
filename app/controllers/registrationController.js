@@ -231,7 +231,8 @@ var registrationCtrl = {
       var data = {
         registration: registration[0],
         stripe : parseInt(registration[0].orderAmount * 100 + 50),
-        stripeFrontKey : credentials.stripeKey.front
+        stripeFrontKey : credentials.stripeKey.front,
+        orderAmount: registration[0].orderAmount * 1 + 0.50
       }
       //console.log(data)
       res.render('partials/registration/checkout', {data : data})

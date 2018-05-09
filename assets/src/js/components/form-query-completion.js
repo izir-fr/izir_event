@@ -2,7 +2,8 @@ var selectQuery = () => {
   $(() => {
     $(document).ready(() => {
       var url = window.location.search.split('?')
-      if (url.length !== 0) {
+
+      if (url.length > 1) {
         var allQueries = url[1].split('&')
         var formatedQuery = []
 

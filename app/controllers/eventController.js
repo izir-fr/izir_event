@@ -234,30 +234,33 @@ var eventFinderForm = (req, res) => {
                 source : "externe"
               }
 
-              // city query filter
-              if (item.adresse.ville.toLowerCase().indexOf(citySearch) !== -1) {
-                // date query filter
-                if ( month === '') {
-                  if (item.epreuves[0].date_debut > dateNow) {
-                    if( discipline )
-                    allItems.push(item) 
-                  }
-                } else {
-                  if (item.epreuves[0].date_debut.getMonth() === ( month - 1) ) {
-                    if( discipline )
-                    allItems.push(item) 
-                  }
-                }                
+              // date query filter
+              if ( month === '') {
+                if (item.epreuves[0].date_debut > dateNow) {
+                  allItems.push(item) 
+                }
               } else {
-                allItems.push(item)
+                if (item.epreuves[0].date_debut.getMonth() === ( month - 1) ) {
+                  allItems.push(item) 
+                }
               }
             }
           })
         })
       }
 
+      // discipline query filter
       if(discipline !== ''){
         return allItems.filter(element => element.epreuves[0].discipline.toLowerCase() === discipline.toLowerCase())
+      } else {
+        return allItems
+      }
+      
+      // city query filter
+      if(citySearch !== ''){
+        return allItems.filter((el) => {
+          return el.toLowerCase().indexOf(citySearch.toLowerCase()) > -1
+        })
       } else {
         return allItems
       }

@@ -10,6 +10,7 @@ import './components/finder-search'
 import './components/event-detail'
 import './components/send-to-friends'
 import './components/register'
+import './components/files-uploader'
 import './components/form-query-completion'
 
 if (module.hot) {

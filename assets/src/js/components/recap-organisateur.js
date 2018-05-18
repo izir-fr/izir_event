@@ -24,9 +24,7 @@ var recap = () => {
       }
     })
 
-    var paiementNumber = $('.paiementNumber').length
     var dossierComplet = $('.complet').length
-    $('#paiement_number').text(paiementNumber)
     $('#dossier_complet').text(dossierComplet)
   })
 }

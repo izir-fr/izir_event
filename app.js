@@ -35,7 +35,11 @@ var registration = require('./app/router/registrationRoutes')
 var organisateur = require('./app/router/organisateurRoutes')
 
 // cutom modules
-var cronConfig = require('./custom_modules/cron')
+var useCron = () => {
+  require('./custom_modules/cron')
+}
+
+useCron()
 
 if (process.env.LOCAL === 'true') {
   // Webpack

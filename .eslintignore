@@ -1,8 +1,4 @@
-app.js
-webpack.config.js
-./node_modules/**
 **/node_modules/**
-/app/*
-/custom_modules/*
-/tools/*
-/test/*
+**/app/views/*
+**/assets/public/**
+**/test/**

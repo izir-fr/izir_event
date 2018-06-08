@@ -1,51 +1,51 @@
-var express = require('express'),
-	router = express.Router();
+var express = require('express')
+var router = express.Router()
 
-//Controllers
+// Controllers
 var cmsCtrl = require('../controllers/cmsController')
 
 // ---------------- INDEX ----------------
 // Get Homepage
-router.get('/', cmsCtrl.index);
+router.get('/', cmsCtrl.index)
 
 // ---------------- CMS ----------------
 // Get "l'entreprise"
-router.get('/info/entreprise', cmsCtrl.entreprise );
+router.get('/info/entreprise', cmsCtrl.entreprise)
 
 // Get "nos partenaires"
-router.get('/info/partenaires', cmsCtrl.partenaires );
+router.get('/info/partenaires', cmsCtrl.partenaires)
 
 // Get "nos medias"
-router.get('/info/medias', cmsCtrl.medias );
+router.get('/info/medias', cmsCtrl.medias)
 
 // Get "tarifs"
-router.get('/info/tarifs', cmsCtrl.tarifs );
+router.get('/info/tarifs', cmsCtrl.tarifs)
 
 // Get "contact"
-router.get('/info/contact', cmsCtrl.contact );
+router.get('/info/contact', cmsCtrl.contact)
 
 // Get "Mentions légales"
-router.get('/info/mentions-legales', cmsCtrl.mentionsLegales );
+router.get('/info/mentions-legales', cmsCtrl.mentionsLegales)
 
 // Get "CGV"
-router.get('/info/cgv', cmsCtrl.cgv );
+router.get('/info/cgv', cmsCtrl.cgv)
 
 // Get "Conditons d'utilisation"
-router.get('/info/cgu', cmsCtrl.cgu );
+router.get('/info/cgu', cmsCtrl.cgu)
 
 // Get "FAQ"
-router.get('/info/faq', cmsCtrl.faq );
+router.get('/info/faq', cmsCtrl.faq)
 
 // Get "Comptabilité"
-router.get('/info/comptabilite', cmsCtrl.comptabilite );
+router.get('/info/comptabilite', cmsCtrl.comptabilite)
 
 // Get "Sécurité"
-router.get('/info/securite', cmsCtrl.securite );
+router.get('/info/securite', cmsCtrl.securite)
 
 // Get "Commande"
-router.get('/info/commande', cmsCtrl.commande );
+router.get('/info/commande', cmsCtrl.commande)
 
 // Get "Remboursement"
-router.get('/info/remboursement', cmsCtrl.remboursement );
+router.get('/info/remboursement', cmsCtrl.remboursement)
 
-module.exports = router;
+module.exports = router

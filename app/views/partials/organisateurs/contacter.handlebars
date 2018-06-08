@@ -1,6 +1,6 @@
 <div class="header container-fluid">
 	<div class="jumbotron">
-		<h1>Contacter {{data.participant.prenom}} {{data.participant.nom}}</h1>
+		<h1>Contacter {{participant.prenom}} {{participant.nom}}</h1>
 	</div>
 </div>
 <div class="container-fluid">
@@ -9,18 +9,18 @@
 	        <div class="alert alert-danger">{{msg}}</div>
 	      {{/each}}
 	{{/if}}
-	<form method="post" action="/organisateur/contacter/{{data.id}}">
-		<input type="hidden" value="{{data.event.id}}" name="event_id">
-		<input type="hidden" value="{{data.participant.email}}" name="email_participant">
-		<input type="hidden" value="{{data.participant.prenom}}" name="prenom_participant">
-		<input type="hidden" value="{{data.participant.nom}}" name="nom_participant">
-		<input type="hidden" value="{{data.eventName}}" name="event_name">
+	<form method="post" action="/organisateur/contacter/{{id}}">
+		<input type="hidden" value="{{event.id}}" name="event_id">
+		<input type="hidden" value="{{participant.email}}" name="email_participant">
+		<input type="hidden" value="{{participant.prenom}}" name="prenom_participant">
+		<input type="hidden" value="{{participant.nom}}" name="nom_participant">
+		<input type="hidden" value="{{eventName}}" name="event_name">
 	    <!-- MESSAGE-->
 	    <div class="row">
 	      <div class="col-sm-12">
 	        <div class="form-group spacer-sm-top">
 	          <label>Messages pour le participant *</label><br>
-	          <textarea name="description" id="" class="form-control" cols="30" rows="10" placeholder="Description de l'évènement" required>Bonjour, nous avons constaté que votre inscription pour l'événement "{{data.eventName}}" à {{data.event.adresse.ville}} le {{date data.event.epreuves.[0].date_debut}} n'est pas complète. Merci de ...</textarea>
+	          <textarea name="description" id="" class="form-control" cols="30" rows="10" placeholder="Description de l'évènement" required>Bonjour, nous avons constaté que votre inscription pour l'événement "{{eventName}}" à {{event.adresse.ville}} le {{date event.epreuves.[0].date_debut}} n'est pas complète. Merci de ...</textarea>
 	        </div>        
 	      </div>
 	    </div>

@@ -2,55 +2,32 @@
 
 # Event Izir App
 
-This app use Node.js, Express, Passport and Mongoose.
+This app use Node.js, Express and Mongoose.
 
 ### Version
 1.1.0
 
 ### Installation
 
-app requires [Node.js](https://nodejs.org/) v4+ to run.
-
 ```sh
 $ npm install
 ```
 
-```sh
-$ npm start
-```
+### Launch app
 
-### Utilisation
-
-launch server
 ```sh
 $ node app
 ```
 
-### Publication
+### Test
 
-Install the Heroku CLI
-
+launch server
 ```sh
-$ heroku login
+$ npm run test
 ```
+### Build assets
 
-Clone the repository
-
+launch server
 ```sh
-$ heroku git:clone -a eventizir
-$ cd eventizir
+$ npm run build
 ```
-
-
-Deploy changes
-
-```sh
-$ git add .
-$ git commit -am "make it better"
-$ git push heroku master
-```
-
-
-## Documentation
-
-lien > https://docs.google.com/document/d/1v63mgHyK6nESz71GDc6esFcnBG5lCrJIlnRbhm0VbE4/edit?usp=sharing

@@ -1,11 +1,10 @@
-var cron = require("cron"),
-    CronJob = require('cron').CronJob,
-    backup = require('mongodb-backup'),
-    cloudinary = require('cloudinary'),
-    os = require('os');
+var CronJob = require('cron').CronJob
+var backup = require('mongodb-backup')
+var cloudinary = require('cloudinary')
+var os = require('os')
 
 // Credentials
-var credentials = require('../app/config/credentials');
+var credentials = require('../app/config/credentials')
 
 // Cloudinary
 cloudinary.config(credentials.cloudinaryCredits)
@@ -13,16 +12,16 @@ cloudinary.config(credentials.cloudinaryCredits)
 // Cron
 exports.cronConfig = new CronJob('0 */30 * * * *', () => {
   // check if localhost
-  if(os.hostname() !== "PC-COM"){
-    //Date
-    var dateNow = new Date(Date.now());
+  if (os.hostname() !== 'PC-COM') {
+    // Date
+    var dateNow = new Date(Date.now())
     var file = 'backup-' + dateNow.valueOf() + '.tar'
 
     // Backup Setting
     backup({
-      uri: credentials.mLab, 
+      uri: credentials.mLab,
       root: './db_backup',
-      collections: [ 'events' , 'orders' , 'users' ],
+      collections: [ 'events', 'orders', 'users' ],
       parser: 'json',
       tar: file,
       callback: (err) => {
@@ -30,11 +29,13 @@ exports.cronConfig = new CronJob('0 */30 * * * *', () => {
           throw err
         } else {
           // Backup to Cloudinary
-          cloudinary.v2.uploader.upload( './db_backup/' + file,
-          {public_id: 'db_backup/' + file, resource_type: "raw"},
-          (err, res) => {})
+          cloudinary.v2.uploader.upload('./db_backup/' + file
+            , {public_id: 'db_backup/' + file, resource_type: 'raw'}
+            , (err, res) => {
+              if (err) throw err
+            })
         }
       }
-    });
+    })
   }
-}, null, true, 'Europe/Paris');
+}, null, true, 'Europe/Paris')

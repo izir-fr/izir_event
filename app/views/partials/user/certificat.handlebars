@@ -5,14 +5,14 @@
 </div>
 <div class="container" id="certificat_upload_page">
 	{{#if errors}}
-	      {{#each errors}}
-	        <div class="alert alert-danger">{{msg}}</div>
-	      {{/each}}
+    {{#each errors}}
+      <div class="alert alert-danger">{{msg}}</div>
+    {{/each}}
 	{{/if}}
 	<form method="post" action="/user/certificat/{{user.id}}">
 	    <!-- VALIDITE-->
 	    <div class="row">
-	    	<div class="col-6 mx-auto">
+	    	<div class="col-6 mx-auto mt-5">
 	    		<h2>Date de validité du certificat</h2>
 	    	</div>
 	    </div>

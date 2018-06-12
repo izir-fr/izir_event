@@ -28,6 +28,7 @@ var UserSchema = mongoose.Schema({
     updated: { type: Date }
   },
   // Comptabilité
+  titulaire: { type: String },
   code_etablissement: { type: String },
   code_guichet: { type: String },
   numero_de_compte: { type: String },

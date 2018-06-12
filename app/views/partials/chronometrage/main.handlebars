@@ -1,0 +1,67 @@
+<div class="header container-fluid">
+  <div class="jumbotron">
+    <h1>Fichier de chronométrage {{event.name}}</h1>
+  </div>
+</div>
+<div class="container-fluid">
+  <div class="row bg-dark-blue">
+    <div class="col-md-3 mt-5 mb-4">
+      <strong class="spacer-sm-right text-capitalize text-light h3 text-left">{{name}}</strong>
+    </div>
+    <div class="col-md-9 text-center mt-5 mb-5">
+      <a href="/event/{{id}}" class="spacer-sm-right text-light" ><i class="fa fa-eye spacer-xs-right"></i>Voir</a>
+      <a href="/event/edit/{{id}}" class="spacer-sm-right text-light"><i class="fa fa-pencil spacer-xs-right"></i>Modifier</a>
+      <a href="/inscription/recap/organisateur/{{id}}" class="spacer-sm-right text-light"><i class="fa fa-users spacer-xs-right "></i>Inscriptions</a>
+      <a href="/chronometrage/event/{{id}}" class="spacer-sm-right text-light"><strong><i class="fa fa-file spacer-xs-right"></i>Chronométrage</strong></a>
+      <a href="/organisateur/comptabilite/{{user.id}}" class="spacer-sm-right text-light"><i class="fa fa-university spacer-xs-right"></i>Comptabilité</a>
+      <a href="/organisateur/epreuves" class="text-light"><i class="fa fa-undo spacer-xs-right" aria-hidden="true"></i>Quitter</a>
+    </div>
+  </div>
+  <div class="row"> 
+    <div class="col-10 mx-auto">
+      <h2 class="mt-5 mb-5">Choisissez votre fichier de chronométrage :</h2>
+      <div class="row">
+        <div class="col-6">
+          <span class="h4 d-block"><i class="fa fa-file spacer-xs-right"></i>GMCAP</span>
+          <a href="/chronometrage/file/gmcap/{{id}}" class="mt-2 d-block"><i class="fa fa-cloud-download spacer-xs-right mt-4" aria-hidden="true"></i>{{id}}.txt</a>
+          <strong class="d-block mt-4 mb-4">Difficulté : <i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star-o" aria-hidden="true"></i></strong>
+          <strong class="d-block mt-4">Utilisation :</strong>
+          <div class="alert alert-light">
+            Fichier en ".txt" formaté conformément aux contraintes transmises par Gilles Mevel, créateur de GMCap.
+            <br>
+            <i class="fa fa-exclamation-circle" aria-hidden="true"></i> NE PAS APPORTER DE MODIFICATION MANUELLE, sous peine de provoquer des erreurs lors de l'import.
+          </div>          
+          <div class="alert alert-light">
+            <ul>
+              <li>1. Cliquez sur le fichier "XXX.txt" pour démarer le téléchargement.</li>
+              <li>2. Ouvrir GMCap. </li>
+              <li>3. Cliquer sur fichier > importer > fichier texte... </li>
+              <li>4. Selectionner le fichier téléchargé à l'étape "1."</li>
+            </ul>
+          </div>  
+          <div class="alert alert-light">
+            Si vous vez déjà un évènement de crée, il faut veuiller à ce que les noms d'épreuve soit identique à la virgule et accent prêt pour que les fichiers soient fusionnés.
+          </div> 
+        </div>
+        <div class="col-6">
+          <span class="h4 d-block"><i class="fa fa-file spacer-xs-right"></i>EXCEL</span>
+          <a href="/chronometrage/file/excel/{{id}}" class="mt-2 d-block"><i class="fa fa-cloud-download spacer-xs-right mt-4" aria-hidden="true"></i>{{id}}.csv</a>
+          <strong class="d-block mt-4 mb-4">Difficulté : <i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star-o" aria-hidden="true"></i><i class="fa fa-star-o" aria-hidden="true"></i></strong>
+          <strong class="d-block mt-4">Utilisation :</strong>
+          <div class="alert alert-light">
+            Le moyen le plus simple de recupérer et manipuler le listing des inscrits pour gérer l'émmargement et le chronométrage sur le site de l'épreuve.
+          </div>          
+          <div class="alert alert-light">
+            <ul>
+              <li>1. Cliquer sur le fichier "XXX.csv" pour démarer le téléchargement.</li>
+              <li>2. Ouvrir Excel. </li>
+              <li>3. Cliquer sur fichier > ouvrir > aller à votre dossier de téléchargement</li>
+              <li>3.bis. Si le fichier n'apparait pas, sélectionner "Tous les fichiers (*.*)" dans le menu déroulant au dessous de ouvrir</li>
+              <li>4. Sélectionner le fichier téléchargé à l'étape "1.", puis cliquer sur "ouvrir"</li>
+            </ul>
+          </div>  
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

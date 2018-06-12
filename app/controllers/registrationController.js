@@ -441,7 +441,6 @@ var registrationCtrl = {
         res.redirect('/organisateur/epreuves')
         req.flash('error', 'Vous n\'êtes pas l\'administrateur de cet événement')
       }
-
     })
   }
 }

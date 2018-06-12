@@ -209,7 +209,9 @@ var registrationCtrl = {
         'Nicolas de izir.fr'
       }
       // envoie du mail
-      smtpTransport.sendMail(mailOptions)
+      smtpTransport.sendMail(mailOptions, (err) => {
+        if (err) throw err
+      })
 
       req.flash('success_msg', 'Vos informations d\'inscription ont bien été prises en compte')
       res.redirect('/inscription/checkout/' + registration.id)
@@ -266,7 +268,9 @@ var registrationCtrl = {
                     'Bonne course !\n\n' +
                     'Nicolas de izir.fr'
               }
-              smtpTransport.sendMail(mailOptions)
+              smtpTransport.sendMail(mailOptions, (err) => {
+                if (err) throw err
+              })
               // REDIRECTION
               res.redirect('/inscription/checkout/' + id)
               req.flash('success_msg', 'Votre inscription à bien été prise en compte et est en attente de paiement')
@@ -303,7 +307,9 @@ var registrationCtrl = {
                   'Bonne course !\n\n' +
                   'Nicolas de izir.fr'
             }
-            smtpTransport.sendMail(mailOptions)
+            smtpTransport.sendMail(mailOptions, (err) => {
+              if (err) throw err
+            })
             // REDIRECTION
             res.redirect('/inscription/recap/organisateur/' + val.event)
             req.flash('success_msg', 'L\'inscription N°' + id + ' est mise à jour avec un paiement guichet (chèque / espèces) et validée')
@@ -361,7 +367,9 @@ var registrationCtrl = {
                   'Bonne course !\n\n' +
                   'Nicolas de izir.fr'
               }
-              smtpTransport.sendMail(mailOptions)
+              smtpTransport.sendMail(mailOptions, (err) => {
+                if (err) throw err
+              })
 
               // REDIRECTION
               res.redirect('/inscription/recap/user/' + req.user.id + '/')

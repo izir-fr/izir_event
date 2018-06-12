@@ -412,30 +412,36 @@ var registrationCtrl = {
         req.flash('error', 'Une erreur est survenue')
         res.redirect('/')
       }
-      var event = results
-      var paiement = []
-      var dons = []
-      results.participants.forEach((val) => {
-        if (val.paiement.captured || val.paiement.other_captured) {
-          val.produits.forEach((val) => {
-            if (val.produitsRef === 'dons') {
-              if (val.produitsSubTotal > 0) {
-                dons.push(val)
+      if (String(req.user.id) === String(results.event.author)) {
+        var event = results
+        var paiement = []
+        var dons = []
+        results.participants.forEach((val) => {
+          if (val.paiement.captured || val.paiement.other_captured) {
+            val.produits.forEach((val) => {
+              if (val.produitsRef === 'dons') {
+                if (val.produitsSubTotal > 0) {
+                  dons.push(val)
+                }
+              } else {
+                if (val.produitsSubTotal > 0) {
+                  paiement.push(val)
+                }
               }
-            } else {
-              if (val.produitsSubTotal > 0) {
-                paiement.push(val)
-              }
-            }
-          })
-        }
-      })
-      event.paiement = paiement
-      event.totalPaiement = paiement.reduce((acc, curr) => {
-        return acc + curr.produitsSubTotal
-      }, 0)
-      event.dons = dons
-      res.render('partials/registration/recap-organisateur', event)
+            })
+          }
+        })
+        event.paiement = paiement
+        event.totalPaiement = paiement.reduce((acc, curr) => {
+          return acc + curr.produitsSubTotal
+        }, 0)
+        event.dons = dons
+        res.render('partials/registration/recap-organisateur', event)
+      } else {
+        res.redirect('/organisateur/epreuves')
+        req.flash('error', 'Vous n\'êtes pas l\'administrateur de cet événement')
+      }
+
     })
   }
 }

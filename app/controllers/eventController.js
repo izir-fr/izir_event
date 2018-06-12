@@ -160,7 +160,9 @@ var loadJsonSync = (element) => {
   return new Promise((resolve, reject) => {
     try {
       request(element.url, (err, res, data) => {
-        if (err) throw err
+        if (err) {
+          reject(err)
+        }
         var parsedData = JSON.parse(data)
         var results = {
           event: parsedData,
@@ -273,7 +275,10 @@ var eventFinderForm = (req, res) => {
           ]
         })
         .exec((err, results) => {
-          if (err) throw err
+          if (err) {
+            req.flash('error', 'Une erreur est survenue')
+            res.redirect('/')
+          }
           if (results !== undefined) {
             results.forEach((val) => {
               // city query filter
@@ -342,7 +347,10 @@ var eventCtrl = {
 
     // AJOUT DE L'EVENT A LA BDD
     Event.createEvent(newEvent, function (err, user) {
-      if (err) throw err
+      if (err) {
+        req.flash('error', 'Une erreur est survenue')
+        res.redirect('/')
+      }
       // REDIRECTION & CONFIRMATION
       req.flash('success_msg', 'Votre évènement est ajouté au calendrier')
       res.redirect('/organisateur/epreuves')
@@ -351,7 +359,10 @@ var eventCtrl = {
   // Get a edit event page
   getEditEvent: function (req, res) {
     Event.findOne({_id: req.params.id}, function (err, event) {
-      if (err) throw err
+      if (err) {
+        req.flash('error', 'Une erreur est survenue')
+        res.redirect('/')
+      }
       var adminId = process.env.ADMIN
       var eventUserId = String(event.author)
 
@@ -372,7 +383,10 @@ var eventCtrl = {
 
     // MODIFICATION DE L'EVENT DANS LA BDD
     Event.findByIdAndUpdate(req.params.id, updateEvent, function (err, user) {
-      if (err) throw err
+      if (err) {
+        req.flash('error', 'Une erreur est survenue')
+        res.redirect('/')
+      }
       // REDIRECTION & CONFIRMATION
       req.flash('success_msg', 'Votre épreuve est modifié avec succès')
       res.redirect('/organisateur/epreuves')
@@ -395,7 +409,10 @@ var eventCtrl = {
         }
       }
     }, function (err, result) {
-      if (err) throw err
+      if (err) {
+        req.flash('error', 'Une erreur est survenue')
+        res.redirect('/')
+      }
       res.render('partials/event/event-detail', {result: result})
     })
   }

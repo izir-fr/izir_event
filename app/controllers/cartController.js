@@ -6,7 +6,10 @@ var cartCtrl = {
   getAllProduct: (req, res) => {
     Product.find({published: {$ne: false}})
       .exec(function (err, products) {
-        if (err) throw err
+        if (err) {
+          req.flash('error', 'Une erreur est survenue')
+          res.redirect('/')
+        }
         res.render('partials/cart/catalogue', {products: products})
       })
   },
@@ -17,11 +20,10 @@ var cartCtrl = {
 
     Product.findById(productId, (err, product) => {
       if (err) {
-        return res.redirect('/')
+        res.redirect('/')
       }
       cart.add(product, product.id)
       req.session.cart = cart
-      console.log(req.session.cart)
       res.redirect('/catalogue/')
     })
   },
@@ -75,7 +77,10 @@ var cartCtrl = {
   // Get cart
   getProductById: (req, res) => {
     Product.findById(req.params.id, (err, produit) => {
-      if (err) throw err
+      if (err) {
+        req.flash('error', 'Une erreur est survenue')
+        res.redirect('/')
+      }
       if (produit.published) {
         res.render('partials/shop/produit', {product: produit})
       } else {

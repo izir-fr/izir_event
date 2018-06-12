@@ -259,6 +259,7 @@ var userCtrl = {
             'Si vous n\'êtes pas à l\'origine de cette demande merci d\'ignorer cet email, ainsi votre mot de passe restera inchangé.\n'
         }
         smtpTransport.sendMail(mailOptions, function (err) {
+          if (err) throw err
           req.flash('info', 'Un email a été envoyé à ' + user.email + ' avec toutes les instructions.')
           done(err, 'done')
         })
@@ -405,7 +406,7 @@ var userCtrl = {
         subject: 'Connais-tu Event Izir',
         text: req.body.description + '\n\n'
       }
-      smtpTransport.sendMail(mailOptions, function (err) {
+      smtpTransport.sendMail(mailOptions, (err) => {
         if (err) throw err
       })
     })

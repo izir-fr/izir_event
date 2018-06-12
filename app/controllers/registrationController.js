@@ -31,7 +31,10 @@ var registrationCtrl = {
         Registration.find({event: req.params.id}).exec(next)
       }
     }, function (err, results) {
-      if (err) throw err
+      if (err) {
+        req.flash('error', 'Une erreur est survenue')
+        res.redirect('/')
+      }
       var jourNaissance
       var moisNaissance
       var anneeNaissance
@@ -178,7 +181,10 @@ var registrationCtrl = {
 
     // enregistrement de la pré-commande
     registration.save(function (err, registration) {
-      if (err) throw err
+      if (err) {
+        req.flash('error', 'Une erreur est survenue')
+        res.redirect('/')
+      }
 
       // Configuration du mail
       var mailOptions = {
@@ -203,7 +209,9 @@ var registrationCtrl = {
         'Nicolas de izir.fr'
       }
       // envoie du mail
-      smtpTransport.sendMail(mailOptions)
+      smtpTransport.sendMail(mailOptions, (err) => {
+        if (err) throw err
+      })
 
       req.flash('success_msg', 'Vos informations d\'inscription ont bien été prises en compte')
       res.redirect('/inscription/checkout/' + registration.id)
@@ -212,7 +220,10 @@ var registrationCtrl = {
   // Get checkout form
   getCheckout: function (req, res) {
     Registration.find({_id: req.params.id}).populate('event').exec(function (err, registration) {
-      if (err) throw err
+      if (err) {
+        req.flash('error', 'Une erreur est survenue')
+        res.redirect('/')
+      }
       var data = {
         registration: registration[0],
         stripe: parseInt(registration[0].orderAmount * 100 + 50),
@@ -231,7 +242,7 @@ var registrationCtrl = {
       { $set: { 'paiement': { 'other': true }, 'updated': new Date(Date.now()) } },
       function (err, user) {
         if (err) {
-          res.redirect('/user/profil/')
+          res.redirect('/')
           req.flash('error', 'Une erreur est survenue lors du paiement')
         } else {
           Registration.find({_id: id}).populate('event').exec(function (err, registrations) {
@@ -257,7 +268,9 @@ var registrationCtrl = {
                     'Bonne course !\n\n' +
                     'Nicolas de izir.fr'
               }
-              smtpTransport.sendMail(mailOptions)
+              smtpTransport.sendMail(mailOptions, (err) => {
+                if (err) throw err
+              })
               // REDIRECTION
               res.redirect('/inscription/checkout/' + id)
               req.flash('success_msg', 'Votre inscription à bien été prise en compte et est en attente de paiement')
@@ -274,7 +287,10 @@ var registrationCtrl = {
       { _id: id },
       { $set: { 'paiement': { 'other_captured': true, 'other': true }, 'updated': new Date(Date.now()), 'statut': 'inscrit' } },
       function (err, val) {
-        if (err) throw err
+        if (err) {
+          res.redirect('/')
+          req.flash('error', 'Une erreur est survenue lors du paiement')
+        }
         Registration.findById(id, (err, val) => {
           if (err) {
             res.redirect('/inscription/recap/organisateur/' + val.event)
@@ -291,7 +307,9 @@ var registrationCtrl = {
                   'Bonne course !\n\n' +
                   'Nicolas de izir.fr'
             }
-            smtpTransport.sendMail(mailOptions)
+            smtpTransport.sendMail(mailOptions, (err) => {
+              if (err) throw err
+            })
             // REDIRECTION
             res.redirect('/inscription/recap/organisateur/' + val.event)
             req.flash('success_msg', 'L\'inscription N°' + id + ' est mise à jour avec un paiement guichet (chèque / espèces) et validée')
@@ -349,7 +367,9 @@ var registrationCtrl = {
                   'Bonne course !\n\n' +
                   'Nicolas de izir.fr'
               }
-              smtpTransport.sendMail(mailOptions)
+              smtpTransport.sendMail(mailOptions, (err) => {
+                if (err) throw err
+              })
 
               // REDIRECTION
               res.redirect('/inscription/recap/user/' + req.user.id + '/')
@@ -362,7 +382,10 @@ var registrationCtrl = {
   // Get user all inscription recap
   getRecapUser: function (req, res) {
     Registration.find({ user: req.user.id }).populate('event').exec(function (err, registrations) {
-      if (err) throw err
+      if (err) {
+        req.flash('error', 'Une erreur est survenue')
+        res.redirect('/')
+      }
       res.render('partials/registration/recap-user', { registrations: registrations })
     })
   },
@@ -383,7 +406,10 @@ var registrationCtrl = {
         }
       }
     }, function (err, results) {
-      if (err) throw err
+      if (err) {
+        req.flash('error', 'Une erreur est survenue')
+        res.redirect('/')
+      }
       var event = results
       var paiement = []
       var dons = []
@@ -420,7 +446,10 @@ var registrationCtrl = {
         Registration.find({event: req.params.id}).populate('user').exec(next)
       }
     }, function (err, results) {
-      if (err) throw err
+      if (err) {
+        req.flash('error', 'Une erreur est survenue')
+        res.redirect('/')
+      }
       var event = results.participants
 
       var inscriptions = []
@@ -538,8 +567,12 @@ var registrationCtrl = {
       try {
         var csv = json2csv({ data: inscriptions, fields: fields, unwindPath: ['COURSE'], del: ';', quotes: '' })
         fs.writeFile(req.params.id + '.csv', csv, 'ascii', (err) => {
-          if (err) throw err
-          res.download('./' + req.params.id + '.csv')
+          if (err) {
+            req.flash('error', 'Une erreur est survenue')
+            res.redirect('/')
+          } else {
+            res.download('./' + req.params.id + '.csv')
+          }
         })
       } catch (err) {
         req.flash('error', 'Une erreur est survenue, si elle se reproduit merci de contacter le service client.')
@@ -557,7 +590,10 @@ var registrationCtrl = {
         Registration.find({event: req.params.id}).populate('user').exec(next)
       }
     }, function (err, results) {
-      if (err) throw err
+      if (err) {
+        req.flash('error', 'Une erreur est survenue')
+        res.redirect('/')
+      }
       var event = results.participants
 
       var inscriptions = []
@@ -667,7 +703,10 @@ var registrationCtrl = {
       try {
         var csv = json2csv({ data: inscriptions, fields: fields, unwindPath: ['COURSE'], del: '  ', quotes: '' })
         fs.writeFile(req.params.id + '.txt', csv, 'ascii', (err) => {
-          if (err) throw err
+          if (err) {
+            req.flash('error', 'Une erreur est survenue')
+            res.redirect('/')
+          }
           res.download('./' + req.params.id + '.txt')
         })
       } catch (err) {

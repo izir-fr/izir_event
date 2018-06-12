@@ -13,7 +13,10 @@ var organsisateurCtrl = {
   // Get all épreuves
   getEpreuves: function (req, res) {
     Event.find({author: req.user.id}, function (err, event) {
-      if (err) throw err
+      if (err) {
+        req.flash('error', 'Une erreur est survenue')
+        res.redirect('/')
+      }
       res.render('partials/organisateurs/event-list', {event: event})
     })
   },
@@ -41,7 +44,7 @@ var organsisateurCtrl = {
 
     smtpTransport.sendMail(mailOptions, function (err) {
       if (err) {
-        req.flash('success_msg', 'Votre message a bien été envoyé à ' + req.body.prenom_participant + ' ' + req.body.nom_participant)
+        req.flash('error', 'Une erreur est survenue')
       }
       req.flash('success_msg', 'Votre message a bien été envoyé à ' + req.body.prenom_participant + ' ' + req.body.nom_participant)
       res.redirect('/inscription/recap/organisateur/' + event)

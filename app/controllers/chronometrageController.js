@@ -10,11 +10,15 @@ var chronometrageCtrl = {
   getChronometrage: (req, res) => {
     Event
       .findOne({ _id: req.params.id })
-      .exec((err, val) => {
+      .exec((err, event) => {
         if (err) {
           res.redirect('/')
         }
-        res.render('partials/chronometrage/main', val)
+        if (String(req.user.id) === String(event.author)) {
+          res.render('partials/chronometrage/main', event)
+        } else {
+          res.redirect('/')
+        }
       })
   },
   // Get a file excell

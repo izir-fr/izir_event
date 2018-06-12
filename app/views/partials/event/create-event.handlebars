@@ -7,12 +7,12 @@
 </div>
 <div class="container">
   {{#if errors}}
-        {{#each errors}}
-          <div class="alert alert-danger">{{msg}}</div>
-        {{/each}}
+    {{#each errors}}
+      <div class="alert alert-danger">{{msg}}</div>
+    {{/each}}
   {{/if}}
   <form method="post" action="/event/create" id="postEvent">
-    <div class="row spacer-md-top">
+    <div class="row mt-5">
       <div class="col-sm-12">
         <h2>Détails de l'évènement</h2>
         <div class="form-group spacer-sm-top">

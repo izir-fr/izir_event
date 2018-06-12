@@ -5,25 +5,33 @@
 </div>
 <div class="container" id="certificat_upload_page">
 	{{#if errors}}
-	      {{#each errors}}
-	        <div class="alert alert-danger">{{msg}}</div>
-	      {{/each}}
+    {{#each errors}}
+      <div class="alert alert-danger">{{msg}}</div>
+    {{/each}}
 	{{/if}}
 	<form method="post" action="/organisateur/comptabilite/{{user.id}}">
 	    <!-- VALIDITE-->
 	    <div class="row">
-	    	<div class="col-12">
+	    	<div class="col-12 mt-5">
 	    		<h2>RIB</h2>
 	    	</div>
 	    </div>
 	    <div class="row">
-	    	<div class="col-12 mx-auto spacer-sm-bottom spacer-sm-top">
-				<div class="input-group">
-					<div class="input-group-addon">Code établissement *</div>
-					<input type="text" class="form-control"  name="code_etablissement" value="{{user.code_etablissement}}" required>
+		    <div class="col-12 mx-auto spacer-sm-bottom spacer-sm-top">
+					<div class="input-group">
+						<div class="input-group-addon">Titulaire *</div>
+						<input type="text" class="form-control"  name="titulaire" value="{{user.titulaire}}" required placeholder="Exemples: John Doe, Courir ici, ...">
+					</div>
 				</div>
 			</div>
-		</div>
+	    <div class="row">
+		    <div class="col-12 mx-auto spacer-sm-bottom">
+					<div class="input-group">
+						<div class="input-group-addon">Code établissement *</div>
+						<input type="text" class="form-control"  name="code_etablissement" value="{{user.code_etablissement}}" required>
+					</div>
+				</div>
+			</div>
 	    <div class="row">
 	    	<div class="col-12 mx-auto spacer-sm-bottom">					
 				<div class="input-group">

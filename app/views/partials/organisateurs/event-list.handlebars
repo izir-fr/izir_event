@@ -5,16 +5,16 @@
 </div>
 <div class="container-fluid">
 	<div class="row">
-		<div class="col-10 mx-auto spacer-sm-bottom">
+		<div class="col-10 mx-auto mb-4">
 			{{#if event}}
 				<div class="row">
-					<div class="col-12 spacer-sm-top spacer-sm-bottom">
+					<div class="col-12 mt-5 mb-4 text-center text-md-left">
 						<h3>{{event.length}} évènements</h3>
 					</div>
 				</div>
 				{{#each event}}
-					<div class="row spacer-sm-top bg-light">
-						<div class="col-md-3 spacer-sm-top spacer-sm-bottom">
+					<div class="row spacer-sm-top bg-light organisateur-event-list">
+						<div class="col-md-4 spacer-sm-top spacer-sm-bottom text-center text-md-left">
 							<strong>{{this.name}}</strong>				
 							{{#if this.paiement}}
 								<i class="fa fa-credit-card-alt text-success spacer-xs-left" aria-hidden="true" title="le paiement en ligne est accepté"></i>
@@ -38,12 +38,25 @@
 								Clôture des inscriptions: {{date this.date_cloture_inscription}}
 							</span>
 						</div>
-						<div class="col-md-5 mt-4">
-							<a href="/event/{{this.id}}" class="spacer-sm-right"><i class="fa fa-eye spacer-xs-right"></i>Voir</strong></a> <a href="/event/edit/{{this.id}}" class="spacer-sm-right"><i class="fa fa-pencil spacer-xs-right"></i>Modifier</strong></a> <a href="/inscription/recap/organisateur/{{this.id}}" class="spacer-sm-right"><i class="fa fa-users spacer-xs-right"></i>Inscriptions</strong></a> <a href="/inscription/file/gmcap/{{this.id}}"><i class="fa fa-file spacer-xs-right"></i>GmCAP</a> <a href="/inscription/file/excel/{{this.id}}"><i class="fa fa-file spacer-xs-right"></i>Excel</a>							
+						<div class="col-md-5 mt-3 text-center">
+			    		<p class="mt-2">
+			    			<i class="fa fa-link spacer-xs-right txt-light-blue" aria-hidden="true"></i><strong>Lien pour les inscriptions : </strong><a href="/event/{{this.id}}" target="_blank">https://event.izir.fr/event/{{this.id}}</a>
+			    			<br>
+			    			<strong>partagez moi sur </strong><i class="fa fa-facebook-official" aria-hidden="true"></i> <i class="fa fa-twitter-square" aria-hidden="true"></i>
+			    		</p>
 						</div>
-						<div class="col-md-4 mt-3">
-			    		<span class="legend"><i class="fa fa-link spacer-xs-right txt-light-blue" aria-hidden="true"></i><strong>Lien pour les inscriptions : </strong><a href="/event/{{this.id}}" target="_blank">https://event.izir.fr/event/{{this.id}}</a> <strong>partagez moi sur </strong><a href="https://facebook.com" rel="nofollow" target="_blank"><i class="fa fa-facebook-official" aria-hidden="true"></i></a> <a href="https://twitter.com" rel="nofollow" target="_blank"><i class="fa fa-twitter-square" aria-hidden="true"></i></a></span>							
-						</div>			
+						<div class="col-sm-3 mt-4">
+							<div class="dropdown text-center text-md-right">
+							  <button class="btn btn-secondary dropdown-toggle " type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Action</button>
+							  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+									<a href="/event/{{this.id}}" class="dropdown-item"><i class="fa fa-eye spacer-xs-right"></i>Aperçu</a>
+									<a href="/event/edit/{{this.id}}" class="dropdown-item"><i class="fa fa-pencil spacer-xs-right"></i>Editer</a>
+									<a href="/inscription/recap/organisateur/{{this.id}}" class="dropdown-item"><i class="fa fa-users spacer-xs-right"></i>Inscriptions</a>
+									<a href="/chronometrage/event/{{this.id}}" class="dropdown-item"><i class="fa fa-clock-o spacer-xs-right"></i>Chronométrage</a>
+									<a href="/organisateur/comptabilite/{{../user.id}}" class="dropdown-item"><i class="fa fa-university spacer-xs-right"></i>Comptabilité</a>
+							  </div>
+							</div>
+						</div>									
 					</div>
 				{{/each}}
 			{{else}}

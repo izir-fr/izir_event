@@ -6,18 +6,17 @@
 <div class="container-fluid">
   <div class="row">
   {{#if errors}}
-        {{#each errors}}
-          <div class="alert alert-danger">{{msg}}</div>
-        {{/each}}
+    {{#each errors}}
+      <div class="alert alert-danger">{{msg}}</div>
+    {{/each}}
   {{/if}}
   </div>
   <div class="row">
     <div class="col-sm-12">
       <form method="post" action="/event/edit/{{event.id}}" accept-charset="UTF-8">
         <div class="row">
-          <div class="col-sm-12 spacer-md-top">
-            <h2>Détails de l'évènement</h2>
-            <div class="form-group spacer-sm-top">
+          <div class="col-sm-12 mt-5">
+            <div class="form-group">
               <label>Nom de l'évènement *</label>
               <input type="text" class="form-control" placeholder="ex: Marathon de Paris" value="{{event.name}}" disabled>
               <input type="hidden" class="form-control" value="{{event.name}}" name="name" required>

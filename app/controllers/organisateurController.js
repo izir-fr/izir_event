@@ -12,23 +12,29 @@ var User = require('../models/user')
 var organsisateurCtrl = {
   // Get all épreuves
   getEpreuves: function (req, res) {
-    Event.find({author: req.user.id}, function (err, event) {
-      if (err) {
-        req.flash('error', 'Une erreur est survenue')
-        res.redirect('/')
-      }
-      res.render('partials/organisateurs/event-list', {event: event})
-    })
+    Event
+      .find({ author: req.user.id })
+      .sort({ created_at: -1 })
+      .exec((err, event) => {
+        if (err) {
+          req.flash('error', 'Une erreur est survenue')
+          res.redirect('/')
+        }
+        res.render('partials/organisateurs/event-list', {event: event})
+      })
   },
   // Get contact form
   getContacter: function (req, res) {
-    Registration.findById(req.params.id).populate('event').exec((err, data) => {
-      if (err) {
-        res.render('partials/user/profil/' + req.user.id, {error: err})
-      } else {
-        res.render('partials/organisateurs/contacter', data)
-      }
-    })
+    Registration
+      .findById(req.params.id)
+      .populate('event')
+      .exec((err, data) => {
+        if (err) {
+          res.render('partials/user/profil/' + req.user.id, {error: err})
+        } else {
+          res.render('partials/organisateurs/contacter', data)
+        }
+      })
   },
   // Post contact form
   postContacter: function (req, res) {
@@ -62,14 +68,13 @@ var organsisateurCtrl = {
         code_guichet: req.body.code_guichet,
         numero_de_compte: req.body.numero_de_compte,
         cle_RIB: req.body.cle_RIB,
+        titulaire: req.body.titulaire,
         updated: new Date()
       }
     } catch (err) {
       req.flash('error', err)
       res.redirect('/organisateur/comptabilite/' + req.user.id)
     }
-
-    console.log(updateUser)
 
     User.findByIdAndUpdate(req.user.id, updateUser, function (err, user) {
       if (err) {

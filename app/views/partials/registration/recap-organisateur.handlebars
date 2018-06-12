@@ -4,25 +4,22 @@
   </div>
 </div>
 <div class="container-fluid">
-  <div class="row">
-    <div class="col-12 text-center">
-      <strong class="spacer-sm-right text-capitalize">{{event.name}} :</strong>
-      <a href="/event/{{event.id}}" class="spacer-sm-right"><i class="fa fa-eye spacer-xs-right"></i>Voir</strong></a>
-      <a href="/event/edit/{{event.id}}" class="spacer-sm-right"><i class="fa fa-pencil spacer-xs-right"></i>Modifier</strong></a>
-      <strong><a href="/inscription/recap/organisateur/{{event.id}}" class="spacer-sm-right"><u><i class="fa fa-users spacer-xs-right "></i>Inscriptions</u></strong></a></strong>
-      <a href="/inscription/file/gmcap/{{event.id}}" class="spacer-sm-right"><i class="fa fa-file spacer-xs-right"></i>GmCAP</a>
-      <a href="/inscription/file/excel/{{event.id}}" class="spacer-sm-right"><i class="fa fa-file spacer-xs-right"></i>Excel</a>
-      <a href="/organisateur/epreuves"><i class="fa fa-undo spacer-xs-right" aria-hidden="true"></i>Retour</a>
+  <div class="row bg-dark-blue">
+    <div class="col-md-3 mt-5 mb-4">
+      <strong class="spacer-sm-right text-capitalize text-light h3 text-left">{{event.name}}</strong>
     </div>
-  </div>
-  <div class="row">
-    <div class="col-12 spacer-sm-top">
-      <h3>Tableau de bord</h3>
+    <div class="col-md-9 text-center mt-5 mb-5">
+      <a href="/event/{{event.id}}" class="spacer-sm-right text-light" ><i class="fa fa-eye spacer-xs-right"></i>Voir</a>
+      <a href="/event/edit/{{event.id}}" class="spacer-sm-right text-light"><i class="fa fa-pencil spacer-xs-right"></i>Modifier</a>
+      <a href="/inscription/recap/organisateur/{{event.id}}" class="spacer-sm-right text-light"><strong><i class="fa fa-users spacer-xs-right "></i>Inscriptions</strong></a>
+      <a href="/chronometrage/event/{{event.id}}" class="spacer-sm-right text-light"><i class="fa fa-file spacer-xs-right"></i>Chronométrage</a>
+      <a href="/organisateur/comptabilite/{{user.id}}" class="spacer-sm-right text-light"><i class="fa fa-university spacer-xs-right"></i>Comptabilité</a>
+      <a href="/organisateur/epreuves" class="text-light"><i class="fa fa-undo spacer-xs-right" aria-hidden="true"></i>Quitter</a>
     </div>
   </div>
   <div class="row text-center ">
     <div class="col-lg-3">
-      <div class="row bg-light-blue">
+      <div class="row">
         <div class="col-12 spacer-sm-top spacer-sm-bottom">
           Filtrer par épreuve
         </div>
@@ -46,7 +43,7 @@
       </form> 
     </div>
     <div class="col-lg-3 bg-light">
-      <div class="row bg-light-blue">
+      <div class="row bg-light">
         <div class="col-12 spacer-sm-top spacer-sm-bottom">
           <i class="fa fa-users spacer-xs-right"></i> Nombre d'inscrits
         </div>
@@ -64,7 +61,7 @@
       </div>
     </div>    
     <div class="col-lg-3">
-      <div class="row bg-light-blue">
+      <div class="row">
         <div class="col-12 spacer-sm-top spacer-sm-bottom">
           <i class="fa fa-credit-card-alt spacer-xs-right spacer-sm-left"></i> Paiements validés
         </div>
@@ -98,7 +95,7 @@
       </div>
     </div>
     <div class="col-lg-3 bg-light">
-      <div class="row bg-light-blue">
+      <div class="row bg-light">
         <div class="col-12 spacer-sm-top spacer-sm-bottom">
           <i class="fa fa-folder-open spacer-xs-right spacer-sm-left"></i> Dossiers complets
         </div>

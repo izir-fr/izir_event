@@ -5,9 +5,9 @@
 </div>
 <div class="container-fluid">
 	{{#if errors}}
-	      {{#each errors}}
-	        <div class="alert alert-danger">{{msg}}</div>
-	      {{/each}}
+    {{#each errors}}
+      <div class="alert alert-danger">{{msg}}</div>
+    {{/each}}
 	{{/if}}
 	<form method="post" action="/organisateur/contacter/{{id}}">
 		<input type="hidden" value="{{event.id}}" name="event_id">
@@ -17,7 +17,7 @@
 		<input type="hidden" value="{{eventName}}" name="event_name">
 	    <!-- MESSAGE-->
 	    <div class="row">
-	      <div class="col-sm-12">
+	      <div class="col-sm-12 mt-5">
 	        <div class="form-group spacer-sm-top">
 	          <label>Messages pour le participant *</label><br>
 	          <textarea name="description" id="" class="form-control" cols="30" rows="10" placeholder="Description de l'évènement" required>Bonjour, nous avons constaté que votre inscription pour l'événement "{{eventName}}" à {{event.adresse.ville}} le {{date event.epreuves.[0].date_debut}} n'est pas complète. Merci de ...</textarea>

@@ -205,13 +205,13 @@ var userCtrl = {
         updated: new Date()
       }
     } catch (err) {
-      req.flash('error', err)
+      req.flash('error_msg', err)
       res.redirect('/user/edit-profil/' + req.user.id)
     }
 
     User.findByIdAndUpdate(req.user.id, updateUser, function (err, user) {
       if (err) {
-        req.flash('error', 'Une erreur est survenue lors de la mise à jour de votre profil')
+        req.flash('error_msg', 'Une erreur est survenue lors de la mise à jour de votre profil')
         res.redirect('/user/edit-profil/' + req.user.id)
       } else {
         req.flash('success_msg', 'Votre profil a été mis à jour')
@@ -236,7 +236,7 @@ var userCtrl = {
         User.findOne({ email: req.body.email }, function (err, user) {
           if (err) throw err
           if (!user) {
-            req.flash('error', 'Aucun compte n\'existe avec cette adresse e-mail')
+            req.flash('error_msg', 'Aucun compte n\'existe avec cette adresse e-mail')
             return res.redirect('/user/password-forgot')
           }
 
@@ -260,7 +260,7 @@ var userCtrl = {
         }
         smtpTransport.sendMail(mailOptions, function (err) {
           if (err) throw err
-          req.flash('info', 'Un email a été envoyé à ' + user.email + ' avec toutes les instructions.')
+          req.flash('info_msg', 'Un email a été envoyé à ' + user.email + ' avec toutes les instructions.')
           done(err, 'done')
         })
       }
@@ -274,7 +274,7 @@ var userCtrl = {
     User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, function (err, user) {
       if (err) throw err
       if (!user) {
-        req.flash('error', 'Votre demande changement de mot de passe n\'est pas valide ou à expiré.')
+        req.flash('error_msg', 'Votre demande changement de mot de passe n\'est pas valide ou à expiré.')
         return res.redirect('/user/password-forgot')
       } else {
         var data = {user: user, resetPasswordToken: user.resetPasswordToken}
@@ -289,7 +289,7 @@ var userCtrl = {
         User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, function (err, user) {
           if (err) throw err
           if (!user) {
-            req.flash('error', 'Votre demande changement de mot de passe n\'est pas valide ou à expiré.')
+            req.flash('error_msg', 'Votre demande changement de mot de passe n\'est pas valide ou à expiré.')
             return res.redirect('back')
           }
 
@@ -333,7 +333,7 @@ var userCtrl = {
         }
         smtpTransport.sendMail(mailOptions, function (err) {
           if (err) throw err
-          req.flash('success', 'Bravo! Votre mot de passe a été changé.')
+          req.flash('success_msg', 'Bravo! Votre mot de passe a été changé.')
           done(err)
         })
       }
@@ -351,7 +351,7 @@ var userCtrl = {
     var certificat = req.body.certificats
 
     if (certificat === '' || certificat === undefined) {
-      req.flash('error', 'Aucun certificat n\'a été joint')
+      req.flash('error_msg', 'Aucun certificat n\'a été joint')
       res.redirect('/user/certificat/' + req.user.id)
     } else {
       try {
@@ -365,13 +365,13 @@ var userCtrl = {
           updated: new Date()
         }
       } catch (err) {
-        req.flash('error', err)
+        req.flash('error_msg', err)
         res.redirect('/user/certificat/' + req.user.id)
       }
 
       User.findByIdAndUpdate(req.user.id, updateUser, function (err, user) {
         if (err) {
-          req.flash('error', 'Une erreur est survenue lors de la mise à jour de votre certificat')
+          req.flash('error_msg', 'Une erreur est survenue lors de la mise à jour de votre certificat')
           res.redirect('/user/certificat/' + req.user.id)
         } else {
           req.flash('success_msg', 'Votre certificat a été mis à jour')

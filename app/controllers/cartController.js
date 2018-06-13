@@ -7,7 +7,7 @@ var cartCtrl = {
     Product.find({published: {$ne: false}})
       .exec(function (err, products) {
         if (err) {
-          req.flash('error', 'Une erreur est survenue')
+          req.flash('error_msg', 'Une erreur est survenue')
           res.redirect('/')
         }
         res.render('partials/cart/catalogue', {products: products})
@@ -78,7 +78,7 @@ var cartCtrl = {
   getProductById: (req, res) => {
     Product.findById(req.params.id, (err, produit) => {
       if (err) {
-        req.flash('error', 'Une erreur est survenue')
+        req.flash('error_msg', 'Une erreur est survenue')
         res.redirect('/')
       }
       if (produit.published) {

@@ -17,7 +17,7 @@ var organsisateurCtrl = {
       .sort({ created_at: -1 })
       .exec((err, event) => {
         if (err) {
-          req.flash('error', 'Une erreur est survenue')
+          req.flash('error_msg', 'Une erreur est survenue')
           res.redirect('/')
         }
         res.render('partials/organisateurs/event-list', {event: event})
@@ -50,9 +50,10 @@ var organsisateurCtrl = {
 
     smtpTransport.sendMail(mailOptions, function (err) {
       if (err) {
-        req.flash('error', 'Une erreur est survenue')
+        req.flash('error_msg', 'Une erreur est survenue')
+      } else {
+        req.flash('success_msg', 'Votre message a bien été envoyé à ' + req.body.prenom_participant + ' ' + req.body.nom_participant)
       }
-      req.flash('success_msg', 'Votre message a bien été envoyé à ' + req.body.prenom_participant + ' ' + req.body.nom_participant)
       res.redirect('/inscription/recap/organisateur/' + event)
     })
   },
@@ -72,13 +73,13 @@ var organsisateurCtrl = {
         updated: new Date()
       }
     } catch (err) {
-      req.flash('error', err)
+      req.flash('error_msg', err)
       res.redirect('/organisateur/comptabilite/' + req.user.id)
     }
 
     User.findByIdAndUpdate(req.user.id, updateUser, function (err, user) {
       if (err) {
-        req.flash('error', 'Une erreur est survenue lors de la mise à jour de votre RIB')
+        req.flash('error_msg', 'Une erreur est survenue lors de la mise à jour de votre RIB')
         res.redirect('/organisateur/comptabilite/' + req.user.id)
       } else {
         req.flash('success_msg', 'Votre RIB a été mis à jour')

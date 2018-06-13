@@ -5,19 +5,74 @@ var json2csv = require('json2csv')
 // Models
 var Event = require('../models/event')
 var Registration = require('../models/registration')
+var User = require('../models/user')
 
 var chronometrageCtrl = {
-  getChronometrage: (req, res) => {
+  getAllChronometrageEvent: (req, res) => {
+    Event
+      .find({ chronometreur: req.user.id })
+      .exec((err, events) => {
+        if (err) {
+          res.redirect('/')
+        }
+        var data = {
+          event: events
+        }
+        res.render('partials/chronometrage/all-events', data)
+      })
+  },
+  getChronometrageEvent: (req, res) => {
     Event
       .findOne({ _id: req.params.id })
+      .populate('chronometreur')
       .exec((err, event) => {
         if (err) {
           res.redirect('/')
         }
-        if (String(req.user.id) === String(event.author)) {
-          res.render('partials/chronometrage/main', event)
+        if (String(req.user.id) === String(event.author) || String(req.user.id) === String(event.chronometreur)) {
+          var profil
+          if (String(req.user.id) === String(event.author)) {
+            profil = {
+              organisateur: true
+            }
+          } else {
+            profil = {
+              chronometreur: true
+            }
+          }
+          var data = {
+            profil,
+            event
+          }
+          res.render('partials/chronometrage/one-event', data)
         } else {
           res.redirect('/')
+        }
+      })
+  },
+  postAddChronometreur: (req, res) => {
+    User
+      .findOne({ email: req.body.chronometreur_email })
+      .select({
+        email: 1,
+        _id: 1
+      })
+      .exec((err, user) => {
+        if (err || user === null) {
+          req.flash('error_msg', 'Aucun compte n\'est associé à cet email, merci de contacter votre chronométreur pour qu\'il crée un compte ou vous donne l\'email qu\'il utilise sur la plateforme')
+          res.redirect('/chronometrage/event/' + req.params.id)
+        } else {
+          Event
+            .findOneAndUpdate({ _id: req.params.id },
+              {$set: {'chronometreur': user.id}}
+            )
+            .exec((err, event) => {
+              if (err) {
+                res.redirect('/chronometrage/event/' + req.params.id)
+              } else {
+                res.redirect('/chronometrage/event/' + event.id)
+              }
+            })
         }
       })
   },
@@ -37,7 +92,7 @@ var chronometrageCtrl = {
       }
     }, function (err, results) {
       if (err) {
-        req.flash('error', 'Une erreur est survenue')
+        req.flash('error_msg', 'Une erreur est survenue')
         res.redirect('/')
       }
       var event = results.participants
@@ -158,14 +213,14 @@ var chronometrageCtrl = {
         var csv = json2csv({ data: inscriptions, fields: fields, unwindPath: ['COURSE'], del: ';', quotes: '' })
         fs.writeFile(req.params.id + '.csv', csv, 'ascii', (err) => {
           if (err) {
-            req.flash('error', 'Une erreur est survenue')
+            req.flash('error_msg', 'Une erreur est survenue')
             res.redirect('/')
           } else {
             res.download('./' + req.params.id + '.csv')
           }
         })
       } catch (err) {
-        req.flash('error', 'Une erreur est survenue, si elle se reproduit merci de contacter le service client.')
+        req.flash('error_msg', 'Une erreur est survenue, si elle se reproduit merci de contacter le service client.')
         res.redirect('/inscription/recap/organisateur/' + req.user.id)
       }
     })
@@ -181,7 +236,7 @@ var chronometrageCtrl = {
       }
     }, function (err, results) {
       if (err) {
-        req.flash('error', 'Une erreur est survenue')
+        req.flash('error_msg', 'Une erreur est survenue')
         res.redirect('/')
       }
       var event = results.participants
@@ -294,13 +349,13 @@ var chronometrageCtrl = {
         var csv = json2csv({ data: inscriptions, fields: fields, unwindPath: ['COURSE'], del: '  ', quotes: '' })
         fs.writeFile(req.params.id + '.txt', csv, 'ascii', (err) => {
           if (err) {
-            req.flash('error', 'Une erreur est survenue')
+            req.flash('error_msg', 'Une erreur est survenue')
             res.redirect('/')
           }
           res.download('./' + req.params.id + '.txt')
         })
       } catch (err) {
-        req.flash('error', 'Une erreur est survenue, si elle se reproduit merci de contacter le service client.')
+        req.flash('error_msg', 'Une erreur est survenue, si elle se reproduit merci de contacter le service client.')
         res.redirect('/inscription/recap/organisateur/' + req.user.id)
       }
     })

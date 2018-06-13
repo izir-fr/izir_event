@@ -30,7 +30,7 @@ var registrationCtrl = {
       }
     }, function (err, results) {
       if (err) {
-        req.flash('error', 'Une erreur est survenue')
+        req.flash('error_msg', 'Une erreur est survenue')
         res.redirect('/')
       }
       var jourNaissance
@@ -180,7 +180,7 @@ var registrationCtrl = {
     // enregistrement de la pré-commande
     registration.save(function (err, registration) {
       if (err) {
-        req.flash('error', 'Une erreur est survenue')
+        req.flash('error_msg', 'Une erreur est survenue')
         res.redirect('/')
       }
 
@@ -219,7 +219,7 @@ var registrationCtrl = {
   getCheckout: function (req, res) {
     Registration.find({_id: req.params.id}).populate('event').exec(function (err, registration) {
       if (err) {
-        req.flash('error', 'Une erreur est survenue')
+        req.flash('error_msg', 'Une erreur est survenue')
         res.redirect('/')
       }
       var data = {
@@ -240,13 +240,13 @@ var registrationCtrl = {
       { $set: { 'paiement': { 'other': true }, 'updated': new Date(Date.now()) } },
       function (err, user) {
         if (err) {
+          req.flash('error_msg', 'Une erreur est survenue lors du paiement')
           res.redirect('/')
-          req.flash('error', 'Une erreur est survenue lors du paiement')
         } else {
           Registration.find({_id: id}).populate('event').exec(function (err, registrations) {
             if (err) {
+              req.flash('error_msg', 'Une erreur est survenue lors de l\'envoie du mail de confirmation')
               res.redirect('/user/profil/')
-              req.flash('error', 'Une erreur est survenue lors de l\'envoie du mail de confirmation')
             } else {
               var permanence = registrations[0].event.permanence
               var userEmail = registrations[0].participant.email
@@ -270,8 +270,8 @@ var registrationCtrl = {
                 if (err) throw err
               })
               // REDIRECTION
-              res.redirect('/inscription/checkout/' + id)
               req.flash('success_msg', 'Votre inscription à bien été prise en compte et est en attente de paiement')
+              res.redirect('/inscription/checkout/' + id)
             }
           })
         }
@@ -286,13 +286,13 @@ var registrationCtrl = {
       { $set: { 'paiement': { 'other_captured': true, 'other': true }, 'updated': new Date(Date.now()), 'statut': 'inscrit' } },
       function (err, val) {
         if (err) {
+          req.flash('error_msg', 'Une erreur est survenue lors du paiement')
           res.redirect('/')
-          req.flash('error', 'Une erreur est survenue lors du paiement')
         }
         Registration.findById(id, (err, val) => {
           if (err) {
+            req.flash('error_msg', 'Une erreur est survenue lors de la validation du paiement')
             res.redirect('/inscription/recap/organisateur/' + val.event)
-            req.flash('error', 'Une erreur est survenue lors de la validation du paiement')
           } else {
             // EMAIL NOTIFICATION
             var mailOptions = {
@@ -309,8 +309,8 @@ var registrationCtrl = {
               if (err) throw err
             })
             // REDIRECTION
-            res.redirect('/inscription/recap/organisateur/' + val.event)
             req.flash('success_msg', 'L\'inscription N°' + id + ' est mise à jour avec un paiement guichet (chèque / espèces) et validée')
+            res.redirect('/inscription/recap/organisateur/' + val.event)
           }
         })
       }
@@ -333,8 +333,8 @@ var registrationCtrl = {
         // console.log(charge)
 
         if (err) {
+          req.flash('error_msg', 'Une erreur est survenue lors du paiement')
           res.redirect('/user/profil/')
-          req.flash('error', 'Une erreur est survenue lors du paiement')
         } else {
           // UPDATE registration.statut : "payé" + paiementCaptured
           Registration.update({_id: req.params.id}, {$set:
@@ -350,8 +350,8 @@ var registrationCtrl = {
               }
           }, function (err, user) {
             if (err) {
+              req.flash('error_msg', 'Une erreure est survenue lors du paiement')
               res.redirect('/user/profil/')
-              req.flash('error', 'Une erreure est survenue lors du paiement')
             } else {
             // console.log(user)
             // EMAIL NOTIFICATION
@@ -370,8 +370,8 @@ var registrationCtrl = {
               })
 
               // REDIRECTION
-              res.redirect('/inscription/recap/user/' + req.user.id + '/')
               req.flash('success_msg', 'Votre paiement à bien été pris en compte et votre inscription validée')
+              res.redirect('/inscription/recap/user/' + req.user.id + '/')
             }
           })
         }
@@ -385,7 +385,7 @@ var registrationCtrl = {
       .populate('event')
       .exec(function (err, registrations) {
         if (err) {
-          req.flash('error', 'Une erreur est survenue')
+          req.flash('error_msg', 'Une erreur est survenue')
           res.redirect('/')
         }
         res.render('partials/registration/recap-user', { registrations: registrations })
@@ -409,7 +409,7 @@ var registrationCtrl = {
       }
     }, function (err, results) {
       if (err) {
-        req.flash('error', 'Une erreur est survenue')
+        req.flash('error_msg', 'Une erreur est survenue')
         res.redirect('/')
       }
       if (String(req.user.id) === String(results.event.author)) {
@@ -438,8 +438,8 @@ var registrationCtrl = {
         event.dons = dons
         res.render('partials/registration/recap-organisateur', event)
       } else {
+        req.flash('error_msg', 'Vous n\'êtes pas l\'administrateur de cet événement')
         res.redirect('/organisateur/epreuves')
-        req.flash('error', 'Vous n\'êtes pas l\'administrateur de cet événement')
       }
     })
   }

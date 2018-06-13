@@ -276,7 +276,7 @@ var eventFinderForm = (req, res) => {
         })
         .exec((err, results) => {
           if (err) {
-            req.flash('error', 'Une erreur est survenue')
+            req.flash('error_msg', 'Une erreur est survenue')
             res.redirect('/')
           }
           if (results !== undefined) {
@@ -348,7 +348,7 @@ var eventCtrl = {
     // AJOUT DE L'EVENT A LA BDD
     Event.createEvent(newEvent, function (err, user) {
       if (err) {
-        req.flash('error', 'Une erreur est survenue')
+        req.flash('error_msg', 'Une erreur est survenue')
         res.redirect('/')
       }
       // REDIRECTION & CONFIRMATION
@@ -360,7 +360,7 @@ var eventCtrl = {
   getEditEvent: function (req, res) {
     Event.findOne({_id: req.params.id}, function (err, event) {
       if (err) {
-        req.flash('error', 'Une erreur est survenue')
+        req.flash('error_msg', 'Une erreur est survenue')
         res.redirect('/')
       }
       var adminId = process.env.ADMIN
@@ -384,7 +384,7 @@ var eventCtrl = {
     // MODIFICATION DE L'EVENT DANS LA BDD
     Event.findByIdAndUpdate(req.params.id, updateEvent, function (err, user) {
       if (err) {
-        req.flash('error', 'Une erreur est survenue')
+        req.flash('error_msg', 'Une erreur est survenue')
         res.redirect('/')
       }
       // REDIRECTION & CONFIRMATION
@@ -410,7 +410,7 @@ var eventCtrl = {
       }
     }, function (err, result) {
       if (err) {
-        req.flash('error', 'Une erreur est survenue')
+        req.flash('error_msg', 'Une erreur est survenue')
         res.redirect('/')
       }
       res.render('partials/event/event-detail', {result: result})

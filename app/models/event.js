@@ -66,6 +66,7 @@ var EventSchema = mongoose.Schema({
     siteWeb: { type: String },
     facebook: { type: String }
   },
+  chronometreur: { type: Schema.ObjectId, ref: 'User' },
   funds_repaid: { type: Boolean, default: false },
   source: { type: String },
   doublon: { type: String },

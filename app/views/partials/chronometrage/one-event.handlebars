@@ -39,14 +39,14 @@
             <li>Téléphone portable : {{event.chronometreur.fonePort}}</li>
           </ul>
           {{else}}
-            <div class="alert alert-danger text-center" role="alert">
+            <div class="alert alert-warning text-center" role="alert">
               Aucun chronométreur n'est actuelement rattaché à votre évévement. En rattachant un chronométreur à votre épreuve, celui aura accès directement au fichier de chronométrage.
             </div>
             <form method="post" action="/chronometrage/event/{{event.id}}/chronometreur/add">
               <div class="row">
                 <div class="col-md-8">
                   <div class="form-group">
-                    <label for="chronometreur_email">Email du chronométreur</label>
+                    <label for="chronometreur_email">Email "pro" du chronométreur</label>
                     <input type="email" class="form-control" name="chronometreur_email" placeholder="name@example.com">
                   </div>
                 </div>
@@ -60,10 +60,16 @@
       </div>
     </div>
   </div>
-
+  <div class="row">
+    <div class="col-8 mx-auto mt-5">
+      <div class="alert alert-info text-center" role="alert">
+        Les inscriptions de cet événement sont cloturées le : {{date event.date_cloture_inscription}} à {{dateHours event.date_cloture_inscription}}h{{dateMinutes event.date_cloture_inscription}}
+      </div>      
+    </div>
+  </div>
   <div class="row"> 
     <div class="col-10 mx-auto">
-      <h2 class="mt-5 mb-5">Choisissez votre fichier de chronométrage :</h2>
+      <h2 class="mt-4 mb-5">Choisissez votre fichier de chronométrage :</h2>
       <div class="row">
         <div class="col-md-6">
           <span class="h4 d-block"><i class="fa fa-file spacer-xs-right"></i>GMCAP</span>

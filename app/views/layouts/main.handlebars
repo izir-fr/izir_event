@@ -82,13 +82,19 @@
                 </ul>
               </div>
               <div class=" col-sm-6 col-md-12 spacer-sm-top" id="menu-organisateur">
-                <h3 class=""><i class="fa fa-calendar-check-o" ></i></i> Organisateur</h3>
+                <h3 class=""><i class="fa fa-calendar-check-o" ></i> Organisateur</h3>
                 <ul>
                   <li class="spacer-xs-top"><a href="/event/create">Ajouter un évènement</a></li>
-                  <li><a href="/organisateur/epreuves">Mes évènements</a></li>
+                  <li><a href="/organisateur/epreuves">Mes événements</a></li>
                   <li><a href="/organisateur/comptabilite/{{user.id}}">Comptabilité</a></li>
                 </ul>
               </div>
+              <div class=" col-sm-6 col-md-12 spacer-sm-top">
+                <h3 class=""><i class="fa fa-clock-o" aria-hidden="true"></i> Chronométreur</h3>
+                <ul>
+                  <li><a href="/chronometrage/epreuves">Mes événements</a></li>
+                </ul>
+              </div>              
             </div>
             <div class="row">
               <div class="col-12">
@@ -123,8 +129,8 @@
                     <div class="alert alert-danger">{{error_msg}}</div>
                   {{/if}}
 
-                  {{#if error}}
-                    <div class="alert alert-danger">{{error}}</div>
+                  {{#if info_msg}}
+                    <div class="alert alert-info">{{info_msg}}</div>
                   {{/if}}                
                 </div>
               </div>

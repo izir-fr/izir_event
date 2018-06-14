@@ -16,7 +16,7 @@ var certificatUploader = () => {
   // init upload
   cloudinary.openUploadWidget(cloudinaryKey, (err, res) => {
     if (err) {
-      window.alert('Une erreur est survenue lors l\'importation de votre fichier, merci de réessayer')
+      window.alert('Une erreur est survenue lors de l\'importation de votre fichier, merci de réessayer. Description de l\'erreur: ' + err)
     }
     if (res.length >= 1) {
       var certificat = res[0]

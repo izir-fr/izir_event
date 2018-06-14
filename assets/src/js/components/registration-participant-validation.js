@@ -18,7 +18,7 @@ var registrationValidation = () => {
       var adresse2 = $('input[name=adresse2]')
       var codePostal = $('input[name=codePostal]')
       var city = $('input[name=city]')
-      var certificat = $('input[name=certificats]')
+      var certificat = $('input[name=certificat_file]')
 
       var user = {
         nom: nom.val(),
@@ -88,7 +88,8 @@ var registrationValidation = () => {
           adresse2.val('')
           codePostal.val('')
           city.val('')
-          $('#old_certificat').addClass('hidde')
+          $('#user_certificat').addClass('hidde')
+          $('#other_participant_certificat').removeClass('hidde')
           certificat.val('')
         }
         if (!newParticipant.is(':checked')) {
@@ -105,7 +106,8 @@ var registrationValidation = () => {
           adresse2.val(user.adresse2)
           codePostal.val(user.codePostal)
           city.val(user.city)
-          $('#old_certificat').removeClass('hidde')
+          $('#user_certificat').removeClass('hidde')
+          $('#other_participant_certificat').addClass('hidde')
           certificat.val(user.certificat)
         }
       })
@@ -154,7 +156,7 @@ var registrationValidation = () => {
           // CERTIFICAT VALIDATION
           if ($('input[name=certificat_required]').val() === 'false') {
             certificatValidation = true
-          } else if ($('.certificats').length === 0 || $('.certificats').val() === '') {
+          } else if ($('input[name=certificat_file]').val() === '') {
             certificatValidation = false
             window.alert('Merci d\'ajouter un certificat medical valide pour continuer votre inscription')// console.log(certificatValidation)
           } else if ($('input[name=certificatCondition]').is(':checked') === false) {

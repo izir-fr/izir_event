@@ -96,46 +96,6 @@ $(function(){
     });
   //règlement end
 
-  // => CERTIFICATS
-  //Ajout des certificat a cloudinary
-  $('#upload_certificats_opener').cloudinary_upload_widget({
-      cloud_name: cloud_name,
-      api_key : api_key,
-      upload_preset: upload_preset,
-      folder: 'certificats_documents',
-      field_name :  'photo[]',
-      max_files : 1},
-      function(error, result) {
-    });
-
-  //Remonté des URL de certificat
-  $(document).on('cloudinarywidgetfileuploadsuccess', function(e, data) {
-      var validation = data.public_id.search("certificats_documents")
-      var validationFalse = -1
-      if (validation > validationFalse) {
-          certificats.push(data.secure_url)
-      $('.certificats').remove()
-      $('#old_certificat').remove()
-      $('.cloudinary-thumbnails').remove()
-
-      if($('#certificat_upload_page').length === 1){
-        $('input[name=month]').val('')
-        $('input[name=year]').val('')
-      }
-
-      for (var i = 0 ; i < certificats.length; i++) {
-        numero = i + 1
-        var certificat = "<input class=\'form-control certificats\' name=\'certificats\' value=\'" + certificats[i] + "\' type=\'hidden\'>"
-        $('#uploaded_certificats').append(certificat)
-        $('input[name=certificatCondition]').prop('disabled', false)
-      }
-      if($('.certificats').length>=1){
-        $('#certificatButton>.cloudinary-button').remove()
-        $('#certificatCheckbox').removeClass('hidde')
-      }
-      }
-    });
-  //certificat end
 
   // => DISPLAY SET UP
   //default button

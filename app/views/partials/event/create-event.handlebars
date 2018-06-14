@@ -193,33 +193,38 @@
       </div>
     </div>
 
-    <!-- FILES-->
+    <!-- IMAGES FILES-->
     <div class="row spacer-sm-top">
       <div class="col-sm-12">
-        <div class="form-group">
-          <div class="col-sm-12">
-            <label>Ajouter des images<em class="legend"> .jpg, .png et .pdf uniquement, 3 photos maximum</em></label>
-          </div>
-        </div>
+        <label>Ajouter le flyer, des photos, des images<em class="legend"> .jpg, .png et .pdf uniquement, 3 documents maximum</em></label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12">
+        <span id="imagesButton">
+          <a href="#upload_images_opener" id="upload_images_opener" class="btn btn-default">Ajouter des images</a>
+        </span>
+      </div>      
+    </div>
+    <div class="row">
+      <div class="col-12 mt-2" id="uploaded_images">
+        <!-- IMAGES UPLOADED -->
+      </div>
+    </div>
+
+    <!-- LEGALES FILES -->
+    <div class="row">
+      <div class="col-sm-12 spacer-md-top">
+        <label>Ajouter le réglement de l'épreuve<em class="legend"> .pdf , .jpg et .png uniquement, 1 pièce jointe</em></label>
+      </div>      
+    </div>
+    <div class="row">
         <div class="col-sm-12">
-          <span id="imagesButton">
-            <a href="#" id="upload_images_opener">Ajouter des images</a>
-          </span>
-        </div>
-        <div id="uploaded_images">
-          <!-- IMAGES UPLOADED -->
-        </div>
-        <div class="form-group">
-          <div class="col-sm-12 spacer-md-top">
-            <label>Ajouter le réglement de l'épreuve<em class="legend"> .pdf , .jpg et .png uniquement, 1 pièce jointe</em></label>
-          </div>
-        </div>
-        <div class="col-sm-12">
-          <span id="legalesButton"> 
-            <a href="#" id="upload_legales_opener">Ajouter des images</a>
-          </span>
-        </div>
-        <div id="uploaded_legales"></div>
+          <a href="#upload_legales_opener" id="upload_legales_opener" class="btn btn-default">Ajouter le règlement</a>
+        </div>      
+    </div>
+    <div class="row">
+      <div class="col-12 mt-2" id="uploaded_legales">
         <!-- REGLEMENT UPLOADED -->
       </div>
     </div>
@@ -588,4 +593,4 @@
   <p class="legend"><br><em>* Champs obligatoire</em></p>
 </div>
 
-<script src="/js/files-uploader.js" type="text/javascript"></script>
+<!-- <script src="/js/files-uploader.js" type="text/javascript"></script> -->

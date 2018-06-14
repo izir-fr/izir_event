@@ -67,7 +67,10 @@ if (local || env) {
         'window.jQuery': 'jquery',
         Popper: ['popper.js', 'default']
       })
-    ]
+    ],
+    externals: {
+      cloudinary: 'cloudinary'
+    }
   }
 
   if (env) {

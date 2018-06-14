@@ -171,7 +171,7 @@ var registrationCtrl = {
       orderAmount: req.body.total,
       statut: 'pré-inscrit',
       docs: {
-        certificat: req.body.certificats
+        certificat: req.body.certificat_file
       },
       updated: new Date()
     })

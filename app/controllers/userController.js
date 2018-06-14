@@ -348,7 +348,7 @@ var userCtrl = {
   },
   // Post user certificat based on :id
   postCertificatByUserId: function (req, res) {
-    var certificat = req.body.certificats
+    var certificat = req.body.certificat_file
 
     if (certificat === '' || certificat === undefined) {
       req.flash('error_msg', 'Aucun certificat n\'a été joint')

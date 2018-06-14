@@ -12,6 +12,7 @@ import './components/send-to-friends'
 import './components/register'
 import './components/cloudinary-uploader'
 import './components/form-query-completion'
+import './components/event-config'
 
 if (module.hot) {
   module.hot.accept()

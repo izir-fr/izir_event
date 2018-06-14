@@ -1,5 +1,19 @@
 import cloudinary from 'cloudinary'
 
+var imgQuantityCheck = () => {
+  var imageFiles = $('input[name=img]')
+  if (imageFiles.length >= 3) {
+    $('#upload_images_opener').remove()
+  }
+}
+
+var legalesQuantityCheck = () => {
+  var legales = $('input[name=legales]')
+  if (legales.length >= 1) {
+    $('#upload_legales_opener').remove()
+  }
+}
+
 var cloudinaryKey = {
   cloud_name: 'eventizir',
   api_key: 644512573537437,
@@ -64,11 +78,64 @@ var certificatUploader = (e) => {
   })
 }
 
+var imageUploader = (e) => {
+  // cloudinary upload options
+  cloudinaryKey.folder = 'events_images'
+  cloudinaryKey.field_name = 'photo[]'
+  cloudinaryKey.max_files = 1
+  // init upload
+  cloudinary.openUploadWidget(cloudinaryKey, (err, res) => {
+    if (err) {
+      window.alert('Une erreur est survenue lors de l\'importation de votre fichier, merci de réessayer. Description de l\'erreur: ' + err)
+    }
+    if (res.length >= 1) {
+      var image = res[0]
+      // input file value to save action
+      $('#uploaded_images').append('<input name="img" value="' + image.secure_url + '" type="hidden">')
+      // link to upload file
+      $('#uploaded_images').append('<a href="' + image.secure_url + '" target="_blank" class="upload_image"><img class="img-thumbnail" src="' + image.thumbnail_url + '" alt="' + image.original_filename + '"></a>')
+      // supéression du bouton si limite atteinte
+      imgQuantityCheck()
+    }
+  })
+}
+
+var legalesUploader = (e) => {
+  // cloudinary upload options
+  cloudinaryKey.folder = 'legales_documents'
+  cloudinaryKey.field_name = 'photo[]'
+  cloudinaryKey.max_files = 1
+  // init upload
+  cloudinary.openUploadWidget(cloudinaryKey, (err, res) => {
+    if (err) {
+      window.alert('Une erreur est survenue lors de l\'importation de votre fichier, merci de réessayer. Description de l\'erreur: ' + err)
+    }
+    if (res.length >= 1) {
+      var legales = res[0]
+      // input file value to save action
+      $('#uploaded_legales').append('<input name="legales" value="' + legales.secure_url + '" type="hidden">')
+      // link to upload file
+      $('#uploaded_legales').append('<a href="' + legales.secure_url + '" target="_blank" class="upload_legales"><img class="img-thumbnail" src="' + legales.thumbnail_url + '" alt="' + legales.original_filename + '"></a>')
+      // supression du bouton si limite atteinte
+      legalesQuantityCheck()
+    }
+  })
+}
+
 // Export trigger
 var fileUploader = () => {
+  // verify document limite
+  imgQuantityCheck()
+  legalesQuantityCheck()
   // certificat trigger
   $('#upload_certificats_opener').on('click', (e) => {
     certificatUploader(e)
+  })
+  $('#upload_images_opener').on('click', (e) => {
+    imageUploader(e)
+  })
+  $('#upload_legales_opener').on('click', (e) => {
+    legalesUploader(e)
   })
 }
 

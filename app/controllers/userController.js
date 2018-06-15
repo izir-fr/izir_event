@@ -344,7 +344,12 @@ var userCtrl = {
   },
   // Get user certificat based on :id
   getCertificatByUserId: function (req, res) {
-    res.render('partials/user/certificat')
+    var event = {}
+    console.log(req.query.event)
+    if (req.query.event) {
+      event.id = req.query.event
+    }
+    res.render('partials/user/certificat', event)
   },
   // Post user certificat based on :id
   postCertificatByUserId: function (req, res) {
@@ -375,7 +380,11 @@ var userCtrl = {
           res.redirect('/user/certificat/' + req.user.id)
         } else {
           req.flash('success_msg', 'Votre certificat a été mis à jour')
-          res.redirect('/user/profil/' + req.user.id + '/')
+          if (req.query.event) {
+            res.redirect('/inscription/pre-inscription/' + req.query.event)
+          } else {
+            res.redirect('/user/profil/' + req.user.id + '/')
+          }
         }
       })
     }

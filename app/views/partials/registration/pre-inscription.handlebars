@@ -328,12 +328,12 @@
 					    			<div class="alert alert-light text-center">
 							    		<p><strong>Vous avez déjà un certificat médical (ou une licence) d'enregistré, valide jusqu'au {{user.certificat.expiration_month}}/{{user.certificat.expiration_year}}</strong></p>
 							        <a href="{{user.certificat.file}}" class="spacer-sm-top spacer-sm-bottom btn btn-warning" target="_blank">Voir mon document</a>
-							        <a href="/user/certificat/{{user.id}}" class="spacer-sm-top spacer-sm-bottom btn btn-outline-dark spacer-sm-left">Changer mon document</a>
+							        <a href="/user/certificat/{{user.id}}?event={{results.event.id}}" class="spacer-sm-top spacer-sm-bottom btn btn-outline-dark spacer-sm-left">Changer mon document</a>
 							      </div>
 						    	{{else}}
 						    		<div class="alert alert-warning text-center">
 							    		<p><strong>Vous n'avez pas encore de certificat médical (ou une licence) d'enregistré.</strong></p>
-							        <a href="/user/certificat/{{user.id}}" class="spacer-sm-top spacer-sm-bottom btn btn-warning">Enregistrer mon document</a>
+							        <a href="/user/certificat/{{user.id}}?event={{results.event.id}}" class="spacer-sm-top spacer-sm-bottom btn btn-warning">Enregistrer mon document</a>
 						    		</div>
 						    	{{/if}}
 					    	</div>

@@ -9,7 +9,11 @@
       <div class="alert alert-danger">{{msg}}</div>
     {{/each}}
 	{{/if}}
-	<form method="post" action="/user/certificat/{{user.id}}">
+  {{#if id}}
+    <form method="post" action="/user/certificat/{{user.id}}?event={{id}}">
+  {{else}}
+    <form method="post" action="/user/certificat/{{user.id}}">
+  {{/if}}
     <!-- VALIDITE-->
     <div class="row">
     	<div class="col-10 mx-auto mt-5 text-center">

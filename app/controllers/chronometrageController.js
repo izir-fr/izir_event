@@ -29,7 +29,7 @@ var chronometrageCtrl = {
         if (err) {
           res.redirect('/')
         }
-        if (String(req.user.id) === String(event.author) || String(req.user.id) === String(event.chronometreur)) {
+        if (String(req.user.id) === String(event.author) || String(req.user.id) === String(event.chronometreur.id)) {
           var profil
           if (String(req.user.id) === String(event.author)) {
             profil = {

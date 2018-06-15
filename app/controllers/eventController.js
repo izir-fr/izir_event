@@ -247,7 +247,7 @@ var eventFinderForm = (req, res) => {
 
       // city query filter
       if (citySearch !== '') {
-        allItems.filter(element => element.toLowerCase().indexOf(citySearch.toLowerCase()) > -1)
+        allItems.filter(element => element.adresse.ville.toLowerCase() === citySearch.toLowerCase())
       }
       return allItems
     })

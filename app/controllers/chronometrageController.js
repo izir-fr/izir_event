@@ -346,7 +346,7 @@ var chronometrageCtrl = {
       var fields = ['NOM', 'PRENOM', 'ADRESSE1', 'ADRESSE2', 'CODE', 'VILLE', 'ETAT', 'PAYS', 'EMAIL', 'TEL', 'SEXE', 'NUMERO', 'HANDICAP', 'LICENCE', 'NAISSANCE', 'CATEGORIE', 'TEMPS', 'CLUB', 'CODECLUB', 'ORGANISME', 'NATION', 'COURSE', 'DISTANCE', 'PAYE', 'INVITE', 'ENVOICLASST', 'CERTIF MEDICAL']
 
       try {
-        var csv = json2csv({ data: inscriptions, fields: fields, unwindPath: ['COURSE'], del: '  ', quotes: '' })
+        var csv = json2csv({ data: inscriptions, fields: fields, unwindPath: ['COURSE'], del: '\t', quotes: '' })
         fs.writeFile(req.params.id + '.txt', csv, 'ascii', (err) => {
           if (err) {
             req.flash('error_msg', 'Une erreur est survenue')

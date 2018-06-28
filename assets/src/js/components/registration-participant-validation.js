@@ -63,6 +63,14 @@ var registrationValidation = () => {
       })
 
       // Step 2 to 1
+      $('#epreuve-form-back').on('click', (e) => {
+        $('#header-participant').removeClass('txt-dark-blue').addClass('text-secondary')
+        $('#header-epreuve').removeClass('text-secondary').addClass('txt-dark-blue')
+        $('#step-participant').addClass('hidde')
+        $('#step-epreuve').removeClass('hidde')
+      })
+
+      // Step 2 new participant
       var newParticipantCheckedAction = () => {
         if (newParticipant.is(':checked')) {
           nom.val('')
@@ -104,14 +112,6 @@ var registrationValidation = () => {
         }
       }
 
-      $('#epreuve-form-back').on('click', (e) => {
-        $('#header-participant').removeClass('txt-dark-blue').addClass('text-secondary')
-        $('#header-epreuve').removeClass('text-secondary').addClass('txt-dark-blue')
-        $('#step-participant').addClass('hidde')
-        $('#step-epreuve').removeClass('hidde')
-      })
-
-      // Step 2 new participant
       $('#userRegisterButton').on('click', () => {
         $('#inscriptionForm').removeClass('hidde')
         $('#inscriptionSelect').remove()

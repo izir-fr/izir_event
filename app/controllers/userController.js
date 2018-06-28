@@ -41,19 +41,19 @@ var userCtrl = {
       var createContact = new SibApiV3Sdk.CreateContact({
         email: user.email,
         attributes: {
-            'PRENOM': user.name,
-            'NOM': user.surname
-          },
+          'PRENOM': user.name,
+          'NOM': user.surname
+        },
         listIds: [21, 18],
-        updateEnabled: true                
+        updateEnabled: true
       })
 
       apiInstance
         .createContact(createContact)
         .then((data) => {
-          console.log('sendinblue : ' + data)
+          // console.log('sendinblue : ' + data)
         }, function (error) {
-          if (err) throw err
+          if (error) throw error
         })
     }
 
@@ -83,9 +83,9 @@ var userCtrl = {
                     sendinblueCreateAction(user)
                   }
                   req.flash('success_msg', 'Vous êtes enregistré et pouvez vous connecter')
-                  res.redirect('/user/login')                    
+                  res.redirect('/user/login')
                 }
-              })         
+              })
             } else {
               req.flash('error_msg', errorsExplenations.userAlreadyExist)
               res.redirect('/user/register')
@@ -107,7 +107,7 @@ var userCtrl = {
 
     if (errorBody !== false) {
       errorBody.forEach((val) => {
-        req.flash('error_msg', val.msg )
+        req.flash('error_msg', val.msg)
       })
       res.redirect('/user/register')
     } else {

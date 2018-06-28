@@ -193,190 +193,200 @@
 
 					<!--Step 2. Participant-->
 					<div id="step-participant" class="hidde">
-						<div class="row">
-							<div class="col-sm-12">
-								<div class="form-check alert alert-warning">
-									<label class="form-check-label">
-										<input class="form-check-input" type="checkbox" name="newParticipant"> Inscrire à cette épreuve une autre personne que <strong>{{user.surname}} {{user.name}}</strong>
-									</label>
-								</div>
+						<div id="inscriptionSelect" class="row mt-5 text-center">
+							<div class="col-md-6">
+								<span id="userRegisterButton" class="btn btn-secondary">Je m'inscrit</span>
+							</div>
+							<div class="col-md-6">
+								<span id="otherRegisterButton" class="btn btn-secondary">J'inscrit une autre personne</span>
 							</div>
 						</div>
-						<div class="row">
-							<div class="col-12 text-center">
-								<p class="alert alert-dark"><i class="fa fa-arrow-down" aria-hidden="true"></i> <strong>Informations</strong></p>
-							</div>
-						</div>
-						<div class="row">
-					    	<div class="col-sm-6">
-					    		<div class="form-group">
-					        		<label>Nom *</label>
-					        		<input type="text" class="form-control" placeholder="Nom" name="surname" value="{{user.surname}}" required>
-					        	</div>
-					    	</div>
-					    	<div class="col-sm-6">
-					    		<div class="form-group">
-					        		<label>Prénom *</label>
-					        		<input type="text" class="form-control" placeholder="Prénom" name="name" value="{{user.name}}" required>
-					        	</div>
-					    	</div>
-					    </div>
-					    <div class="row">
-					    	<div class="col-sm-6">
-								<div class="form-group">
-									<label>Email *</label>
-									<input type="email" class="form-control" placeholder="Email" name="email"  value="{{user.email}}" required>
-								</div>
-					    	</div>
-					    	<div class="col-sm-6">
-								<div class="form-group">
-									<label for="sex">Je suis *</label>
-									<select class="form-control" name="sex" id="sex" required>
-										<option value="{{user.sex}}" selected>{{user.sex}}</option>
-										<option value="Homme">Homme</option>
-										<option value="Femme">Femme</option>
-									</select>
-								</div>
-					    	</div>
-					    </div>
-					    <div class="row">
-					    	<div class="col-12">
-						        <div class="form-group">
-						          <label>Date de naissance (jour/mois/année)*</label>
-						          <div class="row">
-						            <div class="col-4">
-						              <select class="form-control" name="jourNaissance" id="jourNaissance" required>
-						                <option value="{{jourNaissance}}" selected>{{jourNaissance}}</option>
-						                {{#each date_list.day}}
-						               		<option value="{{this.value}}">{{this.value}}</option>
-						                {{/each}}
-						              </select>
-						            </div>
-						            <div class="col-4">
-						              <select class="form-control" name="moisNaissance" id="moisNaissance" required>
-						                <option value="{{moisNaissance}}" selected>{{moisNaissance}}</option>
-						                {{#each date_list.month}}
-						               		<option value="{{this.value}}">{{this.value}}</option>
-						                {{/each}}
-						              </select>
-						            </div>
-						            <div class="col-4">
-						            	<input class="form-control" type="number" placeholder="2018"  min="1900" step="1" value="{{anneeNaissance}}" name="anneeNaissance" required>
-						            </div>
-						          </div>
-						        </div>
-					    	</div>
-					    </div>
-					    <div class="row">
-					    	<div class="col-sm-4">
-					    		<div class="form-group">
-									<label>Team / Club</label>
-									<input type="text" class="form-control" placeholder="Team / Club" name="team"  value="{{user.team}}">
-								</div>
-					    	</div>
-					    	<div class="col-sm-4">
-					    		<div class="form-group">
-									<label>N° de licence</label>
-									<input type="text" class="form-control" placeholder="#Numéro de License" name="numLicence"  value="{{user.numLicence}}">
-								</div>
-					    	</div>
-					    	<div class="col-sm-4">
-								<div class="form-group">
-									<label for="categorie">Catégorie *</label>
-									<select class="form-control" name="categorie" id="categorie" required>
-										<option value="{{user.categorie}}" selected>{{user.categorie}}</option>
-										{{#each category_list}}
-						          <option value="{{this.short}} - {{this.name}}">{{this.short}} - {{this.name}}</option>
-						        {{/each}}
-									</select>
-								</div>
-					    	</div>
-					    </div>
-						<div class="row">
-					    	<div class="col-sm-12">
-								<div class="form-group">
-									<label>Adresse ligne 1 *</label>
-									<input type="text" class="form-control" placeholder="ex: 9 rue Albert Camus" name="adresse1"  value="{{user.adresse1}}" required>
-								</div>
-								<div class="form-group">
-									<label>Adresse ligne 2</label>
-									<input type="text" class="form-control" placeholder="ex: Appt 103" name="adresse2"  value="{{user.adresse2}}">
-								</div>
-								<div class="form-group">
-									<label>Code postal *</label>
-									<input type="text" class="form-control" placeholder="ex: 56300" name="codePostal"  value="{{user.codePostal}}" required>
-								</div>
-								<div class="form-group">
-									<label>Ville *</label>
-									<input type="text" class="form-control" placeholder="ex: Pontivy" name="city"  value="{{user.city}}" required>
-								</div>
-							</div>
-					    </div>
-						
-						<!--Certificat Medical-->
-						{{#if results.event.certificat_required}}
+						<div id="inscriptionForm" class="hidde">
 							<div class="row">
-								<div class="col-12 spacer-sm-top text-center">
-									<p class="alert alert-dark"><i class="fa fa-arrow-down" aria-hidden="true"></i> <strong>Certificat Medical - Licence</strong></p>
-								</div>
-							</div>
-						  
-						  <!-- user certificat -->
-					    <div class="row " id="user_certificat">
-					    	<div class="col-12 mx-auto">
-					    		{{#if user.certificat.file}}
-					    			<div class="alert alert-light text-center">
-							    		<p><strong>Vous avez déjà un certificat médical (ou une licence) d'enregistré, valide jusqu'au {{user.certificat.expiration_month}}/{{user.certificat.expiration_year}}</strong></p>
-							        <a href="{{user.certificat.file}}" class="spacer-sm-top spacer-sm-bottom btn btn-warning" target="_blank">Voir mon document</a>
-							        <a href="/user/certificat/{{user.id}}?event={{results.event.id}}" class="spacer-sm-top spacer-sm-bottom btn btn-outline-dark spacer-sm-left">Changer mon document</a>
-							      </div>
-						    	{{else}}
-						    		<div class="alert alert-warning text-center">
-							    		<p><strong>Vous n'avez pas encore de certificat médical (ou une licence) d'enregistré.</strong></p>
-							        <a href="/user/certificat/{{user.id}}?event={{results.event.id}}" class="spacer-sm-top spacer-sm-bottom btn btn-warning">Enregistrer mon document</a>
-						    		</div>
-						    	{{/if}}
-					    	</div>
-					    </div>
-						  
-							<!-- other participant certificat -->
-						  <div class="hidde" id="other_participant_certificat">
-								<div class="row">
-									<div class="col-12 spacer-sm-top">
-										<div id="other_participant_certificat_inerBox" class="alert alert-warning text-center">
-											Ajouter le certificat medical ou la licence*<em class="legend"> .pdf , .jpg et .png uniquement, 1 pièce jointe</em>
-											<span class="mt-5 mb-5 d-block">
-												<a href="" id="file_viewer" class="hidde btn btn-warning" target="_blank">Voir mon document</a>
-												<a href="#upload_certificats_opener" id="upload_certificats_opener" class="btn btn-danger">Ajouter un document</a>
-											</span>
-										</div>		
+								<div class="col-sm-12">
+									<div class="form-check alert alert-warning">
+										<label class="form-check-label">
+											<input class="form-check-input" type="checkbox" name="newParticipant" id="newParticipant"> Inscrire à cette épreuve une autre personne que <strong>{{user.surname}} {{user.name}}</strong>
+										</label>
 									</div>
 								</div>
-						  </div>
-						  <input name='certificat_file' value='{{user.certificat.file}}' type='hidden'>
-
-						  <!-- checkbox certificat user confirmation -->
+							</div>
 							<div class="row">
-								<div class="col-12">
-									<div class="form-check alert alert-light">
-										<label class="form-check-label">
-											<input class="form-check-input" type="checkbox" name="certificatCondition" id="certificatCondition" required>
-											<p>Je déclare sur l'honneur que le certificat transmis est authentique et valide. Je décharge ainsi la société REF SPORT PONTIVY et l'organisateur de toute responsabilité liée à celui-ci.</p>
-										</label>
-									</div>								
+								<div class="col-12 text-center">
+									<p class="alert alert-dark"><i class="fa fa-arrow-down" aria-hidden="true"></i> <strong>Informations</strong></p>
 								</div>
-							</div>						  
-						{{/if}}
+							</div>
+							<div class="row">
+						    	<div class="col-sm-6">
+						    		<div class="form-group">
+						        		<label>Nom *</label>
+						        		<input type="text" class="form-control" placeholder="Nom" name="surname" value="{{user.surname}}" required>
+						        	</div>
+						    	</div>
+						    	<div class="col-sm-6">
+						    		<div class="form-group">
+						        		<label>Prénom *</label>
+						        		<input type="text" class="form-control" placeholder="Prénom" name="name" value="{{user.name}}" required>
+						        	</div>
+						    	</div>
+						    </div>
+						    <div class="row">
+						    	<div class="col-sm-6">
+									<div class="form-group">
+										<label>Email *</label>
+										<input type="email" class="form-control" placeholder="Email" name="email"  value="{{user.email}}" required>
+									</div>
+						    	</div>
+						    	<div class="col-sm-6">
+									<div class="form-group">
+										<label for="sex">Je suis *</label>
+										<select class="form-control" name="sex" id="sex" required>
+											<option value="{{user.sex}}" selected>{{user.sex}}</option>
+											<option value="Homme">Homme</option>
+											<option value="Femme">Femme</option>
+										</select>
+									</div>
+						    	</div>
+						    </div>
+						    <div class="row">
+						    	<div class="col-12">
+							        <div class="form-group">
+							          <label>Date de naissance (jour/mois/année)*</label>
+							          <div class="row">
+							            <div class="col-4">
+							              <select class="form-control" name="jourNaissance" id="jourNaissance" required>
+							                <option value="{{jourNaissance}}" selected>{{jourNaissance}}</option>
+							                {{#each date_list.day}}
+							               		<option value="{{this.value}}">{{this.value}}</option>
+							                {{/each}}
+							              </select>
+							            </div>
+							            <div class="col-4">
+							              <select class="form-control" name="moisNaissance" id="moisNaissance" required>
+							                <option value="{{moisNaissance}}" selected>{{moisNaissance}}</option>
+							                {{#each date_list.month}}
+							               		<option value="{{this.value}}">{{this.value}}</option>
+							                {{/each}}
+							              </select>
+							            </div>
+							            <div class="col-4">
+							            	<input class="form-control" type="number" placeholder="2018"  min="1900" step="1" value="{{anneeNaissance}}" name="anneeNaissance" required>
+							            </div>
+							          </div>
+							        </div>
+						    	</div>
+						    </div>
+						    <div class="row">
+						    	<div class="col-sm-4">
+						    		<div class="form-group">
+										<label>Team / Club</label>
+										<input type="text" class="form-control" placeholder="Team / Club" name="team"  value="{{user.team}}">
+									</div>
+						    	</div>
+						    	<div class="col-sm-4">
+						    		<div class="form-group">
+										<label>N° de licence</label>
+										<input type="text" class="form-control" placeholder="#Numéro de License" name="numLicence"  value="{{user.numLicence}}">
+									</div>
+						    	</div>
+						    	<div class="col-sm-4">
+									<div class="form-group">
+										<label for="categorie">Catégorie *</label>
+										<select class="form-control" name="categorie" id="categorie" required>
+											<option value="{{user.categorie}}" selected>{{user.categorie}}</option>
+											{{#each category_list}}
+							          <option value="{{this.short}} - {{this.name}}">{{this.short}} - {{this.name}}</option>
+							        {{/each}}
+										</select>
+									</div>
+						    	</div>
+						    </div>
+							<div class="row">
+						    	<div class="col-sm-12">
+									<div class="form-group">
+										<label>Adresse ligne 1 *</label>
+										<input type="text" class="form-control" placeholder="ex: 9 rue Albert Camus" name="adresse1"  value="{{user.adresse1}}" required>
+									</div>
+									<div class="form-group">
+										<label>Adresse ligne 2</label>
+										<input type="text" class="form-control" placeholder="ex: Appt 103" name="adresse2"  value="{{user.adresse2}}">
+									</div>
+									<div class="form-group">
+										<label>Code postal *</label>
+										<input type="text" class="form-control" placeholder="ex: 56300" name="codePostal"  value="{{user.codePostal}}" required>
+									</div>
+									<div class="form-group">
+										<label>Ville *</label>
+										<input type="text" class="form-control" placeholder="ex: Pontivy" name="city"  value="{{user.city}}" required>
+									</div>
+								</div>
+						    </div>
+							
+							<!--Certificat Medical-->
+							{{#if results.event.certificat_required}}
+								<div class="row">
+									<div class="col-12 spacer-sm-top text-center">
+										<p class="alert alert-dark"><i class="fa fa-arrow-down" aria-hidden="true"></i> <strong>Certificat Medical - Licence</strong></p>
+									</div>
+								</div>
+							  
+							  <!-- user certificat -->
+						    <div class="row " id="user_certificat">
+						    	<div class="col-12 mx-auto">
+						    		{{#if user.certificat.file}}
+						    			<div class="alert alert-light text-center">
+								    		<p><strong>Vous avez déjà un certificat médical (ou une licence) d'enregistré, valide jusqu'au {{user.certificat.expiration_month}}/{{user.certificat.expiration_year}}</strong></p>
+								        <a href="{{user.certificat.file}}" class="spacer-sm-top spacer-sm-bottom btn btn-warning" target="_blank">Voir mon document</a>
+								        <a href="/user/certificat/{{user.id}}?event={{results.event.id}}" class="spacer-sm-top spacer-sm-bottom btn btn-outline-dark spacer-sm-left">Changer mon document</a>
+								      </div>
+							    	{{else}}
+							    		<div class="alert alert-warning text-center">
+								    		<p><strong>Vous n'avez pas encore de certificat médical (ou une licence) d'enregistré.</strong></p>
+								        <a href="/user/certificat/{{user.id}}?event={{results.event.id}}" class="spacer-sm-top spacer-sm-bottom btn btn-warning">Enregistrer mon document</a>
+							    		</div>
+							    	{{/if}}
+						    	</div>
+						    </div>
+							  
+								<!-- other participant certificat -->
+							  <div class="hidde" id="other_participant_certificat">
+									<div class="row">
+										<div class="col-12 spacer-sm-top">
+											<div id="other_participant_certificat_inerBox" class="alert alert-warning text-center">
+												Ajouter le certificat medical ou la licence*<em class="legend"> .pdf , .jpg et .png uniquement, 1 pièce jointe</em>
+												<span class="mt-5 mb-5 d-block">
+													<a href="" id="file_viewer" class="hidde btn btn-warning" target="_blank">Voir mon document</a>
+													<a href="#upload_certificats_opener" id="upload_certificats_opener" class="btn btn-danger">Ajouter un document</a>
+												</span>
+											</div>		
+										</div>
+									</div>
+							  </div>
+							  <input name='certificat_file' value='{{user.certificat.file}}' type='hidden'>
 
-						<div class="row">
-							<div class="col-6 text-center">
-								<a class="btn btn-outline-primary" href="#step-epreuve" id="epreuve-form-back">< Retour</a>
+							  <!-- checkbox certificat user confirmation -->
+								<div class="row">
+									<div class="col-12">
+										<div class="form-check alert alert-light">
+											<label class="form-check-label">
+												<input class="form-check-input" type="checkbox" name="certificatCondition" id="certificatCondition" required>
+												<p>Je déclare sur l'honneur que le certificat transmis est authentique et valide. Je décharge ainsi la société REF SPORT PONTIVY et l'organisateur de toute responsabilité liée à celui-ci.</p>
+											</label>
+										</div>								
+									</div>
+								</div>						  
+							{{/if}}
+
+							<div class="row">
+								<div class="col-6 text-center">
+									<a class="btn btn-outline-primary" href="#step-epreuve" id="epreuve-form-back">< Retour</a>
+								</div>
+								<div class="col-6 text-center">
+									<a class="btn btn-secondary" href="#step-confirmation" id="participant-form-submit">Suivant ></a>
+								</div>
 							</div>
-							<div class="col-6 text-center">
-								<a class="btn btn-secondary" href="#step-confirmation" id="participant-form-submit">Suivant ></a>
-							</div>
+						</div>							
 						</div>
-					</div>
 
 					<!--Step 3. confirmation-->
 					<div id="step-confirmation" class="hidde">

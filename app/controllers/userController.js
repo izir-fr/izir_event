@@ -168,9 +168,7 @@ var userCtrl = {
           moisNaissance: moisNaissance,
           anneeNaissance: anneeNaissance
         }
-        // console.log(user)
 
-        // console.log(data)
         res.render('partials/user/edit-profil', { data: data, date_list: dateList, category_list: catList })
       })
     } else {
@@ -339,7 +337,6 @@ var userCtrl = {
   // Get user certificat based on :id
   getCertificatByUserId: function (req, res) {
     var event = {}
-    console.log(req.query.event)
     if (req.query.event) {
       event.id = req.query.event
     }

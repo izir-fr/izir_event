@@ -71,7 +71,7 @@ var registrationValidation = () => {
       })
 
       // Step 2 new participant
-      newParticipant.on('click', () => {
+      var newParticipantCheckedAction = () => {
         if (newParticipant.is(':checked')) {
           nom.val('')
           prenom.val('')
@@ -110,6 +110,22 @@ var registrationValidation = () => {
           $('#other_participant_certificat').addClass('hidde')
           certificat.val(user.certificat)
         }
+      }
+
+      $('#userRegisterButton').on('click', () => {
+        $('#inscriptionForm').removeClass('hidde')
+        $('#inscriptionSelect').remove()
+      })
+
+      $('#otherRegisterButton').on('click', () => {
+        $('#inscriptionForm').removeClass('hidde')
+        $('#newParticipant').prop('checked', true)
+        newParticipantCheckedAction()
+        $('#inscriptionSelect').remove()
+      })
+
+      newParticipant.on('click', () => {
+        newParticipantCheckedAction()
       })
 
       // Step 2 to 3

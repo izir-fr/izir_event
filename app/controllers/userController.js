@@ -30,83 +30,68 @@ var userCtrl = {
   },
   // Post a register
   postRegister: (req, res) => {
-    var errors
-
-    try {
-      var name = req.body.name.toLowerCase()
-      var surname = req.body.surname.toLowerCase()
-      var username = req.body.username.toLowerCase()
-      var email = req.body.email.toLowerCase()
-      var password = req.body.password
-    } catch (err) {
-      res.render('partials/user/register', {error: err})
+    var errorsExplenations = {
+      userAlreadyExist: 'Ce non d\'utilisateur ou cet email est déjà utilisé. Si vous avez oublié votre mot de passe, merci de cliquez sur mot de passe oublié.',
+      globalMsg: 'Une erreur est survenue lors de la création de votre profil, si l\'erreur persiste merci de contacter le service client'
     }
 
-    var tests = [
-      {
-        search: {username: username},
-        msg: 'Ce non d\'utilisateur est déjà utilisé. Si vous avez oublié votre mot de passe, merci de cliquez sur mot de passe oublié.'
-      },
-      {
-        search: {email: email},
-        msg: 'C\'est email est déjà utilisé. Si vous avez oublié votre mot de passe, merci de cliquez sur mot de passe oublié.'
-      }
-    ]
-
-    var validationUser = (search, message, success) => {
-      User.findOne(search, (err, res) => {
-        if (err) {
-          throw err
-        } else {
-          if (res !== null) {
-            // console.log(res)
-            errors = message
-          }
-          success(errors)
-        }
+    var sendinblueCreateAction = (user) => {
+      // Create sendinblue contact
+      var apiInstance = new SibApiV3Sdk.ContactsApi()
+      var createContact = new SibApiV3Sdk.CreateContact({
+        email: user.email,
+        attributes: {
+          'PRENOM': user.name,
+          'NOM': user.surname
+        },
+        listIds: [21, 18],
+        updateEnabled: true
       })
+
+      apiInstance
+        .createContact(createContact)
+        .then((data) => {
+          // console.log('sendinblue : ' + data)
+        }, function (error) {
+          if (error) throw error
+        })
     }
 
-    var createAction = (errors) => {
-      if (errors) {
-        // console.log(errors)
-        res.render('partials/user/register', {error: errors})
-      } else {
-        var newUser = new User({
-          name: name,
-          surname: surname,
-          email: email,
-          username: username,
-          password: password
-        })
+    var userCreateAction = (query) => {
+      User
+        .findOne({ $or: [ { email: query.email }, { username: query.username } ] })
+        .exec((err, data) => {
+          if (err) {
+            req.flash('error_msg', errorsExplenations.globalMsg)
+            res.redirect('/user/register')
+          } else {
+            if (data === null || data.length > 0) {
+              var newUser = new User({
+                name: query.name,
+                surname: query.surname,
+                email: query.email,
+                username: query.username,
+                password: query.password
+              })
 
-        // console.log(newUser)
-        User.createUser(newUser, function (err, user) {
-          if (err) throw err
-          // Create sendinblue contact
-          var apiInstance = new SibApiV3Sdk.ContactsApi()
-          var createContact = new SibApiV3Sdk.CreateContact() // CreateContact | Values to create a contact
-
-          createContact = {
-            email: newUser.email,
-            attributes: {
-              'PRENOM': newUser.name,
-              'NOM': newUser.surname
-            },
-            listIds: [21, 18],
-            updateEnabled: true
+              User.createUser(newUser, function (err, user) {
+                if (err) {
+                  req.flash('error_msg', errorsExplenations.globalMsg)
+                  res.render('partials/user/register')
+                } else {
+                  if (user) {
+                    sendinblueCreateAction(user)
+                  }
+                  req.flash('success_msg', 'Vous êtes enregistré et pouvez vous connecter')
+                  res.redirect('/user/login')
+                }
+              })
+            } else {
+              req.flash('error_msg', errorsExplenations.userAlreadyExist)
+              res.redirect('/user/register')
+            }
           }
-
-          apiInstance.createContact(createContact).then((data) => {
-            console.log('API called successfully. Returned data: ' + data)
-          }, function (error) {
-            console.error(error)
-          })
         })
-
-        req.flash('success_msg', 'Vous êtes enregistré et pouvez vous connecter')
-        res.redirect('/user/login')
-      }
     }
 
     // Validation
@@ -118,14 +103,23 @@ var userCtrl = {
     req.checkBody('password', 'Mot de passe requis').notEmpty()
     req.checkBody('password2', 'Les mots de passe ne sont pas identiques').equals(req.body.password)
 
-    errors = req.validationErrors()
+    var errorBody = req.validationErrors()
 
-    // console.log(test)
-    validationUser(tests[0].search, tests[0].msg, (res) => {
-      validationUser(tests[1].search, tests[1].msg, (res) => {
-        createAction(res)
+    if (errorBody !== false) {
+      errorBody.forEach((val) => {
+        req.flash('error_msg', val.msg)
       })
-    })
+      res.redirect('/user/register')
+    } else {
+      var user = {
+        name: req.body.name.toLowerCase(),
+        surname: req.body.surname.toLowerCase(),
+        username: req.body.username.toLowerCase(),
+        email: req.body.email.toLowerCase(),
+        password: req.body.password
+      }
+      userCreateAction(user)
+    }
   },
   // Get login form
   getLogin: function (req, res) {

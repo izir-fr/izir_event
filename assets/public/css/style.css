@@ -128,6 +128,39 @@ p.footer {
   border-bottom: 1px solid #999;
   margin-bottom: 10px;
 }
+
+.explore-link{
+  display: block;
+  padding: 1.5rem 0.5rem 1.5rem 0.5rem;
+  border: 1px solid #000;
+  color: #000 !important;
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+    
+.explore-link:hover{
+  background-color: #23717e !important;
+  color: white !important;
+  border-color: #fff !important;
+}
+
+#home-event-banner {
+  margin: 1.5rem 0 0 0 !important;
+  display: block;
+  height: 20rem;
+  width: 100%;
+  background-image: url(../img/home-banner/slide1.jpg);
+  background-size: cover  !important;
+  background-position: center  !important;
+}
+
+#home-event-banner img{
+  margin: auto;
+  display: block;
+  max-width: 25rem;
+  padding-top: 100px;
+}
 /* TEXT */
 .txt-white {
   color: #FFF;

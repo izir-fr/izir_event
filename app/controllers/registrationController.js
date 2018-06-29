@@ -255,8 +255,8 @@ var registrationCtrl = {
               var mailOptions = {
                 to: userEmail,
                 from: 'Event Izir <event@izir.fr>',
-                subject: 'Récapitulatif de paiement de l\'inscription N°' + id,
-                text: 'Nous avons le plaisir de vous confirmer que votre demande d\'inscription a bien été prise en compte. \n\n' +
+                subject: 'Confirmation du mode de paiement de l\'inscription N°' + id,
+                text: 'Nous avons le plaisir de vous confirmer que votre inscription a bien été prise en compte. \n\n' +
                     'Vous avez choisi le mode de paiement "chèque / espèce". De ce fait, la validation de votre inscription est réalisée manuelement par l\'organisateur. Celui-ci validera votre inscription lors de son paiement. Le paiement de votre inscription est à réaliser directement à l\'organisateur, ce qui lui permettera de valider votre inscription dès sa réception. \n\n' +
                     'Le paiement est réalisable: \n' +
                     '- sur le lieu de l\'épreuve, le jour de celle-ci.\n' +
@@ -298,7 +298,7 @@ var registrationCtrl = {
             var mailOptions = {
               to: val.participant.email,
               from: 'Event Izir <event@izir.fr>',
-              subject: 'Confirmation de paiement et de validation de l\'inscription N° ' + id,
+              subject: 'Confirmation de paiement de l\'inscription N° ' + id,
               text: 'Nous avons le plaisir de vous confirmer que votre paiement a bien été pris en compte et que votre inscription N°' + id + ' est validée. \n\n' +
                   'Vous venez donc de finaliser votre incription N°' + id + ' pour l\'épreuve suivante : ' + val.eventName + '.\n\n' +
                   'Vous pouvez à tout moment consulter le statut de vos inscriptions en suivant ce lien http://event.izir.fr/inscription/recap/user/' + val.user + '\n\n' +

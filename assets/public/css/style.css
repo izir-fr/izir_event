@@ -280,6 +280,11 @@ a.login > p{
 .delete-epreuve{
   margin-top: 70px;
 }
+
+#paiement_other :hover,#paiement_CB :hover {
+  cursor: pointer;
+  border-color: #999;
+}
 /*////////////////////////// 
 END <= IZIR CUSTOM
 //////////////////////////*/

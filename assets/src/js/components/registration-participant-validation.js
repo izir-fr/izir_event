@@ -251,6 +251,13 @@ var registrationValidation = () => {
         $('#registration-form').remove()
         $('#divForm').append('<div class="col-sm-12"><p class="alert alert-danger">La date limite d\'inscription à cette épreuve dépassée</p></div>')
       }
+
+      $('#registration-form').on('submit', (e) => {
+        var validation = window.confirm('Souhaitez vous valider ces informations?')
+        if (!validation) {
+          e.preventDefault()
+        }
+      })
       // form end
     })
   }

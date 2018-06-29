@@ -2,28 +2,24 @@
   <div class="row">
     <div class="col-sm-4 spacer-md-top">
       <div class="row">
-        <div class="col-sm-12">
-          {{#if data.registration.event.docs.img}}
-            <img src="{{data.registration.event.docs.img.[0]}}" alt="{{data.registration.event.name}}" class="img-fluid">
-          {{else}}
-            <img src="/img/thumb.png" alt="{{data.registration.event.name}}" class="img-fluid">
-          {{/if}}
-            <ul>
-              <li><strong>Lieu :</strong> {{data.registration.event.adresse.ville}} {{data.registration.event.adresse.codePostal}}</li>
-            </ul>
-          {{#each data.registration.event.epreuves}}
-          <ul class="spacer-sm-top">
-            <li><strong>Epreuve :</strong> {{this.name}}</li>
-            <li><strong>Discipline :</strong> {{this.discipline}}</li>
-            <li><strong>Date :</strong> {{date this.date_debut}} à {{dateHours this.date_debut}}h{{dateMinutes this.date_debut}}</li>
-            <li><strong>Distance :</strong> {{this.distance}}Km</li>
-            <li><strong>Denivelé + :</strong> {{this.denivele}} mètres</li>
-            <li><strong>Nombre de participants maximum:</strong> {{this.placesDispo}}</li>
-            <li><strong>Tarif:</strong> {{this.tarif}}€</li> 
+        <div class="col-md-10 mx-auto">
+          <span class="h4 mt-5">L'événement</span>
+          <ul class="mt-2 mb-5">
+            <li class="mb-2"><strong>{{data.registration.event.adresse.ville}} {{results.event.adresse.codePostal}}</strong></li>
+            {{#each data.registration.event.epreuves}}
+              <li class="mb-2">{{this.name}} - le {{date this.date_debut}} à {{dateHours this.date_debut}}h{{dateMinutes this.date_debut}} -  {{this.distance}}Km</li>
+            {{/each}}
           </ul>
-          {{/each}}
-          <ul>
-            <li class="text-center"><a class="btn btn-outline-primary spacer-sm-top" href="/event/{{data.registration.event.id}}" target="_blank">Détails de l'évènement</a></li>
+          <span class="h4 mt-5">Récapitulatif</span>
+          <ul class="mt-2">
+            <li class="mb-2"><strong>Produit - Total TTC</strong></li>
+            {{#each data.registration.produits}}
+              <li class="text-muted">{{this.produitsRef}}: {{this.produitsSubTotal}} €</li>                
+            {{/each}}
+            {{#if data.registration.event.paiement}}
+              <li class="text-muted">Frais de paiement en ligne: 0,50 €</li>
+            {{/if}}              
+            <li class="border border-right-0 border-bottom-0 border-left-0 border-dark mt-2"><strong class="d-block mt-2">Total de l'inscription: {{data.orderAmount}} €</strong></li>
           </ul>
         </div>
       </div>
@@ -38,130 +34,120 @@
             <strong class="text-secondary" id="header-participant">2. Participant</strong>
           </div>
           <div class="col-3 text-center">
-            <strong class="text-secondary" id="header-confirmation">3. Confirmation</strong>
+            <strong class="text-secondary" id="header-confirmation">3. Récapitulatif</strong>
           </div>
           <div class="col-3 text-center spacer-sm-bottom">
             <strong class="txt-dark-blue" id="header-paiement">4. Paiement</strong>
           </div>
         </div>
       <form method="post" action="/inscription/checkout/{{data.registration.id}}" id="checkout-form">
-          <div class="row">
-            <div class="col-sm-12">
-            <table class="table spacer-sm-top">
-              <thead class="bg-dark-blue txt-white">
-                <tr>
-                  <th class="text-center">Produit</th>
-                  <th class="text-center">Quantité</th>
-                  <th class="text-center">Prix unitaire</th>
-                  <th class="text-center">Total TTC</th>
-                </tr>
-              </thead>
-              <tbody>
-                  {{#each data.registration.produits}}
-                  <tr>
-                    <td>
-                      <strong>{{this.produitsRef}}</strong>
-                    </td>
-                    <td class="text-right">
-                      <span>{{this.produitsQuantite}}</span>
-                    </td>
-                    <td class="text-center">
-                      <span>{{this.produitsPrix}}</span> €
-                    </td>
-                    <td class="text-center subtotal">
-                      <span>{{this.produitsSubTotal}} €</span>
-                    </td>
-                  </tr>
-                  {{/each}}
-                  {{#if data.registration.event.paiement}}
-                  <tr>
-                    <td>
-                      <strong>Frais de paiement en ligne</strong>
-                    </td>
-                    <td class="text-right">
-                      <span>1</span>
-                    </td>
-                    <td class="text-center">
-                      <span>0,50</span> €
-                    </td>
-                    <td class="text-center subtotal">
-                      <span>0,50 €</span>
-                    </td>
-                  </tr>
-                  {{/if}}                 
-                <tr class="table-dark">
-                    <td>
-                      <strong>Total de l'inscription</strong>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td class="text-center" id="total-ttc">
-                      <span id="totalview"><strong>{{data.orderAmount}} €</strong></span>
-                    </td>
-                  </tr>
-              </tbody>
-            </table>    
-            </div>
-          <input type="hidden" name="stripe" value="{{data.stripe}}">
-          <input type="hidden" name="event" value="{{data.registration.event.name}}">
-          <!--
-          <button type="submit">Payer</button>
-          -->
-        </div>
+        <input type="hidden" name="stripe" value="{{data.stripe}}">
+        <input type="hidden" name="event" value="{{data.registration.event.name}}">
+
         <div class="row">
-          <div class="col-12">  
-            <div class="alert alert-warning spacer-sm-top">      
-            <!-- PAIEMENT-->
+          <div class="col-10 mx-auto">  
+            <div>      
+            <!-- PAIEMENT ACCEPTED-->
             {{#if data.registration.event.paiement}}
+              <!-- paiement CB already done -->
               {{#if data.registration.paiement.captured}}
                 <p>Votre inscription est finalisée, aucune action n'est requise de votre part.</p>
                 <p>Votre référence de paiement est : {{data.registration.paiement.id}}</p>
                 <p>Pour toute question relative à votre inscription, merci de contacter le service client via le chat en bas de l'écran.</p>
                 <p>Pour toute question relative à l'épreuve, merci de contacter le l'organisateur de celle-ci.</p>
-                <p>Merci de votre compréhension.</p>              
+                <p>Merci de votre compréhension.</p> 
+              <!-- paiement to do -->
               {{else}}
+                <!-- other paiement option already choose and accept by organisateur -->
                 {{#if data.registration.paiement.other_captured}}
                   <p>L'organisateur à bien reçus votre paiement, l'inscription est finalisée, aucune action supplémenatire n'est requise de votre part.</p>
                   <p>Pour toute question relative à votre inscription, merci de contacter le service client via le chat en bas de l'écran.</p>
                   <p>Pour toute question relative à l'épreuve, merci de contacter le l'organisateur de celle-ci.</p>
                   <p>Merci de votre compréhension.</p>                  
-                {{else}}              
+                {{else}}
+                  <!-- other paiement option already choose and BUT NOT accept by organisateur -->
                   {{#if data.registration.paiement.other}}
                     <p class="spacer-sm-bottom"><strong>Vous avez choisi un paiement par chèque / espèce pour valider votre inscription.</strong> Ce règlement sera à envoyer à l'adresse de la permanance de l'organisation de l'évènement (si le delai postal le permet) ou à donner en main propre au guichet de l'organisation lorsque que vous vous présenterez à l'évènement. L'organisateur validera votre inscription après réception de son paiement.</p>
                   {{else}}
+                    <!-- paiement to action -->
                     <div class="row">
-                      <div class="col-6">
-                        <a href="/inscription/checkout/{{data.registration.id}}/other-paiement" class="btn btn-secondary d-block spacer-xs-top" id="other-checkout">Paiement par chèque / espèce *</a>
-                      </div>
-                      <div class="col-6">
-
-                        <script 
-                          src="https://checkout.stripe.com/checkout.js" class="stripe-button"
-                          input-type="submit"
-                          data-label="Paiment par CB"
-                          data-email="{{data.registration.participant.email}}"
-                          data-key="{{data.stripeFrontKey}}"
-                          data-amount="{{data.stripe}}"
-                          data-name="event.izir"
-                          data-description="{{data.registration.eventName}}"
-                          data-locale="auto"
-                          data-currency="EUR"
-                          > 
-                        </script>                    
+                      <div class="col-12 alert alert-warning text-center">
+                        <span><i class="fa fa-exclamation-triangle mr-2" aria-hidden="true"></i>Votre place n'est pas encore garantie. Aucun paiement n'est enregistré. Pour finaliser votre inscription, merci de choisir l'un des modes de paiement ci-dessous.</span>
                       </div>
                     </div>
-                    <div class="text-center spacer-sm-top spacer-sm-bottom bg-light">
-                      <img class="img-fluid spacer-sm-top" src="/img/rect3737.png" alt="Paiement sécurisé" width="50" height="50">
-                      <p class="spacer-sm-top spacer-sm-bottom "><strong>Paiement sécurisé</strong><span class=""> par stripe.com</span></p>
-                      <p class="spacer-sm-bottom"><strong>* paiement par chèque / espèce :</strong> Ce règlement sera à envoyer à l'adresse de la permanance de l'organisation de l'évènement (si le delai postal le permet) ou à donner en main propre au guichet de l'organisation lorsque que vous vous présenterez à l'évènement. L'organisateur validera votre inscription après réception de son paiement.</p>
+                    <div id="paiement_CB" class="row border border-muted mb-3">
+                      <div class="col-10 mx-auto mt-2 mb-2">
+                        <div class="row">
+                          <div class="col-12">
+                            <span id="paiement_CB_checkbox" class="btn btn-muted mr-3"><i class="fa fa-square-o" aria-hidden="true"></i></span><strong>Paiement par carte bancaire</strong>                            
+                          </div>
+                        </div>
+                        <div id="paiement_CB_sub" class="hidde">
+                          <div class="row">
+                            <div class="col-12">
+                              <p>Informations sur ce moyen de paiement</p>
+                              <p>Ce règlement garantie votre place et valide votre inscription instantanément. En le choississant, finis la queue au gichet le jour de l'évèenement pour payer l'inscription.</p>
+                              <div class="row">
+                                <div class="col-sm-3">
+                                  <img class="img-fluid mt-2 mb-2" src="/img/rect3737.png" alt="Paiement sécurisé" width="50" height="50">
+                                </div>
+                                <div class="col-sm-9">
+                                  <p class="mb-2 mt-2 "><strong>Paiement 100% sécurisé</strong></p>
+                                  <img class="img-fluid" src="/img/cb-visa-mastercard.png" alt="Paiement sécurisé" width="auto" height="100%">
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-12 mt-2">
+                              <script 
+                                src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                                input-type="submit"
+                                data-label="Valider mon paiement et mon inscription"
+                                data-email="{{data.registration.participant.email}}"
+                                data-key="{{data.stripeFrontKey}}"
+                                data-amount="{{data.stripe}}"
+                                data-name="event.izir"
+                                data-description="{{data.registration.eventName}}"
+                                data-locale="auto"
+                                data-currency="EUR"
+                                > 
+                              </script> 
+                            </div>
+                          </div>                          
+                        </div>
+                      </div>
+                    </div>
+                    <div id="paiement_other" class="row border border-muted mb-3">
+                      <div class="col-10 mx-auto mt-2 mb-2">
+                        <div class="row">
+                          <div class="col-12">
+                            <span id="paiement_other_checkbox" class="btn btn-muted mr-3"><i class="fa fa-square-o" aria-hidden="true"></i></span><strong>Paiement par chèque / espèce</strong>  
+                          </div>
+                        </div>
+                        <div id="paiement_other_sub" class="hidde">
+                          <div class="row">
+                            <div class="col-12">
+                              <p>Informations sur ce moyen de paiement</p>
+                              <p>Ce règlement sera à envoyer à l'adresse de la permanance de l'organisation de l'évènement (si le delai postal le permet) ou à donner en main propre au guichet de l'organisation lorsque que vous vous présenterez à l'évènement. L'organisateur validera votre inscription après réception de son paiement. Votre place n'est donc pas garantie.</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-12">
+                              <a href="/inscription/checkout/{{data.registration.id}}/other-paiement" class="btn btn-secondary d-block spacer-xs-top" id="other-checkout">Valider mon paiement et mon inscription</a>
+                            </div>
+                          </div>                          
+                        </div>
+                      </div>
                     </div>
                   {{/if}}
                 {{/if}}
               {{/if}}
+            <!-- PAIEMENT NOT ACCEPTED-->
             {{else}}
               <div class="col-12 alert alert-warning spacer-sm-top">
                 <p>Votre inscription a bien été prise en compte.</p>
-                <p>Vous ne pouvez pas payer votre inscription car l'organisateur n'a pas activé cette fonctionnalité. L'organisateur vous demandera donc de payer les {{data.registration.orderAmount}} € votre inscription lors du retrait de votre dossard.</p>
+                <p>Vous ne pouvez pas payer votre inscription car l'organisateur n'a pas activé cette fonctionnalité. L'organisateur vous demandera donc de payer les votre inscription au guichet de l'événement.</p>
                 <p>Merci de votre compréhension.</p>
               </div>
             {{/if}}

@@ -63,7 +63,7 @@ router.get('/login', userCtrl.getLogin)
 // Post a login
 router.post(
   '/login'
-  , passport.authenticate('local', {successRedirect: '/event/finder', failureRedirect: '/user/login', failureFlash: true})
+  , passport.authenticate('local', {failureRedirect: '/user/login', failureFlash: true})
   , userCtrl.postLogin
 )
 // Get profil page redirect to a user profil

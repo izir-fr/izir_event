@@ -26,7 +26,11 @@ apiKey.apiKey = credentials.sendinblueCredits
 var userCtrl = {
   // Get register form
   getRegister: (req, res) => {
-    res.render('partials/user/register')
+    if (req.query.event_id) {
+      res.render('partials/user/register', {event_id: req.query.event_id})
+    } else {
+      res.render('partials/user/register')
+    }
   },
   // Post a register
   postRegister: (req, res) => {
@@ -83,7 +87,11 @@ var userCtrl = {
                     sendinblueCreateAction(user)
                   }
                   req.flash('success_msg', 'Vous êtes enregistré et pouvez vous connecter')
-                  res.redirect('/user/login')
+                  if (req.query.event_id) {
+                    res.redirect('/user/login?event_id=' + req.query.event_id)
+                  } else {
+                    res.redirect('/user/login')
+                  }
                 }
               })
             } else {
@@ -126,12 +134,20 @@ var userCtrl = {
     if (req.user) {
       res.redirect('profil/' + req.user.id + '/')
     } else {
-      res.render('partials/user/login')
+      if (req.query.event_id) {
+        res.render('partials/user/login', {event_id: req.query.event_id})
+      } else {
+        res.render('partials/user/login')
+      }
     }
   },
   // Post a login
   postLogin: function (req, res) {
-    res.redirect('/')
+    if (req.query.event_id) {
+      res.redirect('/inscription/pre-inscription/' + req.query.event_id)
+    } else {
+      res.redirect('/event/finder')
+    }
   },
   // Get profil page redirect to a user profil
   getProfil: function (req, res) {

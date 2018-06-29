@@ -2,18 +2,30 @@
   	<div class="row justify-content-center ">
 	    <div class="col-8 ">
 			<h1 class="page-header text-center">Connexion</h1>
-			<form method="post" action="/user/login">
-			  <div class="form-group spacer-md-top">
-			    <label>Pseudo</label>
-			    <input type="text" class="form-control" name="username" placeholder="Username">
-			  </div>
-			  <div class="form-group">
-			    <label>Mot de passe</label>
-			    <input type="password" class="form-control" name="password" placeholder="Password">
-			  </div>
-			  <button type="submit" class="btn btn-default">Connexion</button>
-			</form>
-			<p><br>Vous n'avez pas de compte? <strong><a href="/user/register">s'inscrire</a></strong> | <a href="/user/password-forgot">mot de passe oublié ?</a></p>
+			{{#if event_id}}
+				<form method="post" action="/user/login?event_id={{event_id}}">
+			{{else}}
+				<form method="post" action="/user/login">
+			{{/if}}
+				
+				  <div class="form-group spacer-md-top">
+				    <label>Pseudo</label>
+				    <input type="text" class="form-control" name="username" placeholder="Username">
+				  </div>
+				  <div class="form-group">
+				    <label>Mot de passe</label>
+				    <input type="password" class="form-control" name="password" placeholder="Password">
+				  </div>
+				  <button type="submit" class="btn btn-default">Connexion</button>
+				</form>
+			<p><br>Vous n'avez pas de compte?
+				<strong>
+					{{#if event_id}}
+						<a href="/user/register?event_id={{event_id}}">s'inscrire</a>
+					{{else}}
+						<a href="/user/register">s'inscrire</a>
+					{{/if}}
+				</strong> | <a href="/user/password-forgot">mot de passe oublié ?</a></p>
 		</div>
 	</div>
 </div>

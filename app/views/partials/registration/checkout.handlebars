@@ -3,8 +3,15 @@
     <div class="col-sm-4 spacer-md-top">
       <div class="row">
         <div class="col-md-10 mx-auto">
-          <span class="h4">Récapitulatif</span>
-          <ul class="mt-5">
+          <span class="h4 mt-5">L'événement</span>
+          <ul class="mt-2 mb-5">
+            <li class="mb-2"><strong>{{data.registration.event.adresse.ville}} {{results.event.adresse.codePostal}}</strong></li>
+            {{#each data.registration.event.epreuves}}
+              <li class="mb-2">{{this.name}} - le {{date this.date_debut}} à {{dateHours this.date_debut}}h{{dateMinutes this.date_debut}} -  {{this.distance}}Km</li>
+            {{/each}}
+          </ul>
+          <span class="h4 mt-5">Récapitulatif</span>
+          <ul class="mt-2">
             <li class="mb-2"><strong>Produit - Total TTC</strong></li>
             {{#each data.registration.produits}}
               <li class="text-muted">{{this.produitsRef}}: {{this.produitsSubTotal}} €</li>                

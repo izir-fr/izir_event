@@ -9,6 +9,16 @@ var checkout = () => {
       }
     })
   }
+  $('#paiement_CB').on('click', () => {
+    $('#paiement_CB_checkbox > i').toggleClass('fa-square-o')
+    $('#paiement_CB_checkbox > i').toggleClass('fa-check-square')
+    $('#paiement_CB_sub').toggleClass('hidde')
+  })
+  $('#paiement_other').on('click', () => {
+    $('#paiement_other_checkbox > i').toggleClass('fa-square-o')
+    $('#paiement_other_checkbox > i').toggleClass('fa-check-square')
+    $('#paiement_other_sub').toggleClass('hidde')
+  })
 }
 
 export default checkout()

@@ -9,15 +9,15 @@ var checkout = () => {
       }
     })
   }
-  $('#paiement_CB').on('click', () => {
-    $('#paiement_CB_checkbox > i').toggleClass('fa-square-o')
-    $('#paiement_CB_checkbox > i').toggleClass('fa-check-square')
-    $('#paiement_CB_sub').toggleClass('hidde')
-  })
-  $('#paiement_other').on('click', () => {
-    $('#paiement_other_checkbox > i').toggleClass('fa-square-o')
-    $('#paiement_other_checkbox > i').toggleClass('fa-check-square')
-    $('#paiement_other_sub').toggleClass('hidde')
+  $('.paiement_option').on('click', (e) => {
+    // init paiement
+    $('.paiement_option_sub').addClass('hidde')
+    $('.paiement_option_checkbox').removeClass('fa-check-square')
+    $('.paiement_option_checkbox').addClass('fa-square-o')
+    // action on selected paiement option
+    $(e.currentTarget).find('.paiement_option_sub').removeClass('hidde')
+    $(e.currentTarget).find('.paiement_option_checkbox').removeClass('fa-square-o')
+    $(e.currentTarget).find('.paiement_option_checkbox').addClass('fa-check-square')
   })
 }
 

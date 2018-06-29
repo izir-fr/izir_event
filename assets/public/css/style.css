@@ -281,7 +281,7 @@ a.login > p{
   margin-top: 70px;
 }
 
-#paiement_other :hover,#paiement_CB :hover {
+.paiement_option :hover {
   cursor: pointer;
   border-color: #999;
 }

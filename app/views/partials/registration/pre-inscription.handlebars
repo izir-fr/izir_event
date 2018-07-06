@@ -1,7 +1,7 @@
 <div class="container-fluid">
 	<div class="row">
 		<div class="col-sm-4">
-			<div class="row">
+			<div class="row sticky-top">
 				<div class="col-sm-12">
 					{{#if results.event.docs.img}}
 						<img src="{{results.event.docs.img.[0]}}" alt="{{results.event.name}}" class="img-fluid">
@@ -75,7 +75,13 @@
 												{{#if this.active}}
 											    <tr class="epreuve-validation">
 											    	<td>
-											    		<p>{{this.name}}</p>
+											    		<p>
+											    			{{#if this.team}}
+											    				{{this.name}} <strong class="text-muted">(Equipe)</strong>
+											    			{{else}}
+																	{{this.name}} <strong class="text-muted">(Individuel)</strong>
+											    			{{/if}}
+											    		</p>
 											    		<input name="ref" type="hidden" value="{{this.name}}" >
 											    	</td>
 											    	<td class="text-right">
@@ -408,6 +414,11 @@
 									<label for="capitaine_team">Nom de l'équipe</label>
 									<input type="text" class="form-control" name="capitaine_team" value="{{user.team}}">
 								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-12 text-center">
+								<p class="alert alert-dark"><i class="fa fa-arrow-down" aria-hidden="true"></i>Le capitaine</p>
 							</div>
 						</div>
 						<div class="row">

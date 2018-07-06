@@ -64,7 +64,10 @@ var registrationCtrl = {
           max: val.placesDispo,
           quantity: 0,
           tarif: val.tarif,
-          active: true
+          active: true,
+          team: val.team,
+          teamMin: val.team_qty_min,
+          teamMax: val.team_qty_max
         }
         uniqueProduit.push(epreuve)
       })
@@ -122,13 +125,11 @@ var registrationCtrl = {
     var tarif = req.body.tarif
     var quantity = req.body.quantity
     var subtotal = req.body.subtotal
-    var option
-    // console.log(ref)
+    var option, registration, mailOptions
 
     // ajout des produits dans la commande
     if (subtotal.constructor === Array) {
       for (var i = 0; i < ref.length; i++) {
-        // console.log(ref[i])
         option = {
           produitsRef: ref[i],
           produitsPrix: tarif[i],
@@ -146,36 +147,94 @@ var registrationCtrl = {
       }
       produits.push(option)
     }
-    // console.log(produits)
 
     // création de la pré-commande
-    var registration = new Registration({
-      user: req.user.id, // user
-      event: req.params.id, // event
-      eventName: req.body.eventName,
-      participant: {
-        nom: req.body.surname,
-        prenom: req.body.name,
-        email: req.body.email,
-        sex: req.body.sex,
-        dateNaissance: req.body.jourNaissance + '/' + req.body.moisNaissance + '/' + req.body.anneeNaissance,
-        team: req.body.team,
-        numLicence: req.body.numLicence,
-        categorie: req.body.categorie,
-        adresse1: req.body.adresse1,
-        adresse2: req.body.adresse2,
-        codePostal: req.body.codePostal,
-        city: req.body.city
-      },
-      produits: produits, // toute le pack
-      orderAmount: req.body.total,
-      statut: 'pré-inscrit',
-      docs: {
-        certificat: req.body.certificat_file
-      },
-      updated: new Date()
-    })
-    // console.log(registration)
+    if (req.body.teamActivate === 'true') {
+      var team = []
+
+      if (req.body.member_nom.constructor === Array) {
+        req.body.member_nom.forEach((val, key) => {
+          var member = {
+            nom: req.body.member_nom[key],
+            prenom: req.body.member_prenom[key],
+            sex: req.body.member_sex[key],
+            dateNaissance: req.body.membre_birth_day[key] + '/' + req.body.membre_birth_month[key] + '/' + req.body.membre_birth_year[key],
+            team: req.body.capitaine_team,
+            numLicence: req.body.member_license[key],
+            email: req.body.member_email[key],
+            docs: {
+              certificat: req.body.certificat_membre_file[key]
+            }
+          }
+
+          team.push(member)
+        })
+      } else {
+        var member = {
+          nom: req.body.member_nom,
+          prenom: req.body.member_prenom,
+          sex: req.body.member_sex,
+          dateNaissance: req.body.membre_birth_day + '/' + req.body.membre_birth_month + '/' + req.body.membre_birth_year,
+          team: req.body.capitaine_team,
+          numLicence: req.body.member_license,
+          email: req.body.member_email,
+          docs: {
+            certificat: req.body.certificat_membre_file
+          }
+        }
+
+        team.push(member)
+      }
+
+      registration = new Registration({
+        user: req.user.id, // user
+        event: req.params.id, // event
+        eventName: req.body.eventName,
+        participant: {
+          nom: req.body.capitaine_surname,
+          prenom: req.body.capitaine_name,
+          email: req.body.capitaine_email,
+          team: req.body.capitaine_team,
+          codePostal: req.body.capitaine_cp,
+          city: req.body.capitaine_city
+        },
+        team: team,
+        produits: produits, // toute le pack
+        orderAmount: req.body.total,
+        statut: 'pré-inscrit',
+        docs: {
+          certificat: ''
+        },
+        updated: new Date()
+      })
+    } else {
+      registration = new Registration({
+        user: req.user.id, // user
+        event: req.params.id, // event
+        eventName: req.body.eventName,
+        participant: {
+          nom: req.body.surname,
+          prenom: req.body.name,
+          email: req.body.email,
+          sex: req.body.sex,
+          dateNaissance: req.body.jourNaissance + '/' + req.body.moisNaissance + '/' + req.body.anneeNaissance,
+          team: req.body.team,
+          numLicence: req.body.numLicence,
+          categorie: req.body.categorie,
+          adresse1: req.body.adresse1,
+          adresse2: req.body.adresse2,
+          codePostal: req.body.codePostal,
+          city: req.body.city
+        },
+        produits: produits, // toute le pack
+        orderAmount: req.body.total,
+        statut: 'pré-inscrit',
+        docs: {
+          certificat: req.body.certificat_file
+        },
+        updated: new Date()
+      })
+    }
 
     // enregistrement de la pré-commande
     registration.save(function (err, registration) {
@@ -185,27 +244,50 @@ var registrationCtrl = {
       }
 
       // Configuration du mail
-      var mailOptions = {
-        to: registration.participant.email,
-        from: 'Event Izir <event@izir.fr>',
-        subject: 'Récapitulatif d\'inscription N°' + registration.id,
-        text: 'Bonjour,\n\n' +
-        'vous venez de saisir les informations suivantes pour vous inscrire à l\'épreuve ' + registration.eventName + ' .\n\n' +
-        'Voici les informations sur le participant qui sont transmises à l\'organisateur : \n\n' +
-        ' - Nom : ' + registration.participant.nom + '.\n' +
-        ' - Prénom : ' + registration.participant.prenom + '.\n' +
-        ' - Email : ' + registration.participant.email + '.\n\n' +
-        ' - Date de naissance : ' + registration.participant.dateNaissance + '.\n' +
-        ' - Team : ' + registration.participant.team + '.\n' +
-        ' - Sex : ' + registration.participant.sex + '.\n' +
-        ' - Numéro de Licence : ' + registration.participant.numLicence + '.\n' +
-        ' - Categorie : ' + registration.participant.categorie + '.\n' +
-        ' - Adresse : ' + registration.participant.adresse1 + ' ' + registration.participant.adresse2 + ' ' + registration.participant.codePostal + ' ' + registration.participant.city + '.\n\n' +
-        'Pour valider votre inscription, si ce n\'est déjà fait, n\'oubliez pas d\'effectuer votre règlement en ligne en suivant ce lien http://event.izir.fr/inscription/checkout/' + registration.id + '\n\n' +
-        'Vous pouvez à tout moment consulter le statut de vos inscriptions en suivant ce lien http://event.izir.fr/inscription/recap/user/' + req.user.id + '\n\n' +
-        'Bonne course !\n\n' +
-        'Nicolas de izir.fr'
+      if (req.body.teamActivate === 'true') {
+        mailOptions = {
+          to: registration.participant.email,
+          from: 'Event Izir <event@izir.fr>',
+          subject: 'Récapitulatif d\'inscription N°' + registration.id,
+          text: 'Bonjour,\n\n' +
+          'vous venez de saisir les informations suivantes pour vous inscrire à l\'épreuve ' + registration.eventName + ' .\n\n' +
+          'Voici les informations sur l\'équipe qui sont transmises à l\'organisateur : \n\n' +
+          'Nom de l\'équipe :' +
+          ' - Team : ' + registration.participant.team + '.\n' +
+          'Capitaine:' +
+          ' - Nom : ' + registration.participant.nom + '.\n' +
+          ' - Prénom : ' + registration.participant.prenom + '.\n' +
+          ' - Email : ' + registration.participant.email + '.\n\n' +
+          ' - Adresse : ' + registration.participant.codePostal + ' ' + registration.participant.city + '.\n\n' +
+          'Pour valider votre inscription, si ce n\'est déjà fait, n\'oubliez pas d\'effectuer votre règlement en ligne en suivant ce lien http://event.izir.fr/inscription/checkout/' + registration.id + '\n\n' +
+          'Vous pouvez à tout moment consulter le statut de vos inscriptions en suivant ce lien http://event.izir.fr/inscription/recap/user/' + req.user.id + '\n\n' +
+          'Bonne course !\n\n' +
+          'Nicolas de izir.fr'
+        }
+      } else {
+        mailOptions = {
+          to: registration.participant.email,
+          from: 'Event Izir <event@izir.fr>',
+          subject: 'Récapitulatif d\'inscription N°' + registration.id,
+          text: 'Bonjour,\n\n' +
+          'vous venez de saisir les informations suivantes pour vous inscrire à l\'épreuve ' + registration.eventName + ' .\n\n' +
+          'Voici les informations sur le participant qui sont transmises à l\'organisateur : \n\n' +
+          ' - Nom : ' + registration.participant.nom + '.\n' +
+          ' - Prénom : ' + registration.participant.prenom + '.\n' +
+          ' - Email : ' + registration.participant.email + '.\n\n' +
+          ' - Date de naissance : ' + registration.participant.dateNaissance + '.\n' +
+          ' - Team : ' + registration.participant.team + '.\n' +
+          ' - Sex : ' + registration.participant.sex + '.\n' +
+          ' - Numéro de Licence : ' + registration.participant.numLicence + '.\n' +
+          ' - Categorie : ' + registration.participant.categorie + '.\n' +
+          ' - Adresse : ' + registration.participant.adresse1 + ' ' + registration.participant.adresse2 + ' ' + registration.participant.codePostal + ' ' + registration.participant.city + '.\n\n' +
+          'Pour valider votre inscription, si ce n\'est déjà fait, n\'oubliez pas d\'effectuer votre règlement en ligne en suivant ce lien http://event.izir.fr/inscription/checkout/' + registration.id + '\n\n' +
+          'Vous pouvez à tout moment consulter le statut de vos inscriptions en suivant ce lien http://event.izir.fr/inscription/recap/user/' + req.user.id + '\n\n' +
+          'Bonne course !\n\n' +
+          'Nicolas de izir.fr'
+        }
       }
+
       // envoie du mail
       smtpTransport.sendMail(mailOptions, (err) => {
         if (err) throw err
@@ -228,7 +310,7 @@ var registrationCtrl = {
         stripeFrontKey: credentials.stripeKey.front,
         orderAmount: registration[0].orderAmount * 1 + 0.50
       }
-      // console.log(data)
+
       res.render('partials/registration/checkout', {data: data})
     })
   },
@@ -324,14 +406,11 @@ var registrationCtrl = {
       description: req.body.event,
       source: req.body.stripeToken
     }
-    // console.log(stripeCheckout)
 
     // STIPE
     stripe.charges.create(
       stripeCheckout,
       function (err, charge) {
-        // console.log(charge)
-
         if (err) {
           req.flash('error_msg', 'Une erreur est survenue lors du paiement')
           res.redirect('/user/profil/')
@@ -353,7 +432,6 @@ var registrationCtrl = {
               req.flash('error_msg', 'Une erreure est survenue lors du paiement')
               res.redirect('/user/profil/')
             } else {
-            // console.log(user)
             // EMAIL NOTIFICATION
               var mailOptions = {
                 to: req.user.email,
@@ -397,7 +475,7 @@ var registrationCtrl = {
       event: function (next) {
         Event.findById(req.params.id).exec(next)
       },
-      participants: function (next) {
+      registration: function (next) {
         if (req.query.epreuve && req.query.epreuve !== 'Toutes') {
           Registration
             .find({ event: req.params.id, produits: { $elemMatch: { produitsRef: req.query.epreuve, produitsQuantite: { $ne: 0 } } } })
@@ -413,10 +491,12 @@ var registrationCtrl = {
         res.redirect('/')
       }
       if (String(req.user.id) === String(results.event.author)) {
-        var event = results
+        var event = {}
         var paiement = []
         var dons = []
-        results.participants.forEach((val) => {
+        var inscriptions = require('../../custom_modules/app/registrationToTeam')(results.registration)
+
+        inscriptions.forEach((val) => {
           if (val.paiement.captured || val.paiement.other_captured) {
             val.produits.forEach((val) => {
               if (val.produitsRef === 'dons') {
@@ -431,6 +511,9 @@ var registrationCtrl = {
             })
           }
         })
+
+        event.event = results.event
+        event.inscriptions = inscriptions
         event.paiement = paiement
         event.totalPaiement = paiement.reduce((acc, curr) => {
           return acc + curr.produitsSubTotal

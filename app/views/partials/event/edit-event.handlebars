@@ -258,7 +258,7 @@
         </div>
         <div>
           {{#each event.epreuves}}
-          <div id="epreuveFrom">
+          <div id="epreuveFrom" class="d-flex border border-left-0 border-right-0 border-top-0 mt-2 mb-2">
             <div>
               <div class="row">
                 <div class="col-sm-12">
@@ -282,6 +282,69 @@
                         <div class="form-group">
                           <label>Description de l'épreuve</label><br>
                           <textarea name="epreuveDescription" class="form-control" cols="30" rows="10" placeholder="Description de l'épreuve">{{description}}</textarea>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-12">
+                        <div class="alert alert-warning" role="alert">
+                          <div class="row">
+                            <div class="col-12">
+                              <strong class="d-block mb-2">Inscription en équipe</strong>
+                              <span>
+                                En activant cette option, vous indiquer que cette épreuve se court en équipe. Vous recevrez donc une seule inscription pour une équipe avec un seul paiement pour tous les membres de cette équipe. Merci d'adapter votre prix de l'inscription, ci-dessous, en conséquent.
+                              </span>
+                              <p class="mt-2">
+                                Ex: inscription indivuelle, Prix de l'inscription 10€; inscription équipe (2 personnes), Prix de l'inscription 20€.
+                              </p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-12">
+                              <div class="form-group">
+                                <div class="row">
+                                  <div class="col-lg-4">
+                                    <div class="row mb-2">
+                                      <label class="col-lg-9 col-sm-4 d-inline text-right">Inscription en équipe :</label>  
+                                      <select name="team" class="form-control col-lg-3 col-sm-8 d-inline">
+                                        {{#if this.team}}
+                                          <option value="true" selected>Oui</option>
+                                          <option value="false">Non</option>
+                                        {{else}}
+                                          <option value="true">Oui</option>
+                                          <option value="false" selected>Non</option>
+                                        {{/if}}
+                                      </select>                                        
+                                    </div>
+                                  </div>
+                                  <div class="col-lg-8">
+                                    <div class="row">
+                                      <label class="col-sm-4 text-right">Nombre de membres composants une équipe :</label>
+                                      {{#if this.team}}
+                                        <div class="input-group col-sm-4">
+                                          <div class="input-group-addon">min</div>
+                                          <input type="number" class="form-control" placeholder="0" name="team_qty_min" min="2" step="1" value="{{team_qty_min}}">
+                                        </div>
+                                        <div class="input-group col-sm-4">
+                                          <div class="input-group-addon">max</div>
+                                          <input type="number" class="form-control" placeholder="0" name="team_qty_max" min="2" step="1" value="{{team_qty_max}}">
+                                        </div>
+                                      {{else}}
+                                        <div class="input-group col-sm-4">
+                                          <div class="input-group-addon">min</div>
+                                          <input type="number" class="form-control" placeholder="0" name="team_qty_min" min="2" step="1" value="2">
+                                        </div>
+                                        <div class="input-group col-sm-4">
+                                          <div class="input-group-addon">max</div>
+                                          <input type="number" class="form-control" placeholder="0" name="team_qty_max" min="2" step="1" value="2">
+                                        </div>
+                                      {{/if}}                                        
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -416,6 +479,53 @@
                         <div class="form-group">
                           <label>Description de l'épreuve</label><br>
                           <textarea name="epreuveDescription" class="form-control" cols="30" rows="10" placeholder="Description de l'épreuve"></textarea>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-12">
+                        <div class="alert alert-warning" role="alert">
+                          <div class="row">
+                            <div class="col-12">
+                              <strong class="d-block mb-2">Inscription en équipe</strong>
+                              <span>
+                                En activant cette option, vous indiquer que cette épreuve se court en équipe. Vous recevrez donc une seule inscription pour une équipe avec un seul paiement pour tous les membres de cette équipe. Merci d'adapter votre prix de l'inscription, ci-dessous, en conséquent.
+                              </span>
+                              <p class="mt-2">
+                                Ex: inscription indivuelle, Prix de l'inscription 10€; inscription équipe (2 personnes), Prix de l'inscription 20€.
+                              </p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-12">
+                              <div class="form-group">
+                                <div class="row">
+                                  <div class="col-lg-4">
+                                    <div class="row mb-2">
+                                      <label class="col-lg-9 col-sm-4 d-inline text-right">Inscription en équipe :</label>  
+                                      <select name="team" class="form-control col-lg-3 col-sm-8 d-inline">
+                                        <option value="true">Oui</option>
+                                        <option value="false" selected>Non</option>
+                                      </select>                                        
+                                    </div>
+                                  </div>
+                                  <div class="col-lg-8">
+                                    <div class="row">
+                                      <label class="col-sm-4 text-right">Nombre de membres composants une équipe :</label>
+                                      <div class="input-group col-sm-4">
+                                        <div class="input-group-addon">min</div>
+                                        <input type="number" class="form-control" placeholder="0" name="team_qty_min" min="2" step="1" value="2">
+                                      </div>
+                                      <div class="input-group col-sm-4">
+                                        <div class="input-group-addon">max</div>
+                                        <input type="number" class="form-control" placeholder="0" name="team_qty_max" min="2" step="1" value="2">
+                                      </div>                                     
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>

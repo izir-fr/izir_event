@@ -34,6 +34,9 @@ var epreuveConstructor = (req, res, next) => {
   var denivele = req.body.denivele
   var placesDispo = req.body.placesDispo
   var epreuveId = req.body.epreuve_id
+  var team = req.body.team
+  var teamQtyMin = req.body.team_qty_min
+  var teamQtyMax = req.body.team_qty_max
 
   // Ajout de l'épreuve de l'évènement
   if (epreuveId.constructor === Array) {
@@ -47,7 +50,11 @@ var epreuveConstructor = (req, res, next) => {
         tarif: tarif[i], // req.body.tarif,
         distance: distance[i], // req.body.distance,
         denivele: denivele[i], // req.body.denivele,
-        placesDispo: placesDispo[i] // req.body.placesDispo,
+        placesDispo: placesDispo[i], // req.body.placesDispo,
+        // team
+        team: reqBolleanTest(team[i]),
+        team_qty_min: teamQtyMin[i],
+        team_qty_max: teamQtyMax[i]
       }
       epreuves.push(epreuve)
     }
@@ -61,7 +68,11 @@ var epreuveConstructor = (req, res, next) => {
       tarif: tarif, // req.body.tarif,
       distance: distance, // req.body.distance,
       denivele: denivele, // req.body.denivele,
-      placesDispo: placesDispo // req.body.placesDispo,
+      placesDispo: placesDispo, // req.body.placesDispo,
+      // team
+      team: reqBolleanTest(team),
+      team_qty_min: teamQtyMin,
+      team_qty_max: teamQtyMax
     }
     epreuves.push(epreuve)
   }
@@ -100,7 +111,7 @@ var optionConstructor = (req, res, next) => {
 }
 
 var reqBolleanTest = (value) => {
-  if (value === 'on') {
+  if (value === 'on' || value === 'true') {
     return true
   } else {
     return false
@@ -238,7 +249,6 @@ var eventCtrl = {
     var newEvent = new Event(
       event
     )
-    // console.log(newEvent)
 
     // AJOUT DE L'EVENT A LA BDD
     Event.createEvent(newEvent, function (err, user) {
@@ -274,7 +284,6 @@ var eventCtrl = {
     var epreuves = epreuveConstructor(req)
     var options = optionConstructor(req)
     var updateEvent = eventConstructor(req, epreuves, options)
-    // console.log(updateEvent)
 
     // MODIFICATION DE L'EVENT DANS LA BDD
     Event.findByIdAndUpdate(req.params.id, updateEvent, function (err, user) {

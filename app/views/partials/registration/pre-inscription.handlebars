@@ -1,7 +1,7 @@
 <div class="container-fluid">
 	<div class="row">
 		<div class="col-sm-4">
-			<div class="row">
+			<div class="row sticky-top">
 				<div class="col-sm-12">
 					{{#if results.event.docs.img}}
 						<img src="{{results.event.docs.img.[0]}}" alt="{{results.event.name}}" class="img-fluid">
@@ -11,17 +11,16 @@
 						<ul>
 							<li><strong>Lieu :</strong> {{results.event.adresse.ville}} {{results.event.adresse.codePostal}}</li>
 						</ul>
-
 					{{#each results.event.epreuves}}
-					<ul class="spacer-sm-top">
-						<li><strong>Epreuve :</strong> {{this.name}}</li>
-						<li><strong>Discipline :</strong> {{this.discipline}}</li>
-						<li><strong>Date :</strong> {{date this.date_debut}} à {{dateHours this.date_debut}}h{{dateMinutes this.date_debut}}</li>
-						<li><strong>Distance :</strong> {{this.distance}}Km</li>
-						<li><strong>Denivelé + :</strong> {{this.denivele}} mètres</li>
-						<li><strong>Nombre de participants maximum:</strong> {{this.placesDispo}}</li>
-						<li><strong>Tarif:</strong> {{this.tarif}}€</li> 
-					</ul>
+						<ul class="spacer-sm-top">
+							<li><strong>Epreuve :</strong> {{this.name}}</li>
+							<li><strong>Discipline :</strong> {{this.discipline}}</li>
+							<li><strong>Date :</strong> {{date this.date_debut}} à {{dateHours this.date_debut}}h{{dateMinutes this.date_debut}}</li>
+							<li><strong>Distance :</strong> {{this.distance}}Km</li>
+							<li><strong>Denivelé + :</strong> {{this.denivele}} mètres</li>
+							<li><strong>Nombre de participants maximum:</strong> {{this.placesDispo}}</li>
+							<li><strong>Tarif:</strong> {{this.tarif}}€</li> 
+						</ul>
 					{{/each}}
 				</div>
 			</div>			
@@ -31,8 +30,7 @@
 		<div class="col-sm-8 spacer-md-top" id="divForm">
 			
 			<div class="sticky-top">
-				<h1 class="text-lowercase text-center spacer-md-bottom">Inscription {{results.event.name}}</h1>	
-				
+				<h1 class="text-lowercase text-center spacer-md-bottom">Inscription {{results.event.name}}</h1>				
 	    		<div class="row">
 	    			<div class="col-3 text-center">
 	    				<strong class="txt-dark-blue" id="header-epreuve">1. Epreuve</strong>
@@ -73,18 +71,24 @@
 												<td class="bg-light" colspan="4"><strong>EPREUVES</strong></td>
 											</tr>
 											{{#each disponibility}}
+											
 												{{#if this.active}}
 											    <tr class="epreuve-validation">
 											    	<td>
-											    		<p>{{this.name}}</p>
+											    		<p>
+											    			{{#if this.team}}
+											    				{{this.name}} <strong class="text-muted">(Equipe)</strong>
+											    			{{else}}
+																	{{this.name}} <strong class="text-muted">(Individuel)</strong>
+											    			{{/if}}
+											    		</p>
 											    		<input name="ref" type="hidden" value="{{this.name}}" >
 											    	</td>
 											    	<td class="text-right">
 											    		<select class="quantity w-100 custom-select epreuveInput quantityInput input epreuveQuantityValidation" name="quantity" name="quantity" >
-															<option value="0" selected>0</option>
-															<option value="1">1</option>
-														</select>
-											    		<!--<input class="form-control epreuveInput quantityInput input epreuveQuantityValidation" name="quantity" type="number" value="0"  min="0" max="1">-->
+																<option value="0" selected>0</option>
+																<option value="1">1</option>
+															</select>
 											    	</td>
 											    	<td class="text-center">
 											    		<span class="tarifView">{{this.tarif}}</span> €
@@ -92,7 +96,13 @@
 											    	</td>
 											    	<td class="text-center subtotal">
 											    		<span class="subtotalView">{{this.tarif}}</span> €
-											    		<input class="subtotalInput option" type="hidden" name="subtotal" value="{{this.tarif}}" min="0"  step=".01" required>
+											    		{{#if this.team}}
+											    			<input class="subtotalInput option teamActivate" type="hidden" name="subtotal" value="{{this.tarif}}" min="0"  step=".01" required>
+											    		{{else}}
+											    			<input class="subtotalInput option" type="hidden" name="subtotal" value="{{this.tarif}}" min="0"  step=".01" required>
+											    		{{/if}}
+											    		<input type="hidden" name="team_min" value="{{this.teamMin}}">
+											    		<input type="hidden" name="team_max" value="{{this.teamMax}}">
 											    	</td>
 											    </tr>
 											    {{else}}
@@ -219,15 +229,15 @@
 							<div class="row">
 						    	<div class="col-sm-6">
 						    		<div class="form-group">
-						        		<label>Nom *</label>
-						        		<input type="text" class="form-control" placeholder="Nom" name="surname" value="{{user.surname}}" required>
-						        	</div>
+						        	<label>Nom *</label>
+						        	<input type="text" class="form-control" placeholder="Nom" name="surname" value="{{user.surname}}" required>
+						        </div>
 						    	</div>
 						    	<div class="col-sm-6">
 						    		<div class="form-group">
-						        		<label>Prénom *</label>
-						        		<input type="text" class="form-control" placeholder="Prénom" name="name" value="{{user.name}}" required>
-						        	</div>
+						        	<label>Prénom *</label>
+						        	<input type="text" class="form-control" placeholder="Prénom" name="name" value="{{user.name}}" required>
+						        </div>
 						    	</div>
 						    </div>
 						    <div class="row">
@@ -250,30 +260,30 @@
 						    </div>
 						    <div class="row">
 						    	<div class="col-12">
-							        <div class="form-group">
-							          <label>Date de naissance (jour/mois/année)*</label>
-							          <div class="row">
-							            <div class="col-4">
-							              <select class="form-control" name="jourNaissance" id="jourNaissance" required>
-							                <option value="{{jourNaissance}}" selected>{{jourNaissance}}</option>
-							                {{#each date_list.day}}
-							               		<option value="{{this.value}}">{{this.value}}</option>
-							                {{/each}}
-							              </select>
-							            </div>
-							            <div class="col-4">
-							              <select class="form-control" name="moisNaissance" id="moisNaissance" required>
-							                <option value="{{moisNaissance}}" selected>{{moisNaissance}}</option>
-							                {{#each date_list.month}}
-							               		<option value="{{this.value}}">{{this.value}}</option>
-							                {{/each}}
-							              </select>
-							            </div>
-							            <div class="col-4">
-							            	<input class="form-control" type="number" placeholder="2018"  min="1900" step="1" value="{{anneeNaissance}}" name="anneeNaissance" required>
-							            </div>
-							          </div>
-							        </div>
+						        <div class="form-group">
+						          <label>Date de naissance (jour/mois/année)*</label>
+						          <div class="row">
+						            <div class="col-4">
+						              <select class="form-control" name="jourNaissance" id="jourNaissance" required>
+						                <option value="{{jourNaissance}}" selected>{{jourNaissance}}</option>
+						                {{#each date_list.day}}
+						               		<option value="{{this.value}}">{{this.value}}</option>
+						                {{/each}}
+						              </select>
+						            </div>
+						            <div class="col-4">
+						              <select class="form-control" name="moisNaissance" id="moisNaissance" required>
+						                <option value="{{moisNaissance}}" selected>{{moisNaissance}}</option>
+						                {{#each date_list.month}}
+						               		<option value="{{this.value}}">{{this.value}}</option>
+						                {{/each}}
+						              </select>
+						            </div>
+						            <div class="col-4">
+						            	<input class="form-control" type="number" placeholder="2018"  min="1900" step="1" value="{{anneeNaissance}}" name="anneeNaissance" required>
+						            </div>
+						          </div>
+						        </div>
 						    	</div>
 						    </div>
 						    <div class="row">
@@ -386,7 +396,288 @@
 								</div>
 							</div>
 						</div>							
+					</div>
+
+					<!-- step 2. equipe -->
+					<div id="step-team" class="hidde">
+						<input type="hidden" name="teamActivate" value="false">
+						
+						<!-- l'équipe -->
+						<div class="row">
+							<div class="col-12 text-center">
+								<p class="alert alert-dark"><i class="fa fa-arrow-down" aria-hidden="true"></i>L'équipe</p>
+							</div>
 						</div>
+						<div class="row">
+							<div class="col-sm-12">
+								<div class="form-group">
+									<label for="capitaine_team">Nom de l'équipe</label>
+									<input type="text" class="form-control" name="capitaine_team" value="{{user.team}}">
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-12 text-center">
+								<p class="alert alert-dark"><i class="fa fa-arrow-down" aria-hidden="true"></i>Le capitaine</p>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label for="capitaine_name">Nom du capitaine</label>
+									<input type="text" class="form-control" name="capitaine_name" value="{{user.surname}}">
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label for="capitaine_surname">Prénom du capitaine</label>
+									<input type="text" class="form-control" name="capitaine_surname" value="{{user.name}}">
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label for="capitaine_cp">Code postal</label>
+									<input type="text" class="form-control" name="capitaine_cp" value="{{user.codePostal}}">
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label for="capitaine_city">Ville</label>
+									<input type="text" class="form-control" name="capitaine_city" value="{{user.city}}">
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-12">
+								<div class="form-group">
+									<label for="capitaine_email">Email</label>
+									<input type="email" class="form-control" name="capitaine_email" value="{{user.email}}">
+								</div>
+							</div>
+						</div>
+
+						<!-- les membres -->
+						<div class="row">
+							<div class="col-12 text-center mt-5">
+								<p class="alert alert-dark"><i class="fa fa-arrow-down" aria-hidden="true"></i>Les membres</p>
+							</div>
+						</div>
+						<div class="row team-count">
+							<div class="col-11 mx-auto bg-light mb-5">
+								<div class="row">
+									<div class="col-sm-6">
+										<div class="form-group">
+											<label for="member_nom">Nom du membre</label>
+											<input type="text" class="form-control" name="member_nom" value="{{user.surname}}">
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<div class="form-group">
+											<label for="member_prenom">Prénom du membre</label>
+											<input type="text" class="form-control" name="member_prenom" value="{{user.name}}">
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-sm-6">
+										<div class="form-group">
+											<label for="">Sexe</label>
+											<input type="text" class="form-control" name="member_sex" value="{{user.sex}}">
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<div class="form-group">
+											<label for="">N° de license</label>
+											<input type="text" class="form-control" name="member_license" value="{{user.numLicense}}">
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-12">
+										<label>Date de naissance (jour/mois/année)*</label>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-sm-4">
+										<div class="form-group">
+				              <select class="form-control membre_birth_day" name="membre_birth_day" required>
+				                <option value="{{jourNaissance}}" selected>{{jourNaissance}}</option>
+				                {{#each date_list.day}}
+				               		<option value="{{this.value}}">{{this.value}}</option>
+				                {{/each}}
+				              </select>											
+										</div>
+									</div>
+									<div class="col-sm-4">
+										<div class="form-group">
+				              <select class="form-control membre_birth_month" name="membre_birth_month" required>
+				                <option value="{{moisNaissance}}" selected>{{moisNaissance}}</option>
+				                {{#each date_list.month}}
+				               		<option value="{{this.value}}">{{this.value}}</option>
+				                {{/each}}
+				              </select>											
+										</div>
+									</div>
+									<div class="col-sm-4">
+										<div class="form-group">
+											<input class="form-control" type="number" placeholder="2018"  min="1900" step="1" value="{{anneeNaissance}}" name="membre_birth_year">											
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-12">
+										<div class="form-group">
+											<label for="member_email">Email du membre</label>
+											<input type="email" class="form-control" name="member_email" value="{{user.email}}">
+										</div>
+									</div>
+								</div>
+
+								<!-- member certificat -->
+								{{#if results.event.certificat_required}}
+									<div class="row text-center membre_certificat">
+										<!-- member certificat -->
+											<div class="col-12 spacer-sm-top">
+												Ajouter le certificat medical ou la licence*<em class="legend"> .pdf , .jpg et .png uniquement, 1 pièce jointe</em>
+												<span class="mt-1 mb-1 d-block">
+													<a href="" class="hidde btn btn-warning file_viewer" target="_blank">Voir mon document</a>
+													<a href="#upload_certificats_opener" class="btn btn-danger upload_certificats_opener">Ajouter un document</a>
+													<input name='certificat_membre_file' class="certificat_membre_file" value='' type='hidden'>
+												</span>
+											</div>
+									</div>
+
+								  <!-- checkbox certificat user confirmation -->
+									<div class="row">
+										<div class="col-12">
+											<label class="form-check-label">
+												<input class="form-check-input" type="checkbox" name="certificatCondition_member" id="certificatCondition_member" required>
+												<p>Je déclare sur l'honneur que le certificat transmis est authentique et valide. Je décharge ainsi la société REF SPORT PONTIVY et l'organisateur de toute responsabilité liée à celui-ci.</p>
+											</label>							
+										</div>
+									</div>
+								{{/if}}							
+							</div>
+						</div>
+
+						<!-- team add aspire JS -->
+						<div class="row team-count" id="team-member">
+							<div class="col-11 mx-auto bg-light mb-5">
+								<div class="row">
+									<div class="col-sm-6">
+										<div class="form-group">
+											<label for="member_nom">Nom du membre</label>
+											<input type="text" class="form-control" name="member_nom" value="">
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<div class="form-group">
+											<label for="member_prenom">Prénom du membre</label>
+											<input type="text" class="form-control" name="member_prenom" value="">
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-sm-6">
+										<div class="form-group">
+											<label for="">Sexe</label>
+											<input type="text" class="form-control" name="member_sex" value="">
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<div class="form-group">
+											<label for="">N° de license</label>
+											<input type="text" class="form-control" name="member_license" value="">
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-12">
+										<label>Date de naissance (jour/mois/année)*</label>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-sm-4">
+										<div class="form-group">
+				              <select class="form-control membre_birth_day" name="membre_birth_day" required>
+				                {{#each date_list.day}}
+				               		<option value="{{this.value}}">{{this.value}}</option>
+				                {{/each}}
+				              </select>											
+										</div>
+									</div>
+									<div class="col-sm-4">
+										<div class="form-group">
+				              <select class="form-control membre_birth_month" name="membre_birth_month" required>
+				                {{#each date_list.month}}
+				               		<option value="{{this.value}}">{{this.value}}</option>
+				                {{/each}}
+				              </select>											
+										</div>
+									</div>
+									<div class="col-sm-4">
+										<div class="form-group">
+											<input class="form-control" type="number" placeholder="2018"  min="1900" step="1" value="" name="membre_birth_year">
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-sm-12">
+										<div class="form-group">
+											<label for="member_email">Email du membre</label>
+											<input type="email" class="form-control" name="member_email" value="">
+										</div>
+									</div>
+								</div>								
+								<!-- member certificat -->
+								{{#if results.event.certificat_required}}
+									<div class="row text-center membre_certificat">
+										<!-- member certificat -->
+											<div class="col-12 spacer-sm-top">
+												Ajouter le certificat medical ou la licence*<em class="legend"> .pdf , .jpg et .png uniquement, 1 pièce jointe</em>
+												<span class="mt-1 mb-1 d-block">
+													<a href="" class="hidde btn btn-warning file_viewer" target="_blank">Voir mon document</a>
+													<a href="#upload_certificats_opener" class="btn btn-danger upload_certificats_opener">Ajouter un document</a>
+													<input name='certificat_membre_file' class="certificat_membre_file" value='' type='hidden'>
+												</span>
+											</div>
+									</div>
+
+								  <!-- checkbox certificat user confirmation -->
+									<div class="row">
+										<div class="col-12">
+											<label class="form-check-label">
+												<input class="form-check-input" type="checkbox" name="certificatCondition_member" id="certificatCondition_member" required>
+												<p>Je déclare sur l'honneur que le certificat transmis est authentique et valide. Je décharge ainsi la société REF SPORT PONTIVY et l'organisateur de toute responsabilité liée à celui-ci.</p>
+											</label>							
+										</div>
+									</div>
+								{{/if}}
+							</div>
+						</div>
+
+						<!-- JS add member here -->
+						<div id="new-team-block"></div>
+
+						<!-- JS button trigger -->
+						<div class="row">
+							<div class="col-12 text-center mb-5">
+								<div id="add-team_member" class="btn btn-warning span">Ajouter un membre <span id="currentTeamLength"></span>/<span id="maxTeamLength"></span></div>
+							</div>
+						</div>
+
+						<!-- bottom navigation -->
+						<div class="row">
+							<div class="col-6 text-center">
+								<a class="btn btn-outline-primary" href="#step-epreuve" id="epreuve-form-back-team">< Retour</a>
+							</div>
+							<div class="col-6 text-center">
+								<a class="btn btn-secondary" href="#step-confirmation" id="team-form-submit">Suivant ></a>
+							</div>
+						</div>						
+					</div>
 
 					<!--Step 3. confirmation-->
 					<div id="step-confirmation" class="hidde">
@@ -416,7 +707,7 @@
 						<div class="row">
 							<div class="col-12 spacer-sm-top text-center">
 								<p class="alert alert-dark">
-									<i class="fa fa-arrow-down" aria-hidden="true"></i> <strong>Participant</strong>
+									<i class="fa fa-arrow-down" aria-hidden="true"></i> <strong id="header-recap-people">Participant</strong>
 								</p>
 							</div>
 						</div>
@@ -450,6 +741,7 @@
 						<div class="row">
 							<div class="col-6 text-center">
 								<a class="btn btn-outline-primary" href="#step-participant" id="participant-form-back">< Modifier</a>
+								<a class="btn btn-outline-primary hidde" href="#step-team" id="team-form-back">< Modifier</a>
 							</div>
 							<div class="col-6 text-center">
 								<button type="submit" class="btn btn-danger" id="checkout">Valider mon inscription > </button>

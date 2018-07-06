@@ -55,7 +55,6 @@ var userCtrl = {
       apiInstance
         .createContact(createContact)
         .then((data) => {
-          // console.log('sendinblue : ' + data)
         }, function (error) {
           if (error) throw error
         })

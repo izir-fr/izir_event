@@ -15,17 +15,27 @@ var registrationSchema = mongoose.Schema({
     team: { type: String },
     numLicence: { type: String },
     categorie: { type: String },
-    /* adresse : {
-      adresse1 : { type: String },
-      adresse2 : { type: String },
-      codePostal : { type: String },
-      city : { type: String }
-    }, */
     adresse1: { type: String },
     adresse2: { type: String },
     codePostal: { type: String },
     city: { type: String }
   },
+  team: [
+    {
+      nom: { type: String },
+      prenom: { type: String },
+      sex: { type: String },
+      dateNaissance: { type: String },
+      team: { type: String },
+      numLicence: { type: String },
+      email: { type: String },
+      docs: {
+        certificat: { type: String },
+        certificat_validation: { type: Boolean, default: true },
+        accord_parentale: { type: String }
+      }
+    }
+  ],
   produits: [
     {
       produitsRef: { type: String },

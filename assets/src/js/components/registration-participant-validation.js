@@ -1,5 +1,71 @@
+var teamMin, teamMax
+var formValidation = false
+
+var dateNow = new Date(Date.now())
+
+var formToComplete = (field) => {
+  $('.border-danger').each((key, val) => {
+    $(val).removeClass('border-danger')
+  })
+  field.addClass('border border-danger').focus()
+}
+
+var addTeamMemberBtn = (maxVal) => {
+  if ($('.team-count').length >= maxVal) {
+    $('#add-team_member').remove()
+  } else {
+    $('#currentTeamLength').text($('.team-count').length)
+  }
+}
+
+var teamVerification = () => {
+  var team
+  $('.subtotalInput').each((key, val) => {
+    if ($(val).hasClass('teamActivate') === true && Number($(val).val()) > 0) {
+      team = true
+
+      teamMin = $($(val).parent().get(0)).find('input[name=team_min]').val()
+      teamMax = $($(val).parent().get(0)).find('input[name=team_max]').val()
+      $('#maxTeamLength').text(teamMax)
+      addTeamMemberBtn(teamMax)
+    } else {
+      team = false
+    }
+  })
+  return team
+}
+
+// confirmation épreuves
+var displayConfirmationEpreuve = () => {
+  if ($('.confirmationProduit').length >= 1) {
+    $('.confirmationProduit').each((key, val) => {
+      $(val).remove()
+    })
+  }
+
+  $('.subtotalView').each((key, val) => {
+    if (parseInt($($('.subtotalView')[key]).text()) > 0) {
+      var produit = $($($($($('.subtotalView')[key]).parent()).parent()).children()[0]).text()
+      var qty = $($($($($($('.subtotalView')[key]).parent()).parent()).children()[1]).children()[0]).val()
+      var price = $($($($($('.subtotalView')[key]).parent()).parent()).children()[2]).text()
+      var subTotal = $($($($($('.subtotalView')[key]).parent()).parent()).children()[3]).text()
+
+      $('#confirmation-epreuve').append(
+        '<div class="row confirmationProduit">' +
+          '<div class="col-3 spacer-sm-top spacer-sm-bottom">' + produit + '</div>' +
+          '<div class="col-3 spacer-sm-top spacer-sm-bottom">' + qty + '</div>' +
+          '<div class="col-3 spacer-sm-top spacer-sm-bottom">' + price + '</div>' +
+          '<div class="col-3 spacer-sm-top spacer-sm-bottom">' + subTotal + '</div>' +
+        '</div>'
+      )
+      $('#confirmation-total').text($('#total-ttc').text())
+    }
+  })
+}
+
 var registrationValidation = () => {
   if ($('#registration-form').length !== 0) {
+    var teamMemberForm = $('#team-member')[0].outerHTML
     $(() => {
       // FORM VALIDATION START
       var newParticipant = $('input[name=newParticipant]')
@@ -43,6 +109,9 @@ var registrationValidation = () => {
       $('#epreuve-form-submit').on('click', (e) => {
         // limitation à 1 epreuve /inscription
         var validation = 0
+        // team validation
+        var team = teamVerification()
+
         $('.epreuve-validation .quantityInput').each((key, val) => {
           if (parseInt($(val).val()) !== 0) {
             validation++
@@ -56,18 +125,34 @@ var registrationValidation = () => {
           e.preventDefault()
         } else {
           $('#header-epreuve').removeClass('txt-dark-blue').addClass('text-secondary')
-          $('#header-participant').removeClass('text-secondary').addClass('txt-dark-blue')
           $('#step-epreuve').addClass('hidde')
-          $('#step-participant').removeClass('hidde')
+          if (team) {
+            $('#currentTeamLength').text($('.team-count').length)
+            $('input[name=teamActivate').val('true')
+            $('#header-participant').removeClass('text-secondary').addClass('txt-dark-blue')
+            $('#step-team').removeClass('hidde')
+          } else {
+            $('#header-participant').removeClass('text-secondary').addClass('txt-dark-blue')
+            $('#step-participant').removeClass('hidde')
+          }
         }
       })
 
-      // Step 2 to 1
+      // Step 2 participant to 1
       $('#epreuve-form-back').on('click', (e) => {
-        $('#header-participant').removeClass('txt-dark-blue').addClass('text-secondary')
-        $('#header-epreuve').removeClass('text-secondary').addClass('txt-dark-blue')
-        $('#step-participant').addClass('hidde')
         $('#step-epreuve').removeClass('hidde')
+        $('#header-epreuve').removeClass('text-secondary').addClass('txt-dark-blue')
+        $('#header-participant').removeClass('txt-dark-blue').addClass('text-secondary')
+        $('#step-participant').addClass('hidde')
+      })
+
+      // Step 2 team to 1
+      $('#epreuve-form-back-team').on('click', (e) => {
+        $('input[name=teamActivate').val('false')
+        $('#step-epreuve').removeClass('hidde')
+        $('#header-epreuve').removeClass('text-secondary').addClass('txt-dark-blue')
+        $('#header-participant').removeClass('txt-dark-blue').addClass('text-secondary')
+        $('#step-team').addClass('hidde')
       })
 
       // Step 2 new participant
@@ -88,11 +173,12 @@ var registrationValidation = () => {
           adresse2.val('')
           codePostal.val('')
           city.val('')
+
+          // certificat
           $('#user_certificat').addClass('hidde')
           $('#other_participant_certificat').removeClass('hidde')
           certificat.val('')
-        }
-        if (!newParticipant.is(':checked')) {
+        } else {
           nom.val(user.nom)
           prenom.val(user.prenom)
           email.val(user.email)
@@ -106,6 +192,8 @@ var registrationValidation = () => {
           adresse2.val(user.adresse2)
           codePostal.val(user.codePostal)
           city.val(user.city)
+
+          // certificat
           $('#user_certificat').removeClass('hidde')
           $('#other_participant_certificat').addClass('hidde')
           certificat.val(user.certificat)
@@ -128,15 +216,17 @@ var registrationValidation = () => {
         newParticipantCheckedAction()
       })
 
-      // Step 2 to 3
+      // Step 2 TEAMMATE add
+      $('#add-team_member').on('click', (e) => {
+        $('#new-team-block').append(teamMemberForm)
+        addTeamMemberBtn(teamMax)
+      })
+
+      // Step 2 to 3 from participant
       $('#participant-form-submit').on('click', (e) => {
         // default var
-        var formValidation = false
         var certificatValidation = false
-        var formToComplete = (field) => {
-          field.addClass('border border-danger').focus()
-          // window.alert('Merci de compléter tous les champs obligatoires notés avec "*"')
-        }
+
         // borders init
         $('input').removeClass('border border-danger')
         $($('#confirmation-epreuve').children()).remove()
@@ -187,24 +277,8 @@ var registrationValidation = () => {
           e.preventDefault()
         } else {
           // confirmation épreuves
-          $('.subtotalView').each((key, val) => {
-            if (parseInt($($('.subtotalView')[key]).text()) > 0) {
-              var produit = $($($($($('.subtotalView')[key]).parent()).parent()).children()[0]).text()
-              var qty = $($($($($($('.subtotalView')[key]).parent()).parent()).children()[1]).children()[0]).val()
-              var price = $($($($($('.subtotalView')[key]).parent()).parent()).children()[2]).text()
-              var subTotal = $($($($($('.subtotalView')[key]).parent()).parent()).children()[3]).text()
+          displayConfirmationEpreuve()
 
-              $('#confirmation-epreuve').append(
-                '<div class="row">' +
-                  '<div class="col-3 spacer-sm-top spacer-sm-bottom">' + produit + '</div>' +
-                  '<div class="col-3 spacer-sm-top spacer-sm-bottom">' + qty + '</div>' +
-                  '<div class="col-3 spacer-sm-top spacer-sm-bottom">' + price + '</div>' +
-                  '<div class="col-3 spacer-sm-top spacer-sm-bottom">' + subTotal + '</div>' +
-                '</div>'
-              )
-              $('#confirmation-total').text($('#total-ttc').text())
-            }
-          })
           // Confirmation data
           $('#confirmation-nom').text(nom.val())
           $('#confirmation-prenom').text(prenom.val())
@@ -226,12 +300,123 @@ var registrationValidation = () => {
         }
       })
 
-      // Step 3 to 2
+      // Step 2 to 3 from team
+      $('#team-form-submit').on('click', (e) => {
+        // capitain form validation
+        if ($('input[name=capitaine_team]').val() === '') {
+          formToComplete($('input[name=capitaine_team]'))
+        } else if ($('input[name=capitaine_name]').val() === '') {
+          formToComplete($('input[name=capitaine_name]'))
+        } else if ($('input[name=capitaine_surname]').val() === '') {
+          formToComplete($('input[name=capitaine_surname]'))
+        } else if ($('input[name=capitaine_cp]').val() === '') {
+          formToComplete($('input[name=capitaine_cp]').val())
+        } else if ($('input[name=capitaine_city]').val() === '') {
+          formToComplete($('input[name=capitaine_city]').val())
+        } else if ($('input[name=capitaine_email]').val() === '') {
+          formToComplete($('input[name=capitaine_email]').val())
+        } else {
+          // vérification du nombre d'inscrit
+          if ($('.team-count').length < Number(teamMin)) {
+            window.alert('Le nombre minimum de membres pour cette épreuve est de ' + teamMin)
+          } else {
+            // member form validation
+            var formErreur = 0
+            var certificatError = 0
+            $('.team-count').each((key, val) => {
+              if (key <= Number(teamMin)) {
+                if ($('input[name=member_nom]')[key].value === '') {
+                  formErreur += 1
+                  formToComplete($($('input[name=member_nom]')[key]))
+                } else if ($('input[name=member_prenom]')[key].value === '') {
+                  formErreur += 1
+                  formToComplete($($('input[name=member_prenom]')[key]))
+                } else if ($('input[name=member_sex]')[key].value === '') {
+                  formErreur += 1
+                  formToComplete($($('input[name=member_sex]')[key]))
+                } else if ($('.membre_birth_day')[key].value === '') {
+                  formErreur += 1
+                  formToComplete($($('.membre_birth_day')[key]))
+                } else if ($('.membre_birth_month')[key].value === '') {
+                  formErreur += 1
+                  formToComplete($($('.membre_birth_month')[key]))
+                } else if ($('input[name=membre_birth_year]')[key].value === '') {
+                  formErreur += 1
+                  formToComplete($($('input[name=membre_birth_year]')[key]))
+                } else if ($('input[name=member_email]')[key].value === '') {
+                  formErreur += 1
+                  formToComplete($($('input[name=member_email]')[key]))
+                }
+              }
+            })
+
+            if ($('input[name=certificat_membre_file]').length >= 1) {
+              $('input[name=certificat_membre_file]').each((key, val) => {
+                if (val.value === '') {
+                  certificatError += 1
+                }
+              })
+
+              $('input[name=certificatCondition_member]').each((key, val) => {
+                if (val.checked === false) {
+                  certificatError += 1
+                }
+              })
+
+              if (certificatError >= 1) {
+                window.alert('Merci d\'ajouter le certificat pour chaque participant et de cocher la case d\'acception.')
+              }
+            }
+
+            console.log(formErreur)
+
+            if (formErreur === 0 && certificatError === 0) {
+              displayConfirmationEpreuve()
+              $('#step-team').addClass('hidde')
+              $('#step-confirmation').removeClass('hidde')
+              $('#participant-form-back').addClass('hidde')
+              $('#team-form-back').removeClass('hidde')
+
+              // Confirmation data
+              $('#confirmation-nom').text($('input[name=capitaine_name]').val())
+              $('#confirmation-prenom').text($('input[name=capitaine_surname]').val())
+              $('#confirmation-email').text($('input[name=capitaine_email]').val())
+              $('#confirmation-team').text($('input[name=capitaine_team]').val())
+              $('#confirmation-codePostal').text($('input[name=capitaine_cp]').val())
+              $('#confirmation-city').text($('input[name=capitaine_city]').val())
+              $('#header-recap-people').text('Team Manager')
+
+              // remove fields
+              $($('#confirmation-date').parent().get(0)).remove()
+              $($('#confirmation-sex').parent().get(0)).remove()
+              $($('#confirmation-licence').parent().get(0)).remove()
+              $($('#confirmation-categorie').parent().get(0)).remove()
+              $($('#confirmation-adresse1').parent().get(0)).remove()
+              $($('#confirmation-adresse2').parent().get(0)).remove()
+              $('input[name=certificatCondition]')[0].required = false
+
+              // Action
+              $('#header-participant').removeClass('txt-dark-blue').addClass('text-secondary')
+              $('#header-confirmation').removeClass('text-secondary').addClass('txt-dark-blue')
+            }
+          }
+        }
+      })
+
+      // Step 3 to 2 particpant
       $('#participant-form-back').on('click', (e) => {
         $('#header-confirmation').removeClass('txt-dark-blue').addClass('text-secondary')
         $('#header-epreuve').removeClass('text-secondary').addClass('txt-dark-blue')
         $('#step-confirmation').addClass('hidde')
         $('#step-participant').removeClass('hidde')
+      })
+
+      // Step 3 to 2 team
+      $('#team-form-back').on('click', (e) => {
+        $('#header-confirmation').removeClass('txt-dark-blue').addClass('text-secondary')
+        $('#header-epreuve').removeClass('text-secondary').addClass('txt-dark-blue')
+        $('#step-confirmation').addClass('hidde')
+        $('#step-team').removeClass('hidde')
       })
 
       // Step 3 to 4
@@ -244,7 +429,6 @@ var registrationValidation = () => {
       })
 
       // Date config
-      var dateNow = new Date(Date.now())
       var dateLimite = new Date($('input[name=dateLimite]').val())
 
       if (dateNow > dateLimite) {

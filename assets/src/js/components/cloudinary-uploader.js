@@ -42,36 +42,54 @@ var certificatUploader = (e) => {
         e.preventDefault()
         window.alert('Une erreur est survenue, merci de réessayer.')
       } else {
-        // change button openner
-        $('#upload_certificats_opener')
-          .removeClass('btn-danger')
-          .addClass('btn-outline-dark')
-        $('#upload_certificats_opener')[0].innerText = 'Changer mon document'
-
-        // action in registration form
-        if ($('#registration-form').length >= 1) {
-          // change box style
-          $('#other_participant_certificat_inerBox')
-            .removeClass('alert-warning')
-            .addClass('alert-light')
-
-          // change button viewer
-          $('#file_viewer')
-            .attr('href', certificat.secure_url)
-            .removeClass('hidde')
-        } else {
-          // action in user certificat form
-          // change box style
-          $('#certificat_innerBox')
-            .removeClass('alert-warning')
-            .addClass('alert-light')
-
-          // change viewer button
-          $('#file_viewer')
-            .removeClass('hidde')
+        if ($($(e.currentTarget)[0]).hasClass('upload_certificats_opener')) {
+          // $('.upload_certificats_opener')
+          // change button openner
+          $($(e.currentTarget)[0])
             .removeClass('btn-danger')
-            .addClass('btn-warning')
-            .attr('href', certificat.secure_url)
+            .addClass('btn-outline-dark')
+          $(e.currentTarget)[0].innerText = 'Changer mon document'
+
+          // action in registration form
+          if ($('#registration-form').length >= 1) {
+            // change button viewer
+            $($($($(e.currentTarget)[0]).parent()[0]).find('.file_viewer')[0]).attr('href', certificat.secure_url).removeClass('hidde')
+            // change input value
+            $($($($(e.currentTarget)[0]).parent()[0]).find('.certificat_membre_file')[0]).val(certificat.secure_url)
+          }
+        } else {
+          // $('#upload_certificats_opener')
+          // change button openner
+          $('#upload_certificats_opener')
+            .removeClass('btn-danger')
+            .addClass('btn-outline-dark')
+          $('#upload_certificats_opener')[0].innerText = 'Changer mon document'
+
+          // action in registration form
+          if ($('#registration-form').length >= 1) {
+            // change box style
+            $('#other_participant_certificat_inerBox')
+              .removeClass('alert-warning')
+              .addClass('alert-light')
+
+            // change button viewer
+            $('#file_viewer')
+              .attr('href', certificat.secure_url)
+              .removeClass('hidde')
+          } else {
+            // action in user certificat form
+            // change box style
+            $('#certificat_innerBox')
+              .removeClass('alert-warning')
+              .addClass('alert-light')
+
+            // change viewer button
+            $('#file_viewer')
+              .removeClass('hidde')
+              .removeClass('btn-danger')
+              .addClass('btn-warning')
+              .attr('href', certificat.secure_url)
+          }
         }
       }
     }
@@ -129,6 +147,9 @@ var fileUploader = () => {
   legalesQuantityCheck()
   // certificat trigger
   $('#upload_certificats_opener').on('click', (e) => {
+    certificatUploader(e)
+  })
+  $(document).on('click', '.upload_certificats_opener', (e) => {
     certificatUploader(e)
   })
   $('#upload_images_opener').on('click', (e) => {

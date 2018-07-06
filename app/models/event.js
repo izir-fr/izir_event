@@ -37,7 +37,11 @@ var EventSchema = mongoose.Schema({
       distance: { type: Number },
       denivele: { type: Number },
       placesDispo: { type: Number },
-      date_debut: { type: Date }
+      date_debut: { type: Date },
+      // team
+      team: { type: Boolean },
+      team_qty_min: { type: Number },
+      team_qty_max: { type: Number }
     }
   ],
   docs: {

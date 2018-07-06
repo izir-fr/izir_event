@@ -50,7 +50,7 @@
       </div>
       <div class="row">
         <div class="col-12 spacer-sm-top spacer-sm-bottom">
-          <strong class="spacer-sm-right">{{participants.length}}</strong><br>
+          <strong class="spacer-sm-right">{{inscriptions.length}}</strong><br>
           <span class="text-muted">Inscriptions</span>
         </div>
       </div>
@@ -114,7 +114,7 @@
   </div>
   <div class="row">
     <div class="col-12 ">
-    {{#if participants}}
+    {{#if inscriptions}}
     <table class="table text-center">
       <thead class="table bg-dark-blue text-white position-sticky">
         <tr>
@@ -127,7 +127,7 @@
         </tr>
       </thead>
       <tbody class="">
-        {{#each participants}}
+        {{#each inscriptions}}
             <tr>
               <td class="text-uppercase">
                 {{#each this.produits}}
@@ -140,6 +140,8 @@
               </td>
               <td class="text-uppercase">
                 <strong>{{this.participant.nom}}</strong> {{this.participant.prenom}}
+                <br>
+                <span class="text-muted">{{this.participant.team}}</span>
                 <br>
                 <span class="text-muted">{{this.participant.categorie}}</span>
                 <br>

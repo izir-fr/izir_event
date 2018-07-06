@@ -95,7 +95,8 @@ var chronometrageCtrl = {
         req.flash('error_msg', 'Une erreur est survenue')
         res.redirect('/')
       }
-      var event = results.participants
+
+      var event = require('../../custom_modules/app/registrationToTeam')(results.participants)
 
       var inscriptions = []
       event.forEach((val) => {
@@ -239,7 +240,8 @@ var chronometrageCtrl = {
         req.flash('error_msg', 'Une erreur est survenue')
         res.redirect('/')
       }
-      var event = results.participants
+
+      var event = require('../../custom_modules/app/registrationToTeam')(results.participants)
 
       var inscriptions = []
       event.forEach((val) => {

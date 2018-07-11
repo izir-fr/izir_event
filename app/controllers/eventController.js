@@ -204,8 +204,10 @@ var eventFinderForm = (req, res) => {
         if (citySearch !== '' || citySearch !== null) {
           results.forEach((val) => {
             // city query filter
-            if (val.adresse.ville.toLowerCase().indexOf(citySearch) !== -1) {
-              allEvents.push(val)
+            if (val.adresse.ville) {
+              if (val.adresse.ville.toLowerCase().indexOf(citySearch) !== -1) {
+                allEvents.push(val)
+              }
             }
           })
         } else {

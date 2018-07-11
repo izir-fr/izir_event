@@ -207,7 +207,7 @@ var eventFinderForm = (req, res) => {
             if (val.adresse.ville) {
               if (val.adresse.ville.toLowerCase().indexOf(citySearch) !== -1) {
                 allEvents.push(val)
-              }              
+              }
             }
           })
         } else {

@@ -19,20 +19,22 @@ var addTeamMemberBtn = (maxVal) => {
 }
 
 var teamVerification = () => {
-  var team
+  var team = 0
   $('.subtotalInput').each((key, val) => {
     if ($(val).hasClass('teamActivate') === true && Number($(val).val()) > 0) {
-      team = true
-
       teamMin = $($(val).parent().get(0)).find('input[name=team_min]').val()
       teamMax = $($(val).parent().get(0)).find('input[name=team_max]').val()
+
       $('#maxTeamLength').text(teamMax)
       addTeamMemberBtn(teamMax)
-    } else {
-      team = false
+      team += 1
     }
   })
-  return team
+  if (team > 0) {
+    return true
+  } else {
+    return false
+  }
 }
 
 // confirmation épreuves
@@ -367,8 +369,6 @@ var registrationValidation = () => {
                 window.alert('Merci d\'ajouter le certificat pour chaque participant et de cocher la case d\'acception.')
               }
             }
-
-            console.log(formErreur)
 
             if (formErreur === 0 && certificatError === 0) {
               displayConfirmationEpreuve()

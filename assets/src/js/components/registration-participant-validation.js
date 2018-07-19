@@ -1,5 +1,6 @@
 var teamMin, teamMax
 var formValidation = false
+var emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i
 
 var dateNow = new Date(Date.now())
 
@@ -238,17 +239,17 @@ var registrationValidation = () => {
           formToComplete(nom)
         } else if (prenom.val() === '') {
           formToComplete(prenom)
-        } else if (email.val() === '') {
+        } else if (email.val() === '' || email.val() === null || emailRegex.test(email.val()) === false) {
           formToComplete(email)
-        } else if (sex.val() === '') {
+        } else if (sex.val() === null || sex.val() === '') {
           formToComplete(sex)
-        } else if (jourNaissance.val() === '') {
+        } else if (jourNaissance.val() === null || jourNaissance.val() === '') {
           formToComplete(jourNaissance)
-        } else if (moisNaissance.val() === '') {
+        } else if (moisNaissance.val() === null || moisNaissance.val() === '') {
           formToComplete(moisNaissance)
         } else if (anneeNaissance.val() === '') {
           formToComplete(anneeNaissance)
-        } else if (categorie.val() === '') {
+        } else if (categorie.val() === null || categorie.val() === '') {
           formToComplete(categorie)
         } else if (adresse1.val() === '') {
           formToComplete(adresse1)
@@ -312,11 +313,11 @@ var registrationValidation = () => {
         } else if ($('input[name=capitaine_surname]').val() === '') {
           formToComplete($('input[name=capitaine_surname]'))
         } else if ($('input[name=capitaine_cp]').val() === '') {
-          formToComplete($('input[name=capitaine_cp]').val())
+          formToComplete($('input[name=capitaine_cp]'))
         } else if ($('input[name=capitaine_city]').val() === '') {
-          formToComplete($('input[name=capitaine_city]').val())
-        } else if ($('input[name=capitaine_email]').val() === '') {
-          formToComplete($('input[name=capitaine_email]').val())
+          formToComplete($('input[name=capitaine_city]'))
+        } else if ($('input[name=capitaine_email]').val() === '' || emailRegex.test($('input[name=capitaine_email]').val()) === false) {
+          formToComplete($('input[name=capitaine_email]'))
         } else {
           // vérification du nombre d'inscrit
           if ($('.team-count').length < Number(teamMin)) {

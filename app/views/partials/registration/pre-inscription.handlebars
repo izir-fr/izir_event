@@ -132,7 +132,7 @@
 													<td class="bg-light" colspan="4"><strong>OPTIONS</strong></td>
 												</tr>
 											    {{#each results.event.options}}
-											    <tr>
+											    <tr class="option-validation">
 											    	<td>
 											    		<p>{{this.reference}}</p>
 											    		<input name="ref" type="hidden" value="{{this.reference}}" >
@@ -188,14 +188,23 @@
 										    </tr>
 										</tbody>
 									</table>			    				
-				    			</div>
-				    		</div>
+			    			</div>
+			    		</div>
+							
+							<div class="row" id="epreuve-validation-warning">
+								<div class="col-11 mx-auto alert alert-warning">
+									<p class="">
+										Vérifiez que vous vous êtes bien inscrit à une seule épreuve (hors options et dons)
+									</p>								
+								</div>
+							</div>
+
 							<div class="row">
 								<div class="col-6 text-center">
 									<a class="btn btn-outline-primary" href="/event/{{results.event.id}}">Détails de l'évènement</a>
 								</div>
 								<div class="col-6 text-center">
-									<a class="btn btn-secondary" href="#step-participant" id="epreuve-form-submit">Suivant ></a>
+									<a class="btn btn-secondary disabled" href="#step-participant" id="epreuve-form-submit">Suivant ></a>
 								</div>
 							</div>	
 				    	</div>
@@ -216,7 +225,7 @@
 								<div class="col-sm-12">
 									<div class="form-check alert alert-warning">
 										<label class="form-check-label">
-											<input class="form-check-input" type="checkbox" name="newParticipant" id="newParticipant"> Inscrire à cette épreuve une autre personne que <strong>{{user.surname}} {{user.name}}</strong>
+											<input class="form-check-input input-participant-validation" type="checkbox" name="newParticipant" id="newParticipant"> Inscrire à cette épreuve une autre personne que <strong>{{user.surname}} {{user.name}}</strong>
 										</label>
 									</div>
 								</div>
@@ -230,13 +239,13 @@
 						    	<div class="col-sm-6">
 						    		<div class="form-group">
 						        	<label>Nom *</label>
-						        	<input type="text" class="form-control" placeholder="Nom" name="surname" value="{{user.surname}}" required>
+						        	<input type="text" class="form-control input-participant-validation" placeholder="Nom" name="surname" value="{{user.surname}}" required>
 						        </div>
 						    	</div>
 						    	<div class="col-sm-6">
 						    		<div class="form-group">
 						        	<label>Prénom *</label>
-						        	<input type="text" class="form-control" placeholder="Prénom" name="name" value="{{user.name}}" required>
+						        	<input type="text" class="form-control input-participant-validation" placeholder="Prénom" name="name" value="{{user.name}}" required>
 						        </div>
 						    	</div>
 						    </div>
@@ -244,13 +253,13 @@
 						    	<div class="col-sm-6">
 									<div class="form-group">
 										<label>Email *</label>
-										<input type="email" class="form-control" placeholder="Email" name="email"  value="{{user.email}}" required>
+										<input type="email" class="form-control input-participant-validation" placeholder="Email" name="email"  value="{{user.email}}" required>
 									</div>
 						    	</div>
 						    	<div class="col-sm-6">
 									<div class="form-group">
 										<label for="sex">Je suis *</label>
-										<select class="form-control" name="sex" id="sex" required>
+										<select class="form-control input-participant-validation" name="sex" id="sex" required>
 											<option value="{{user.sex}}" selected>{{user.sex}}</option>
 											<option value="Homme">Homme</option>
 											<option value="Femme">Femme</option>
@@ -264,7 +273,7 @@
 						          <label>Date de naissance (jour/mois/année)*</label>
 						          <div class="row">
 						            <div class="col-4">
-						              <select class="form-control" name="jourNaissance" id="jourNaissance" required>
+						              <select class="form-control input-participant-validation" name="jourNaissance" id="jourNaissance" required>
 						                <option value="{{jourNaissance}}" selected>{{jourNaissance}}</option>
 						                {{#each date_list.day}}
 						               		<option value="{{this.value}}">{{this.value}}</option>
@@ -272,7 +281,7 @@
 						              </select>
 						            </div>
 						            <div class="col-4">
-						              <select class="form-control" name="moisNaissance" id="moisNaissance" required>
+						              <select class="form-control input-participant-validation" name="moisNaissance" id="moisNaissance" required>
 						                <option value="{{moisNaissance}}" selected>{{moisNaissance}}</option>
 						                {{#each date_list.month}}
 						               		<option value="{{this.value}}">{{this.value}}</option>
@@ -280,7 +289,7 @@
 						              </select>
 						            </div>
 						            <div class="col-4">
-						            	<input class="form-control" type="number" placeholder="2018"  min="1900" step="1" value="{{anneeNaissance}}" name="anneeNaissance" required>
+						            	<input class="form-control input-participant-validation" type="number" placeholder="2018"  min="1900" step="1" value="{{anneeNaissance}}" name="anneeNaissance" required>
 						            </div>
 						          </div>
 						        </div>
@@ -302,7 +311,7 @@
 						    	<div class="col-sm-4">
 									<div class="form-group">
 										<label for="categorie">Catégorie *</label>
-										<select class="form-control" name="categorie" id="categorie" required>
+										<select class="form-control input-participant-validation" name="categorie" id="categorie" required>
 											<option value="{{user.categorie}}" selected>{{user.categorie}}</option>
 											{{#each category_list}}
 							          <option value="{{this.short}} - {{this.name}}">{{this.short}} - {{this.name}}</option>
@@ -315,7 +324,7 @@
 						    	<div class="col-sm-12">
 									<div class="form-group">
 										<label>Adresse ligne 1 *</label>
-										<input type="text" class="form-control" placeholder="ex: 9 rue Albert Camus" name="adresse1"  value="{{user.adresse1}}" required>
+										<input type="text" class="form-control input-participant-validation" placeholder="ex: 9 rue Albert Camus" name="adresse1"  value="{{user.adresse1}}" required>
 									</div>
 									<div class="form-group">
 										<label>Adresse ligne 2</label>
@@ -323,11 +332,11 @@
 									</div>
 									<div class="form-group">
 										<label>Code postal *</label>
-										<input type="text" class="form-control" placeholder="ex: 56300" name="codePostal"  value="{{user.codePostal}}" required>
+										<input type="text" class="form-control input-participant-validation" placeholder="ex: 56300" name="codePostal"  value="{{user.codePostal}}" required>
 									</div>
 									<div class="form-group">
 										<label>Ville *</label>
-										<input type="text" class="form-control" placeholder="ex: Pontivy" name="city"  value="{{user.city}}" required>
+										<input type="text" class="form-control input-participant-validation" placeholder="ex: Pontivy" name="city"  value="{{user.city}}" required>
 									</div>
 								</div>
 						    </div>
@@ -372,14 +381,14 @@
 										</div>
 									</div>
 							  </div>
-							  <input name='certificat_file' value='{{user.certificat.file}}' type='hidden'>
+							  <input name='certificat_file' value='{{user.certificat.file}}' class="input-participant-validation" type='hidden'>
 
 							  <!-- checkbox certificat user confirmation -->
 								<div class="row">
 									<div class="col-12">
 										<div class="form-check alert alert-light">
 											<label class="form-check-label">
-												<input class="form-check-input" type="checkbox" name="certificatCondition" id="certificatCondition" required>
+												<input class="form-check-input input-participant-validation" type="checkbox" name="certificatCondition" id="certificatCondition" required>
 												<p>Je déclare sur l'honneur que le certificat transmis est authentique et valide. Je décharge ainsi la société REF SPORT PONTIVY et l'organisateur de toute responsabilité liée à celui-ci.</p>
 											</label>
 										</div>								
@@ -387,12 +396,27 @@
 								</div>						  
 							{{/if}}
 
+							<div class="row" id="participant-validation-warning">
+								<div class="col-11 mx-auto alert alert-warning">
+									<p class="">
+										Pour continuer votre inscription, vérifiez :
+									</p>
+									<ul>
+										<li>- que les champs obligatoires signalés avec "*" sont correctement complétés</li>
+										{{#if results.event.certificat_required}}
+											<li>- que votre certificat a bien été ajouté </li>
+											<li>- que vous avez coché la case de déclaration de validité et d'authencité du certificat médical/licence</li>
+										{{/if}}
+									</ul>									
+								</div>
+							</div>
+
 							<div class="row">
 								<div class="col-6 text-center">
 									<a class="btn btn-outline-primary" href="#step-epreuve" id="epreuve-form-back">< Retour</a>
 								</div>
 								<div class="col-6 text-center">
-									<a class="btn btn-secondary" href="#step-confirmation" id="participant-form-submit">Suivant ></a>
+									<a class="btn btn-secondary disabled" href="#step-confirmation" id="participant-form-submit">Suivant ></a>
 								</div>
 							</div>
 						</div>							
@@ -411,8 +435,8 @@
 						<div class="row">
 							<div class="col-sm-12">
 								<div class="form-group">
-									<label for="capitaine_team">Nom de l'équipe</label>
-									<input type="text" class="form-control" name="capitaine_team" value="{{user.team}}">
+									<label for="capitaine_team">Nom de l'équipe *</label>
+									<input type="text" class="form-control input-team-validation" name="capitaine_team" value="{{user.team}}">
 								</div>
 							</div>
 						</div>
@@ -424,43 +448,43 @@
 						<div class="row">
 							<div class="col-sm-6">
 								<div class="form-group">
-									<label for="capitaine_name">Nom du capitaine</label>
-									<input type="text" class="form-control" name="capitaine_name" value="{{user.surname}}">
+									<label for="capitaine_name">Nom du capitaine *</label>
+									<input type="text" class="form-control input-team-validation" name="capitaine_name" value="{{user.surname}}">
 								</div>
 							</div>
 							<div class="col-sm-6">
 								<div class="form-group">
-									<label for="capitaine_surname">Prénom du capitaine</label>
-									<input type="text" class="form-control" name="capitaine_surname" value="{{user.name}}">
+									<label for="capitaine_surname">Prénom du capitaine *</label>
+									<input type="text" class="form-control input-team-validation" name="capitaine_surname" value="{{user.name}}">
 								</div>
 							</div>
 						</div>
 						<div class="row">
 							<div class="col-sm-6">
 								<div class="form-group">
-									<label for="capitaine_cp">Code postal</label>
-									<input type="text" class="form-control" name="capitaine_cp" value="{{user.codePostal}}">
+									<label for="capitaine_cp">Code postal *</label>
+									<input type="text" class="form-control input-team-validation" name="capitaine_cp" value="{{user.codePostal}}">
 								</div>
 							</div>
 							<div class="col-sm-6">
 								<div class="form-group">
-									<label for="capitaine_city">Ville</label>
-									<input type="text" class="form-control" name="capitaine_city" value="{{user.city}}">
+									<label for="capitaine_city">Ville *</label>
+									<input type="text" class="form-control input-team-validation" name="capitaine_city" value="{{user.city}}">
 								</div>
 							</div>
 						</div>
 						<div class="row">
 							<div class="col-sm-12">
 								<div class="form-group">
-									<label for="capitaine_email">Email</label>
-									<input type="email" class="form-control" name="capitaine_email" value="{{user.email}}">
+									<label for="capitaine_email">Email *</label>
+									<input type="email" class="form-control input-team-validation" name="capitaine_email" value="{{user.email}}">
 								</div>
 							</div>
 						</div>
 
 						<!-- les membres -->
 						<div class="row">
-							<div class="col-12 text-center mt-5">
+							<div class="col-12 text-center mt-2">
 								<p class="alert alert-dark"><i class="fa fa-arrow-down" aria-hidden="true"></i>Les membres</p>
 							</div>
 						</div>
@@ -469,28 +493,28 @@
 								<div class="row">
 									<div class="col-sm-6">
 										<div class="form-group">
-											<label for="member_nom">Nom du membre</label>
-											<input type="text" class="form-control" name="member_nom" value="{{user.surname}}">
+											<label for="member_nom">Nom du membre *</label>
+											<input type="text" class="form-control input-team-validation" name="member_nom" value="{{user.surname}}">
 										</div>
 									</div>
 									<div class="col-sm-6">
 										<div class="form-group">
-											<label for="member_prenom">Prénom du membre</label>
-											<input type="text" class="form-control" name="member_prenom" value="{{user.name}}">
+											<label for="member_prenom">Prénom du membre *</label>
+											<input type="text" class="form-control input-team-validation" name="member_prenom" value="{{user.name}}">
 										</div>
 									</div>
 								</div>
 								<div class="row">
 									<div class="col-sm-6">
 										<div class="form-group">
-											<label for="">Sexe</label>
-											<input type="text" class="form-control" name="member_sex" value="{{user.sex}}">
+											<label for="">Sexe *</label>
+											<input type="text" class="form-control input-team-validation" name="member_sex" value="{{user.sex}}">
 										</div>
 									</div>
 									<div class="col-sm-6">
 										<div class="form-group">
 											<label for="">N° de license</label>
-											<input type="text" class="form-control" name="member_license" value="{{user.numLicense}}">
+											<input type="text" class="form-control input-team-validation" name="member_license" value="{{user.numLicense}}">
 										</div>
 									</div>
 								</div>
@@ -502,7 +526,7 @@
 								<div class="row">
 									<div class="col-sm-4">
 										<div class="form-group">
-				              <select class="form-control membre_birth_day" name="membre_birth_day" required>
+				              <select class="form-control membre_birth_day input-team-validation" name="membre_birth_day" required>
 				                <option value="{{jourNaissance}}" selected>{{jourNaissance}}</option>
 				                {{#each date_list.day}}
 				               		<option value="{{this.value}}">{{this.value}}</option>
@@ -512,7 +536,7 @@
 									</div>
 									<div class="col-sm-4">
 										<div class="form-group">
-				              <select class="form-control membre_birth_month" name="membre_birth_month" required>
+				              <select class="form-control membre_birth_month input-team-validation" name="membre_birth_month" required>
 				                <option value="{{moisNaissance}}" selected>{{moisNaissance}}</option>
 				                {{#each date_list.month}}
 				               		<option value="{{this.value}}">{{this.value}}</option>
@@ -522,15 +546,15 @@
 									</div>
 									<div class="col-sm-4">
 										<div class="form-group">
-											<input class="form-control" type="number" placeholder="2018"  min="1900" step="1" value="{{anneeNaissance}}" name="membre_birth_year">											
+											<input class="form-control input-team-validation" type="number" placeholder="2018"  min="1900" step="1" value="{{anneeNaissance}}" name="membre_birth_year">											
 										</div>
 									</div>
 								</div>
 								<div class="row">
 									<div class="col-12">
 										<div class="form-group">
-											<label for="member_email">Email du membre</label>
-											<input type="email" class="form-control" name="member_email" value="{{user.email}}">
+											<label for="member_email">Email du membre *</label>
+											<input type="email" class="form-control input-team-validation" name="member_email" value="{{user.email}}">
 										</div>
 									</div>
 								</div>
@@ -544,7 +568,7 @@
 												<span class="mt-1 mb-1 d-block">
 													<a href="" class="hidde btn btn-warning file_viewer" target="_blank">Voir mon document</a>
 													<a href="#upload_certificats_opener" class="btn btn-danger upload_certificats_opener">Ajouter un document</a>
-													<input name='certificat_membre_file' class="certificat_membre_file" value='' type='hidden'>
+													<input name='certificat_membre_file' class="certificat_membre_file input-team-validation" value='' type='hidden'>
 												</span>
 											</div>
 									</div>
@@ -553,7 +577,7 @@
 									<div class="row">
 										<div class="col-12">
 											<label class="form-check-label">
-												<input class="form-check-input" type="checkbox" name="certificatCondition_member" id="certificatCondition_member">
+												<input class="form-check-input input-team-validation" type="checkbox" name="certificatCondition_member" id="certificatCondition_member">
 												<p>Je déclare sur l'honneur que le certificat transmis est authentique et valide. Je décharge ainsi la société REF SPORT PONTIVY et l'organisateur de toute responsabilité liée à celui-ci.</p>
 											</label>							
 										</div>
@@ -568,28 +592,28 @@
 								<div class="row">
 									<div class="col-sm-6">
 										<div class="form-group">
-											<label for="member_nom">Nom du membre</label>
-											<input type="text" class="form-control" name="member_nom" value="">
+											<label for="member_nom">Nom du membre *</label>
+											<input type="text" class="form-control input-team-validation" name="member_nom" value="">
 										</div>
 									</div>
 									<div class="col-sm-6">
 										<div class="form-group">
-											<label for="member_prenom">Prénom du membre</label>
-											<input type="text" class="form-control" name="member_prenom" value="">
+											<label for="member_prenom">Prénom du membre *</label>
+											<input type="text" class="form-control input-team-validation" name="member_prenom" value="">
 										</div>
 									</div>
 								</div>
 								<div class="row">
 									<div class="col-sm-6">
 										<div class="form-group">
-											<label for="">Sexe</label>
-											<input type="text" class="form-control" name="member_sex" value="">
+											<label for="">Sexe *</label>
+											<input type="text" class="form-control input-team-validation" name="member_sex" value="">
 										</div>
 									</div>
 									<div class="col-sm-6">
 										<div class="form-group">
 											<label for="">N° de license</label>
-											<input type="text" class="form-control" name="member_license" value="">
+											<input type="text" class="form-control input-team-validation" name="member_license" value="">
 										</div>
 									</div>
 								</div>
@@ -601,7 +625,7 @@
 								<div class="row">
 									<div class="col-sm-4">
 										<div class="form-group">
-				              <select class="form-control membre_birth_day" name="membre_birth_day" required>
+				              <select class="form-control membre_birth_day input-team-validation" name="membre_birth_day" required>
 				                {{#each date_list.day}}
 				               		<option value="{{this.value}}">{{this.value}}</option>
 				                {{/each}}
@@ -610,7 +634,7 @@
 									</div>
 									<div class="col-sm-4">
 										<div class="form-group">
-				              <select class="form-control membre_birth_month" name="membre_birth_month" required>
+				              <select class="form-control membre_birth_month input-team-validation" name="membre_birth_month" required>
 				                {{#each date_list.month}}
 				               		<option value="{{this.value}}">{{this.value}}</option>
 				                {{/each}}
@@ -619,15 +643,15 @@
 									</div>
 									<div class="col-sm-4">
 										<div class="form-group">
-											<input class="form-control" type="number" placeholder="2018"  min="1900" step="1" value="" name="membre_birth_year">
+											<input class="form-control input-team-validation" type="number" placeholder="2018"  min="1900" step="1" value="" name="membre_birth_year">
 										</div>
 									</div>
 								</div>
 								<div class="row">
 									<div class="col-sm-12">
 										<div class="form-group">
-											<label for="member_email">Email du membre</label>
-											<input type="email" class="form-control" name="member_email" value="">
+											<label for="member_email">Email du membre *</label>
+											<input type="email" class="form-control input-team-validation" name="member_email" value="">
 										</div>
 									</div>
 								</div>								
@@ -640,7 +664,7 @@
 												<span class="mt-1 mb-1 d-block">
 													<a href="" class="hidde btn btn-warning file_viewer" target="_blank">Voir mon document</a>
 													<a href="#upload_certificats_opener" class="btn btn-danger upload_certificats_opener">Ajouter un document</a>
-													<input name='certificat_membre_file' class="certificat_membre_file" value='' type='hidden'>
+													<input name='certificat_membre_file' class="certificat_membre_file input-team-validation" value='' type='hidden'>
 												</span>
 											</div>
 									</div>
@@ -649,7 +673,7 @@
 									<div class="row">
 										<div class="col-12">
 											<label class="form-check-label">
-												<input class="form-check-input" type="checkbox" name="certificatCondition_member" id="certificatCondition_member">
+												<input class="form-check-input input-team-validation" type="checkbox" name="certificatCondition_member" id="certificatCondition_member">
 												<p>Je déclare sur l'honneur que le certificat transmis est authentique et valide. Je décharge ainsi la société REF SPORT PONTIVY et l'organisateur de toute responsabilité liée à celui-ci.</p>
 											</label>							
 										</div>
@@ -668,13 +692,30 @@
 							</div>
 						</div>
 
+						<!-- warning info -->
+						<div class="row" id="team-validation-warning">
+							<div class="col-11 mx-auto alert alert-warning">
+								<span class="text-center">
+									Pour continuer votre inscription, vérifiez :
+									<ul>
+										<li>- que votre équipe est formée d'un minimum de membres de <span id="option-team-min"></span>.</li>
+										<li>- que les champs obligatoires signalés avec "*" sont correctement complétés</li>
+										{{#if results.event.certificat_required}}
+											<li>- que votre certificat a bien été ajouté </li>
+											<li>- que vous avez coché la case de déclaration de validité et d'authencité de chaque certificat médical/licence</li>
+										{{/if}}
+									</ul>
+								</span>								
+							</div>
+						</div>
+
 						<!-- bottom navigation -->
 						<div class="row">
 							<div class="col-6 text-center">
 								<a class="btn btn-outline-primary" href="#step-epreuve" id="epreuve-form-back-team">< Retour</a>
 							</div>
 							<div class="col-6 text-center">
-								<a class="btn btn-secondary" href="#step-confirmation" id="team-form-submit">Suivant ></a>
+								<a class="btn btn-secondary disabled" href="#step-confirmation" id="team-form-submit">Suivant ></a>
 							</div>
 						</div>						
 					</div>
@@ -737,14 +778,21 @@
 									</label>
 								</div>
 							</div>
-				    	</div>					
+				    </div>					
+						<div class="row" id="done-validation-warning">
+							<div class="col-11 mx-auto alert alert-warning">
+								<p class="">
+									Vérifiez que vous avez coché la case des CGV pour finaliser votre inscription.
+								</p>								
+							</div>
+						</div>
 						<div class="row">
 							<div class="col-6 text-center">
 								<a class="btn btn-outline-primary" href="#step-participant" id="participant-form-back">< Modifier</a>
 								<a class="btn btn-outline-primary hidde" href="#step-team" id="team-form-back">< Modifier</a>
 							</div>
 							<div class="col-6 text-center">
-								<button type="submit" class="btn btn-danger" id="checkout">Valider mon inscription > </button>
+								<button type="submit" class="btn btn-danger disabled" id="checkout">Valider mon inscription > </button>
 							</div>
 						</div>
 					</div>

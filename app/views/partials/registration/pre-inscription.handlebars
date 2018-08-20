@@ -47,7 +47,8 @@
 	    		</div>
 
 				<!--formulaire d'inscription-->
-				<form method="post" action="/inscription/pre-inscription/{{results.event.id}}" id="registration-form" class="">
+				<!--method="post" action="/inscription/pre-inscription/{{results.event.id}}" -->
+				<form id="registration-form" class="">
 					<input type="hidden" value="{{results.eventPrice}}" name="chargeAmount">
 					<input type="hidden" value="{{results.event.name}}" name="eventName">
 					<input type="hidden" value="{{results.event.certificat_required}}" name="certificat_required">
@@ -792,7 +793,7 @@
 								<a class="btn btn-outline-primary hidde" href="#step-team" id="team-form-back">< Modifier</a>
 							</div>
 							<div class="col-6 text-center">
-								<button type="submit" class="btn btn-danger disabled" id="checkout">Valider mon inscription > </button>
+								<button type="submit"class="btn btn-danger disabled" id="checkout">Valider mon inscription > </button>
 							</div>
 						</div>
 					</div>

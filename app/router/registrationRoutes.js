@@ -17,7 +17,10 @@ router.get('/recap/organisateur/:id', ensureAuthenticated, registrationCtrl.getR
 router.get('/pre-inscription/:id', ensureAuthenticated, registrationCtrl.getPreinscription)
 
 // Get organisateur a recap
-router.post('/pre-inscription/:id', registrationCtrl.postPreinscription)
+// router.post('/pre-inscription/:id', registrationCtrl.postPreinscription)
+
+// Post Ajax pre-inscription
+router.post('/pre-inscription/:id/post', registrationCtrl.postAjaxPreinscription)
 
 // Get a file excell
 router.get('/checkout/:id', ensureAuthenticated, registrationCtrl.getCheckout)

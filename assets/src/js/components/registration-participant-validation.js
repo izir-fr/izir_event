@@ -31,6 +31,8 @@ var registrationValidation = () => {
     // get confirmation épreuves
     var displayConfirmationEpreuve = require('./registration-participant/displayConfirmationEpreuve')
 
+    var ajaxPostForm = require('./registration-participant/ajaxPostForm')
+
     // init team & indiv form
     $('#step-team')[0].innerHTML = ''
     $('#step-participant')[0].innerHTML = ''
@@ -189,6 +191,13 @@ var registrationValidation = () => {
 
         $('#participant-form-back').addClass('hidde')
         $('#team-form-back').removeClass('hidde')
+      })
+
+      // ----
+      // Step 3 to POST
+      // ----
+      $(document).on('submit', '#registration-form', () => {
+        ajaxPostForm(form)
       })
     })
   }

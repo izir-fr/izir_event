@@ -119,183 +119,377 @@ var registrationCtrl = {
     })
   },
   // Post a pre-inscription
-  postPreinscription: function (req, res) {
+  // postPreinscription: function (req, res) {
+  //   var produits = []
+  //   var ref = req.body.ref
+  //   var tarif = req.body.tarif
+  //   var quantity = req.body.quantity
+  //   var subtotal = req.body.subtotal
+  //   var option, registration, mailOptions
+
+  //   // ajout des produits dans la commande
+  //   if (subtotal.constructor === Array) {
+  //     for (var i = 0; i < ref.length; i++) {
+  //       option = {
+  //         produitsRef: ref[i],
+  //         produitsPrix: tarif[i],
+  //         produitsQuantite: quantity[i],
+  //         produitsSubTotal: subtotal[i]
+  //       }
+  //       produits.push(option)
+  //     }
+  //   } else {
+  //     option = {
+  //       produitsRef: ref,
+  //       produitsPrix: tarif,
+  //       produitsQuantite: quantity,
+  //       produitsSubTotal: subtotal
+  //     }
+  //     produits.push(option)
+  //   }
+
+  //   // création de la pré-commande
+  //   if (req.body.teamActivate === 'true') {
+  //     var team = []
+
+  //     if (req.body.member_nom.constructor === Array) {
+  //       req.body.member_nom.forEach((val, key) => {
+  //         var member = {
+  //           nom: req.body.member_nom[key],
+  //           prenom: req.body.member_prenom[key],
+  //           sex: req.body.member_sex[key],
+  //           dateNaissance: req.body.membre_birth_day[key] + '/' + req.body.membre_birth_month[key] + '/' + req.body.membre_birth_year[key],
+  //           team: req.body.capitaine_team,
+  //           numLicence: req.body.member_license[key],
+  //           email: req.body.member_email[key],
+  //           docs: {
+  //             certificat: req.body.certificat_membre_file[key]
+  //           }
+  //         }
+
+  //         team.push(member)
+  //       })
+  //     } else {
+  //       var member = {
+  //         nom: req.body.member_nom,
+  //         prenom: req.body.member_prenom,
+  //         sex: req.body.member_sex,
+  //         dateNaissance: req.body.membre_birth_day + '/' + req.body.membre_birth_month + '/' + req.body.membre_birth_year,
+  //         team: req.body.capitaine_team,
+  //         numLicence: req.body.member_license,
+  //         email: req.body.member_email,
+  //         docs: {
+  //           certificat: req.body.certificat_membre_file
+  //         }
+  //       }
+
+  //       team.push(member)
+  //     }
+
+  //     registration = new Registration({
+  //       user: req.user.id, // user
+  //       event: req.params.id, // event
+  //       eventName: req.body.eventName,
+  //       participant: {
+  //         nom: req.body.capitaine_surname,
+  //         prenom: req.body.capitaine_name,
+  //         email: req.body.capitaine_email,
+  //         team: req.body.capitaine_team,
+  //         codePostal: req.body.capitaine_cp,
+  //         city: req.body.capitaine_city
+  //       },
+  //       team: team,
+  //       produits: produits, // toute le pack
+  //       orderAmount: req.body.total,
+  //       statut: 'pré-inscrit',
+  //       docs: {
+  //         certificat: ''
+  //       },
+  //       updated: new Date()
+  //     })
+  //   } else {
+  //     registration = new Registration({
+  //       user: req.user.id, // user
+  //       event: req.params.id, // event
+  //       eventName: req.body.eventName,
+  //       participant: {
+  //         nom: req.body.surname,
+  //         prenom: req.body.name,
+  //         email: req.body.email,
+  //         sex: req.body.sex,
+  //         dateNaissance: req.body.jourNaissance + '/' + req.body.moisNaissance + '/' + req.body.anneeNaissance,
+  //         team: req.body.team,
+  //         numLicence: req.body.numLicence,
+  //         categorie: req.body.categorie,
+  //         adresse1: req.body.adresse1,
+  //         adresse2: req.body.adresse2,
+  //         codePostal: req.body.codePostal,
+  //         city: req.body.city
+  //       },
+  //       produits: produits, // toute le pack
+  //       orderAmount: req.body.total,
+  //       statut: 'pré-inscrit',
+  //       docs: {
+  //         certificat: req.body.certificat_file
+  //       },
+  //       updated: new Date()
+  //     })
+  //   }
+
+  //   // enregistrement de la pré-commande
+  //   registration.save(function (err, registration) {
+  //     if (err) {
+  //       res.send({error_msg:'Une erreur est survenue'})
+  //     }
+
+  //     // Configuration du mail
+  //     if (req.body.teamActivate === 'true') {
+  //       mailOptions = {
+  //         to: registration.participant.email,
+  //         from: 'Event Izir <event@izir.fr>',
+  //         subject: 'Récapitulatif d\'inscription N°' + registration.id,
+  //         text: 'Bonjour,\n\n' +
+  //         'vous venez de saisir les informations suivantes pour vous inscrire à l\'épreuve ' + registration.eventName + ' .\n\n' +
+  //         'Voici les informations sur l\'équipe qui sont transmises à l\'organisateur : \n\n' +
+  //         'Nom de l\'équipe :' +
+  //         ' - Team : ' + registration.participant.team + '.\n' +
+  //         'Capitaine:' +
+  //         ' - Nom : ' + registration.participant.nom + '.\n' +
+  //         ' - Prénom : ' + registration.participant.prenom + '.\n' +
+  //         ' - Email : ' + registration.participant.email + '.\n\n' +
+  //         ' - Adresse : ' + registration.participant.codePostal + ' ' + registration.participant.city + '.\n\n' +
+  //         'Pour valider votre inscription, si ce n\'est déjà fait, n\'oubliez pas d\'effectuer votre règlement en ligne en suivant ce lien http://event.izir.fr/inscription/checkout/' + registration.id + '\n\n' +
+  //         'Vous pouvez à tout moment consulter le statut de vos inscriptions en suivant ce lien http://event.izir.fr/inscription/recap/user/' + req.user.id + '\n\n' +
+  //         'Bonne course !\n\n' +
+  //         'Nicolas de izir.fr'
+  //       }
+  //     } else {
+  //       mailOptions = {
+  //         to: registration.participant.email,
+  //         from: 'Event Izir <event@izir.fr>',
+  //         subject: 'Récapitulatif d\'inscription N°' + registration.id,
+  //         text: 'Bonjour,\n\n' +
+  //         'vous venez de saisir les informations suivantes pour vous inscrire à l\'épreuve ' + registration.eventName + ' .\n\n' +
+  //         'Voici les informations sur le participant qui sont transmises à l\'organisateur : \n\n' +
+  //         ' - Nom : ' + registration.participant.nom + '.\n' +
+  //         ' - Prénom : ' + registration.participant.prenom + '.\n' +
+  //         ' - Email : ' + registration.participant.email + '.\n\n' +
+  //         ' - Date de naissance : ' + registration.participant.dateNaissance + '.\n' +
+  //         ' - Team : ' + registration.participant.team + '.\n' +
+  //         ' - Sex : ' + registration.participant.sex + '.\n' +
+  //         ' - Numéro de Licence : ' + registration.participant.numLicence + '.\n' +
+  //         ' - Categorie : ' + registration.participant.categorie + '.\n' +
+  //         ' - Adresse : ' + registration.participant.adresse1 + ' ' + registration.participant.adresse2 + ' ' + registration.participant.codePostal + ' ' + registration.participant.city + '.\n\n' +
+  //         'Pour valider votre inscription, si ce n\'est déjà fait, n\'oubliez pas d\'effectuer votre règlement en ligne en suivant ce lien http://event.izir.fr/inscription/checkout/' + registration.id + '\n\n' +
+  //         'Vous pouvez à tout moment consulter le statut de vos inscriptions en suivant ce lien http://event.izir.fr/inscription/recap/user/' + req.user.id + '\n\n' +
+  //         'Bonne course !\n\n' +
+  //         'Nicolas de izir.fr'
+  //       }
+  //     }
+
+  //     // envoie du mail
+  //     smtpTransport.sendMail(mailOptions, (err) => {
+  //       if (err) throw err
+  //     })
+
+  //     req.flash('success_msg', 'Vos informations d\'inscription ont bien été prises en compte')
+  //     res.redirect('/inscription/checkout/' + registration.id)
+  //   })
+  // },
+  postAjaxPreinscription: function (req, res) {
+    var registration, mailOptions
     var produits = []
-    var ref = req.body.ref
-    var tarif = req.body.tarif
-    var quantity = req.body.quantity
-    var subtotal = req.body.subtotal
-    var option, registration, mailOptions
+    var team = []
+    var form = req.body
+    var data = form.data
+    var cart = data.cart
+    var participant = data.participant
+    var dataTeam = data.team.membres
+    var options = form.option
+    var user = req.user._id
+    var event = req.params.id
 
-    // ajout des produits dans la commande
-    if (subtotal.constructor === Array) {
-      for (var i = 0; i < ref.length; i++) {
-        option = {
-          produitsRef: ref[i],
-          produitsPrix: tarif[i],
-          produitsQuantite: quantity[i],
-          produitsSubTotal: subtotal[i]
-        }
-        produits.push(option)
-      }
+    // some check
+    if (!user) {
+      // res.contentType('json')
+      res.send({error_msg: 'Not logged user'})
+    } else if (!event) {
+      // res.contentType('json')
+      res.send({error_msg: 'No event reconized'})
     } else {
-      option = {
-        produitsRef: ref,
-        produitsPrix: tarif,
-        produitsQuantite: quantity,
-        produitsSubTotal: subtotal
+      // ajout des produits dans la commande
+      cart.epreuve.forEach((val) => {
+        produits.push({
+          produitsRef: val.produit,
+          produitsPrix: val.qty,
+          produitsQuantite: val.price,
+          produitsSubTotal: val.subTotal
+        })
+      })
+
+      // ajout des options à la commande
+      if (cart.options.length >= 1) {
+        cart.options.forEach((val) => {
+          produits.push({
+            produitsRef: val.produit,
+            produitsPrix: val.qty,
+            produitsQuantite: val.price,
+            produitsSubTotal: val.subTotal
+          })
+        })
       }
-      produits.push(option)
-    }
 
-    // création de la pré-commande
-    if (req.body.teamActivate === 'true') {
-      var team = []
+      // ajout des dons à la commande
+      if (cart.dons) {
+        if (cart.dons !== null && cart.dons !== '0') {
+          produits.push({
+            produitsRef: 'don',
+            produitsPrix: 1,
+            produitsQuantite: cart.dons,
+            produitsSubTotal: cart.dons
+          })
+        }
+      }
 
-      if (req.body.member_nom.constructor === Array) {
-        req.body.member_nom.forEach((val, key) => {
-          var member = {
-            nom: req.body.member_nom[key],
-            prenom: req.body.member_prenom[key],
-            sex: req.body.member_sex[key],
-            dateNaissance: req.body.membre_birth_day[key] + '/' + req.body.membre_birth_month[key] + '/' + req.body.membre_birth_year[key],
-            team: req.body.capitaine_team,
-            numLicence: req.body.member_license[key],
-            email: req.body.member_email[key],
+      // si team ajout des membres
+      if (dataTeam) {
+        dataTeam.forEach((val) => {
+          team.push({
+            nom: val.nom,
+            prenom: val.prenom,
+            sex: val.sex,
+            dateNaissance: val.jourNaissance + '/' + val.moisNaissance + '/' + val.anneeNaissance,
+            team: val.team,
+            numLicence: val.numLicense,
+            email: val.email,
             docs: {
-              certificat: req.body.certificat_membre_file[key]
+              certificat: val.certificat
             }
-          }
+          })
+        })
+      }
 
-          team.push(member)
+      // création de la pré-commande single
+      if (options.epreuve_format.individuel === true && options.epreuve_format.team === false) {
+        registration = new Registration({
+          user: user, // user
+          event: event, // event
+          eventName: participant.event,
+          participant: {
+            nom: participant.nom,
+            prenom: participant.prenom,
+            email: participant.email,
+            sex: participant.sex,
+            dateNaissance: participant.jourNaissance + '/' + participant.moisNaissance + '/' + participant.anneeNaissance,
+            team: participant.team,
+            numLicence: participant.numLicence,
+            categorie: participant.categorie,
+            adresse1: participant.adresse1,
+            adresse2: participant.adresse2,
+            codePostal: participant.codePostal,
+            city: participant.city
+          },
+          produits: produits,
+          orderAmount: cart.totalCart,
+          statut: 'pré-inscrit',
+          docs: {
+            certificat: participant.certificat
+          },
+          updated: new Date()
+        })
+
+        // enregistrement de la pré-commande
+        registration.save(function (err, registration) {
+          if (err) {
+            res.send({error_msg: 'Une erreur est survenue lors de l\'enregistrement de votre inscription'})
+          } else {
+            mailOptions = {
+              to: registration.participant.email,
+              from: 'Event Izir <event@izir.fr>',
+              subject: 'Récapitulatif d\'inscription N°' + registration.id,
+              text: 'Bonjour,\n\n' +
+              'vous venez de saisir les informations suivantes pour vous inscrire à l\'épreuve ' + registration.eventName + ' .\n\n' +
+              'Voici les informations sur le participant qui sont transmises à l\'organisateur : \n\n' +
+              ' - Nom : ' + registration.participant.nom + '.\n' +
+              ' - Prénom : ' + registration.participant.prenom + '.\n' +
+              ' - Email : ' + registration.participant.email + '.\n\n' +
+              ' - Date de naissance : ' + registration.participant.dateNaissance + '.\n' +
+              ' - Team : ' + registration.participant.team + '.\n' +
+              ' - Sex : ' + registration.participant.sex + '.\n' +
+              ' - Numéro de Licence : ' + registration.participant.numLicence + '.\n' +
+              ' - Categorie : ' + registration.participant.categorie + '.\n' +
+              ' - Adresse : ' + registration.participant.adresse1 + ' ' + registration.participant.adresse2 + ' ' + registration.participant.codePostal + ' ' + registration.participant.city + '.\n\n' +
+              'Pour valider votre inscription, si ce n\'est déjà fait, n\'oubliez pas d\'effectuer votre règlement en ligne en suivant ce lien http://event.izir.fr/inscription/checkout/' + registration.id + '\n\n' +
+              'Vous pouvez à tout moment consulter le statut de vos inscriptions en suivant ce lien http://event.izir.fr/inscription/recap/user/' + req.user.id + '\n\n' +
+              'Bonne course !\n\n' +
+              'Nicolas de izir.fr'
+            }
+            // envoie du mail
+            smtpTransport.sendMail(mailOptions, (mailErr) => {
+              if (mailErr) throw mailErr
+            })
+            // res.send(form)
+            // req.flash('success_msg', 'Vos informations d\'inscription ont bien été prises en compte')
+            res.send({redirect: '/inscription/checkout/' + registration.id})
+          }
+        })
+      } else if (options.epreuve_format.individuel === false && options.epreuve_format.team === true) {
+        registration = new Registration({
+          user: user, // user
+          event: event, // event
+          eventName: dataTeam[0].event,
+          participant: {
+            nom: data.team.capitaine.nom,
+            prenom: data.team.capitaine.prenom,
+            email: data.team.capitaine.email,
+            team: data.team.name,
+            codePostal: data.team.capitaine.codePostal,
+            city: data.team.capitaine.city
+          },
+          team: team,
+          produits: produits,
+          orderAmount: cart.totalCart,
+          statut: 'pré-inscrit',
+          updated: new Date()
+        })
+
+        // enregistrement de la pré-commande
+        registration.save(function (err, registration) {
+          if (err) {
+            res.send({error_msg: 'Une erreur est survenue lors de l\'enregistrement de votre inscription'})
+          } else {
+            mailOptions = {
+              to: registration.participant.email,
+              from: 'Event Izir <event@izir.fr>',
+              subject: 'Récapitulatif d\'inscription N°' + registration.id,
+              text: 'Bonjour,\n\n' +
+              'vous venez de saisir les informations suivantes pour vous inscrire à l\'épreuve ' + registration.eventName + ' .\n\n' +
+              'Voici les informations sur l\'équipe qui sont transmises à l\'organisateur : \n\n' +
+              'Nom de l\'équipe :' +
+              ' - Team : ' + registration.participant.team + '.\n' +
+              'Capitaine:' +
+              ' - Nom : ' + registration.participant.nom + '.\n' +
+              ' - Prénom : ' + registration.participant.prenom + '.\n' +
+              ' - Email : ' + registration.participant.email + '.\n\n' +
+              ' - Adresse : ' + registration.participant.codePostal + ' ' + registration.participant.city + '.\n\n' +
+              'Pour valider votre inscription, si ce n\'est déjà fait, n\'oubliez pas d\'effectuer votre règlement en ligne en suivant ce lien http://event.izir.fr/inscription/checkout/' + registration.id + '\n\n' +
+              'Vous pouvez à tout moment consulter le statut de vos inscriptions en suivant ce lien http://event.izir.fr/inscription/recap/user/' + req.user.id + '\n\n' +
+              'Bonne course !\n\n' +
+              'Nicolas de izir.fr'
+            }
+            // envoie du mail
+            smtpTransport.sendMail(mailOptions, (mailErr) => {
+              if (mailErr) throw mailErr
+            })
+            // res.send(form)
+            // req.flash('success_msg', 'Vos informations d\'inscription ont bien été prises en compte')
+            res.send({redirect: '/inscription/checkout/' + registration.id})
+          }
         })
       } else {
-        var member = {
-          nom: req.body.member_nom,
-          prenom: req.body.member_prenom,
-          sex: req.body.member_sex,
-          dateNaissance: req.body.membre_birth_day + '/' + req.body.membre_birth_month + '/' + req.body.membre_birth_year,
-          team: req.body.capitaine_team,
-          numLicence: req.body.member_license,
-          email: req.body.member_email,
-          docs: {
-            certificat: req.body.certificat_membre_file
-          }
-        }
-
-        team.push(member)
+        res.send({error_msg: 'format error'})
       }
-
-      registration = new Registration({
-        user: req.user.id, // user
-        event: req.params.id, // event
-        eventName: req.body.eventName,
-        participant: {
-          nom: req.body.capitaine_surname,
-          prenom: req.body.capitaine_name,
-          email: req.body.capitaine_email,
-          team: req.body.capitaine_team,
-          codePostal: req.body.capitaine_cp,
-          city: req.body.capitaine_city
-        },
-        team: team,
-        produits: produits, // toute le pack
-        orderAmount: req.body.total,
-        statut: 'pré-inscrit',
-        docs: {
-          certificat: ''
-        },
-        updated: new Date()
-      })
-    } else {
-      registration = new Registration({
-        user: req.user.id, // user
-        event: req.params.id, // event
-        eventName: req.body.eventName,
-        participant: {
-          nom: req.body.surname,
-          prenom: req.body.name,
-          email: req.body.email,
-          sex: req.body.sex,
-          dateNaissance: req.body.jourNaissance + '/' + req.body.moisNaissance + '/' + req.body.anneeNaissance,
-          team: req.body.team,
-          numLicence: req.body.numLicence,
-          categorie: req.body.categorie,
-          adresse1: req.body.adresse1,
-          adresse2: req.body.adresse2,
-          codePostal: req.body.codePostal,
-          city: req.body.city
-        },
-        produits: produits, // toute le pack
-        orderAmount: req.body.total,
-        statut: 'pré-inscrit',
-        docs: {
-          certificat: req.body.certificat_file
-        },
-        updated: new Date()
-      })
     }
-
-    // enregistrement de la pré-commande
-    registration.save(function (err, registration) {
-      if (err) {
-        req.flash('error_msg', 'Une erreur est survenue')
-        res.redirect('/')
-      }
-
-      // Configuration du mail
-      if (req.body.teamActivate === 'true') {
-        mailOptions = {
-          to: registration.participant.email,
-          from: 'Event Izir <event@izir.fr>',
-          subject: 'Récapitulatif d\'inscription N°' + registration.id,
-          text: 'Bonjour,\n\n' +
-          'vous venez de saisir les informations suivantes pour vous inscrire à l\'épreuve ' + registration.eventName + ' .\n\n' +
-          'Voici les informations sur l\'équipe qui sont transmises à l\'organisateur : \n\n' +
-          'Nom de l\'équipe :' +
-          ' - Team : ' + registration.participant.team + '.\n' +
-          'Capitaine:' +
-          ' - Nom : ' + registration.participant.nom + '.\n' +
-          ' - Prénom : ' + registration.participant.prenom + '.\n' +
-          ' - Email : ' + registration.participant.email + '.\n\n' +
-          ' - Adresse : ' + registration.participant.codePostal + ' ' + registration.participant.city + '.\n\n' +
-          'Pour valider votre inscription, si ce n\'est déjà fait, n\'oubliez pas d\'effectuer votre règlement en ligne en suivant ce lien http://event.izir.fr/inscription/checkout/' + registration.id + '\n\n' +
-          'Vous pouvez à tout moment consulter le statut de vos inscriptions en suivant ce lien http://event.izir.fr/inscription/recap/user/' + req.user.id + '\n\n' +
-          'Bonne course !\n\n' +
-          'Nicolas de izir.fr'
-        }
-      } else {
-        mailOptions = {
-          to: registration.participant.email,
-          from: 'Event Izir <event@izir.fr>',
-          subject: 'Récapitulatif d\'inscription N°' + registration.id,
-          text: 'Bonjour,\n\n' +
-          'vous venez de saisir les informations suivantes pour vous inscrire à l\'épreuve ' + registration.eventName + ' .\n\n' +
-          'Voici les informations sur le participant qui sont transmises à l\'organisateur : \n\n' +
-          ' - Nom : ' + registration.participant.nom + '.\n' +
-          ' - Prénom : ' + registration.participant.prenom + '.\n' +
-          ' - Email : ' + registration.participant.email + '.\n\n' +
-          ' - Date de naissance : ' + registration.participant.dateNaissance + '.\n' +
-          ' - Team : ' + registration.participant.team + '.\n' +
-          ' - Sex : ' + registration.participant.sex + '.\n' +
-          ' - Numéro de Licence : ' + registration.participant.numLicence + '.\n' +
-          ' - Categorie : ' + registration.participant.categorie + '.\n' +
-          ' - Adresse : ' + registration.participant.adresse1 + ' ' + registration.participant.adresse2 + ' ' + registration.participant.codePostal + ' ' + registration.participant.city + '.\n\n' +
-          'Pour valider votre inscription, si ce n\'est déjà fait, n\'oubliez pas d\'effectuer votre règlement en ligne en suivant ce lien http://event.izir.fr/inscription/checkout/' + registration.id + '\n\n' +
-          'Vous pouvez à tout moment consulter le statut de vos inscriptions en suivant ce lien http://event.izir.fr/inscription/recap/user/' + req.user.id + '\n\n' +
-          'Bonne course !\n\n' +
-          'Nicolas de izir.fr'
-        }
-      }
-
-      // envoie du mail
-      smtpTransport.sendMail(mailOptions, (err) => {
-        if (err) throw err
-      })
-
-      req.flash('success_msg', 'Vos informations d\'inscription ont bien été prises en compte')
-      res.redirect('/inscription/checkout/' + registration.id)
-    })
   },
   // Get checkout form
   getCheckout: function (req, res) {

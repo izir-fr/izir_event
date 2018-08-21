@@ -86,9 +86,9 @@ var teamFormValidation = (form) => {
       capitaine: {
         nom: $('input[name=capitaine_name]').val(),
         prenom: $('input[name=capitaine_surname]').val(),
-        email: $('input[name=capitaine_cp]').val(),
-        codePostal: $('input[name=capitaine_city]').val(),
-        city: $('input[name=capitaine_email]').val()
+        email: $('input[name=capitaine_email]').val(),
+        codePostal: $('input[name=capitaine_cp]').val(),
+        city: $('input[name=capitaine_city]').val()
       },
       membres: []
     }

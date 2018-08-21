@@ -49,7 +49,7 @@ var getSelectedEpreuve = (form) => {
     }
   })
 
-  if ($('.don').length > 1) {
+  if ($('.don').length >= 1) {
     form.data.cart.dons = $('.don')[0].value
   }
 

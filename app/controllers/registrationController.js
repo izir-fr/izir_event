@@ -297,7 +297,7 @@ var registrationCtrl = {
   //   })
   // },
   postAjaxPreinscription: function (req, res) {
-    var registration, mailOptions    
+    var registration, mailOptions
     var produits = []
     var team = []
     var form = req.body
@@ -317,7 +317,6 @@ var registrationCtrl = {
       // res.contentType('json')
       res.send({error_msg: 'No event reconized'})
     } else {
-
       // ajout des produits dans la commande
       cart.epreuve.forEach((val) => {
         produits.push({
@@ -332,12 +331,12 @@ var registrationCtrl = {
       if (cart.options.length >= 1) {
         cart.options.forEach((val) => {
           produits.push({
-          produitsRef: val.produit,
-          produitsPrix: val.qty,
-          produitsQuantite: val.price,
-          produitsSubTotal: val.subTotal
+            produitsRef: val.produit,
+            produitsPrix: val.qty,
+            produitsQuantite: val.price,
+            produitsSubTotal: val.subTotal
+          })
         })
-        })      
       }
 
       // ajout des dons à la commande
@@ -348,7 +347,7 @@ var registrationCtrl = {
             produitsPrix: 1,
             produitsQuantite: cart.dons,
             produitsSubTotal: cart.dons
-          })        
+          })
         }
       }
 
@@ -431,7 +430,7 @@ var registrationCtrl = {
             })
             // res.send(form)
             // req.flash('success_msg', 'Vos informations d\'inscription ont bien été prises en compte')
-            res.send({redirect: '/inscription/checkout/' + registration.id}) 
+            res.send({redirect: '/inscription/checkout/' + registration.id})
           }
         })
       } else if (options.epreuve_format.individuel === false && options.epreuve_format.team === true) {
@@ -484,12 +483,12 @@ var registrationCtrl = {
             })
             // res.send(form)
             // req.flash('success_msg', 'Vos informations d\'inscription ont bien été prises en compte')
-            res.send({redirect: '/inscription/checkout/' + registration.id})       
+            res.send({redirect: '/inscription/checkout/' + registration.id})
           }
         })
       } else {
         res.send({error_msg: 'format error'})
-      }      
+      }
     }
   },
   // Get checkout form

@@ -51,6 +51,9 @@
             {{#if data.registration.event.paiement}}
               <!-- paiement CB already done -->
               {{#if data.registration.paiement.captured}}
+                <span class="d-block text-center  mt-5 mb-5">
+                  <i class="fa fa-check-circle-o fa-4x text-success"></i>
+                </span>
                 <p>Votre inscription est finalisée, aucune action n'est requise de votre part.</p>
                 <p>Votre référence de paiement est : {{data.registration.paiement.id}}</p>
                 <p>Pour toute question relative à votre inscription, merci de contacter le service client via le chat en bas de l'écran.</p>
@@ -60,6 +63,9 @@
               {{else}}
                 <!-- other paiement option already choose and accept by organisateur -->
                 {{#if data.registration.paiement.other_captured}}
+                  <span class="d-block text-center mt-5 mb-5">
+                    <i class="fa fa-check-circle-o fa-4x text-success"></i>
+                  </span>
                   <p>L'organisateur à bien reçus votre paiement, l'inscription est finalisée, aucune action supplémenatire n'est requise de votre part.</p>
                   <p>Pour toute question relative à votre inscription, merci de contacter le service client via le chat en bas de l'écran.</p>
                   <p>Pour toute question relative à l'épreuve, merci de contacter le l'organisateur de celle-ci.</p>

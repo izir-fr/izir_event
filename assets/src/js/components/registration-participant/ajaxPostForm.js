@@ -1,9 +1,10 @@
 var url = document.location.pathname
+var domain = document.location.origin
 
 var ajaxPostForm = (data) => {
   $.ajax({
     type: 'POST',
-    url: url + '/post',
+    url: domain + url + '/post',
     // The key needs to match your method's input parameter (case-sensitive).
     data: JSON.stringify(data),
     contentType: 'application/json; charset=utf-8',

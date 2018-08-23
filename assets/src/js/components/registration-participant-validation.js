@@ -196,8 +196,9 @@ var registrationValidation = () => {
       // ----
       // Step 3 to POST
       // ----
-      $(document).on('submit', '#registration-form', () => {
+      $(document).on('submit', '#registration-form', (e) => {
         ajaxPostForm(form)
+        e.preventDefault()
       })
     })
   }

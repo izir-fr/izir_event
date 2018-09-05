@@ -1,0 +1,240 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-4">
+      <div class="row sticky-top">
+        <div class="col-sm-12">
+          {{#if results.event.docs.img}}
+            <img src="{{results.event.docs.img.[0]}}" alt="{{results.event.name}}" class="img-fluid">
+          {{else}}
+            <img src="/img/thumb.png" alt="{{results.event.name}}" class="img-fluid">
+          {{/if}}
+            <ul>
+              <li><strong>Lieu :</strong> {{results.event.adresse.ville}} {{results.event.adresse.codePostal}}</li>
+            </ul>
+          {{#each results.event.epreuves}}
+            <ul class="spacer-sm-top">
+              <li><strong>Epreuve :</strong> {{this.name}}</li>
+              <li><strong>Discipline :</strong> {{this.discipline}}</li>
+              <li><strong>Date :</strong> {{date this.date_debut}} à {{dateHours this.date_debut}}h{{dateMinutes this.date_debut}}</li>
+              <li><strong>Distance :</strong> {{this.distance}}Km</li>
+              <li><strong>Denivelé + :</strong> {{this.denivele}} mètres</li>
+              <li><strong>Nombre de participants maximum:</strong> {{this.placesDispo}}</li>
+              <li><strong>Tarif:</strong> {{this.tarif}}€</li> 
+            </ul>
+          {{/each}}
+        </div>
+      </div>      
+    </div>
+
+    <!--formulaire d'inscription block-->
+    <div class="col-sm-8 bg-light" id="divForm">
+      
+      <div class="sticky-top">
+
+        <!-- titre -->
+        <div class="row">
+          <div class="col-11 mx-auto mt-3">
+            <div class="row">
+              <div class="col-12 bg-white border border-right-0 border-left-0 border-top-0">
+                <h1 class="d-block mt-5 mb-5 text-lowercase text-center">
+                  Votre inscription - {{results.event.name}}
+                </h1>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!--formulaire d'inscription-->
+        <form id="cart-form" class="" method="POST">
+          <input type="hidden" value="{{results.eventPrice}}" name="chargeAmount">
+          <input type="hidden" value="{{results.event.name}}" name="eventName">
+          <input type="hidden" value="{{results.event.certificat_required}}" name="certificat_required">
+          <input type="hidden" value="{{results.event.date_cloture_inscription}}" name="dateLimite">
+          
+          <div class="row" id="step-epreuve">
+            <div class="col-11 mx-auto mt-3 bg-white">
+
+              <!--Step 1. epreuve-->
+
+              <!-- epreuves -->
+              <div class="row">
+                <div class="col-12">
+                  <strong class="d-block mt-3 mb-3 ml-2 text-lowercase text-left">
+                    Epreuve
+                  </strong>
+                </div>
+              </div>
+              {{#each disponibility}}
+                <div class="row epreuves mb-3">
+                  <input name="ref" type="hidden" value="{{this.name}}" >
+                  <input name="tarif" type="hidden" value="{{this.tarif}}" min="0"  step=".01" required>
+                  <input type="hidden" name="team_min" value="{{this.teamMin}}">
+                  <input type="hidden" name="team_max" value="{{this.teamMax}}">
+
+                  <!-- quantité -->
+                  <div class="col-3">
+                    {{#if this.active}}
+                      <select class="w-100 custom-select quantity cart-trigger" name="quantity">
+                        <option value="0" selected>0</option>
+                        <option value="1">1</option>
+                      </select>
+                    {{else}}
+                      <input type="number" class="form-control quantity" value="0" disabled>
+                    {{/if}}                  
+                  </div>
+
+                  <!-- epreuve name -->
+                  <div class="col-7 ">
+                    <span>
+                      {{#if this.team}}
+                        {{this.name}} <strong class="text-muted">(Equipe)</strong>
+                      {{else}}
+                        {{this.name}} <strong class="text-muted">(Individuel)</strong>
+                      {{/if}}
+                      {{#if this.active}}
+                      {{else}}
+                        <span class="badge badge-danger">Complet</span>
+                      {{/if}}
+                    </span>
+                  </div>
+
+                  <!-- subtotal -->
+                  <div class="col-2 text-right">
+                    <span class="cart-subtotal">0</span> EUR
+                  </div>
+                </div>
+              {{/each}}
+
+              <!-- options -->
+              {{#if results.event.options}}
+                <div class="row border border-right-0 border-left-0 border-bottom-0">
+                  <div class="col-12">
+                    <strong class="d-block mt-3 mb-3 ml-2 text-lowercase text-left">
+                      Options
+                    </strong>
+                  </div>
+                </div>
+                {{#each results.event.options}}
+                  <input name="ref" type="hidden" value="{{this.reference}}" >
+                  <div class="row options">
+                    <input name="ref" type="hidden" value="{{this.reference}}" >
+                    <input name="tarif" type="hidden" value="{{this.prix}}" min="0"  step=".01" required>
+
+                    <div class="col-3">
+                      <input class="form-control cart-trigger" name="quantity" type="number" value="0"  min="0">
+                    </div>
+                    <div class="col-7">
+                      <span>{{this.reference}}</span>
+                    </div>
+                    <div class="col-2 text-right">
+                      <span class="cart-subtotal">0</span> EUR
+                    </div>
+                  </div>
+                {{/each}}
+              {{/if}}
+
+              <!-- dons -->
+              {{#if results.event.dons}}             
+                <div class="row dons mt-3 border border-right-0 border-left-0 border-bottom-0">
+                  <div class="col-12">
+                    <strong class="d-block mt-3 mb-3 ml-2 text-lowercase text-left">
+                      Dons
+                    </strong>
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <div class="col-8 mt-3">
+                    <span>Battons-nous pour la même cause, faites un don !</span>
+                  </div>
+                  <div class="col-2">
+                    <input class="form-control cart-trigger" name="don" type="number" value="0" min="0"  step=".01" required> 
+                  </div>
+                  <div class="col-2 mt-2">
+                    <span>EUR</span>
+                  </div>
+                </div>
+              {{/if}}             
+            </div>
+          </div>
+
+          <!-- total -->
+          <div class="row">
+            <div class="col-11 mx-auto">
+              <div class="row bg-dark-blue">
+                <div class="col-8 text-white">
+                  <strong class="d-block mt-3 mb-3 text-lowercase text-left">
+                   Total ttc
+                  </strong>
+                </div>
+                <div class="col-4">
+                  <strong class="d-block mt-3 mb-3 text-white text-right"><span id="totalview">0</span> EUR</strong>
+                </div>
+              </div>
+            </div>
+          </div>            
+          <input id="totalInput" name="total" type="hidden" value="{{results.event.epreuves.[0].tarif}}" min="0"  step=".01" required>
+          
+          <!-- user helper  -->
+          <div class="row" id="epreuve-validation-warning">
+            <div class="col-11 mt-3 mx-auto alert alert-warning">
+              <p class="">
+                Vérifiez que vous vous êtes bien inscrit à une seule épreuve (hors options et dons)
+              </p>                
+            </div>
+          </div>
+
+          <!-- checkout nav -->
+          <div class="row mb-3 mt-3">
+            <div class="col-11 mx-auto bg-white">
+              <div class="row">
+
+                <!-- nav participant -->
+                <div class="col-12 border border-left-0 border-right-0 border-top-0">
+                  <span class="d-block mt-2 mb-2">
+                    Participant
+                  </span>
+                </div>
+
+                <!-- nav paiement -->
+                {{#if results.event.paiement}}
+                <div class="col-12 border border-left-0 border-right-0 border-top-0">
+                  <span class="d-block mt-2 mb-2">
+                    Paiement
+                  </span>
+                </div>
+                {{/if}}
+
+                <!-- nav certificat -->
+                {{#if results.event.certificat_required}}
+                  <div class="col-12 border border-left-0 border-right-0 border-top-0">
+                    <span class="d-block mt-2 mb-2">
+                      Certificat
+                    </span>
+                  </div>
+                {{/if}}  
+
+                <!-- nav confirmation               -->
+                <div class="col-12 border border-left-0 border-right-0 border-top-0">
+                  <span class="d-block mt-2 mb-2">
+                    Confirmation
+                  </span>
+                </div> 
+              </div>
+            </div>
+          </div>
+
+          <!-- cta -->
+          <div class="row">
+            <div class="col-6 mb-5 text-center">
+              <a class="btn btn-outline-primary" href="/event/{{results.event.id}}">Détails de l'évènement</a>
+            </div>
+            <div class="col-6 text-center">
+              <button type="submit"class="btn btn-secondary disabled" id="cart">Suivant > </button>
+            </div>
+          </div>  
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<p class="legend"><br><em>* Champs obligatoire</em></p>

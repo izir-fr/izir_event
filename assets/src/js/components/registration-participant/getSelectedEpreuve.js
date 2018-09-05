@@ -1,7 +1,6 @@
-var epreuveValidationWarning = $('#epreuve-validation-warning')
-
 // get selected event data for validation and recap
 var getSelectedEpreuve = (form) => {
+  var totalCart = 0
   var defautArray = {
     produit: null,
     qty: null,
@@ -12,12 +11,12 @@ var getSelectedEpreuve = (form) => {
   form.data.cart.epreuve = []
   form.data.cart.options = []
 
-  $('.epreuveInput').each((key, val) => {
-    var produit = $($('.epreuve-validation')[key]).find('input[name=ref]')[0].value
-    var qty = $($('.epreuve-validation')[key]).find('.quantityInput')[0].value
-    var price = $($('.epreuve-validation')[key]).find('.tarifView')[0].innerText
-    var subTotal = $($('.epreuve-validation')[key]).find('.subtotalView')[0].innerText
-    epreuveValidationWarning.removeClass('hidde')
+  $('.epreuves').each((key, val) => {
+    var produit = $(val).find('input[name=ref]')[0].value
+    var qty = $(val).find('.quantity')[0].value
+    var price = $(val).find('input[name=tarif]')[0].value
+    var subTotal = qty * price
+    $(val).find('.cart-subtotal').text(subTotal)
 
     var eventChoice = {
       produit: produit,
@@ -26,16 +25,19 @@ var getSelectedEpreuve = (form) => {
       subTotal: subTotal
     }
 
+    totalCart += eventChoice.subTotal * 1
+
     if (eventChoice.subTotal > 0) {
       form.data.cart.epreuve.push(eventChoice)
     }
   })
 
-  $('.option-validation').each((key, val) => {
-    var produit = $($('.option-validation')[key]).find('input[name=ref]')[0].value
-    var qty = $($('.option-validation')[key]).find('.quantityInput')[0].value
-    var price = $($('.option-validation')[key]).find('.tarifView')[0].innerText
-    var subTotal = $($('.option-validation')[key]).find('.subtotalView')[0].innerText
+  $('.options').each((key, val) => {
+    var produit = $(val).find('input[name=ref]')[0].value
+    var qty = $(val).find('input[name=quantity]')[0].value
+    var price = $(val).find('input[name=tarif]')[0].value
+    var subTotal = qty * price
+    $(val).find('.cart-subtotal').text(subTotal)
 
     var optionChoice = {
       produit: produit,
@@ -44,21 +46,24 @@ var getSelectedEpreuve = (form) => {
       subTotal: subTotal
     }
 
+    totalCart += optionChoice.subTotal * 1
+
     if (optionChoice.subTotal > 0) {
       form.data.cart.options.push(optionChoice)
     }
   })
 
-  if ($('.don').length >= 1) {
-    form.data.cart.dons = $('.don')[0].value
+  if ($('input[name=don]').length >= 1) {
+    var don = $('input[name=don]').val() * 1
+    form.data.cart.dons = don
+    totalCart += don
   }
 
-  form.data.cart.totalCart = $('#totalview').text()
+  $('#totalview')[0].innerHTML = totalCart
+  form.data.cart.totalCart = totalCart
 
   if (form.data.cart.epreuve.length === 0) {
     form.data.cart.epreuve.push(defautArray)
-  } else {
-    epreuveValidationWarning.addClass('hidde')
   }
 
   return form

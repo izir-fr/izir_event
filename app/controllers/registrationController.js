@@ -33,31 +33,13 @@ var registrationCtrl = {
         req.flash('error_msg', 'Une erreur est survenue')
         res.redirect('/')
       }
-      var jourNaissance
-      var moisNaissance
-      var anneeNaissance
+
       var produisParticipant = results.participants
       var maxParticipant = results.event.epreuves
       var allProduits = []
       var uniqueProduit = []
 
-      if (req.user.birthday !== '') {
-        try {
-          jourNaissance = req.user.birthday.split('/')[0]
-          moisNaissance = req.user.birthday.split('/')[1]
-          anneeNaissance = req.user.birthday.split('/')[2]
-        } catch (err) {
-          jourNaissance = ''
-          moisNaissance = ''
-          anneeNaissance = ''
-        }
-      } else {
-        jourNaissance = ''
-        moisNaissance = ''
-        anneeNaissance = ''
-      }
-
-      /// /Single epreuve init participants
+      // Single epreuve init participants
       maxParticipant.forEach((val) => {
         var epreuve = {
           name: val.name,
@@ -106,196 +88,234 @@ var registrationCtrl = {
 
       var data = {
         results: results,
-        jourNaissance: jourNaissance,
-        moisNaissance: moisNaissance,
-        anneeNaissance: anneeNaissance,
         disponibility: uniqueProduit,
         date_list: dateList,
         category_list: catList,
         discipline_list: disList
       }
 
-      res.render('partials/registration/pre-inscription', data)
+      res.render('partials/registration/step-cart', data)
     })
   },
-  // Post a pre-inscription
-  // postPreinscription: function (req, res) {
-  //   var produits = []
-  //   var ref = req.body.ref
-  //   var tarif = req.body.tarif
-  //   var quantity = req.body.quantity
-  //   var subtotal = req.body.subtotal
-  //   var option, registration, mailOptions
+  postAjaxCart: (req, res) => {
+    var registration
+    var produits = []
+    var form = req.body
+    var data = form.data
+    var cart = data.cart
+    var participant = data.participant
+    var user = req.user._id
+    var event = req.params.id
 
-  //   // ajout des produits dans la commande
-  //   if (subtotal.constructor === Array) {
-  //     for (var i = 0; i < ref.length; i++) {
-  //       option = {
-  //         produitsRef: ref[i],
-  //         produitsPrix: tarif[i],
-  //         produitsQuantite: quantity[i],
-  //         produitsSubTotal: subtotal[i]
-  //       }
-  //       produits.push(option)
-  //     }
-  //   } else {
-  //     option = {
-  //       produitsRef: ref,
-  //       produitsPrix: tarif,
-  //       produitsQuantite: quantity,
-  //       produitsSubTotal: subtotal
-  //     }
-  //     produits.push(option)
-  //   }
+    // some check
+    if (!user) {
+      // res.contentType('json')
+      res.send({error_msg: 'Not logged user'})
+    } else if (!event) {
+      // res.contentType('json')
+      res.send({error_msg: 'No event reconized'})
+    } else {
+      // ajout des produits dans la commande
+      cart.epreuve.forEach((val) => {
+        produits.push({
+          produitsRef: val.produit,
+          produitsPrix: val.price,
+          produitsQuantite: val.qty,
+          produitsSubTotal: val.subTotal
+        })
+      })
 
-  //   // création de la pré-commande
-  //   if (req.body.teamActivate === 'true') {
-  //     var team = []
+      // ajout des options à la commande
+      if (cart.options.length >= 1) {
+        cart.options.forEach((val) => {
+          produits.push({
+            produitsRef: val.produit,
+            produitsPrix: val.price,
+            produitsQuantite: val.qty,
+            produitsSubTotal: val.subTotal
+          })
+        })
+      }
 
-  //     if (req.body.member_nom.constructor === Array) {
-  //       req.body.member_nom.forEach((val, key) => {
-  //         var member = {
-  //           nom: req.body.member_nom[key],
-  //           prenom: req.body.member_prenom[key],
-  //           sex: req.body.member_sex[key],
-  //           dateNaissance: req.body.membre_birth_day[key] + '/' + req.body.membre_birth_month[key] + '/' + req.body.membre_birth_year[key],
-  //           team: req.body.capitaine_team,
-  //           numLicence: req.body.member_license[key],
-  //           email: req.body.member_email[key],
-  //           docs: {
-  //             certificat: req.body.certificat_membre_file[key]
-  //           }
-  //         }
+      // ajout des dons à la commande
+      if (cart.dons) {
+        if (cart.dons !== null && cart.dons !== '0') {
+          produits.push({
+            produitsRef: 'don',
+            produitsPrix: 1,
+            produitsQuantite: cart.dons,
+            produitsSubTotal: cart.dons
+          })
+        }
+      }
 
-  //         team.push(member)
-  //       })
-  //     } else {
-  //       var member = {
-  //         nom: req.body.member_nom,
-  //         prenom: req.body.member_prenom,
-  //         sex: req.body.member_sex,
-  //         dateNaissance: req.body.membre_birth_day + '/' + req.body.membre_birth_month + '/' + req.body.membre_birth_year,
-  //         team: req.body.capitaine_team,
-  //         numLicence: req.body.member_license,
-  //         email: req.body.member_email,
-  //         docs: {
-  //           certificat: req.body.certificat_membre_file
-  //         }
-  //       }
+      // création du panier
+      registration = new Registration({
+        user: user, // user
+        event: event, // event
+        eventName: participant.event,
+        produits: produits,
+        orderAmount: cart.totalCart,
+        statut: 'pré-inscrit',
+        updated: new Date()
+      })
 
-  //       team.push(member)
-  //     }
+      // enregistrement de la pré-commande
+      registration.save(function (err, registration) {
+        if (err) {
+          res.send({error_msg: 'Une erreur est survenue lors de l\'enregistrement de votre inscription'})
+        } else {
+          res.send({redirect: '/inscription/cart/'+ registration.id + '/participant'})
+        }
+      })
+    }
+  },
+  cartParticipantUpdate: (req, res) => {
+    var data
+    var jourNaissance
+    var moisNaissance
+    var anneeNaissance
+    if (req.user.birthday !== '') {
+      try {
+        jourNaissance = req.user.birthday.split('/')[0]
+        moisNaissance = req.user.birthday.split('/')[1]
+        anneeNaissance = req.user.birthday.split('/')[2]
+      } catch (err) {
+        jourNaissance = ''
+        moisNaissance = ''
+        anneeNaissance = ''
+      }
+    } else {
+      jourNaissance = ''
+      moisNaissance = ''
+      anneeNaissance = ''
+    }
 
-  //     registration = new Registration({
-  //       user: req.user.id, // user
-  //       event: req.params.id, // event
-  //       eventName: req.body.eventName,
-  //       participant: {
-  //         nom: req.body.capitaine_surname,
-  //         prenom: req.body.capitaine_name,
-  //         email: req.body.capitaine_email,
-  //         team: req.body.capitaine_team,
-  //         codePostal: req.body.capitaine_cp,
-  //         city: req.body.capitaine_city
-  //       },
-  //       team: team,
-  //       produits: produits, // toute le pack
-  //       orderAmount: req.body.total,
-  //       statut: 'pré-inscrit',
-  //       docs: {
-  //         certificat: ''
-  //       },
-  //       updated: new Date()
-  //     })
-  //   } else {
-  //     registration = new Registration({
-  //       user: req.user.id, // user
-  //       event: req.params.id, // event
-  //       eventName: req.body.eventName,
-  //       participant: {
-  //         nom: req.body.surname,
-  //         prenom: req.body.name,
-  //         email: req.body.email,
-  //         sex: req.body.sex,
-  //         dateNaissance: req.body.jourNaissance + '/' + req.body.moisNaissance + '/' + req.body.anneeNaissance,
-  //         team: req.body.team,
-  //         numLicence: req.body.numLicence,
-  //         categorie: req.body.categorie,
-  //         adresse1: req.body.adresse1,
-  //         adresse2: req.body.adresse2,
-  //         codePostal: req.body.codePostal,
-  //         city: req.body.city
-  //       },
-  //       produits: produits, // toute le pack
-  //       orderAmount: req.body.total,
-  //       statut: 'pré-inscrit',
-  //       docs: {
-  //         certificat: req.body.certificat_file
-  //       },
-  //       updated: new Date()
-  //     })
-  //   }
+    Registration
+      .find({_id: req.params.id})
+      .populate('event')
+      .exec((err, registration) => {
+        data = {
+          results: registration[0],
+          jourNaissance: jourNaissance,
+          moisNaissance: moisNaissance,
+          anneeNaissance: anneeNaissance,
+          date_list: dateList,
+          category_list: catList,
+          discipline_list: disList
+        }
+        res.render('partials/registration/step-participant', data)
+      })
+  },
+  postAjaxCartParticipantUpdate: (req, res) => {
+    var id = req.params.id
+    // update registration
+    Registration.update(
+      { _id: id },
+      { $set: {
+        'participant': {
+          'nom': req.body.surname,
+          'prenom': req.body.name,
+          'email': req.body.email,
+          'sex': req.body.sex,
+          'dateNaissance': req.body.jourNaissance + '/' + req.body.moisNaissance + '/' + req.body.anneeNaissance,
+          'team': req.body.team,
+          'numLicence': req.body.numLicence,
+          'categorie': req.body.categorie,
+          'adresse1': req.body.adresse1,
+          'adresse2': req.body.adresse2,
+          'codePostal': req.body.codePostal,
+          'city': req.body.city
+        }, 
+        'updated': new Date(Date.now())
+      }
+    }, (err, user) => {
+        if (err) {
+          req.flash('error_msg', 'Une erreur est survenue lors de la saisie de vos informations')
+          res.redirect('/inscription/cart/' + id + '/participant')
+        } else {
+          Registration
+            .find({_id: id})
+            .populate('event')
+            .exec((err, registration) => {
+              if (err) {
+                req.flash('error_msg', 'Une erreur est survenue lors de la saisie de vos informations')
+                res.redirect('/inscription/cart/' + id + '/participant')
+              } else {
+                var eventConfig = registration[0].event
+                if (eventConfig.paiement) {
+                  res.redirect('/inscription/checkout/' + id)
+                } else if (eventConfig.certificat_required) {
+                  res.redirect('/inscription/cart/' + id + '/certificat')
+                } else {
+                  res.redirect('/inscription/checkout/' + id + '/confirmation')
+                }
+              }
+            })
+        }
+      }
+    )
+  },
+  getCertificat: (req, res) => {
+    var id = req.params.id
+    Registration
+      .find({_id: id})
+      .populate('event')
+      .exec((err, registration) => {
+        if (err) {
+          req.flash('error_msg', 'Une erreur est survenue lors du chargement de la page')
+        }
+        var data = {results: registration[0]}
+        res.render('partials/registration/step-certificat', data)
+      })
+  },
+  postCertificat: (req, res) => {
+    var id = req.params.id
+    // update registration
+    Registration.update(
+      { _id: id },
+      { $set: {
+        docs: {
+          'certificat': req.body.certificat_file,
+          'certificat_validation': true
+        }, 
+        'updated': new Date(Date.now())
+      }
+    }, (err, user) => {
+        if (err) {
+          req.flash('error_msg', 'Une erreur est survenue lors de la saisie de vos informations')
+          res.redirect('/inscription/cart/' + id + '/certificat')
+        } else {
+          res.redirect('/inscription/checkout/' + id + '/confirmation')
+        }
+      }
+    )
+  },
+  getConfirmation: (req, res) => {
+    var confirmationRegistration
 
-  //   // enregistrement de la pré-commande
-  //   registration.save(function (err, registration) {
-  //     if (err) {
-  //       res.send({error_msg:'Une erreur est survenue'})
-  //     }
 
-  //     // Configuration du mail
-  //     if (req.body.teamActivate === 'true') {
-  //       mailOptions = {
-  //         to: registration.participant.email,
-  //         from: 'Event Izir <event@izir.fr>',
-  //         subject: 'Récapitulatif d\'inscription N°' + registration.id,
-  //         text: 'Bonjour,\n\n' +
-  //         'vous venez de saisir les informations suivantes pour vous inscrire à l\'épreuve ' + registration.eventName + ' .\n\n' +
-  //         'Voici les informations sur l\'équipe qui sont transmises à l\'organisateur : \n\n' +
-  //         'Nom de l\'équipe :' +
-  //         ' - Team : ' + registration.participant.team + '.\n' +
-  //         'Capitaine:' +
-  //         ' - Nom : ' + registration.participant.nom + '.\n' +
-  //         ' - Prénom : ' + registration.participant.prenom + '.\n' +
-  //         ' - Email : ' + registration.participant.email + '.\n\n' +
-  //         ' - Adresse : ' + registration.participant.codePostal + ' ' + registration.participant.city + '.\n\n' +
-  //         'Pour valider votre inscription, si ce n\'est déjà fait, n\'oubliez pas d\'effectuer votre règlement en ligne en suivant ce lien http://event.izir.fr/inscription/checkout/' + registration.id + '\n\n' +
-  //         'Vous pouvez à tout moment consulter le statut de vos inscriptions en suivant ce lien http://event.izir.fr/inscription/recap/user/' + req.user.id + '\n\n' +
-  //         'Bonne course !\n\n' +
-  //         'Nicolas de izir.fr'
-  //       }
-  //     } else {
-  //       mailOptions = {
-  //         to: registration.participant.email,
-  //         from: 'Event Izir <event@izir.fr>',
-  //         subject: 'Récapitulatif d\'inscription N°' + registration.id,
-  //         text: 'Bonjour,\n\n' +
-  //         'vous venez de saisir les informations suivantes pour vous inscrire à l\'épreuve ' + registration.eventName + ' .\n\n' +
-  //         'Voici les informations sur le participant qui sont transmises à l\'organisateur : \n\n' +
-  //         ' - Nom : ' + registration.participant.nom + '.\n' +
-  //         ' - Prénom : ' + registration.participant.prenom + '.\n' +
-  //         ' - Email : ' + registration.participant.email + '.\n\n' +
-  //         ' - Date de naissance : ' + registration.participant.dateNaissance + '.\n' +
-  //         ' - Team : ' + registration.participant.team + '.\n' +
-  //         ' - Sex : ' + registration.participant.sex + '.\n' +
-  //         ' - Numéro de Licence : ' + registration.participant.numLicence + '.\n' +
-  //         ' - Categorie : ' + registration.participant.categorie + '.\n' +
-  //         ' - Adresse : ' + registration.participant.adresse1 + ' ' + registration.participant.adresse2 + ' ' + registration.participant.codePostal + ' ' + registration.participant.city + '.\n\n' +
-  //         'Pour valider votre inscription, si ce n\'est déjà fait, n\'oubliez pas d\'effectuer votre règlement en ligne en suivant ce lien http://event.izir.fr/inscription/checkout/' + registration.id + '\n\n' +
-  //         'Vous pouvez à tout moment consulter le statut de vos inscriptions en suivant ce lien http://event.izir.fr/inscription/recap/user/' + req.user.id + '\n\n' +
-  //         'Bonne course !\n\n' +
-  //         'Nicolas de izir.fr'
-  //       }
-  //     }
+    var id = req.params.id
+    Registration
+      .find({_id: id})
+      .populate('event')
+      .exec((err, registration) => {
+        if (err) {
+          req.flash('error_msg', 'Une erreur est survenue lors du chargement de la page')
+        }
 
-  //     // envoie du mail
-  //     smtpTransport.sendMail(mailOptions, (err) => {
-  //       if (err) throw err
-  //     })
 
-  //     req.flash('success_msg', 'Vos informations d\'inscription ont bien été prises en compte')
-  //     res.redirect('/inscription/checkout/' + registration.id)
-  //   })
-  // },
+        /*
+        some validation check
+        */
+
+        var data = {
+          results: registration[0], 
+          confirmationRegistration: confirmationRegistration
+        }
+        res.render('partials/registration/step-confirmation', data)
+      })
+  },
   postAjaxPreinscription: function (req, res) {
     var registration, mailOptions
     var produits = []
@@ -493,36 +513,49 @@ var registrationCtrl = {
   },
   // Get checkout form
   getCheckout: function (req, res) {
-    Registration.find({_id: req.params.id}).populate('event').exec(function (err, registration) {
-      if (err) {
-        req.flash('error_msg', 'Une erreur est survenue')
-        res.redirect('/')
-      }
-      var data = {
-        registration: registration[0],
-        stripe: parseInt(registration[0].orderAmount * 100 + 50),
-        stripeFrontKey: credentials.stripeKey.front,
-        orderAmount: registration[0].orderAmount * 1 + 0.50
-      }
+    Registration
+      .find({_id: req.params.id})
+      .populate('event')
+      .exec(function (err, registration) {
+        if (err) {
+          req.flash('error_msg', 'Une erreur est survenue')
+          res.redirect('/')
+        }
+        var data = {
+          data: {
+            registration: registration[0],
+            stripe: parseInt(registration[0].orderAmount * 100 + 50),
+            stripeFrontKey: credentials.stripeKey.front,
+            orderAmount: registration[0].orderAmount * 1 + 0.50            
+          },
+          results: registration[0]
+        }
 
-      res.render('partials/registration/checkout', {data: data})
-    })
+        console.log(data)
+
+        res.render('partials/registration/step-checkout', data)
+      })
   },
   getOtherPaiement: function (req, res) {
     var id = req.params.id
     // do somthings
     Registration.update(
       { _id: id },
-      { $set: { 'paiement': { 'other': true }, 'updated': new Date(Date.now()) } },
+      { $set: 
+        {
+          'paiement': { 'other': true },
+          'updated': new Date(Date.now())
+        }
+      },
       function (err, user) {
         if (err) {
           req.flash('error_msg', 'Une erreur est survenue lors du paiement')
-          res.redirect('/')
+          res.redirect('/inscription/checkout/' + id)
         } else {
           Registration.find({_id: id}).populate('event').exec(function (err, registrations) {
             if (err) {
               req.flash('error_msg', 'Une erreur est survenue lors de l\'envoie du mail de confirmation')
-              res.redirect('/user/profil/')
+              res.redirect('/inscription/checkout/' + id)
             } else {
               var permanence = registrations[0].event.permanence
               var userEmail = registrations[0].participant.email
@@ -545,9 +578,23 @@ var registrationCtrl = {
               smtpTransport.sendMail(mailOptions, (err) => {
                 if (err) throw err
               })
-              // REDIRECTION
-              req.flash('success_msg', 'Votre inscription à bien été prise en compte et est en attente de paiement')
-              res.redirect('/inscription/checkout/' + id)
+              Registration
+                .find({_id: id})
+                .populate('event')
+                .exec((err, registration) => {
+                  if (err) {
+                    req.flash('error_msg', 'Une erreur est survenue lors du chargement de la page')
+                    res.redirect('/inscription/checkout/' + id)
+                  } else {
+                    req.flash('success_msg', 'Votre paiement à bien été pris en compte')
+                    var eventConfig = registration[0].event
+                    if (eventConfig.certificat_required) {
+                      res.redirect('/inscription/cart/' + id + '/certificat')
+                    } else {
+                      res.redirect('/inscription/checkout/' + id + '/confirmation')
+                    }
+                  }
+                })
             }
           })
         }
@@ -594,6 +641,7 @@ var registrationCtrl = {
   },
   // Post a checkout
   postCheckout: function (req, res) {
+    var id = req.params.id
     var stripeCheckout = {
       amount: req.body.stripe,
       currency: 'eur',
@@ -610,7 +658,7 @@ var registrationCtrl = {
           res.redirect('/user/profil/')
         } else {
           // UPDATE registration.statut : "payé" + paiementCaptured
-          Registration.update({_id: req.params.id}, {$set:
+          Registration.update({_id: id}, {$set:
               {
                 'statut': 'inscrit',
                 'paiement': {
@@ -624,15 +672,15 @@ var registrationCtrl = {
           }, function (err, user) {
             if (err) {
               req.flash('error_msg', 'Une erreure est survenue lors du paiement')
-              res.redirect('/user/profil/')
+              res.redirect('/inscription/checkout/' + id)
             } else {
             // EMAIL NOTIFICATION
               var mailOptions = {
                 to: req.user.email,
                 from: 'Event Izir <event@izir.fr>',
-                subject: 'Confirmation de paiement et de validation de l\'inscription N° ' + req.params.id,
-                text: 'Nous avons le plaisir de vous confirmer que votre paiement a bien été pris en compte et que votre inscription N°' + req.params.id + ' est validée. \n\n' +
-                  'Vous venez donc de finaliser votre incription N°' + req.params.id + ' pour l\'épreuve suivante : ' + req.body.event + '.\n\n' +
+                subject: 'Confirmation de paiement et de validation de l\'inscription N° ' + id,
+                text: 'Nous avons le plaisir de vous confirmer que votre paiement a bien été pris en compte et que votre inscription N°' + id + ' est validée. \n\n' +
+                  'Vous venez donc de finaliser votre incription N°' + id + ' pour l\'épreuve suivante : ' + req.body.event + '.\n\n' +
                   'Vous pouvez à tout moment consulter le statut de vos inscriptions en suivant ce lien http://event.izir.fr/inscription/recap/user/' + req.user.id + '\n\n' +
                   'Bonne course !\n\n' +
                   'Nicolas de izir.fr'
@@ -641,9 +689,23 @@ var registrationCtrl = {
                 if (err) throw err
               })
 
-              // REDIRECTION
-              req.flash('success_msg', 'Votre paiement à bien été pris en compte et votre inscription validée')
-              res.redirect('/inscription/recap/user/' + req.user.id + '/')
+              Registration
+                .find({_id: id})
+                .populate('event')
+                .exec((err, registration) => {
+                  if (err) {
+                    req.flash('error_msg', 'Une erreur est survenue lors du chargement de la page')
+                    res.redirect('/inscription/checkout/' + id)
+                  } else {
+                    req.flash('success_msg', 'Votre paiement à bien été pris en compte')
+                    var eventConfig = registration[0].event
+                    if (eventConfig.certificat_required) {
+                      res.redirect('/inscription/cart/' + id + '/certificat')
+                    } else {
+                      res.redirect('/inscription/checkout/' + id + '/confirmation')
+                    }
+                  }
+                })
             }
           })
         }

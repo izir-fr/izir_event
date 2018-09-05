@@ -143,7 +143,7 @@ var userCtrl = {
   // Post a login
   postLogin: function (req, res) {
     if (req.query.event_id) {
-      res.redirect('/inscription/pre-inscription/' + req.query.event_id)
+      res.redirect('/inscription/cart/' + req.query.event_id)
     } else {
       res.redirect('/event/finder')
     }
@@ -387,7 +387,7 @@ var userCtrl = {
         } else {
           req.flash('success_msg', 'Votre certificat a été mis à jour')
           if (req.query.event) {
-            res.redirect('/inscription/pre-inscription/' + req.query.event)
+            res.redirect('/inscription/cart/' + req.query.event)
           } else {
             res.redirect('/user/profil/' + req.user.id + '/')
           }

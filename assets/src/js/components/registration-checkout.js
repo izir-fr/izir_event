@@ -1,4 +1,7 @@
 var checkout = () => {
+  var helper = $('#helper')
+  $('#checkout-validation-warning').append(helper)
+
   if ($('.stripe-button-el').length === 1) {
     $('.stripe-button-el').addClass('btn btn-danger d-block w-100').removeClass('stripe-button-el')
     $('button > span').addClass('spacer-xs-top')

@@ -1,45 +1,55 @@
-var registrationCart = () => {
-  if ($('#registration-form').length !== 0) {
+// form defaults options definition
+var form = require('./registration-participant/form')
+
+// registration form with some validation
+var registrationValidation = () => {
+  if ($('#cart-form').length !== 0) {
+    // HTML constructors
+    var epreuveValidationWarning = $('#epreuve-validation-warning')
+
+    // get cart
+    var getSelectedEpreuve = require('./registration-participant/getSelectedEpreuve')
+
+    // ajax
+    var ajaxPostForm = require('./registration-participant/ajaxCreateCart')
+
     $(() => {
-      // var epreuveQt = 0
-      // CART START
-      var cart = () => {
-        var totalData = []
-        var tarif = 0
-        // event subtotal
-        $('.quantityInput').each((key, val) => {
-          var subtotal = ($('input[name=tarif]')[key].value * 1) * ($('.quantity')[key].value * 1)
-          $('.subtotalView')[key].textContent = subtotal
-          $('input[name=subtotal]')[key].value = subtotal
-        })
+      // Date limite verification
+      var dateLimite = new Date($('input[name=dateLimite]').val())
 
-        // total
-        $('input[name=subtotal]').each((key) => {
-          totalData.push($('input[name=subtotal]')[key].value * 1)
-        })
-        totalData.forEach((val, key) => {
-          tarif += totalData[key]
-        })
-        $('#totalview')[0].innerHTML = tarif
-        $('input[name=total]').val(tarif)
+      if (form.option.dateNow > dateLimite) {
+        $('#registration-form').remove()
+        $('#divForm').append('<div class="col-sm-12"><p class="alert alert-danger">La date limite d\'inscription à cette épreuve dépassée</p></div>')
       }
 
-      var totalEpreuve = () => {
-        var totalEpreuveQt = []
-        $('.epreuveInput').each((key) => {
-          totalEpreuveQt.push($('.epreuveInput')[key].value * 1)
-        })
-      }
-      $(document).ready(() => {
-        totalEpreuve()
-        cart()
+      // complete form.data.epreuve{}
+      $('.cart-trigger').on('change', (e) => {
+        form = getSelectedEpreuve(form)
+
+        // UX helper and alert
+        if (form.data.cart.epreuve.length < 1 || form.data.cart.epreuve[0].qty === null) {
+          epreuveValidationWarning.removeClass('hidde')
+          $('#cart').addClass('disabled')
+        } else if (form.data.cart.epreuve.length > 1) {
+          epreuveValidationWarning.removeClass('hidde')
+          $('#cart').addClass('disabled')
+          window.alert("Vous ne pouvez vous inscrire qu'à une épreuve à la fois")
+          epreuveValidationWarning.removeClass('hidde')
+        } else {
+          epreuveValidationWarning.addClass('hidde')
+          $('#cart').removeClass('disabled')
+        }
       })
-      $('.input').on('change keyup click', (e) => {
-        totalEpreuve()
-        cart()
+
+      // ----
+      // Step 3 to POST
+      // ----
+      $(document).on('submit', '#cart-form', (e) => {
+        ajaxPostForm(form)
+        e.preventDefault()
       })
     })
   }
 }
 
-export default registrationCart()
+export default registrationValidation()

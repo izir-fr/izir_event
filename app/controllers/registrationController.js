@@ -106,6 +106,7 @@ var registrationCtrl = {
     var participant = data.participant
     var user = req.user._id
     var event = req.params.id
+    var epreuveFormat = form.option.epreuve_format
 
     // some check
     if (!user) {
@@ -115,19 +116,15 @@ var registrationCtrl = {
       // res.contentType('json')
       res.send({error_msg: 'No event reconized'})
     } else {
-      // ajout des produits dans la commande
-      cart.epreuve.forEach((val) => {
-        produits.push({
-          produitsRef: val.produit,
-          produitsPrix: val.price,
-          produitsQuantite: val.qty,
-          produitsSubTotal: val.subTotal
-        })
-      })
-
-      // ajout des options à la commande
-      if (cart.options.length >= 1) {
-        cart.options.forEach((val) => {
+      if (epreuveFormat.team && epreuveFormat.individuel) {
+        req.flash('error_msg', 'Une erreur est survenue lors du choix de l\'épreuve')
+        res.redirect('/inscription/cart/' + event)
+      } else if (!epreuveFormat.team && !epreuveFormat.individuel) {
+        req.flash('error_msg', 'Une erreur est survenue lors du choix de l\'épreuve')
+        res.redirect('/inscription/cart/' + event)
+      } else {
+        // ajout des produits dans la commande
+        cart.epreuve.forEach((val) => {
           produits.push({
             produitsRef: val.produit,
             produitsPrix: val.price,
@@ -135,39 +132,61 @@ var registrationCtrl = {
             produitsSubTotal: val.subTotal
           })
         })
-      }
 
-      // ajout des dons à la commande
-      if (cart.dons) {
-        if (cart.dons !== null && cart.dons !== '0') {
-          produits.push({
-            produitsRef: 'don',
-            produitsPrix: 1,
-            produitsQuantite: cart.dons,
-            produitsSubTotal: cart.dons
+        // ajout des options à la commande
+        if (cart.options.length >= 1) {
+          cart.options.forEach((val) => {
+            produits.push({
+              produitsRef: val.produit,
+              produitsPrix: val.price,
+              produitsQuantite: val.qty,
+              produitsSubTotal: val.subTotal
+            })
           })
         }
-      }
 
-      // création du panier
-      registration = new Registration({
-        user: user, // user
-        event: event, // event
-        eventName: participant.event,
-        produits: produits,
-        orderAmount: cart.totalCart,
-        statut: 'pré-inscrit',
-        updated: new Date()
-      })
-
-      // enregistrement de la pré-commande
-      registration.save(function (err, registration) {
-        if (err) {
-          res.send({error_msg: 'Une erreur est survenue lors de l\'enregistrement de votre inscription'})
-        } else {
-          res.send({redirect: '/inscription/cart/'+ registration.id + '/participant'})
+        // ajout des dons à la commande
+        if (cart.dons) {
+          if (cart.dons !== null && cart.dons !== '0') {
+            produits.push({
+              produitsRef: 'don',
+              produitsPrix: 1,
+              produitsQuantite: cart.dons,
+              produitsSubTotal: cart.dons
+            })
+          }
         }
-      })
+
+        // création du panier
+        registration = new Registration({
+          user: user, // user
+          event: event, // event
+          eventName: participant.event,
+          produits: produits,
+          orderAmount: cart.totalCart,
+          options: {
+            epreuve_format : {
+              team: epreuveFormat.team,
+              individuel: epreuveFormat.individuel
+            },
+            team_limits: {
+              min: form.option.team.min,
+              max: form.option.team.max
+            }
+          },
+          statut: 'pré-inscrit',
+          updated: new Date()
+        })
+
+        // enregistrement de la pré-commande
+        registration.save(function (err, registration) {
+          if (err) {
+            res.send({error_msg: 'Une erreur est survenue lors de l\'enregistrement de votre inscription'})
+          } else {
+            res.send({redirect: '/inscription/cart/'+ registration.id + '/participant'})
+          }
+        })
+      }        
     }
   },
   cartParticipantUpdate: (req, res) => {
@@ -204,7 +223,14 @@ var registrationCtrl = {
           category_list: catList,
           discipline_list: disList
         }
-        res.render('partials/registration/step-participant', data)
+        if (registration[0].options.epreuve_format.team === false && registration[0].options.epreuve_format.individuel === true) {
+          res.render('partials/registration/step-participant', data)
+        } else if (registration[0].options.epreuve_format.team === true && registration[0].options.epreuve_format.individuel === false) {
+          res.redirect('/inscription/cart/' + req.params.id + '/team')
+        } else {
+          req.flash('error_msg', 'Une erreur est survenue lors du choix de l\'épreuve')
+          res.redirect('/inscription/cart/' + registration[0].event.id)
+        }
       })
   },
   postAjaxCartParticipantUpdate: (req, res) => {
@@ -256,6 +282,34 @@ var registrationCtrl = {
       }
     )
   },
+  cartTeamUpdate: (req, res) => {
+    var data
+
+    Registration
+      .find({_id: req.params.id})
+      .populate('event')
+      .exec((err, registration) => {
+        data = {
+          results: registration[0],
+          date_list: dateList,
+          category_list: catList,
+          discipline_list: disList
+        }
+        res.render('partials/registration/step-team', data)
+        // if (registration[0].options.epreuve_format.team === false && registration[0].options.epreuve_format.individuel === true) {
+        //   res.render('partials/registration/step-participant', data)
+        // } else if (registration[0].options.epreuve_format.team === true && registration[0].options.epreuve_format.individuel === false) {
+        //   res.redirect('/inscription/cart/' + req.params.id + '/team')
+        // } else {
+        //   req.flash('error_msg', 'Une erreur est survenue lors du choix de l\'épreuve')
+        //   res.redirect('/inscription/cart/' + registration[0].event.id)
+        // }
+      })
+  },
+  postAjaxCartTeamUpdate: (req, res) => {
+    console.log(req.body)
+    res.redirect('/inscription/checkout/' + req.params.id)
+  },
   getCertificat: (req, res) => {
     var id = req.params.id
     Registration
@@ -292,26 +346,50 @@ var registrationCtrl = {
     )
   },
   getConfirmation: (req, res) => {
-    var confirmationRegistration
-
+    var registrationCheckup = {
+      success: false,
+      error_msg: "",
+      error_step: {
+        participant: false,
+        team: false,
+        paiement: false,
+        certificat: false
+      }
+    }
 
     var id = req.params.id
     Registration
       .find({_id: id})
       .populate('event')
       .exec((err, registration) => {
+        var organisateur_validation = registration[0].organisateur_validation
+
         if (err) {
           req.flash('error_msg', 'Une erreur est survenue lors du chargement de la page')
         }
-
-
-        /*
-        some validation check
-        */
+        if (organisateur_validation.participant &&  organisateur_validation.team &&  organisateur_validation.paiement  &&  organisateur_validation.certificat) {
+          registrationCheckup.success = true
+        } else {
+          if (!organisateur_validation.participant) {
+            registrationCheckup.error_msg = 'Votre formulaire n\'est pas conforme'
+            registrationCheckup.error_step.participant = true
+          } else if (!organisateur_validation.team) {
+            registrationCheckup.error_msg = 'Votre formulaire n\'est pas conforme'
+            registrationCheckup.error_step.team = true
+          } else if (!organisateur_validation.paiement) {
+            registrationCheckup.error_msg = 'Votre paiement n\'est pas validé'
+            registrationCheckup.error_step.paiement = true
+          } else if (!organisateur_validation.certificat) {
+            registrationCheckup.error_msg = 'Votre certificat n\'est pas conforme'
+            registrationCheckup.error_step.certificat = true
+          } else {
+            registrationCheckup.error_msg = 'Une erreur inconnue est survenue, merci de contacter le service client à serviceclient@izir.fr'
+          }
+        }
 
         var data = {
           results: registration[0], 
-          confirmationRegistration: confirmationRegistration
+          registrationCheckup: registrationCheckup
         }
         res.render('partials/registration/step-confirmation', data)
       })
@@ -622,8 +700,7 @@ var registrationCtrl = {
               to: val.participant.email,
               from: 'Event Izir <event@izir.fr>',
               subject: 'Confirmation de paiement de l\'inscription N° ' + id,
-              text: 'Nous avons le plaisir de vous confirmer que votre paiement a bien été pris en compte et que votre inscription N°' + id + ' est validée. \n\n' +
-                  'Vous venez donc de finaliser votre incription N°' + id + ' pour l\'épreuve suivante : ' + val.eventName + '.\n\n' +
+              text: 'Nous avons le plaisir de vous confirmer que votre paiement a bien été pris en compte pour l\' inscription N°' + id + '. \n\n' +
                   'Vous pouvez à tout moment consulter le statut de vos inscriptions en suivant ce lien http://event.izir.fr/inscription/recap/user/' + val.user + '\n\n' +
                   'Bonne course !\n\n' +
                   'Nicolas de izir.fr'
@@ -678,9 +755,8 @@ var registrationCtrl = {
               var mailOptions = {
                 to: req.user.email,
                 from: 'Event Izir <event@izir.fr>',
-                subject: 'Confirmation de paiement et de validation de l\'inscription N° ' + id,
-                text: 'Nous avons le plaisir de vous confirmer que votre paiement a bien été pris en compte et que votre inscription N°' + id + ' est validée. \n\n' +
-                  'Vous venez donc de finaliser votre incription N°' + id + ' pour l\'épreuve suivante : ' + req.body.event + '.\n\n' +
+                subject: 'Confirmation de paiement de l\'inscription N° ' + id,
+                text: 'Nous avons le plaisir de vous confirmer que votre paiement a bien été pris en compte pour l\' inscription N°' + id + '. \n\n' +
                   'Vous pouvez à tout moment consulter le statut de vos inscriptions en suivant ce lien http://event.izir.fr/inscription/recap/user/' + req.user.id + '\n\n' +
                   'Bonne course !\n\n' +
                   'Nicolas de izir.fr'

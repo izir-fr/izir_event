@@ -33,6 +33,11 @@ router.get('/cart/:id/participant', ensureAuthenticated, registrationCtrl.cartPa
 // Post Ajax pre-inscription
 router.post('/cart/:id/participant/post', registrationCtrl.postAjaxCartParticipantUpdate)
 
+// Get user all inscription recap
+router.get('/cart/:id/team', ensureAuthenticated, registrationCtrl.cartTeamUpdate)
+
+// Post Ajax pre-inscription
+router.post('/cart/:id/team/post', registrationCtrl.postAjaxCartTeamUpdate)
 /*
 REGISTRATION STEP 3
 */

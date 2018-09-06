@@ -45,7 +45,9 @@
         </div>
 
         <!--formulaire d'inscription-->
-        <form id="participant-form" class="" method="POST">
+        <form id="team-form" class="" method="POST" action="/inscription/cart/{{results.id}}/team/post">
+          <input type="hidden" name="team_max" value="{{results.options.team_limits.max}}">
+          <input type="hidden" name="team_min" value="{{results.options.team_limits.max}}">
 
           <div class="row" id="step-epreuve">
             <div class="col-11 mx-auto mt-3 bg-white">
@@ -101,24 +103,8 @@
               </div>
             </div>
           </div>            
-          
-          <!-- user helper  -->
-          <div class="row" id="participant-validation-warning">
-            <div class="col-11 mx-auto alert alert-warning">
-              <p>
-                Pour continuer votre inscription, vérifiez :
-              </p>
-              <ul>
-                <li>- que les champs obligatoires signalés avec "*" sont correctement complétés</li>
-                {{#if results.event.certificat_required}}
-                  <li>- que votre certificat a bien été ajouté </li>
-                  <li>- que vous avez coché la case de déclaration de validité et d'authencité du certificat médical/licence</li>
-                {{/if}}
-              </ul>                 
-            </div>
-          </div>
 
-          <div class="row mb-3">
+          <div class="row">
             <div class="col-11 mx-auto bg-white">
               <div class="row">
 
@@ -130,585 +116,300 @@
                     </strong>
                   </span>
                 </div>
+              </div>
+
+              <div class="row">
+                <div class="col-12">
+                  <!-- l'équipe -->
+                  <div class="row">
+                    <div class="col-11 mx-auto text-center bg-light-blue text-white">
+                      <p class="mt-2 h5">L'équipe</p>
+                    </div>
+                  </div>
+                  <div class="row mt-3">
+                    <div class="col-sm-3 ">
+                      <div class="form-group">
+                        Nom de l'équipe *
+                      </div>
+                    </div>
+                    <div class="col-sm-9">
+                      <input type="text" class="form-control input-team-validation" name="capitaine_team" value="{{user.team}}" required>
+                    </div>
+                  </div>
+                  <div class="row mt-3">
+                    <div class="col-11 mx-auto text-center bg-light-blue text-white">
+                      <p class="mt-2 h5">Le capitaine</p>
+                    </div>
+                  </div>
+                  <div class="row mt-3">
+                    <div class="col-sm-3">
+                      <div class="form-group">
+                        Nom du capitaine *
+                      </div>
+                    </div>
+                    <div class="col-9">
+                      <input type="text" class="form-control input-team-validation" name="capitaine_name" value="{{user.surname}}" required>
+                    </div>
+                  </div>
+                  <div class="row mt-3">
+                    <div class="col-sm-3">
+                      <div class="form-group">
+                        Prénom du capitaine *
+                      </div>
+                    </div>
+                    <div class="col-9">
+                      <input type="text" class="form-control input-team-validation" name="capitaine_surname" value="{{user.name}}" required>
+                    </div>
+                  </div>
+                  <div class="row mt-3">
+                    <div class="col-sm-3">
+                      <div class="form-group">
+                        Code postal *
+                      </div>
+                    </div>
+                    <div class="col-9">
+                      <input type="text" class="form-control input-team-validation" name="capitaine_cp" value="{{user.codePostal}}" required>
+                    </div>
+                  </div>
+                  <div class="row mt-3">
+                    <div class="col-sm-3">
+                      <div class="form-group">
+                        Ville *
+                      </div>
+                    </div>
+                    <div class="col-9">
+                      <input type="text" class="form-control input-team-validation" name="capitaine_city" value="{{user.city}}" required>
+                    </div>
+                  </div>
+                  <div class="row mt-3">
+                    <div class="col-sm-3">
+                      <div class="form-group">
+                        Email *
+                      </div>
+                    </div>
+                    <div class="col-9">
+                      <input type="email" class="form-control input-team-validation" name="capitaine_email" value="{{user.email}}" required>
+                    </div>
+                  </div>
+
+                  <!-- les membres -->
+                  <div class="row mt-3">
+                    <div class="col-11 mx-auto text-center mt-2 bg-light-blue text-white">
+                      <p class="mt-2 h5">Les membres</p>
+                    </div>
+                  </div>
+                  <div class="row team-count">
+                    <div class="col-11 mx-auto bg-light mb-5">
+                      <div class="row">
+                        <div class="col-sm-6">
+                          <div class="form-group">
+                            <label for="member_nom">Nom du membre *</label>
+                            <input type="text" class="form-control input-team-validation" name="member_nom" value="{{user.surname}}">
+                          </div>
+                        </div>
+                        <div class="col-sm-6">
+                          <div class="form-group">
+                            <label for="member_prenom">Prénom du membre *</label>
+                            <input type="text" class="form-control input-team-validation" name="member_prenom" value="{{user.name}}">
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-sm-6">
+                          <div class="form-group">
+                            <label for="">Sexe *</label>
+                            <input type="text" class="form-control input-team-validation" name="member_sex" value="{{user.sex}}">
+                          </div>
+                        </div>
+                        <div class="col-sm-6">
+                          <div class="form-group">
+                            <label for="">N° de license</label>
+                            <input type="text" class="form-control input-team-validation" name="member_license" value="{{user.numLicense}}">
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-12">
+                          <label>Date de naissance (jour/mois/année)*</label>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-sm-4">
+                          <div class="form-group">
+                            <select class="form-control membre_birth_day input-team-validation" name="membre_birth_day" required>
+                              <option value="{{jourNaissance}}" selected>{{jourNaissance}}</option>
+                              {{#each date_list.day}}
+                                <option value="{{this.value}}">{{this.value}}</option>
+                              {{/each}}
+                            </select>                     
+                          </div>
+                        </div>
+                        <div class="col-sm-4">
+                          <div class="form-group">
+                            <select class="form-control membre_birth_month input-team-validation" name="membre_birth_month" required>
+                              <option value="{{moisNaissance}}" selected>{{moisNaissance}}</option>
+                              {{#each date_list.month}}
+                                <option value="{{this.value}}">{{this.value}}</option>
+                              {{/each}}
+                            </select>                     
+                          </div>
+                        </div>
+                        <div class="col-sm-4">
+                          <div class="form-group">
+                            <input class="form-control input-team-validation" type="number" placeholder="2018"  min="1900" step="1" value="{{anneeNaissance}}" name="membre_birth_year">                      
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-12">
+                          <div class="form-group">
+                            <label for="member_email">Email du membre *</label>
+                            <input type="email" class="form-control input-team-validation" name="member_email" value="{{user.email}}">
+                          </div>
+                        </div>
+                      </div>            
+                    </div>
+                  </div>
+
+                  <!-- team add aspire JS -->
+                  <div class="row team-count" id="team-member">
+                    <div class="col-11 mx-auto bg-light mb-5">
+                      <div class="row">
+                        <div class="col-sm-6">
+                          <div class="form-group">
+                            <label for="member_nom">Nom du membre *</label>
+                            <input type="text" class="form-control input-team-validation" name="member_nom" value="">
+                          </div>
+                        </div>
+                        <div class="col-sm-6">
+                          <div class="form-group">
+                            <label for="member_prenom">Prénom du membre *</label>
+                            <input type="text" class="form-control input-team-validation" name="member_prenom" value="">
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-sm-6">
+                          <div class="form-group">
+                            <label for="">Sexe *</label>
+                            <input type="text" class="form-control input-team-validation" name="member_sex" value="">
+                          </div>
+                        </div>
+                        <div class="col-sm-6">
+                          <div class="form-group">
+                            <label for="">N° de license</label>
+                            <input type="text" class="form-control input-team-validation" name="member_license" value="">
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-12">
+                          <label>Date de naissance (jour/mois/année)*</label>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-sm-4">
+                          <div class="form-group">
+                            <select class="form-control membre_birth_day input-team-validation" name="membre_birth_day" required>
+                              {{#each date_list.day}}
+                                <option value="{{this.value}}">{{this.value}}</option>
+                              {{/each}}
+                            </select>                     
+                          </div>
+                        </div>
+                        <div class="col-sm-4">
+                          <div class="form-group">
+                            <select class="form-control membre_birth_month input-team-validation" name="membre_birth_month" required>
+                              {{#each date_list.month}}
+                                <option value="{{this.value}}">{{this.value}}</option>
+                              {{/each}}
+                            </select>                     
+                          </div>
+                        </div>
+                        <div class="col-sm-4">
+                          <div class="form-group">
+                            <input class="form-control input-team-validation" type="number" placeholder="2018"  min="1900" step="1" value="" name="membre_birth_year">
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-sm-12">
+                          <div class="form-group">
+                            <label for="member_email">Email du membre *</label>
+                            <input type="email" class="form-control input-team-validation" name="member_email" value="">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- JS add member here -->
+                  <div id="new-team-block"></div>
+
+                  <!-- JS button trigger -->
+                  <div class="row">
+                    <div class="col-12 text-center mb-5">
+                      <div id="add-team_member" class="btn btn-warning span">Ajouter un membre <span id="currentTeamLength"></span>/<span id="maxTeamLength"></span></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
                 <!-- nav paiement -->
                 {{#if results.event.paiement}}
-                <div class="col-12 border border-left-0 border-right-0 border-top-0">
+                <div class="col-12 border border-left-0 border-right-0">
                   <span class="d-block mt-2 mb-2">
-                    Paiement
+                    <i class="fa fa-check text-muted" aria-hidden="true"></i> Paiement
                   </span>
                 </div>
                 {{/if}}
 
-                <div class="row">
-                  <div class="col-12">
-              <div class="row">
-                  <div class="col-sm-6">
-                    <div class="form-group">
-                      <label>Nom *</label>
-                      <input type="text" class="form-control input-participant-validation" placeholder="Nom" name="surname" value="{{user.surname}}" required>
-                    </div>
+                <!-- nav certificat -->
+                {{#if results.event.certificat_required}}
+                  <div class="col-12 border border-left-0 border-right-0 border-top-0">
+                    <span class="d-block mt-2 mb-2">
+                      <i class="fa fa-check text-muted" aria-hidden="true"></i> Certificat
+                    </span>
                   </div>
-                  <div class="col-sm-6">
-                    <div class="form-group">
-                      <label>Prénom *</label>
-                      <input type="text" class="form-control input-participant-validation" placeholder="Prénom" name="name" value="{{user.name}}" required>
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-sm-6">
-                  <div class="form-group">
-                    <label>Email *</label>
-                    <input type="email" class="form-control input-participant-validation" placeholder="Email" name="email"  value="{{user.email}}" required>
-                  </div>
-                  </div>
-                  <div class="col-sm-6">
-                  <div class="form-group">
-                    <label for="sex">Je suis *</label>
-                    <select class="form-control input-participant-validation" name="sex" id="sex" required>
-                      <option value="{{user.sex}}" selected>{{user.sex}}</option>
-                      <option value="Homme">Homme</option>
-                      <option value="Femme">Femme</option>
-                    </select>
-                  </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-12">
-                    <div class="form-group">
-                      <label>Date de naissance (jour/mois/année)*</label>
-                      <div class="row">
-                        <div class="col-4">
-                          <select class="form-control input-participant-validation" name="jourNaissance" id="jourNaissance" required>
-                            <option value="{{jourNaissance}}" selected>{{jourNaissance}}</option>
-                            {{#each date_list.day}}
-                              <option value="{{this.value}}">{{this.value}}</option>
-                            {{/each}}
-                          </select>
-                        </div>
-                        <div class="col-4">
-                          <select class="form-control input-participant-validation" name="moisNaissance" id="moisNaissance" required>
-                            <option value="{{moisNaissance}}" selected>{{moisNaissance}}</option>
-                            {{#each date_list.month}}
-                              <option value="{{this.value}}">{{this.value}}</option>
-                            {{/each}}
-                          </select>
-                        </div>
-                        <div class="col-4">
-                          <input class="form-control input-participant-validation" type="number" placeholder="2018"  min="1900" step="1" value="{{anneeNaissance}}" name="anneeNaissance" required>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-sm-4">
-                    <div class="form-group">
-                    <label>Team / Club</label>
-                    <input type="text" class="form-control" placeholder="Team / Club" name="team"  value="{{user.team}}">
-                  </div>
-                  </div>
-                  <div class="col-sm-4">
-                    <div class="form-group">
-                    <label>N° de licence</label>
-                    <input type="text" class="form-control" placeholder="#Numéro de License" name="numLicence"  value="{{user.numLicence}}">
-                  </div>
-                  </div>
-                  <div class="col-sm-4">
-                  <div class="form-group">
-                    <label for="categorie">Catégorie *</label>
-                    <select class="form-control input-participant-validation" name="categorie" id="categorie" required>
-                      <option value="{{user.categorie}}" selected>{{user.categorie}}</option>
-                      {{#each category_list}}
-                        <option value="{{this.short}} - {{this.name}}">{{this.short}} - {{this.name}}</option>
-                      {{/each}}
-                    </select>
-                  </div>
-                  </div>
-                </div>
-              <div class="row">
-                  <div class="col-sm-12">
-                  <div class="form-group">
-                    <label>Adresse ligne 1 *</label>
-                    <input type="text" class="form-control input-participant-validation" placeholder="ex: 9 rue Albert Camus" name="adresse1"  value="{{user.adresse1}}" required>
-                  </div>
-                  <div class="form-group">
-                    <label>Adresse ligne 2</label>
-                    <input type="text" class="form-control" placeholder="ex: Appt 103" name="adresse2"  value="{{user.adresse2}}">
-                  </div>
-                  <div class="form-group">
-                    <label>Code postal *</label>
-                    <input type="text" class="form-control input-participant-validation" placeholder="ex: 56300" name="codePostal"  value="{{user.codePostal}}" required>
-                  </div>
-                  <div class="form-group">
-                    <label>Ville *</label>
-                    <input type="text" class="form-control input-participant-validation" placeholder="ex: Pontivy" name="city"  value="{{user.city}}" required>
-                  </div>
-                </div>
-                </div>
+                {{/if}} 
 
-
-                  </div>
-                </div>
-
-
-
-                <!-- nav confirmation -->
+                <!-- nav confirmation               -->
                 <div class="col-12 border border-left-0 border-right-0 border-top-0">
                   <span class="d-block mt-2 mb-2">
-                    Confirmation
-                  </span>
-                </div> 
-              </div>
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col-6 mb-5 text-center">
-              <a class="btn btn-outline-primary" href="/event/{{results.event.id}}">Détails de l'évènement</a>
-            </div>
-            <div class="col-6 text-center">
-              <a class="btn btn-secondary disabled" href="#step-participant" id="epreuve-form-submit">Suivant ></a>
-            </div>
-          </div>  
-        </div>
-      </div>
-
-
-
-
-
-
-          <!--Step 2. Participant-->
-          <div id="step-participant" class="hidde">
-            <div id="inscriptionSelect" class="row mt-5 text-center">
-              <div class="col-md-6">
-                <span id="userRegisterButton" class="btn btn-secondary">Je m'inscris</span>
-              </div>
-              <div class="col-md-6">
-                <span id="otherRegisterButton" class="btn btn-secondary">J'inscris une autre personne</span>
-              </div>
-            </div>
-            <div id="inscriptionForm" class="hidde">
-              <div class="row">
-                <div class="col-sm-12">
-                  <div class="form-check alert alert-warning">
-                    <label class="form-check-label">
-                      <input class="form-check-input input-participant-validation" type="checkbox" name="newParticipant" id="newParticipant"> Inscrire à cette épreuve une autre personne que <strong>{{user.surname}} {{user.name}}</strong>
-                    </label>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-12 text-center">
-                  <p class="alert alert-dark"><i class="fa fa-arrow-down" aria-hidden="true"></i> <strong>Informations</strong></p>
-                </div>
-              </div>
-              <!-- nav certificat -->
-              {{#if results.event.certificat_required}}
-                <div class="col-12 border border-left-0 border-right-0 border-top-0">
-                  <span class="d-block mt-2 mb-2">
-                    Certificat
+                    <i class="fa fa-check text-muted" aria-hidden="true"></i> Confirmation
                   </span>
                 </div>
-              {{/if}}  
-
-
-
-              <div class="row">
-                <div class="col-6 text-center">
-                  <a class="btn btn-outline-primary" href="#step-epreuve" id="epreuve-form-back">< Retour</a>
-                </div>
-                <div class="col-6 text-center">
-                  <a class="btn btn-secondary disabled" href="#step-confirmation" id="participant-form-submit">Suivant ></a>
-                </div>
-              </div>
-            </div>              
-          </div>
-
-          <!-- step 2. equipe -->
-          <div id="step-team" class="hidde">
-            <input type="hidden" name="teamActivate" value="false">
-            
-            <!-- l'équipe -->
-            <div class="row">
-              <div class="col-12 text-center">
-                <p class="alert alert-dark"><i class="fa fa-arrow-down" aria-hidden="true"></i>L'équipe</p>
               </div>
             </div>
-            <div class="row">
-              <div class="col-sm-12">
-                <div class="form-group">
-                  <label for="capitaine_team">Nom de l'équipe *</label>
-                  <input type="text" class="form-control input-team-validation" name="capitaine_team" value="{{user.team}}">
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-12 text-center">
-                <p class="alert alert-dark"><i class="fa fa-arrow-down" aria-hidden="true"></i>Le capitaine</p>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-sm-6">
-                <div class="form-group">
-                  <label for="capitaine_name">Nom du capitaine *</label>
-                  <input type="text" class="form-control input-team-validation" name="capitaine_name" value="{{user.surname}}">
-                </div>
-              </div>
-              <div class="col-sm-6">
-                <div class="form-group">
-                  <label for="capitaine_surname">Prénom du capitaine *</label>
-                  <input type="text" class="form-control input-team-validation" name="capitaine_surname" value="{{user.name}}">
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-sm-6">
-                <div class="form-group">
-                  <label for="capitaine_cp">Code postal *</label>
-                  <input type="text" class="form-control input-team-validation" name="capitaine_cp" value="{{user.codePostal}}">
-                </div>
-              </div>
-              <div class="col-sm-6">
-                <div class="form-group">
-                  <label for="capitaine_city">Ville *</label>
-                  <input type="text" class="form-control input-team-validation" name="capitaine_city" value="{{user.city}}">
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-sm-12">
-                <div class="form-group">
-                  <label for="capitaine_email">Email *</label>
-                  <input type="email" class="form-control input-team-validation" name="capitaine_email" value="{{user.email}}">
-                </div>
-              </div>
-            </div>
-
-            <!-- les membres -->
-            <div class="row">
-              <div class="col-12 text-center mt-2">
-                <p class="alert alert-dark"><i class="fa fa-arrow-down" aria-hidden="true"></i>Les membres</p>
-              </div>
-            </div>
-            <div class="row team-count">
-              <div class="col-11 mx-auto bg-light mb-5">
-                <div class="row">
-                  <div class="col-sm-6">
-                    <div class="form-group">
-                      <label for="member_nom">Nom du membre *</label>
-                      <input type="text" class="form-control input-team-validation" name="member_nom" value="{{user.surname}}">
-                    </div>
-                  </div>
-                  <div class="col-sm-6">
-                    <div class="form-group">
-                      <label for="member_prenom">Prénom du membre *</label>
-                      <input type="text" class="form-control input-team-validation" name="member_prenom" value="{{user.name}}">
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-sm-6">
-                    <div class="form-group">
-                      <label for="">Sexe *</label>
-                      <input type="text" class="form-control input-team-validation" name="member_sex" value="{{user.sex}}">
-                    </div>
-                  </div>
-                  <div class="col-sm-6">
-                    <div class="form-group">
-                      <label for="">N° de license</label>
-                      <input type="text" class="form-control input-team-validation" name="member_license" value="{{user.numLicense}}">
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-12">
-                    <label>Date de naissance (jour/mois/année)*</label>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-sm-4">
-                    <div class="form-group">
-                      <select class="form-control membre_birth_day input-team-validation" name="membre_birth_day" required>
-                        <option value="{{jourNaissance}}" selected>{{jourNaissance}}</option>
-                        {{#each date_list.day}}
-                          <option value="{{this.value}}">{{this.value}}</option>
-                        {{/each}}
-                      </select>                     
-                    </div>
-                  </div>
-                  <div class="col-sm-4">
-                    <div class="form-group">
-                      <select class="form-control membre_birth_month input-team-validation" name="membre_birth_month" required>
-                        <option value="{{moisNaissance}}" selected>{{moisNaissance}}</option>
-                        {{#each date_list.month}}
-                          <option value="{{this.value}}">{{this.value}}</option>
-                        {{/each}}
-                      </select>                     
-                    </div>
-                  </div>
-                  <div class="col-sm-4">
-                    <div class="form-group">
-                      <input class="form-control input-team-validation" type="number" placeholder="2018"  min="1900" step="1" value="{{anneeNaissance}}" name="membre_birth_year">                      
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-12">
-                    <div class="form-group">
-                      <label for="member_email">Email du membre *</label>
-                      <input type="email" class="form-control input-team-validation" name="member_email" value="{{user.email}}">
-                    </div>
-                  </div>
-                </div>
-
-                <!-- member certificat -->
-                {{#if results.event.certificat_required}}
-                  <div class="row text-center membre_certificat">
-                    <!-- member certificat -->
-                      <div class="col-12 spacer-sm-top">
-                        Ajouter le certificat medical ou la licence*<em class="legend"> .pdf , .jpg et .png uniquement, 1 pièce jointe</em>
-                        <span class="mt-1 mb-1 d-block">
-                          <a href="" class="hidde btn btn-warning file_viewer" target="_blank">Voir mon document</a>
-                          <a href="#upload_certificats_opener" class="btn btn-danger upload_certificats_opener">Ajouter un document</a>
-                          <input name='certificat_membre_file' class="certificat_membre_file input-team-validation" value='' type='hidden'>
-                        </span>
-                      </div>
-                  </div>
-
-                  <!-- checkbox certificat user confirmation -->
-                  <div class="row">
-                    <div class="col-12">
-                      <label class="form-check-label">
-                        <input class="form-check-input input-team-validation" type="checkbox" name="certificatCondition_member" id="certificatCondition_member">
-                        <p>Je déclare sur l'honneur que le certificat transmis est authentique et valide. Je décharge ainsi la société REF SPORT PONTIVY et l'organisateur de toute responsabilité liée à celui-ci.</p>
-                      </label>              
-                    </div>
-                  </div>
-                {{/if}}             
-              </div>
-            </div>
-
-            <!-- team add aspire JS -->
-            <div class="row team-count" id="team-member">
-              <div class="col-11 mx-auto bg-light mb-5">
-                <div class="row">
-                  <div class="col-sm-6">
-                    <div class="form-group">
-                      <label for="member_nom">Nom du membre *</label>
-                      <input type="text" class="form-control input-team-validation" name="member_nom" value="">
-                    </div>
-                  </div>
-                  <div class="col-sm-6">
-                    <div class="form-group">
-                      <label for="member_prenom">Prénom du membre *</label>
-                      <input type="text" class="form-control input-team-validation" name="member_prenom" value="">
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-sm-6">
-                    <div class="form-group">
-                      <label for="">Sexe *</label>
-                      <input type="text" class="form-control input-team-validation" name="member_sex" value="">
-                    </div>
-                  </div>
-                  <div class="col-sm-6">
-                    <div class="form-group">
-                      <label for="">N° de license</label>
-                      <input type="text" class="form-control input-team-validation" name="member_license" value="">
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-12">
-                    <label>Date de naissance (jour/mois/année)*</label>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-sm-4">
-                    <div class="form-group">
-                      <select class="form-control membre_birth_day input-team-validation" name="membre_birth_day" required>
-                        {{#each date_list.day}}
-                          <option value="{{this.value}}">{{this.value}}</option>
-                        {{/each}}
-                      </select>                     
-                    </div>
-                  </div>
-                  <div class="col-sm-4">
-                    <div class="form-group">
-                      <select class="form-control membre_birth_month input-team-validation" name="membre_birth_month" required>
-                        {{#each date_list.month}}
-                          <option value="{{this.value}}">{{this.value}}</option>
-                        {{/each}}
-                      </select>                     
-                    </div>
-                  </div>
-                  <div class="col-sm-4">
-                    <div class="form-group">
-                      <input class="form-control input-team-validation" type="number" placeholder="2018"  min="1900" step="1" value="" name="membre_birth_year">
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-sm-12">
-                    <div class="form-group">
-                      <label for="member_email">Email du membre *</label>
-                      <input type="email" class="form-control input-team-validation" name="member_email" value="">
-                    </div>
-                  </div>
-                </div>                
-                <!-- member certificat -->
-                {{#if results.event.certificat_required}}
-                  <div class="row text-center membre_certificat">
-                    <!-- member certificat -->
-                      <div class="col-12 spacer-sm-top">
-                        Ajouter le certificat medical ou la licence*<em class="legend"> .pdf , .jpg et .png uniquement, 1 pièce jointe</em>
-                        <span class="mt-1 mb-1 d-block">
-                          <a href="" class="hidde btn btn-warning file_viewer" target="_blank">Voir mon document</a>
-                          <a href="#upload_certificats_opener" class="btn btn-danger upload_certificats_opener">Ajouter un document</a>
-                          <input name='certificat_membre_file' class="certificat_membre_file input-team-validation" value='' type='hidden'>
-                        </span>
-                      </div>
-                  </div>
-
-                  <!-- checkbox certificat user confirmation -->
-                  <div class="row">
-                    <div class="col-12">
-                      <label class="form-check-label">
-                        <input class="form-check-input input-team-validation" type="checkbox" name="certificatCondition_member" id="certificatCondition_member">
-                        <p>Je déclare sur l'honneur que le certificat transmis est authentique et valide. Je décharge ainsi la société REF SPORT PONTIVY et l'organisateur de toute responsabilité liée à celui-ci.</p>
-                      </label>              
-                    </div>
-                  </div>
-                {{/if}}
-              </div>
-            </div>
-
-            <!-- JS add member here -->
-            <div id="new-team-block"></div>
-
-            <!-- JS button trigger -->
-            <div class="row">
-              <div class="col-12 text-center mb-5">
-                <div id="add-team_member" class="btn btn-warning span">Ajouter un membre <span id="currentTeamLength"></span>/<span id="maxTeamLength"></span></div>
-              </div>
-            </div>
-
-            <!-- warning info -->
-            <div class="row" id="team-validation-warning">
+            <p class="legend d-bloc ml-2"><br><em>* Champs obligatoire</em></p>
+            <!-- user helper  -->
+            <div class="row" id="participant-validation-warning">
               <div class="col-11 mx-auto alert alert-warning">
-                <span class="text-center">
+                <p>
                   Pour continuer votre inscription, vérifiez :
-                  <ul>
-                    <li>- que votre équipe est formée d'un minimum de membres de <span id="option-team-min"></span>.</li>
-                    <li>- que les champs obligatoires signalés avec "*" sont correctement complétés</li>
-                    {{#if results.event.certificat_required}}
-                      <li>- que votre certificat a bien été ajouté </li>
-                      <li>- que vous avez coché la case de déclaration de validité et d'authencité de chaque certificat médical/licence</li>
-                    {{/if}}
-                  </ul>
-                </span>               
-              </div>
-            </div>
-
-            <!-- bottom navigation -->
-            <div class="row">
-              <div class="col-6 text-center">
-                <a class="btn btn-outline-primary" href="#step-epreuve" id="epreuve-form-back-team">< Retour</a>
-              </div>
-              <div class="col-6 text-center">
-                <a class="btn btn-secondary disabled" href="#step-confirmation" id="team-form-submit">Suivant ></a>
-              </div>
-            </div>            
-          </div>
-
-          <!--Step 3. confirmation-->
-          <div id="step-confirmation" class="hidde">
-            <div class="row">
-              <div class="col-12 spacer-sm-top text-center">
-                <p class="alert alert-dark"><i class="fa fa-arrow-down" aria-hidden="true"></i> <strong>Epreuve & Options</strong></p>
-              </div>
-            </div>
-            
-            <div class="row">
-              <div class="col-10 mx-auto">
-                <div class="row bg-dark-blue txt-white">
-                  <div class="col-3 spacer-sm-top spacer-sm-bottom">Produit</div>
-                  <div class="col-3 spacer-sm-top spacer-sm-bottom">Quantité</div>
-                  <div class="col-3 spacer-sm-top spacer-sm-bottom">Prix</div>
-                  <div class="col-3 spacer-sm-top spacer-sm-bottom">Total</div>
-                </div>
-                <div id="confirmation-epreuve"></div>
-                <div class="row bg-light">
-                  <div class="col-9 spacer-sm-top spacer-sm-bottom"><strong>TOTAL</strong></div>
-                  <div class="col-3 spacer-sm-top spacer-sm-bottom" id="confirmation-total"></div>
-                </div>              
-              </div>
-            </div>
-
-
-            <div class="row">
-              <div class="col-12 spacer-sm-top text-center">
-                <p class="alert alert-dark">
-                  <i class="fa fa-arrow-down" aria-hidden="true"></i> <strong id="header-recap-people">Participant</strong>
                 </p>
+                Pour continuer votre inscription, vérifiez :
+                <ul>
+                  <li>- que votre équipe est formée d'un minimum de membres de <span id="option-team-min"></span>.</li>
+                  <li>- que les champs obligatoires signalés avec "*" sont correctement complétés</li>
+                  {{#if results.event.certificat_required}}
+                    <li>- que votre certificat a bien été ajouté </li>
+                    <li>- que vous avez coché la case de déclaration de validité et d'authencité de chaque certificat médical/licence</li>
+                  {{/if}}
+                </ul>                
               </div>
             </div>
-            <div class="row">
-              <div class="col-12">
-                <ul class="spacer-sm-left">
-                  <li class="text-capitalize ">nom : <span id="confirmation-nom"></span></li>
-                  <li class="text-capitalize">prénom : <span id="confirmation-prenom"></span></li>
-                  <li class="text-lowercase">email : <span id="confirmation-email"></span></li>
-                  <li class="text-capitalize">date de naissance  : <span id="confirmation-date"></span></li>
-                  <li class="text-capitalize">team : <span id="confirmation-team"></span></li>
-                  <li class="text-capitalize">sex : <span id="confirmation-sex"></span></li>
-                  <li class="text-capitalize">numéro de licence : <span id="confirmation-licence"></span></li>
-                  <li class="text-capitalize">categorie : <span id="confirmation-categorie"></span></li>
-                  <li class="text-capitalize">adresse 1 : <span id="confirmation-adresse1"></span></li>
-                  <li class="text-capitalize">adresse 2 : <span id="confirmation-adresse2"></span></li>
-                  <li class="text-capitalize">code postal : <span id="confirmation-codePostal"></span></li>
-                  <li class="text-capitalize">ville : <span id="confirmation-city"></span></li>
-                </ul>
-              </div>
-            </div>
-              <div class="row">
-                <div class="col-sm-12">
-                <div class="form-check alert alert-light">
-                  <label class="form-check-label">
-                    <input class="form-check-input" type="checkbox" name="CGV" id="cgv" required> <p>J'ai lu les conditions générales de vente et j'y adhère sans réserve. <a href="/info/cgv">(Lire les Conditions générales de vente)</a></strong></p>
-                  </label>
-                </div>
-              </div>
-            </div>          
-            <div class="row" id="done-validation-warning">
-              <div class="col-11 mx-auto alert alert-warning">
-                <p class="">
-                  Vérifiez que vous avez coché la case des CGV pour finaliser votre inscription.
-                </p>                
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-6 text-center">
-                <a class="btn btn-outline-primary" href="#step-participant" id="participant-form-back">< Modifier</a>
-                <a class="btn btn-outline-primary hidde" href="#step-team" id="team-form-back">< Modifier</a>
-              </div>
-              <div class="col-6 text-center">
-                <button type="submit"class="btn btn-danger disabled" id="checkout">Valider mon inscription > </button>
-              </div>
-            </div>
-          </div>
 
-          <!--Légende form-->
-          <div class="row">
-            <div class="col-12">
-              <p class="legend"><br><em>* Champs obligatoire</em></p>
+            <div class="row">
+              <div class="col-6 mb-5 text-center">
+                <a class="btn btn-outline-primary" href="/event/{{results.event.id}}">Détails de l'évènement</a>
+              </div>
+              <div class="col-6 text-center">
+                <button type="submit" class="btn btn-secondary">Suivant ></button>
+              </div>
             </div>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
     </div>
   </div>

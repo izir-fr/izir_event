@@ -46,10 +46,7 @@
 
         <!--formulaire d'inscription-->
         <form id="cart-form" class="" method="POST">
-          <input type="hidden" value="{{results.eventPrice}}" name="chargeAmount">
           <input type="hidden" value="{{results.event.name}}" name="eventName">
-          <input type="hidden" value="{{results.event.certificat_required}}" name="certificat_required">
-          <input type="hidden" value="{{results.event.date_cloture_inscription}}" name="dateLimite">
           
           <div class="row" id="step-epreuve">
             <div class="col-11 mx-auto mt-3 bg-white">
@@ -68,8 +65,6 @@
                 <div class="row epreuves mb-3">
                   <input name="ref" type="hidden" value="{{this.name}}" >
                   <input name="tarif" type="hidden" value="{{this.tarif}}" min="0"  step=".01" required>
-                  <input type="hidden" name="team_min" value="{{this.teamMin}}">
-                  <input type="hidden" name="team_max" value="{{this.teamMax}}">
 
                   <!-- quantité -->
                   <div class="col-3">
@@ -88,8 +83,10 @@
                     <span>
                       {{#if this.team}}
                         {{this.name}} <strong class="text-muted">(Equipe)</strong>
+                        <input type="hidden" name='epreuve_format' value="team">
                       {{else}}
                         {{this.name}} <strong class="text-muted">(Individuel)</strong>
+                        <input type="hidden" name='epreuve_format' value="individuel">
                       {{/if}}
                       {{#if this.active}}
                       {{else}}
@@ -116,7 +113,7 @@
                 </div>
                 {{#each results.event.options}}
                   <input name="ref" type="hidden" value="{{this.reference}}" >
-                  <div class="row options">
+                  <div class="row mb-3 options">
                     <input name="ref" type="hidden" value="{{this.reference}}" >
                     <input name="tarif" type="hidden" value="{{this.prix}}" min="0"  step=".01" required>
 
@@ -191,7 +188,7 @@
                 <!-- nav participant -->
                 <div class="col-12 border border-left-0 border-right-0 border-top-0">
                   <span class="d-block mt-2 mb-2">
-                    Participant
+                    <i class="fa fa-check text-muted" aria-hidden="true"></i> Participant
                   </span>
                 </div>
 
@@ -199,7 +196,7 @@
                 {{#if results.event.paiement}}
                 <div class="col-12 border border-left-0 border-right-0 border-top-0">
                   <span class="d-block mt-2 mb-2">
-                    Paiement
+                    <i class="fa fa-check text-muted" aria-hidden="true"></i> Paiement
                   </span>
                 </div>
                 {{/if}}
@@ -208,7 +205,7 @@
                 {{#if results.event.certificat_required}}
                   <div class="col-12 border border-left-0 border-right-0 border-top-0">
                     <span class="d-block mt-2 mb-2">
-                      Certificat
+                      <i class="fa fa-check text-muted" aria-hidden="true"></i> Certificat
                     </span>
                   </div>
                 {{/if}}  
@@ -216,7 +213,7 @@
                 <!-- nav confirmation               -->
                 <div class="col-12 border border-left-0 border-right-0 border-top-0">
                   <span class="d-block mt-2 mb-2">
-                    Confirmation
+                    <i class="fa fa-check text-muted" aria-hidden="true"></i> Confirmation
                   </span>
                 </div> 
               </div>
@@ -237,4 +234,6 @@
     </div>
   </div>
 </div>
+{{results.event.date_cloture_inscription}}
 <p class="legend"><br><em>* Champs obligatoire</em></p>
+<input type="hidden" value="{{results.event.date_cloture_inscription}}" name="dateLimite">

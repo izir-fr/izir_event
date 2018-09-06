@@ -1,0 +1,6 @@
+import './modules/registration-cart'
+import './modules/registration-participant'
+import './modules/registration-team'
+import './modules/registration-checkout'
+import './modules/registration-certificat'
+import './modules/check-date'

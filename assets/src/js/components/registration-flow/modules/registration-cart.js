@@ -1,5 +1,5 @@
 // form defaults options definition
-var form = require('./registration-participant/form')
+var form = require('../includes/form')
 
 // registration form with some validation
 var registrationValidation = () => {
@@ -8,23 +8,18 @@ var registrationValidation = () => {
     var epreuveValidationWarning = $('#epreuve-validation-warning')
 
     // get cart
-    var getSelectedEpreuve = require('./registration-participant/getSelectedEpreuve')
+    var getSelectedEpreuve = require('../includes/createCart')
 
     // ajax
-    var ajaxPostForm = require('./registration-participant/ajaxCreateCart')
+    var ajaxPostForm = require('../includes/ajaxCreateCart')
 
     $(() => {
-      // Date limite verification
-      var dateLimite = new Date($('input[name=dateLimite]').val())
-
-      if (form.option.dateNow > dateLimite) {
-        $('#registration-form').remove()
-        $('#divForm').append('<div class="col-sm-12"><p class="alert alert-danger">La date limite d\'inscription à cette épreuve dépassée</p></div>')
-      }
-
-      // complete form.data.epreuve{}
+      // ----
+      // TRIGGER
+      // ----
       $('.cart-trigger').on('change', (e) => {
         form = getSelectedEpreuve(form)
+        form.data.participant.event = $('input[name=eventName]').val()
 
         // UX helper and alert
         if (form.data.cart.epreuve.length < 1 || form.data.cart.epreuve[0].qty === null) {
@@ -42,7 +37,7 @@ var registrationValidation = () => {
       })
 
       // ----
-      // Step 3 to POST
+      // FORM POST
       // ----
       $(document).on('submit', '#cart-form', (e) => {
         ajaxPostForm(form)

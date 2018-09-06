@@ -110,12 +110,11 @@
                   <div class="row">
                     <div class="col-12">
                       <span class="d-block mt-2 mb-2">
-                          Participant
+                        <i class="fa fa-check text-success" aria-hidden="true"></i> Participant
                       </span>                      
                     </div>
                   </div>
                 </div>
-
 
                 <!-- nav paiement -->
                 <div class="col-12 border border-left-0 border-right-0">
@@ -139,10 +138,10 @@
                             <span class="d-block text-center  mt-5 mb-5">
                               <i class="fa fa-check-circle-o fa-4x text-success"></i>
                             </span>
-                            <p>Votre inscription est finalisée, aucune action n'est requise de votre part.</p>
+                            <p>Votre inscription est payée, aucune action n'est requise de votre part.</p>
                             <p>Votre référence de paiement est : {{data.registration.paiement.id}}</p>
-                            <p>Pour toute question relative à votre inscription, merci de contacter le service client via le chat en bas de l'écran.</p>
-                            <p>Pour toute question relative à l'épreuve, merci de contacter le l'organisateur de celle-ci.</p>
+                            <p>Pour toute question relative à votre inscription, merci de contacter le service client via le chat en bas de l'écran ou par email à serviceclient@izir.fr.</p>
+                            <p>Pour toute question relative à l'épreuve, merci de contacter l'organisateur de celle-ci.</p>
                             <p>Merci de votre compréhension.</p>                
                           </div>
                         <!-- paiement to do -->
@@ -153,8 +152,8 @@
                               <span class="d-block text-center mt-5 mb-5">
                                 <i class="fa fa-check-circle-o fa-4x text-success"></i>
                               </span>
-                              <p>L'organisateur à bien reçus votre paiement, l'inscription est finalisée, aucune action supplémenatire n'est requise de votre part.</p>
-                              <p>Pour toute question relative à votre inscription, merci de contacter le service client via le chat en bas de l'écran.</p>
+                              <p>L'organisateur à bien reçus votre paiement, aucune action supplémenatire n'est requise de votre part.</p>
+                              <p>Pour toute question relative à votre inscription, merci de contacter le service client via le chat en bas de l'écran ou par email à serviceclient@izir.fr.</p>
                               <p>Pour toute question relative à l'épreuve, merci de contacter le l'organisateur de celle-ci.</p>
                               <p>Merci de votre compréhension.</p>              
                             </div>
@@ -162,12 +161,14 @@
                             <!-- other paiement option already choose and BUT NOT accept by organisateur -->
                             {{#if data.registration.paiement.other}}
                               <div class="heper">
-                                <p class="spacer-sm-bottom"><strong>Vous avez choisi un paiement par chèque / espèce pour valider votre inscription.</strong> Ce règlement sera à envoyer à l'adresse de la permanance de l'organisation de l'évènement (si le delai postal le permet) ou à donner en main propre au guichet de l'organisation lorsque que vous vous présenterez à l'évènement. L'organisateur validera votre inscription après réception de son paiement.</p>                      
+                                <p class="spacer-sm-bottom"><strong>Vous avez choisi un paiement par chèque / espèce pour valider votre inscription.</strong> Ce règlement sera à envoyer à l'adresse de la permanance de l'organisation de l'évènement (si le delai postal le permet) ou à donner en main propre au guichet de l'organisation lorsque que vous vous présenterez à l'évènement.</p>
+                                <p>Votre place ne peut-être garantie tant que l'organisateur n'est pas en possession de votre paiement.</p>
+                                <p>L'organisateur validera votre inscription après réception de son paiement.</p>                      
                               </div>
                             {{else}}
                               <!-- paiement to action -->
                               <div id="helper">
-                                <span><i class="fa fa-exclamation-triangle mr-2" aria-hidden="true"></i>Votre place n'est pas encore garantie. Aucun paiement n'est enregistré. Pour finaliser votre inscription, merci de choisir l'un des modes de paiement ci-dessous.</span>
+                                <span><i class="fa fa-exclamation-triangle mr-2" aria-hidden="true"></i>Votre inscription ne sera envoyée à l'oganisateur qu'après son paiement. Pour valider votre inscription, merci de choisir l'un des modes de paiement ci-dessus.</span>
                               </div>
                               <div class="row border border-muted mb-3 paiement_option mt-3">
                                 <div class="col-10 mx-auto mt-2 mb-2">
@@ -223,7 +224,8 @@
                                     <div class="row">
                                       <div class="col-12">
                                         <p>Informations sur ce moyen de paiement</p>
-                                        <p>Ce règlement sera à envoyer à l'adresse de la permanance de l'organisation de l'évènement (si le delai postal le permet) ou à donner en main propre au guichet de l'organisation lorsque que vous vous présenterez à l'évènement. L'organisateur validera votre inscription après réception de son paiement. Votre place n'est donc pas garantie.</p>
+                                        <p>Ce règlement sera à envoyer à l'adresse de la permanance de l'organisation de l'évènement (si le delai postal le permet) ou à donner en main propre au guichet de l'organisation lorsque que vous vous présenterez à l'évènement. L'organisateur validera votre inscription après réception de son paiement.</p>
+                                        <p><strong>Ce moyen de paiement ne vous garantie pas votre place pour cet événement.</strong></p>
                                       </div>
                                     </div>
                                     <div class="row">
@@ -254,7 +256,7 @@
                 {{#if results.event.certificat_required}}
                   <div class="col-12 border border-left-0 border-right-0 border-top-0">
                     <span class="d-block mt-2 mb-2">
-                      Certificat
+                      <i class="fa fa-check text-muted" aria-hidden="true"></i> Certificat
                     </span>
                   </div>
                 {{/if}}  
@@ -262,27 +264,21 @@
                 <!-- nav confirmation               -->
                 <div class="col-12 border border-left-0 border-right-0 border-top-0">
                   <span class="d-block mt-2 mb-2">
-                    Confirmation
+                    <i class="fa fa-check text-muted" aria-hidden="true"></i> Confirmation
                   </span>
                 </div>
               </div>
             </div>
 
-
-
-
-
             <input type="hidden" name="stripe" value="{{data.stripe}}">
             <input type="hidden" name="event" value="{{data.registration.event.name}}">
 
-            <d
-            </div>
           </div>
 
           <div class="col-11 mx-auto">
             <!-- user helper  -->
             <div class="row" >
-              <div class="col-11 mx-auto mt-3 alert alert-warning">
+              <div class="col-11 mx-auto alert alert-warning">
                 <span id="checkout-validation-warning">
                 </span>               
               </div>

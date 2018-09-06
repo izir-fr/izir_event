@@ -109,7 +109,7 @@
                 <!-- nav participant -->
                 <div class="col-12 border border-left-0 border-right-0 border-top-0">
                   <span class="d-block mt-2 mb-2">
-                    Participant
+                    <i class="fa fa-check text-success" aria-hidden="true"></i> Participant
                   </span>
                 </div>
 
@@ -117,79 +117,74 @@
                 {{#if results.event.paiement}}
                 <div class="col-12 border border-left-0 border-right-0 border-top-0">
                   <span class="d-block mt-2 mb-2">
-                    Paiement
+                    <i class="fa fa-check text-success" aria-hidden="true"></i> Paiement
                   </span>
                 </div>
                 {{/if}}
 
                 <!-- nav certificat -->
-                  <div class="col-12 border border-left-0 border-right-0 border-top-0">
-                    <div class="row">
-                      <div class="col-12">
-                        <span class="d-block mt-2 mb-2">
-                          <strong class="text-muted">
-                            Certificat
-                          </strong>                          
-                        </span>
-                      </div>
+                <div class="col-12 border border-left-0 border-right-0 border-top-0 text-center">
+                  <div class="row text-left">
+                    <div class="col-12">
+                      <span class="d-block mt-2 mb-2">
+                        <strong class="text-muted ">
+                          Certificat
+                        </strong>                          
+                      </span>
                     </div>
-                    <div class="row">
-                      <div class="col-12">
-                        <!-- user certificat -->
-                        <div class="row " id="user_certificat">
-                          <div class="col-12 mx-auto">
-                            {{#if user.certificat.file}}
-                              <div class="alert alert-light text-center">
-                                <p><strong>Vous avez déjà un certificat médical (ou une licence) d'enregistré, valide jusqu'au {{user.certificat.expiration_month}}/{{user.certificat.expiration_year}}</strong></p>
-                                <a href="{{user.certificat.file}}" class="spacer-sm-top spacer-sm-bottom btn btn-warning" target="_blank">Voir mon document</a>
-                                <a href="/user/certificat/{{user.id}}?event={{results.event.id}}" class="spacer-sm-top spacer-sm-bottom btn btn-outline-dark spacer-sm-left">Changer mon document</a>
-                              </div>
-                            {{else}}
-                              <div class="alert alert-warning text-center">
-                                <p><strong>Vous n'avez pas encore de certificat médical (ou une licence) d'enregistré.</strong></p>
-                                <a href="/user/certificat/{{user.id}}?event={{results.event.id}}" class="spacer-sm-top spacer-sm-bottom btn btn-warning">Enregistrer mon document</a>
-                              </div>
-                            {{/if}}
-                          </div>
-                        </div>
-                          
-                        <!-- other participant certificat -->
-                        <div class="hidde" id="other_participant_certificat">
-                          <div class="row">
-                            <div class="col-12 spacer-sm-top">
-                              <div id="other_participant_certificat_inerBox" class="alert alert-warning text-center">
-                                Ajouter le certificat medical ou la licence*<em class="legend"> .pdf , .jpg et .png uniquement, 1 pièce jointe</em>
-                                <span class="mt-5 mb-5 d-block">
-                                  <a href="" id="file_viewer" class="hidde btn btn-warning" target="_blank">Voir mon document</a>
-                                  <a href="#upload_certificats_opener" id="upload_certificats_opener" class="btn btn-danger">Ajouter un document</a>
-                                </span>
-                              </div>    
-                            </div>
-                          </div>
-                        </div>
-                        
-                        <!-- checkbox certificat user confirmation -->
-                        <input name='certificat_file' value='{{user.certificat.file}}' class="input-participant-validation" type='hidden'>
-                        <div class="row">
-                          <div class="col-12">
-                            <div class="form-check alert alert-light">
-                              <label class="form-check-label">
-                                <input class="form-check-input input-participant-validation" type="checkbox" name="certificatCondition" id="certificatCondition" required>
-                                <p>Je déclare sur l'honneur que le certificat transmis est authentique et valide. Je décharge ainsi la société REF SPORT PONTIVY et l'organisateur de toute responsabilité liée à celui-ci.</p>
-                              </label>
-                            </div>                
-                          </div>
-                        </div>
-         
-                      </div>
-                    </div>
-                    
                   </div>
-
+                  <div class="row">
+                    <div class="col-12 mb-3">
+                      1. Choisir votre document
+                    </div>
+                  </div>
+                  <div class="row">
+                    {{#if user.certificat.file}}
+                    <div class="col-md-5 mx-auto">
+                      <!-- user certificat -->
+                      <span id="user_certificat" class="btn btn-outline-primary">
+                        Utiliser mon certificat / licence
+                      </span>
+                      <input type="hidden" name="user_certificat_document" value="{{user.certificat.file}}">
+                    </div>
+                    {{/if}}
+                    <div class="col-md-5 mx-auto">
+                      <!-- other certificat -->
+                      <span class="btn btn-outline-primary" id="upload_cart_certificats_opener">
+                        Télécharger un document
+                      </span>
+                      <input type="hidden" name="other_certificat_document" value="">
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-12 mt-3 mb-3">
+                      2. Vérifier votre document
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-12">
+                      <a id="certificat_viewer" class="btn btn-outline-secondary disabled" target="_blank" href="#">
+                        <i class="fa fa-file" aria-hidden="true"></i> Voir le document
+                      </a>
+                    </div>
+                    <!-- certificat input form -->
+                    <input name='certificat_file' class="input-participant-validation" value='' type='hidden' required>
+                  </div>
+                  <div class="row">
+                    <div class="col-12 mt-3 mb-3">
+                      3. Valider votre document
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-11 mx-auto">
+                      <p><input class="form-check-input input-participant-validation" type="checkbox" name="certificatCondition" id="certificatCondition" required> Je déclare sur l'honneur que le certificat transmis est authentique et valide. Je décharge ainsi la société REF SPORT PONTIVY et l'organisateur de toute responsabilité liée à celui-ci.</p>
+                    </div>
+                  </div>
+                </div>
                 <!-- nav confirmation               -->
                 <div class="col-12 border border-left-0 border-right-0 border-top-0">
                   <span class="d-block mt-2 mb-2">
-                    Confirmation
+                    <i class="fa fa-check text-muted" aria-hidden="true"></i> Confirmation
                   </span>
                 </div> 
               </div>
@@ -199,7 +194,7 @@
           <div class="col-11 mx-auto">
             <!-- user helper  -->
             <div class="row" id="participant-validation-warning">
-              <div class="col-11 mx-auto mt-3 alert alert-warning">
+              <div class="col-11 mx-auto alert alert-warning">
                 <p class="">
                   <p>Pour continuer votre inscription, vérifiez :</p>
                   <ul>

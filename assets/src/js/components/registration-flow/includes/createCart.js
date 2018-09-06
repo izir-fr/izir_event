@@ -10,6 +10,8 @@ var getSelectedEpreuve = (form) => {
 
   form.data.cart.epreuve = []
   form.data.cart.options = []
+  form.option.epreuve_format.team = false
+  form.option.epreuve_format.individuel = false
 
   $('.epreuves').each((key, val) => {
     var produit = $(val).find('input[name=ref]')[0].value
@@ -29,6 +31,19 @@ var getSelectedEpreuve = (form) => {
 
     if (eventChoice.subTotal > 0) {
       form.data.cart.epreuve.push(eventChoice)
+    }
+
+    // epreuve format save in form option
+    if (subTotal >= 1) {
+      var epreuveFormat = $(val).find('input[name=epreuve_format]')[0].value
+      if (epreuveFormat === 'team') {
+        form.option.epreuve_format.team = true
+      } else if (epreuveFormat === 'individuel') {
+        form.option.epreuve_format.individuel = true
+      } else {
+        form.option.epreuve_format.team = false
+        form.option.epreuve_format.individuel = false
+      }
     }
   })
 

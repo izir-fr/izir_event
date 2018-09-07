@@ -165,11 +165,11 @@ var registrationCtrl = {
           produits: produits,
           orderAmount: cart.totalCart,
           options: {
-            epreuve_format : {
+            'epreuve_format': {
               team: epreuveFormat.team,
               individuel: epreuveFormat.individuel
             },
-            team_limits: {
+            'team_limits': {
               min: form.option.team.min,
               max: form.option.team.max
             }
@@ -181,12 +181,12 @@ var registrationCtrl = {
         // enregistrement de la pré-commande
         registration.save(function (err, registration) {
           if (err) {
-            res.send({error_msg: 'Une erreur est survenue lors de l\'enregistrement de votre inscription'})
+            res.send({ error_msg: 'Une erreur est survenue lors de l\'enregistrement de votre inscription' })
           } else {
-            res.send({redirect: '/inscription/cart/'+ registration.id + '/participant'})
+            res.send({ redirect: '/inscription/cart/' + registration.id + '/participant' })
           }
         })
-      }        
+      }
     }
   },
   cartParticipantUpdate: (req, res) => {
@@ -214,6 +214,10 @@ var registrationCtrl = {
       .find({_id: req.params.id})
       .populate('event')
       .exec((err, registration) => {
+        if (err) {
+          req.flash('error_msg', 'Une erreur est survenue lors du choix de l\'épreuve')
+          res.redirect('/inscription/cart/' + registration[0].event.id)
+        }
         data = {
           results: registration[0],
           jourNaissance: jourNaissance,
@@ -252,10 +256,10 @@ var registrationCtrl = {
           'adresse2': req.body.adresse2,
           'codePostal': req.body.codePostal,
           'city': req.body.city
-        }, 
+        },
         'updated': new Date(Date.now())
       }
-    }, (err, user) => {
+      }, (err, user) => {
         if (err) {
           req.flash('error_msg', 'Une erreur est survenue lors de la saisie de vos informations')
           res.redirect('/inscription/cart/' + id + '/participant')
@@ -279,8 +283,7 @@ var registrationCtrl = {
               }
             })
         }
-      }
-    )
+      })
   },
   cartTeamUpdate: (req, res) => {
     var data
@@ -289,6 +292,10 @@ var registrationCtrl = {
       .find({_id: req.params.id})
       .populate('event')
       .exec((err, registration) => {
+        if (err) {
+          req.flash('error_msg', 'Une erreur est survenue lors du chargement de l\'événement')
+          res.redirect('/inscription/cart/' + registration[0].event.id)
+        }
         data = {
           results: registration[0],
           date_list: dateList,
@@ -296,22 +303,75 @@ var registrationCtrl = {
           discipline_list: disList
         }
         res.render('partials/registration/step-team', data)
-        // if (registration[0].options.epreuve_format.team === false && registration[0].options.epreuve_format.individuel === true) {
-        //   res.render('partials/registration/step-participant', data)
-        // } else if (registration[0].options.epreuve_format.team === true && registration[0].options.epreuve_format.individuel === false) {
-        //   res.redirect('/inscription/cart/' + req.params.id + '/team')
-        // } else {
-        //   req.flash('error_msg', 'Une erreur est survenue lors du choix de l\'épreuve')
-        //   res.redirect('/inscription/cart/' + registration[0].event.id)
-        // }
       })
   },
   postAjaxCartTeamUpdate: (req, res) => {
-    console.log(req.body)
-    res.redirect('/inscription/checkout/' + req.params.id)
+    var id = req.params.id
+    var capitaine = {
+      nom: req.body.capitaine_name,
+      prenom: req.body.capitaine_surname,
+      email: req.body.capitaine_email,
+      team: req.body.capitaine_team,
+      codePostal: req.body.capitaine_cp,
+      city: req.body.capitaine_city
+    }
+
+    var team = []
+
+    req.body.member_nom.forEach((val, key) => {
+      team.push({
+        nom: req.body.member_nom[key],
+        prenom: req.body.member_prenom[key],
+        sex: req.body.member_sex[key],
+        dateNaissance: req.body.membre_birth_day[key] + '/' + req.body.membre_birth_month[key] + '/' + req.body.membre_birth_year[key],
+        team: req.body.capitaine_team,
+        numLicence: req.body.member_license[key],
+        email: req.body.member_email[key]
+      })
+    })
+
+    Registration.update(
+      { _id: id }, {
+        $set: {
+          'participant': capitaine,
+          'team': team,
+          'updated': new Date(Date.now())
+        }
+      }, (err, user) => {
+        if (err) {
+          req.flash('error_msg', 'Une erreur est survenue lors de la saisie de vos informations')
+          res.redirect('/inscription/cart/' + id + '/team')
+        } else {
+          Registration
+            .find({_id: id})
+            .populate('event')
+            .exec((err, registration) => {
+              if (err) {
+                req.flash('error_msg', 'Une erreur est survenue lors de la saisie de vos informations')
+                res.redirect('/inscription/cart/' + id + '/team')
+              } else {
+                var eventConfig = registration[0].event
+                if (eventConfig.paiement) {
+                  res.redirect('/inscription/checkout/' + id)
+                } else if (eventConfig.certificat_required) {
+                  res.redirect('/inscription/cart/' + id + '/certificat')
+                } else {
+                  res.redirect('/inscription/checkout/' + id + '/confirmation')
+                }
+              }
+            })
+        }
+      }
+    )
   },
   getCertificat: (req, res) => {
     var id = req.params.id
+
+    var member = false
+    if (req.query.membre) {
+      member = req.query.membre
+    }
+
     Registration
       .find({_id: id})
       .populate('event')
@@ -319,23 +379,27 @@ var registrationCtrl = {
         if (err) {
           req.flash('error_msg', 'Une erreur est survenue lors du chargement de la page')
         }
-        var data = {results: registration[0]}
-        res.render('partials/registration/step-certificat', data)
+        var data = {results: registration[0], member: member}
+        if (registration[0].options.epreuve_format.team && member === false) {
+          res.redirect('/inscription/cart/' + id + '/certificat/team')
+        } else {
+          res.render('partials/registration/step-certificat', data)
+        }
       })
   },
   postCertificat: (req, res) => {
     var id = req.params.id
     // update registration
     Registration.update(
-      { _id: id },
-      { $set: {
-        docs: {
-          'certificat': req.body.certificat_file,
-          'certificat_validation': true
-        }, 
-        'updated': new Date(Date.now())
-      }
-    }, (err, user) => {
+      { _id: id }, {
+        $set: {
+          docs: {
+            'certificat': req.body.certificat_file,
+            'certificat_validation': true
+          },
+          'updated': new Date(Date.now())
+        }
+      }, (err, user) => {
         if (err) {
           req.flash('error_msg', 'Une erreur est survenue lors de la saisie de vos informations')
           res.redirect('/inscription/cart/' + id + '/certificat')
@@ -345,10 +409,43 @@ var registrationCtrl = {
       }
     )
   },
+  getCertificatTeam: (req, res) => {
+    var id = req.params.id
+
+    Registration
+      .find({_id: id})
+      .populate('event')
+      .exec((err, registration) => {
+        if (err) {
+          req.flash('error_msg', 'Une erreur est survenue lors du chargement de la page')
+        }
+        var data = {results: registration[0]}
+        res.render('partials/registration/step-certificat-team', data)
+      })
+  },
+  postCertificatTeam: (req, res) => {
+    var id = req.params.id
+    var member = req.params.member
+
+    Registration.updateOne(
+      { 'team._id': member }, {
+        $set: {
+          'team.$.docs': {
+            'certificat': req.body.certificat_file,
+            'certificat_validation': true
+          }
+        }
+      }, (err, user) => {
+        if (err) {
+          req.flash('error_msg', 'Une erreur est survenue lors de la saisie de vos informations')
+        }
+        res.redirect('/inscription/cart/' + id + '/certificat')
+      })
+  },
   getConfirmation: (req, res) => {
     var registrationCheckup = {
       success: false,
-      error_msg: "",
+      error_msg: '',
       error_step: {
         participant: false,
         team: false,
@@ -362,36 +459,37 @@ var registrationCtrl = {
       .find({_id: id})
       .populate('event')
       .exec((err, registration) => {
-        var organisateur_validation = registration[0].organisateur_validation
-
-        if (err) {
+        if (err || registration.length === 0) {
           req.flash('error_msg', 'Une erreur est survenue lors du chargement de la page')
-        }
-        if (organisateur_validation.participant &&  organisateur_validation.team &&  organisateur_validation.paiement  &&  organisateur_validation.certificat) {
-          registrationCheckup.success = true
+          res.redirect('/user/profil/' + req.user.id)
         } else {
-          if (!organisateur_validation.participant) {
-            registrationCheckup.error_msg = 'Votre formulaire n\'est pas conforme'
-            registrationCheckup.error_step.participant = true
-          } else if (!organisateur_validation.team) {
-            registrationCheckup.error_msg = 'Votre formulaire n\'est pas conforme'
-            registrationCheckup.error_step.team = true
-          } else if (!organisateur_validation.paiement) {
-            registrationCheckup.error_msg = 'Votre paiement n\'est pas validé'
-            registrationCheckup.error_step.paiement = true
-          } else if (!organisateur_validation.certificat) {
-            registrationCheckup.error_msg = 'Votre certificat n\'est pas conforme'
-            registrationCheckup.error_step.certificat = true
+          var organisateurValidation = registration[0].organisateur_validation
+          if (organisateurValidation.participant && organisateurValidation.team && organisateurValidation.paiement && organisateurValidation.certificat) {
+            registrationCheckup.success = true
           } else {
-            registrationCheckup.error_msg = 'Une erreur inconnue est survenue, merci de contacter le service client à serviceclient@izir.fr'
+            if (!organisateurValidation.participant) {
+              registrationCheckup.error_msg = 'Votre formulaire n\'est pas conforme'
+              registrationCheckup.error_step.participant = true
+            } else if (!organisateurValidation.team) {
+              registrationCheckup.error_msg = 'Votre formulaire n\'est pas conforme'
+              registrationCheckup.error_step.team = true
+            } else if (!organisateurValidation.paiement) {
+              registrationCheckup.error_msg = 'Votre paiement n\'est pas validé'
+              registrationCheckup.error_step.paiement = true
+            } else if (!organisateurValidation.certificat) {
+              registrationCheckup.error_msg = 'Votre certificat n\'est pas conforme'
+              registrationCheckup.error_step.certificat = true
+            } else {
+              registrationCheckup.error_msg = 'Une erreur inconnue est survenue, merci de contacter le service client à serviceclient@izir.fr'
+            }
           }
-        }
 
-        var data = {
-          results: registration[0], 
-          registrationCheckup: registrationCheckup
+          var data = {
+            results: registration[0],
+            registrationCheckup: registrationCheckup
+          }
+          res.render('partials/registration/step-confirmation', data)
         }
-        res.render('partials/registration/step-confirmation', data)
       })
   },
   postAjaxPreinscription: function (req, res) {
@@ -604,13 +702,10 @@ var registrationCtrl = {
             registration: registration[0],
             stripe: parseInt(registration[0].orderAmount * 100 + 50),
             stripeFrontKey: credentials.stripeKey.front,
-            orderAmount: registration[0].orderAmount * 1 + 0.50            
+            orderAmount: registration[0].orderAmount * 1 + 0.50
           },
           results: registration[0]
         }
-
-        console.log(data)
-
         res.render('partials/registration/step-checkout', data)
       })
   },
@@ -618,9 +713,8 @@ var registrationCtrl = {
     var id = req.params.id
     // do somthings
     Registration.update(
-      { _id: id },
-      { $set: 
-        {
+      { _id: id }, {
+        $set: {
           'paiement': { 'other': true },
           'updated': new Date(Date.now())
         }

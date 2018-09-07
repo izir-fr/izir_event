@@ -38,6 +38,8 @@ var getSelectedEpreuve = (form) => {
       var epreuveFormat = $(val).find('input[name=epreuve_format]')[0].value
       if (epreuveFormat === 'team') {
         form.option.epreuve_format.team = true
+        form.option.team.min = $(val).find('input[name=team_min]')[0].value
+        form.option.team.max = $(val).find('input[name=team_max]')[0].value
       } else if (epreuveFormat === 'individuel') {
         form.option.epreuve_format.individuel = true
       } else {

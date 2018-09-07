@@ -60,9 +60,13 @@ REGISTRATION STEP 4
 
 // Get render certificat update form
 router.get('/cart/:id/certificat', ensureAuthenticated, registrationCtrl.getCertificat)
+// Get render certificat update form
+router.get('/cart/:id/certificat/team', ensureAuthenticated, registrationCtrl.getCertificatTeam)
 
 // Post a certificat
 router.post('/cart/:id/certificat/post', registrationCtrl.postCertificat)
+// Post a certificat
+router.post('/cart/:id/certificat/team/:member/post', registrationCtrl.postCertificatTeam)
 
 /*
 REGISTRATION STEP 5

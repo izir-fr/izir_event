@@ -45,7 +45,12 @@
         </div>
 
         <!--formulaire d'inscription-->
+        {{#if member}}
+        <form id="certificat-form" class="" method="POST" action="/inscription/cart/{{results.id}}/certificat/team/{{member}}/post">
+        {{else}}
         <form id="certificat-form" class="" method="POST" action="/inscription/cart/{{results.id}}/certificat/post">
+        {{/if}}
+        
           <div class="row" id="step-epreuve">
             <div class="col-11 mx-auto mt-3 bg-white">
 

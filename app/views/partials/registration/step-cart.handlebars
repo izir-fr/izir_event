@@ -81,9 +81,12 @@
                   <!-- epreuve name -->
                   <div class="col-7 ">
                     <span>
+                      {{this.team_qty_max}}
                       {{#if this.team}}
                         {{this.name}} <strong class="text-muted">(Equipe)</strong>
                         <input type="hidden" name='epreuve_format' value="team">
+                        <input type="hidden" name="team_min" value="{{this.teamMin}}">
+                        <input type="hidden" name="team_max" value="{{this.teamMax}}">
                       {{else}}
                         {{this.name}} <strong class="text-muted">(Individuel)</strong>
                         <input type="hidden" name='epreuve_format' value="individuel">

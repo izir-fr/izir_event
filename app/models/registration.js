@@ -60,6 +60,22 @@ var registrationSchema = mongoose.Schema({
     other: { type: Boolean, default: false },
     other_captured: { type: Boolean, default: false }
   },
+  organisateur_validation: {
+    participant: { type: Boolean, default: true },
+    team: { type: Boolean, default: true },
+    paiement: { type: Boolean, default: true },
+    certificat: { type: Boolean, default: true }
+  },
+  options: {
+    epreuve_format: {
+      team: { type: Boolean, default: false },
+      individuel: { type: Boolean, default: false }
+    },
+    team_limits: {
+      min: { type: Number, default: null },
+      max: { type: Number, default: null }
+    }
+  },
   created_at: { type: Date, required: true, default: Date.now },
   updated: { type: Date }
 })

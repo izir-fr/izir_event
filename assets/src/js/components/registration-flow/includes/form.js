@@ -4,10 +4,6 @@ var form = {
       team: false,
       individuel: false
     },
-    certificatValidation: false,
-    formValidation: false,
-    emailRegex: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i,
-    dateNow: new Date(Date.now()),
     team: {
       max: null,
       min: null

@@ -1,0 +1,339 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-4">
+      <div class="row sticky-top">
+        <div class="col-sm-12">
+          {{#if results.event.docs.img}}
+            <img src="{{results.event.docs.img.[0]}}" alt="{{results.event.name}}" class="img-fluid">
+          {{else}}
+            <img src="/img/thumb.png" alt="{{results.event.name}}" class="img-fluid">
+          {{/if}}
+            <ul>
+              <li><strong>Lieu :</strong> {{results.event.adresse.ville}} {{results.event.adresse.codePostal}}</li>
+            </ul>
+          {{#each results.event.epreuves}}
+            <ul class="spacer-sm-top">
+              <li><strong>Epreuve :</strong> {{this.name}}</li>
+              <li><strong>Discipline :</strong> {{this.discipline}}</li>
+              <li><strong>Date :</strong> {{date this.date_debut}} à {{dateHours this.date_debut}}h{{dateMinutes this.date_debut}}</li>
+              <li><strong>Distance :</strong> {{this.distance}}Km</li>
+              <li><strong>Denivelé + :</strong> {{this.denivele}} mètres</li>
+              <li><strong>Nombre de participants maximum:</strong> {{this.placesDispo}}</li>
+              <li><strong>Tarif:</strong> {{this.tarif}}€</li> 
+            </ul>
+          {{/each}}
+        </div>
+      </div>      
+    </div>
+
+    <!--formulaire d'inscription block-->
+    <div class="col-sm-8 bg-light" id="divForm">
+      
+      <div class="sticky-top">
+
+        <!-- titre -->
+        <div class="row">
+          <div class="col-11 mx-auto mt-3">
+            <div class="row">
+              <div class="col-12 bg-white border border-right-0 border-left-0 border-top-0">
+                <h1 class="d-block mt-5 mb-5 text-lowercase text-center">
+                  Votre inscription - {{results.event.name}}
+                </h1>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!--formulaire d'inscription-->
+        <form id="team-form" class="" method="POST" action="/inscription/cart/{{results.id}}/team/post">
+          <input type="hidden" name="team_max" value="{{results.options.team_limits.max}}">
+          <input type="hidden" name="team_min" value="{{results.options.team_limits.min}}">
+
+          <div class="row" id="step-epreuve">
+            <div class="col-11 mx-auto mt-3 bg-white">
+
+              <!--Step 1. epreuve-->
+
+              <!-- epreuves -->
+              <div class="row">
+                <div class="col-12">
+                  <strong class="d-block mt-3 mb-3 ml-2 text-lowercase text-left">
+                    Panier
+                  </strong>
+                </div>
+              </div>
+              {{#each results.produits}}
+                <div class="row mb-3">
+
+                  <!-- quantité -->
+                  <div class="col-3">
+                    <span>{{this.produitsQuantite}}</span>                
+                  </div>
+
+                  <!-- epreuve name -->
+                  <div class="col-7 ">
+                    <span>
+                        {{this.produitsRef}}
+                    </span>
+                  </div>
+
+                  <!-- subtotal -->
+                  <div class="col-2 text-right subtotal">
+                    <span>{{this.produitsSubTotal}}</span> EUR
+                  </div>
+                </div>
+              {{/each}}             
+            </div>
+          </div>
+
+          <!-- total -->
+          <div class="row">
+            <div class="col-11 mx-auto mt-3">
+              <div class="row bg-dark-blue">
+                <div class="col-8 text-white">
+                  <strong class="d-block mt-3 mb-3 text-lowercase text-left">
+                   Total ttc
+                  </strong>
+                </div>
+                <div class="col-4" id="total-ttc">
+                  <strong class="d-block mt-3 mb-3 text-white text-right">
+                    <span>{{results.orderAmount}}</span> EUR
+                  </strong>
+                </div>
+              </div>
+            </div>
+          </div>            
+
+          <div class="row">
+            <div class="col-11 mx-auto bg-white">
+              <div class="row">
+
+                <!-- nav participant -->
+                <div class="col-12 border border-left-0 border-right-0 border-top-0">
+                  <span class="d-block mt-2 mb-2">
+                    <strong class="text-muted">
+                      Participant
+                    </strong>
+                  </span>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-12">
+                  <!-- l'équipe -->
+                  <div class="row">
+                    <div class="col-11 mx-auto text-center bg-light-blue text-white">
+                      <p class="mt-2 h5">L'équipe</p>
+                    </div>
+                  </div>
+                  <div class="row mt-3">
+                    <div class="col-sm-3 ">
+                      <div class="form-group">
+                        Nom de l'équipe *
+                      </div>
+                    </div>
+                    <div class="col-sm-9">
+                      <input type="text" class="form-control input-team-validation" name="capitaine_team" value="{{user.team}}" required>
+                    </div>
+                  </div>
+                  <div class="row mt-3">
+                    <div class="col-11 mx-auto text-center bg-light-blue text-white">
+                      <p class="mt-2 h5">Le capitaine</p>
+                    </div>
+                  </div>
+                  <div class="row mt-3">
+                    <div class="col-sm-3">
+                      <div class="form-group">
+                        Nom du capitaine *
+                      </div>
+                    </div>
+                    <div class="col-9">
+                      <input type="text" class="form-control input-team-validation" name="capitaine_name" value="{{user.surname}}" required>
+                    </div>
+                  </div>
+                  <div class="row mt-3">
+                    <div class="col-sm-3">
+                      <div class="form-group">
+                        Prénom du capitaine *
+                      </div>
+                    </div>
+                    <div class="col-9">
+                      <input type="text" class="form-control input-team-validation" name="capitaine_surname" value="{{user.name}}" required>
+                    </div>
+                  </div>
+                  <div class="row mt-3">
+                    <div class="col-sm-3">
+                      <div class="form-group">
+                        Code postal *
+                      </div>
+                    </div>
+                    <div class="col-9">
+                      <input type="text" class="form-control input-team-validation" name="capitaine_cp" value="{{user.codePostal}}" required>
+                    </div>
+                  </div>
+                  <div class="row mt-3">
+                    <div class="col-sm-3">
+                      <div class="form-group">
+                        Ville *
+                      </div>
+                    </div>
+                    <div class="col-9">
+                      <input type="text" class="form-control input-team-validation" name="capitaine_city" value="{{user.city}}" required>
+                    </div>
+                  </div>
+                  <div class="row mt-3">
+                    <div class="col-sm-3">
+                      <div class="form-group">
+                        Email *
+                      </div>
+                    </div>
+                    <div class="col-9">
+                      <input type="email" class="form-control input-team-validation" name="capitaine_email" value="{{user.email}}" required>
+                    </div>
+                  </div>
+
+                  <!-- les membres -->
+                  <div class="row mt-3">
+                    <div class="col-11 mx-auto text-center mt-2 mb-2 bg-light-blue text-white">
+                      <p class="mt-2 h5">Les membres</p>
+                    </div>
+                  </div>
+                  <div class="row team-count" id="team-member">
+                    <div class="col-11 mx-auto bg-light mb-2">
+                      <div class="row mt-2">
+                        <div class="col-sm-6">
+                          <div class="form-group">
+                            <label for="member_nom">Nom du membre *</label>
+                            <input type="text" class="form-control input-team-validation" name="member_nom" value="" required>
+                          </div>
+                        </div>
+                        <div class="col-sm-6">
+                          <div class="form-group">
+                            <label for="member_prenom">Prénom du membre *</label>
+                            <input type="text" class="form-control input-team-validation" name="member_prenom" value="" required>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-sm-6">
+                          <div class="form-group">
+                            <label for="">Sexe *</label>
+                            <input type="text" class="form-control input-team-validation" name="member_sex" value="" required>
+                          </div>
+                        </div>
+                        <div class="col-sm-6">
+                          <div class="form-group">
+                            <label for="">N° de license</label>
+                            <input type="text" class="form-control input-team-validation" name="member_license" value="">
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-12">
+                          <label>Date de naissance (jour/mois/année)*</label>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-sm-4">
+                          <div class="form-group">
+                            <select class="form-control membre_birth_day input-team-validation" name="membre_birth_day" required>
+                              {{#each date_list.day}}
+                                <option value="{{this.value}}">{{this.value}}</option>
+                              {{/each}}
+                            </select>                     
+                          </div>
+                        </div>
+                        <div class="col-sm-4">
+                          <div class="form-group">
+                            <select class="form-control membre_birth_month input-team-validation" name="membre_birth_month" required>
+                              {{#each date_list.month}}
+                                <option value="{{this.value}}">{{this.value}}</option>
+                              {{/each}}
+                            </select>                     
+                          </div>
+                        </div>
+                        <div class="col-sm-4">
+                          <div class="form-group">
+                            <input class="form-control input-team-validation" type="number" placeholder="2018"  min="1900" step="1" value="" name="membre_birth_year" required>                      
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-12">
+                          <div class="form-group">
+                            <label for="member_email">Email du membre *</label>
+                            <input type="email" class="form-control input-team-validation" name="member_email" value="" required>
+                          </div>
+                        </div>
+                      </div>            
+                    </div>
+                  </div>
+
+                  <!-- JS add member here -->
+                  <div id="new-team-block"></div>
+
+                  <!-- JS button trigger -->
+                  <div class="row">
+                    <div class="col-12 text-center mb-5">
+                      <div id="add-team_member" class="btn btn-warning span">Ajouter un membre <span id="currentTeamLength"></span>/<span id="maxTeamLength"></span></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+                <!-- nav paiement -->
+                {{#if results.event.paiement}}
+                <div class="col-12 border border-left-0 border-right-0">
+                  <span class="d-block mt-2 mb-2">
+                    <i class="fa fa-check text-muted" aria-hidden="true"></i> Paiement
+                  </span>
+                </div>
+                {{/if}}
+
+                <!-- nav certificat -->
+                {{#if results.event.certificat_required}}
+                  <div class="col-12 border border-left-0 border-right-0 border-top-0">
+                    <span class="d-block mt-2 mb-2">
+                      <i class="fa fa-check text-muted" aria-hidden="true"></i> Certificat
+                    </span>
+                  </div>
+                {{/if}} 
+
+                <!-- nav confirmation               -->
+                <div class="col-12 border border-left-0 border-right-0 border-top-0">
+                  <span class="d-block mt-2 mb-2">
+                    <i class="fa fa-check text-muted" aria-hidden="true"></i> Confirmation
+                  </span>
+                </div>
+              </div>
+            </div>
+            <p class="legend d-bloc ml-2"><br><em>* Champs obligatoire</em></p>
+            <!-- user helper  -->
+            <div class="row" id="participant-validation-warning">
+              <div class="col-11 mx-auto alert alert-warning">
+                <p>
+                  Pour continuer votre inscription, vérifiez :
+                </p>
+                Pour continuer votre inscription, vérifiez :
+                <ul>
+                  <li>- que votre équipe est formée d'un minimum de membres de <span id="option-team-min"></span>.</li>
+                  <li>- que les champs obligatoires signalés avec "*" sont correctement complétés</li>
+                </ul>                
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-6 mb-5 text-center">
+                <a class="btn btn-outline-primary" href="/event/{{results.event.id}}">Détails de l'évènement</a>
+              </div>
+              <div class="col-6 text-center">
+                <button type="submit" class="btn btn-secondary">Suivant ></button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<input type="hidden" value="{{results.event.date_cloture_inscription}}" name="dateLimite">

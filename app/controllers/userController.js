@@ -143,7 +143,7 @@ var userCtrl = {
   // Post a login
   postLogin: function (req, res) {
     if (req.query.event_id) {
-      res.redirect('/inscription/pre-inscription/' + req.query.event_id)
+      res.redirect('/inscription/cart/' + req.query.event_id)
     } else {
       res.redirect('/event/finder')
     }
@@ -351,11 +351,11 @@ var userCtrl = {
   },
   // Get user certificat based on :id
   getCertificatByUserId: function (req, res) {
-    var event = {}
-    if (req.query.event) {
-      event.id = req.query.event
+    var cart = {}
+    if (req.query.cart) {
+      cart.id = req.query.cart
     }
-    res.render('partials/user/certificat', event)
+    res.render('partials/user/certificat', cart)
   },
   // Post user certificat based on :id
   postCertificatByUserId: function (req, res) {
@@ -386,8 +386,8 @@ var userCtrl = {
           res.redirect('/user/certificat/' + req.user.id)
         } else {
           req.flash('success_msg', 'Votre certificat a été mis à jour')
-          if (req.query.event) {
-            res.redirect('/inscription/pre-inscription/' + req.query.event)
+          if (req.query.cart) {
+            res.redirect('/inscription/cart/' + req.query.cart + '/certificat')
           } else {
             res.redirect('/user/profil/' + req.user.id + '/')
           }

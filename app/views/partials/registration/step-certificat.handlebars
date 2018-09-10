@@ -1,0 +1,227 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-4">
+      <div class="row sticky-top">
+        <div class="col-sm-12">
+          {{#if results.event.docs.img}}
+            <img src="{{results.event.docs.img.[0]}}" alt="{{results.event.name}}" class="img-fluid">
+          {{else}}
+            <img src="/img/thumb.png" alt="{{results.event.name}}" class="img-fluid">
+          {{/if}}
+            <ul>
+              <li><strong>Lieu :</strong> {{results.event.adresse.ville}} {{results.event.adresse.codePostal}}</li>
+            </ul>
+          {{#each results.event.epreuves}}
+            <ul class="spacer-sm-top">
+              <li><strong>Epreuve :</strong> {{this.name}}</li>
+              <li><strong>Discipline :</strong> {{this.discipline}}</li>
+              <li><strong>Date :</strong> {{date this.date_debut}} à {{dateHours this.date_debut}}h{{dateMinutes this.date_debut}}</li>
+              <li><strong>Distance :</strong> {{this.distance}}Km</li>
+              <li><strong>Denivelé + :</strong> {{this.denivele}} mètres</li>
+              <li><strong>Nombre de participants maximum:</strong> {{this.placesDispo}}</li>
+              <li><strong>Tarif:</strong> {{this.tarif}}€</li> 
+            </ul>
+          {{/each}}
+        </div>
+      </div>      
+    </div>
+
+    <!--formulaire d'inscription block-->
+    <div class="col-sm-8 bg-light" id="divForm">
+      
+      <div class="sticky-top">
+
+        <!-- titre -->
+        <div class="row">
+          <div class="col-11 mx-auto mt-3">
+            <div class="row">
+              <div class="col-12 bg-white border border-right-0 border-left-0 border-top-0">
+                <h1 class="d-block mt-5 mb-5 text-lowercase text-center">
+                  Votre inscription - {{results.event.name}}
+                </h1>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!--formulaire d'inscription-->
+        {{#if member}}
+        <form id="certificat-form" class="" method="POST" action="/inscription/cart/{{results.id}}/certificat/team/{{member}}/post">
+        {{else}}
+        <form id="certificat-form" class="" method="POST" action="/inscription/cart/{{results.id}}/certificat/post">
+        {{/if}}
+        
+          <div class="row" id="step-epreuve">
+            <div class="col-11 mx-auto mt-3 bg-white">
+
+              <!--Step 1. epreuve-->
+
+              <!-- epreuves -->
+              <div class="row">
+                <div class="col-12">
+                  <strong class="d-block mt-3 mb-3 ml-2 text-lowercase text-left">
+                    Panier
+                  </strong>
+                </div>
+              </div>
+              {{#each results.produits}}
+                <div class="row mb-3">
+
+                  <!-- quantité -->
+                  <div class="col-3">
+                    <span>{{this.produitsQuantite}}</span>                
+                  </div>
+
+                  <!-- epreuve name -->
+                  <div class="col-7 ">
+                    <span>
+                        {{this.produitsRef}}
+                    </span>
+                  </div>
+
+                  <!-- subtotal -->
+                  <div class="col-2 text-right subtotal">
+                    <span>{{this.produitsSubTotal}}</span> EUR
+                  </div>
+                </div>
+              {{/each}}             
+            </div>
+          </div>
+
+          <!-- total -->
+          <div class="row">
+            <div class="col-11 mx-auto">
+              <div class="row bg-dark-blue">
+                <div class="col-8 text-white">
+                  <strong class="d-block mt-3 mb-3 text-lowercase text-left">
+                   Total ttc
+                  </strong>
+                </div>
+                <div class="col-4" id="total-ttc">
+                  <strong class="d-block mt-3 mb-3 text-white text-right">
+                    <span>{{results.orderAmount}}</span> EUR
+                  </strong>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- checkout nav -->
+          <div class="row mb-3 mt-3">
+            <div class="col-11 mx-auto bg-white">
+              <div class="row">
+
+                <!-- nav participant -->
+                <div class="col-12 border border-left-0 border-right-0 border-top-0">
+                  <span class="d-block mt-2 mb-2">
+                    <i class="fa fa-check text-success" aria-hidden="true"></i> Participant
+                  </span>
+                </div>
+
+                <!-- nav paiement -->
+                {{#if results.event.paiement}}
+                <div class="col-12 border border-left-0 border-right-0 border-top-0">
+                  <span class="d-block mt-2 mb-2">
+                    <i class="fa fa-check text-success" aria-hidden="true"></i> Paiement
+                  </span>
+                </div>
+                {{/if}}
+
+                <!-- nav certificat -->
+                <div class="col-12 border border-left-0 border-right-0 border-top-0 text-center">
+                  <div class="row text-left">
+                    <div class="col-12">
+                      <span class="d-block mt-2 mb-2">
+                        <strong class="text-muted ">
+                          Certificat
+                        </strong>                          
+                      </span>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-12 mb-3">
+                      1. Choisir votre document
+                    </div>
+                  </div>
+                  <div class="row">
+                    {{#if user.certificat.file}}
+                    <div class="col-md-5 mx-auto">
+                      <!-- user certificat -->
+                      <span id="user_certificat" class="btn btn-outline-primary">
+                        Utiliser mon certificat / licence
+                      </span>
+                      <input type="hidden" name="user_certificat_document" value="{{user.certificat.file}}">
+                    </div>
+                    {{/if}}
+                    <div class="col-md-5 mx-auto">
+                      <!-- other certificat -->
+                      <span class="btn btn-outline-primary" id="upload_cart_certificats_opener">
+                        Télécharger un document
+                      </span>
+                      <input type="hidden" name="other_certificat_document" value="">
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-12 mt-3 mb-3">
+                      2. Vérifier votre document
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-12">
+                      <a id="certificat_viewer" class="btn btn-outline-secondary disabled" target="_blank" href="#">
+                        <i class="fa fa-file" aria-hidden="true"></i> Voir le document
+                      </a>
+                    </div>
+                    <!-- certificat input form -->
+                    <input name='certificat_file' class="input-participant-validation" value='' type='hidden' required>
+                  </div>
+                  <div class="row">
+                    <div class="col-12 mt-3 mb-3">
+                      3. Valider votre document
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-11 mx-auto">
+                      <p><input class="form-check-input input-participant-validation" type="checkbox" name="certificatCondition" id="certificatCondition" required> Je déclare sur l'honneur que le certificat transmis est authentique et valide. Je décharge ainsi la société REF SPORT PONTIVY et l'organisateur de toute responsabilité liée à celui-ci.</p>
+                    </div>
+                  </div>
+                </div>
+                <!-- nav confirmation               -->
+                <div class="col-12 border border-left-0 border-right-0 border-top-0">
+                  <span class="d-block mt-2 mb-2">
+                    <i class="fa fa-check text-muted" aria-hidden="true"></i> Confirmation
+                  </span>
+                </div> 
+              </div>
+            </div>
+          </div>
+
+          <div class="col-11 mx-auto">
+            <!-- user helper  -->
+            <div class="row" id="participant-validation-warning">
+              <div class="col-11 mx-auto alert alert-warning">
+                <p class="">
+                  <p>Pour continuer votre inscription, vérifiez :</p>
+                  <ul>
+                    <li>- que votre certificat a bien été ajouté </li>
+                    <li>- que vous avez coché la case de déclaration de validité et d'authencité du certificat médical/licence</li>
+                  </ul> 
+                </ul>                 
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-6 mb-5 text-center">
+                <a class="btn btn-outline-primary" href="/event/{{results.event.id}}">Détails de l'évènement</a>
+              </div>
+              <div class="col-6 text-center">
+                <button type="submit" class="btn btn-secondary">Valider</button>
+              </div>
+            </div>             
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<input type="hidden" value="{{results.event.date_cloture_inscription}}" name="dateLimite">

@@ -1,0 +1,359 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-4">
+      <div class="row sticky-top">
+        <div class="col-sm-12">
+          {{#if results.event.docs.img}}
+            <img src="{{results.event.docs.img.[0]}}" alt="{{results.event.name}}" class="img-fluid">
+          {{else}}
+            <img src="/img/thumb.png" alt="{{results.event.name}}" class="img-fluid">
+          {{/if}}
+            <ul>
+              <li><strong>Lieu :</strong> {{results.event.adresse.ville}} {{results.event.adresse.codePostal}}</li>
+            </ul>
+          {{#each results.event.epreuves}}
+            <ul class="spacer-sm-top">
+              <li><strong>Epreuve :</strong> {{this.name}}</li>
+              <li><strong>Discipline :</strong> {{this.discipline}}</li>
+              <li><strong>Date :</strong> {{date this.date_debut}} à {{dateHours this.date_debut}}h{{dateMinutes this.date_debut}}</li>
+              <li><strong>Distance :</strong> {{this.distance}}Km</li>
+              <li><strong>Denivelé + :</strong> {{this.denivele}} mètres</li>
+              <li><strong>Nombre de participants maximum:</strong> {{this.placesDispo}}</li>
+              <li><strong>Tarif:</strong> {{this.tarif}}€</li> 
+            </ul>
+          {{/each}}
+        </div>
+      </div>      
+    </div>
+
+    <!--formulaire d'inscription block-->
+    <div class="col-sm-8 bg-light" id="divForm">
+      
+      <div class="sticky-top">
+
+        <!-- titre -->
+        <div class="row">
+          <div class="col-11 mx-auto mt-3">
+            <div class="row">
+              <div class="col-12 bg-white border border-right-0 border-left-0 border-top-0">
+                <h1 class="d-block mt-5 mb-5 text-lowercase text-center">
+                  Votre inscription - {{results.event.name}}
+                </h1>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!--formulaire d'inscription-->
+        <form id="participant-form" class="" method="POST" action="/inscription/cart/{{results.id}}/participant/post">
+          <div class="row" id="step-epreuve">
+            <div class="col-11 mx-auto mt-3 bg-white">
+
+              <!--Step 1. epreuve-->
+
+              <!-- epreuves -->
+              <div class="row">
+                <div class="col-12">
+                  <strong class="d-block mt-3 mb-3 ml-2 text-lowercase text-left">
+                    Panier
+                  </strong>
+                </div>
+              </div>
+              {{#each results.produits}}
+                <div class="row mb-3">
+
+                  <!-- quantité -->
+                  <div class="col-3">
+                    <span>{{this.produitsQuantite}}</span>                
+                  </div>
+
+                  <!-- epreuve name -->
+                  <div class="col-7 ">
+                    <span>
+                        {{this.produitsRef}}
+                    </span>
+                  </div>
+
+                  <!-- subtotal -->
+                  <div class="col-2 text-right subtotal">
+                    <span>{{this.produitsSubTotal}}</span> EUR
+                  </div>
+                </div>
+              {{/each}}             
+            </div>
+          </div>
+
+          <!-- total -->
+          <div class="row">
+            <div class="col-11 mx-auto">
+              <div class="row bg-dark-blue">
+                <div class="col-8 text-white">
+                  <strong class="d-block mt-3 mb-3 text-lowercase text-left">
+                   Total ttc
+                  </strong>
+                </div>
+                <div class="col-4" id="total-ttc">
+                  <strong class="d-block mt-3 mb-3 text-white text-right">
+                    <span>{{results.orderAmount}}</span> EUR
+                  </strong>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mb-3 mt-3">
+            <div class="col-11 mx-auto bg-white">
+              <div class="row">
+
+                <!-- nav participant -->
+                <div class="col-12">
+                  <!-- header participant -->
+                  <div class="row">
+                    <div class="col-12">
+                      <span class="d-block mt-2 mb-2">
+                        <strong class="text-muted">
+                          Participant
+                        </strong>
+                      </span>                      
+                    </div>
+                  </div>
+                <!-- participant form -->
+                <div class="row">
+                  <div class="col-11 mx-auto">
+                    <div class="row">
+                      <div class="col-sm-3 mt-2">
+                        <div class="form-group">
+                          <label>Nom *</label>
+                        </div>
+                      </div>
+                      <div class="col-sm-9">
+                        <div class="form-group">
+                          <input type="text" class="form-control input-participant-validation" placeholder="Nom" name="surname" value="{{user.surname}}" required>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-sm-3 mt-2">
+                        <div class="form-group">
+                          <label>Prénom *</label>
+                        </div>
+                      </div>
+                      <div class="col-sm-9">
+                        <div class="form-group">
+                          <input type="text" class="form-control input-participant-validation" placeholder="Prénom" name="name" value="{{user.name}}" required>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-sm-3 mt-2">
+                        <div class="form-group">
+                          <label>Email *</label>
+                        </div>
+                      </div>
+                      <div class="col-sm-9">
+                        <div class="form-group">
+                          <input type="email" class="form-control input-participant-validation" placeholder="Email" name="email"  value="{{user.email}}" required>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-sm-3 mt-2">
+                        <div class="form-group">
+                          <label>Genre *</label>
+                        </div>
+                      </div>
+                      <div class="col-sm-9">
+                        <div class="form-group">
+                          <select class="form-control input-participant-validation" name="sex" id="sex" required>
+                            <option value="{{user.sex}}" selected>{{user.sex}}</option>
+                            <option value="Homme">Homme</option>
+                            <option value="Femme">Femme</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-sm-3 mt-2">
+                        <div class="form-group">
+                          <label>Date de naissance (jour/mois/année) *</label>
+                        </div>
+                      </div>
+                      <div class="col-sm-3">
+                        <div class="form-group">
+                          <select class="form-control input-participant-validation" name="jourNaissance" id="jourNaissance" required>
+                            <option value="{{jourNaissance}}" selected>{{jourNaissance}}</option>
+                            {{#each date_list.day}}
+                              <option value="{{this.value}}">{{this.value}}</option>
+                            {{/each}}
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-sm-3">
+                        <div class="form-group">
+                          <select class="form-control input-participant-validation" name="moisNaissance" id="moisNaissance" required>
+                            <option value="{{moisNaissance}}" selected>{{moisNaissance}}</option>
+                            {{#each date_list.month}}
+                              <option value="{{this.value}}">{{this.value}}</option>
+                            {{/each}}
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-sm-3">
+                        <div class="form-group">
+                          <input class="form-control input-participant-validation" type="number" placeholder="2018"  min="1900" step="1" value="{{anneeNaissance}}" name="anneeNaissance" required>
+                        </div>
+                      </div>                      
+                    </div>
+
+                    <!-- information -->
+                    <div class="row border border right-0 border-left-0 border-bottom-0">
+                      <div class="col-12 mt-3 mb-3">
+                        <strong>
+                          Informations
+                        </strong>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-3">
+                        <label>Team / Club</label>
+                      </div>
+                      <div class="col-sm-9">
+                        <div class="form-group">
+                          <input type="text" class="form-control" placeholder="Team / Club" name="team"  value="{{user.team}}">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-3">
+                        <label>N° de licence</label>
+                      </div>
+                      <div class="col-sm-9">
+                        <div class="form-group">
+                          <input type="text" class="form-control" placeholder="#Numéro de License" name="numLicence"  value="{{user.numLicence}}">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-3">
+                        <label for="categorie">Catégorie *</label>
+                      </div>
+                      <div class="col-sm-9">
+                        <div class="form-group">
+                          <select class="form-control input-participant-validation" name="categorie" id="categorie" required>
+                            <option value="{{user.categorie}}" selected>{{user.categorie}}</option>
+                            {{#each category_list}}
+                              <option value="{{this.short}} - {{this.name}}">{{this.short}} - {{this.name}}</option>
+                            {{/each}}
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- adresse -->
+                    <div class="row border border right-0 border-left-0 border-bottom-0">
+                      <div class="col-12 mt-3 mb-3">
+                        <strong>
+                          Adresse
+                        </strong>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-sm-3">
+                        <label>Adresse ligne 1 *</label>
+                      </div>
+                      <div class="col-sm-9">
+                        <div class="form-group">
+                          
+                          <input type="text" class="form-control input-participant-validation" placeholder="ex: 9 rue Albert Camus" name="adresse1"  value="{{user.adresse1}}" required>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-sm-3">
+                        <label>Adresse ligne 2</label>
+                      </div>
+                      <div class="col-9">
+                        <div class="form-group">
+                          <input type="text" class="form-control" placeholder="ex: Appt 103" name="adresse2"  value="{{user.adresse2}}">
+                        </div>                        
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-sm-3">
+                        <label>Code postal *</label>
+                      </div>
+                      <div class="col-9">
+                        <div class="form-group">
+                          <input type="text" class="form-control input-participant-validation" placeholder="ex: 56300" name="codePostal"  value="{{user.codePostal}}" required>
+                        </div>                        
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-sm-3">
+                        <label>Ville *</label>
+                      </div>
+                      <div class="col-9">
+                        <div class="form-group">
+                          <input type="text" class="form-control input-participant-validation" placeholder="ex: Pontivy" name="city"  value="{{user.city}}" required>
+                        </div>                        
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- nav paiement -->
+                {{#if results.event.paiement}}
+                <div class="col-12 border border-left-0 border-right-0">
+                  <span class="d-block mt-2 mb-2">
+                    <i class="fa fa-check text-muted" aria-hidden="true"></i> Paiement
+                  </span>
+                </div>
+                {{/if}}
+
+                <!-- nav certificat -->
+                {{#if results.event.certificat_required}}
+                  <div class="col-12 border border-left-0 border-right-0 border-top-0">
+                    <span class="d-block mt-2 mb-2">
+                      <i class="fa fa-check text-muted" aria-hidden="true"></i> Certificat
+                    </span>
+                  </div>
+                {{/if}}  
+
+                <!-- nav confirmation               -->
+                <div class="col-12 border border-left-0 border-right-0 border-top-0">
+                  <span class="d-block mt-2 mb-2">
+                    <i class="fa fa-check text-muted" aria-hidden="true"></i> Confirmation
+                  </span>
+                </div> 
+              </div>
+            </div>
+          </div>
+
+          <div class="col-11 mx-auto">
+            <!-- user helper  -->
+            <div class="row" id="participant-validation-warning">
+              <div class="col-11 mx-auto mt-3 alert alert-warning">
+                <p class="">
+                  Pour continuer votre inscription, vérifiez :
+                </p>
+                <ul>
+                  <li>- que les champs obligatoires signalés avec "*" sont correctement complétés</li>
+                </ul>                 
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-6 mb-5 text-center">
+                <a class="btn btn-outline-primary" href="/event/{{results.event.id}}">Détails de l'évènement</a>
+              </div>
+              <div class="col-6 text-center">
+                <button type="submit" class="btn btn-secondary">Suivant ></button>
+              </div>
+            </div>             
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<input type="hidden" value="{{results.event.date_cloture_inscription}}" name="dateLimite">

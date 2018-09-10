@@ -21,104 +21,69 @@
   </head>
   <body>
   	<div class="container-fluid">
-      
-      <div id="mobile-menu" class="row d-sm-down">
-        <div class="col-2">
-          {{#if user}}
-          <i id="mobile-menu-trigger" class="fa fa-bars fa-2x spacer-sm-top spacer-xs-bottom" aria-hidden="true"></i>
-          {{/if}}
+      <div class="row">
+        <div class="col-3">
+          <div class="row">
+            <div class="col-md-8 mt-3 mb-3">
+              <a href="/" alt ="EventIzir" id="">
+                <img src="/img/logo.png" alt="event.izir.fr" class="img img-fluid">
+              </a>              
+            </div>
+          </div>
         </div>
-        <div class="col-5 spacer-xs-top">
-          <span id="smallscreen-logo"></span>
-        </div>
-        <div class="col-5 text-right">
-          <span id="smallscreen-user"></span>
-          <span id="smallscreen-search"></span>
+        <div class="col-9">
+          <div class="row text-right" id="desktop-user-menu">
+            <div class="col-12 mt-4" id="user-menu">
+              <span class=""><strong><a href="/event/create" class="btn btn-menu txt-dark-blue">Créer un événement</a></strong></span>
+              <span class="text-muted ">|</span>
+              <span class=""><a href="/event/finder" class="text-muted btn btn-menu">Trouver un évènement</a></span>
+              <span class="">
+                {{#if user}}
+                  <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="user-menu">Mon compte</button>
+                  <div class="dropdown-menu">
+                    <span class="ml-2"><strong>Participant</strong></span>
+                    <a class="dropdown-item" href="/inscription/recap/user/{{user.id}}/">Mes inscriptions</a>
+                    <a class="dropdown-item" href="http://www.runnerbreizh.fr/coureur.php?CoureurNom={{user.surname}}&CoureurPrenom={{user.name}}" target="_blank">Mes classements</a>
+                    <a class="dropdown-item" href="/user/certificat/{{user.id}}/">Mon certificat médical</a>
+                    <a class="dropdown-item" href="/user/amis">Invitez des amis</a>
+                    <a class="dropdown-item" href="/user/profil/edit/{{user.id}}/">Editer mon profil</a>
+                    <a class="dropdown-item" href="/user/password-forgot">Mot de passe</a>
+                    <div role="separator" class="dropdown-divider"></div>
+                    <span class="ml-2"><strong>Organisateur</strong></span>
+                    <a class="dropdown-item" href="/event/create">Créer un événement</a>
+                    <a class="dropdown-item" href="/organisateur/epreuves">Gérer mes événements</a>
+                    <a class="dropdown-item" href="/organisateur/comptabilite/{{user.id}}">Comptabilité</a>
+                    <div role="separator" class="dropdown-divider"></div>
+                    <span class="ml-2"><strong>Chronométreur</strong></span>
+                    <a class="dropdown-item" href="/chronometrage/epreuves">Mes événements</a>
+                    <div role="separator" class="dropdown-divider"></div>
+                    <a class="dropdown-item text-danger" href="/user/logout"><i class="fa fa-sign-out  spacer-xs-left"></i>Se déconnecter</a>
+                  </div>
+                {{else}}
+                  <a href="/user/profil/{{user.id}}" class="btn btn-outline-secondary" id="user-menu">Connection</a>
+                {{/if}}
+              </span>
+            </div>
+          </div>
+          <div id="mobile-menu" class="d-sm-down">
+            <div class="col-12 text-right">
+              
+              <i id="mobile-menu-trigger" class="fa fa-bars fa-2x spacer-sm-top spacer-xs-bottom" aria-hidden="true"></i>
+
+            </div>
+            <div class="col-12 mt-3 mb-3">
+              <div class="col-12" id="mobile-user-menu"></div>
+            </div>
+          </div>          
         </div>
       </div>
+
+
+
+
       
       <div class="row">
-        <div class="col-md-2 bg-light">
-          <header id="profil-menu" class="spacer-xs-left spacer-xs-right sticky-top d-sm-up">
-            <span id="smallscreen-menu-hidde">
-              <div class="row">
-                <div class="col-12 spacer-sm-top spacer-sm-bottom text-center" id="fullscreen-logo">
-                  <a href="/" alt ="EventIzir" id="logo" >
-                    <img src="/img/logo.png" alt="event.izir.fr" class="img img-fluid">
-                  </a>
-                </div>
-              </div>            
-              <div class="row">
-                <div class="col-12 spacer-sm-top" id="fullscreen-search">
-                  <a href="/event/finder" alt="Mon compte" class="d-flex" id="menu-search-block">
-                    <i class="fa fa-search fa-2x txt-dark-blue spacer-xs-right"></i>
-                    <p class="spacer-xs-left" id="menu-search-text">Rechercher une épreuve</p>
-                  </a>
-                </div>
-              </div>
-              {{#if user}}
-              <div class="row">
-                <div class="col-12" id="fullscreen-user">
-                  <a href="/user/profil/{{user.id}}" alt="Mon compte" class="d-flex txt-dark-blue spacer-sm-top text-capitalize" id="user-link">
-                    <i class="fa fa-user-circle fa-2x"> </i> <p class="spacer-xs-left spacer-xs-bottom" id="menu-user-name">{{user.name}} {{user.surname}}</p>
-                  </a>
-                </div>
-              </div>              
-            </span>
-
-            <div class="row">
-              <div class=" col-sm-6 col-md-12 spacer-md-top" id="menu-participant">
-                <h3><i class="fa fa-user-circle"></i> Participant</h3>
-                <ul>
-                  <li class="spacer-xs-top"><a href="/event/finder">S'incrire à une épreuve</a></li>
-                  <li><a class="spacer-xs-top" href="/inscription/recap/user/{{user.id}}/">Mes inscriptions</a></li>
-                  <li><a class="spacer-xs-top" href="http://www.runnerbreizh.fr/coureur.php?CoureurNom={{user.surname}}&CoureurPrenom={{user.name}}" target="_blank">Mes classements</a></li>
-                  <li><a class="spacer-xs-top" href="/user/certificat/{{user.id}}/">Mon certificat médical</a></li>
-                  <li><a class="spacer-xs-top" href="/user/amis">Inviter des amis</a></li>
-                  <li><a href="/user/profil/edit/{{user.id}}/">Editer mon profil</a></li>
-                  <li><a href="/user/password-forgot">Mot de passe</a></li>
-                </ul>
-              </div>
-              <div class=" col-sm-6 col-md-12 spacer-sm-top" id="menu-organisateur">
-                <h3 class=""><i class="fa fa-calendar-check-o" ></i> Organisateur</h3>
-                <ul>
-                  <li class="spacer-xs-top"><a href="/event/create">Ajouter un évènement</a></li>
-                  <li><a href="/organisateur/epreuves">Mes événements</a></li>
-                  <li><a href="/organisateur/comptabilite/{{user.id}}">Comptabilité</a></li>
-                </ul>
-              </div>
-              <div class=" col-sm-6 col-md-12 spacer-sm-top">
-                <h3 class=""><i class="fa fa-clock-o" aria-hidden="true"></i> Chronométreur</h3>
-                <ul>
-                  <li><a href="/chronometrage/epreuves">Mes événements</a></li>
-                </ul>
-              </div>              
-            </div>
-            <div class="row">
-              <div class="col-12">
-                <a href="/user/logout" alt="Se déconnecter">
-                  <span class="text-danger">Se déconnecter<i class="fa fa-sign-out  spacer-xs-left"></i></span>
-                </a>
-              </div>
-            </div>
-            {{else}}
-            <div class="row">
-              <div class="col-12" id="fullscreen-user">
-                <a href="/user/login" class="spacer-sm-top d-flex login spacer-xs-bottom" id="user-link">
-                  <i class="fa fa-user-circle txt-dark-blue fa-2x"> </i>
-                  <p class="spacer-xs-left" id="menu-user-name">Connexion / Inscription</p>
-                </a>                
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-12">
-                <a href="/user/login" class="spacer-sm-top d-flex spacer-xs-bottom"><i class="fa fa-calendar-plus-o fa-2x mr-2" aria-hidden="true"></i>Devenir organisateur</a>
-              </div>
-            </div>            
-            {{/if}}   
-          </header>          
-        </div>
-        <div class="col-md-10">
+        <div class="col-md-12">
           <main role="main">
             <div class="container">
               <div class="row text-center">

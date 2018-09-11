@@ -34,6 +34,7 @@ var cart = require('./app/router/cartRoutes')
 var registration = require('./app/router/registrationRoutes')
 var organisateur = require('./app/router/organisateurRoutes')
 var chronometrage = require('./app/router/chronometrageRoutes')
+var notifications = require('./app/router/notificationRoutes')
 
 // cutom modules
 // var useCron = () => {
@@ -154,6 +155,7 @@ app.use('/catalogue', cart)
 app.use('/inscription', registration)
 app.use('/organisateur', organisateur)
 app.use('/chronometrage', chronometrage)
+app.use('/notifications', notifications)
 
 // FOREST SET UP
 app.use(Liana.init({

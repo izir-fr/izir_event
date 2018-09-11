@@ -297,6 +297,10 @@ a.login > p{
   font-weight: bold;
 }
 
+#btn-menu {
+  border: none;
+}
+
 /* GOOGLE MAPS */
 
 #map {

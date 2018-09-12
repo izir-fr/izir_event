@@ -45,7 +45,11 @@
         </div>
 
         <!--formulaire d'inscription-->
-        <form id="participant-form" class="" method="POST" action="/inscription/cart/{{results.id}}/participant/post">
+        {{#if origine.recap_user}}
+          <form id="participant-form" class="" method="POST" action="/inscription/cart/{{results.id}}/participant/post?origine=recap_user">
+        {{else}}
+          <form id="participant-form" class="" method="POST" action="/inscription/cart/{{results.id}}/participant/post">
+        {{/if}}
           <div class="row" id="step-epreuve">
             <div class="col-11 mx-auto mt-3 bg-white">
 
@@ -128,7 +132,13 @@
                       </div>
                       <div class="col-sm-9">
                         <div class="form-group">
-                          <input type="text" class="form-control input-participant-validation" placeholder="Nom" name="surname" value="{{user.surname}}" required>
+                          <input
+                            type="text"
+                            class="form-control input-participant-validation" placeholder="Nom"
+                            name="surname"
+                            value="{{#if results.participant.nom}}{{results.participant.nom}}{{else}}{{user.surname}}{{/if}}
+                            "
+                            required>
                         </div>
                       </div>
                     </div>
@@ -140,7 +150,14 @@
                       </div>
                       <div class="col-sm-9">
                         <div class="form-group">
-                          <input type="text" class="form-control input-participant-validation" placeholder="Prénom" name="name" value="{{user.name}}" required>
+                          <input
+                            type="text"
+                            class="form-control input-participant-validation"
+                            placeholder="Prénom"
+                            name="name"
+                            value="{{#if results.participant.prenom}}{{results.participant.prenom}}{{else}}{{user.name}}{{/if}}
+                            "
+                            required>
                         </div>
                       </div>
                     </div>
@@ -152,7 +169,13 @@
                       </div>
                       <div class="col-sm-9">
                         <div class="form-group">
-                          <input type="email" class="form-control input-participant-validation" placeholder="Email" name="email"  value="{{user.email}}" required>
+                          <input
+                            type="email"
+                            class="form-control input-participant-validation"
+                            placeholder="Email"
+                            name="email"
+                            value="{{#if results.participant.email}}{{results.participant.email}}{{else}}{{user.email}}{{/if}}"
+                            required>
                         </div>
                       </div>
                     </div>
@@ -165,7 +188,15 @@
                       <div class="col-sm-9">
                         <div class="form-group">
                           <select class="form-control input-participant-validation" name="sex" id="sex" required>
-                            <option value="{{user.sex}}" selected>{{user.sex}}</option>
+                            <option
+                              value="{{#if results.participant.sex}}{{results.participant.sex}}{{else}}{{user.sex}}{{/if}}"
+                              selected>
+                              {{#if results.participant.sex}}
+                                {{results.participant.sex}}
+                              {{else}}
+                                {{user.sex}}
+                              {{/if}}
+                            </option>
                             <option value="Homme">Homme</option>
                             <option value="Femme">Femme</option>
                           </select>
@@ -180,8 +211,13 @@
                       </div>
                       <div class="col-sm-3">
                         <div class="form-group">
-                          <select class="form-control input-participant-validation" name="jourNaissance" id="jourNaissance" required>
-                            <option value="{{jourNaissance}}" selected>{{jourNaissance}}</option>
+                          <select
+                            class="form-control input-participant-validation" name="jourNaissance" id="jourNaissance" required>
+                            <option
+                              value="{{#if results.participant.dateNaissance}}{{userDateDay results.participant.dateNaissance}}{{else}}{{jourNaissance}}{{/if}}"
+                              selected>
+                              {{#if results.participant.dateNaissance}}{{userDateDay results.participant.dateNaissance}}{{else}}{{jourNaissance}}{{/if}}
+                            </option>
                             {{#each date_list.day}}
                               <option value="{{this.value}}">{{this.value}}</option>
                             {{/each}}
@@ -191,7 +227,11 @@
                       <div class="col-sm-3">
                         <div class="form-group">
                           <select class="form-control input-participant-validation" name="moisNaissance" id="moisNaissance" required>
-                            <option value="{{moisNaissance}}" selected>{{moisNaissance}}</option>
+                            <option
+                              value="{{#if results.participant.dateNaissance}}{{userDateMonth results.participant.dateNaissance}}{{else}}{{moisNaissance}}{{/if}}"
+                              selected>
+                              {{#if results.participant.dateNaissance}}{{userDateMonth results.participant.dateNaissance}}{{else}}{{moisNaissance}}{{/if}}
+                            </option>
                             {{#each date_list.month}}
                               <option value="{{this.value}}">{{this.value}}</option>
                             {{/each}}
@@ -200,7 +240,15 @@
                       </div>
                       <div class="col-sm-3">
                         <div class="form-group">
-                          <input class="form-control input-participant-validation" type="number" placeholder="2018"  min="1900" step="1" value="{{anneeNaissance}}" name="anneeNaissance" required>
+                          <input
+                            class="form-control input-participant-validation"
+                            type="number"
+                            placeholder="2018"
+                            min="1900"
+                            step="1"
+                            value="{{#if results.participant.dateNaissance}}{{userDateYear results.participant.dateNaissance}}{{else}}{{anneeNaissance}}{{/if}}"
+                            name="anneeNaissance"
+                            required>
                         </div>
                       </div>                      
                     </div>
@@ -219,7 +267,12 @@
                       </div>
                       <div class="col-sm-9">
                         <div class="form-group">
-                          <input type="text" class="form-control" placeholder="Team / Club" name="team"  value="{{user.team}}">
+                          <input
+                            type="text"
+                            class="form-control"
+                            placeholder="Team / Club"
+                            name="team"
+                            value="{{#if results.participant.team}}{{results.participant.team}}{{else}}{{user.team}}{{/if}}">
                         </div>
                       </div>
                     </div>
@@ -229,7 +282,12 @@
                       </div>
                       <div class="col-sm-9">
                         <div class="form-group">
-                          <input type="text" class="form-control" placeholder="#Numéro de License" name="numLicence"  value="{{user.numLicence}}">
+                          <input
+                            type="text"
+                            class="form-control"
+                            placeholder="#Numéro de License"
+                            name="numLicence"
+                            value="{{#if results.participant.numLicence}}{{results.participant.numLicence}}{{else}}{{user.numLicence}}{{/if}}">
                         </div>
                       </div>
                     </div>
@@ -240,7 +298,11 @@
                       <div class="col-sm-9">
                         <div class="form-group">
                           <select class="form-control input-participant-validation" name="categorie" id="categorie" required>
-                            <option value="{{user.categorie}}" selected>{{user.categorie}}</option>
+                            <option
+                              value="{{#if results.participant.categorie}}{{results.participant.categorie}}{{else}}{{user.categorie}}{{/if}}"
+                              selected>
+                              {{#if results.participant.categorie}}{{results.participant.categorie}}{{else}}{{user.categorie}}{{/if}}
+                            </option>
                             {{#each category_list}}
                               <option value="{{this.short}} - {{this.name}}">{{this.short}} - {{this.name}}</option>
                             {{/each}}
@@ -263,8 +325,13 @@
                       </div>
                       <div class="col-sm-9">
                         <div class="form-group">
-                          
-                          <input type="text" class="form-control input-participant-validation" placeholder="ex: 9 rue Albert Camus" name="adresse1"  value="{{user.adresse1}}" required>
+                          <input
+                            type="text"
+                            class="form-control input-participant-validation"
+                            placeholder="ex: 9 rue Albert Camus"
+                            name="adresse1"
+                            value="{{#if results.participant.adresse1}}{{results.participant.adresse1}}{{else}}{{user.adresse1}}{{/if}}"
+                            required>
                         </div>
                       </div>
                     </div>
@@ -274,7 +341,12 @@
                       </div>
                       <div class="col-9">
                         <div class="form-group">
-                          <input type="text" class="form-control" placeholder="ex: Appt 103" name="adresse2"  value="{{user.adresse2}}">
+                          <input
+                            type="text"
+                            class="form-control"
+                            placeholder="ex: Appt 103"
+                            name="adresse2"
+                            value="{{#if results.participant.adresse2}}{{results.participant.adresse2}}{{else}}{{user.adresse2}}{{/if}}">
                         </div>                        
                       </div>
                     </div>
@@ -284,7 +356,13 @@
                       </div>
                       <div class="col-9">
                         <div class="form-group">
-                          <input type="text" class="form-control input-participant-validation" placeholder="ex: 56300" name="codePostal"  value="{{user.codePostal}}" required>
+                          <input
+                            type="text"
+                            class="form-control input-participant-validation"
+                            placeholder="ex: 56300"
+                            name="codePostal"
+                            value="{{#if results.participant.codePostal}}{{results.participant.codePostal}}{{else}}{{user.codePostal}}{{/if}}"
+                            required>
                         </div>                        
                       </div>
                     </div>
@@ -294,7 +372,13 @@
                       </div>
                       <div class="col-9">
                         <div class="form-group">
-                          <input type="text" class="form-control input-participant-validation" placeholder="ex: Pontivy" name="city"  value="{{user.city}}" required>
+                          <input
+                            type="text"
+                            class="form-control input-participant-validation"
+                            placeholder="ex: Pontivy"
+                            name="city"
+                            value="{{#if results.participant.city}}{{results.participant.city}}{{else}}{{user.city}}{{/if}}"
+                            required>
                         </div>                        
                       </div>
                     </div>

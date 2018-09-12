@@ -80,7 +80,10 @@ var hbs = exphbs.create({
     dateMonth: (val) => { return (val.getUTCMonth() + 1) },
     dateDay: (val) => { return val.getUTCDate() },
     dateHours: (val) => { return val.getUTCHours() },
-    dateMinutes: (val) => { return val.getUTCMinutes() }
+    dateMinutes: (val) => { return val.getUTCMinutes() },
+    userDateDay: (val) => { return val.split('/')[0] },
+    userDateMonth: (val) => { return val.split('/')[1] },
+    userDateYear: (val) => { return val.split('/')[2] }
   }
 })
 

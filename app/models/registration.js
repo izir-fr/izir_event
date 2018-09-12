@@ -64,7 +64,8 @@ var registrationSchema = mongoose.Schema({
     participant: { type: Boolean, default: true },
     team: { type: Boolean, default: true },
     paiement: { type: Boolean, default: true },
-    certificat: { type: Boolean, default: true }
+    certificat: { type: Boolean, default: true },
+    all: { type: Boolean, default: false }
   },
   options: {
     epreuve_format: {

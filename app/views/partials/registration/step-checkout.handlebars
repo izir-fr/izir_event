@@ -288,6 +288,11 @@
               <div class="col-6 mb-5 text-center">
                 <a class="btn btn-outline-primary" href="/event/{{results.event.id}}">Détails de l'évènement</a>
               </div>
+              {{#if origine.recap_user}}
+                <div class="col-6 mb-5 text-center">
+                  <a class="btn btn-outline-primary" href="/inscription/recap/user/{{user.id}}">Mes inscriptions ></a>
+                </div>
+              {{/if}}
             </div>             
           </div>
         </div>

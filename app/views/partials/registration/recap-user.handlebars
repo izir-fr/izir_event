@@ -4,123 +4,119 @@
   </div>
 </div>
 <div class="container-fluid">
-  {{#if registrations}}
-  <div class="row bg-dark-blue txt-white">
-    <div class="col-md-3">Dossier</div>
-    <div class="col-md-3">Participant</div>
-    <div class="col-md-2">Evènement</div>
-    <div class="col-md-2">Paiement</div>
-    <div class="col-md-1">Docs</div>
-    <div class="col-md-1">Action</div>
-  </div>
-  <div class="row">
-    <div class="col-md-3"></div>
-    <div class="col-md-3"></div>
-    <div class="col-md-2"></div>
-    <div class="col-md-2"></div>
-    <div class="col-md-1"></div>
-    <div class="col-md-1"></div>
-  </div>
 
-          {{#each registrations}}
-            <tr class="text-lowercase">
-              <td>
-                <strong>
-                {{#if this.paiement.captured}}
-                  <span class="text-uppercase">complet</span>
-                  <i class="fa fa-check text-success" aria-hidden="true"></i>
-                {{else}}
-                  {{#if this.paiement.other_captured}}
-                    <span class="text-uppercase">complet</span>
-                    <i class="fa fa-check text-success" aria-hidden="true"></i>
-                  {{else}}
-                    {{#if this.paiement.other}}
-                      <span class="text-uppercase">en attente <i class="fa fa-check text-warning" aria-hidden="true"></i></span>
-                      <br>
-                      <span class="text-warning">de réception du paiement par l'organisation</span>
-                    {{else}}
-                      <span class="text-uppercase">Non finalisée</span>
-                      <br>
-                      <span><a class="text-danger" href="/inscription/checkout/{{this.id}}">En attente de paiement</a></span>
-                    {{/if}}
-                  {{/if}}
-                {{/if}}
-                </strong>
-                <br>
-                <span class="text-secondary">du: {{date this.created_at}}</span>
-                <br>
-                <span class="text-secondary text-uppercase">n°: {{this.id}}</span>
-              </td>
-              <td>
-                <strong>{{this.participant.nom}}</strong> {{this.participant.prenom}}
-                <br>
-                <span class="text-secondary">{{this.participant.sex}}</span>
-                <br>
-                <span class="text-secondary">{{this.participant.dateNaissance}}</span>
-                <br>
-                <span class="text-secondary">{{this.participant.team}}</span>
-              </td>
-              <td>
-                <strong><a href="/event/{{this.event.id}}">{{this.event.name}}</a></strong>
-                <br>
-                <span class="text-secondary">{{this.event.adresse.codePostal}} {{this.event.adresse.ville}}</span>
-              </td>
-              <td>
-                
-                {{#if this.paiement.captured}}
-                  Méthode : CB
-                  <br>
-                  <span class="text-secondary">N°: {{this.paiement.id}}</span>
-                {{else}}
-                  {{#if this.paiement.other_captured}}
-                    Méthode : Chèque / Espèce 
-                  {{else}}
-                    {{#if this.paiement.other}}
-                      Méthode : Chèque / Espèce
-                      <br>
-                      <span class="text-secondary">Paiement en direct à l'organisation</span>
-                    {{else}}
-                      Non Payé
-                    {{/if}}
-                  {{/if}}             
-                {{/if}}
-              </td>
-              <td>
-                {{#if this.docs.certificat}}
-                  <a href="{{this.docs.certificat}}" target="_blank"><i class="fa fa-file text-success" aria-hidden="true"></i></a>
-                {{else}}
-                  <i class="fa fa-file text-muted" aria-hidden="true"></i>
-                {{/if}}
-              </td>               
-              <td>
-                <span class="text-center">
-                  <a href="/inscription/checkout/{{this.id}}" class="spacer-xs-right"><i class="fa fa-eye" aria-hidden="true"></i></a>
-                  {{#if this.paiement.captured}}
-                    <i class="fa fa-credit-card-alt text-muted" aria-hidden="true"></i>
-                  {{else}}
-                    {{#if this.paiement.other_captured}}
-                      <i class="fa fa-credit-card-alt text-muted" aria-hidden="true"></i>
-                    {{else}}
-                      {{#if this.paiement.other}}
-                      <a class="text-danger" href="/inscription/checkout/{{this.id}}">
-                        <i class="fa fa-credit-card-alt text-warning" aria-hidden="true"></i> 
-                      </a>
-                      {{else}}
-                        <a class="text-danger" href="/inscription/checkout/{{this.id}}">
-                          <i class="fa fa-credit-card-alt text-danger" aria-hidden="true"></i>  
-                        </a>                      
-                      {{/if}}  
-                    {{/if}}             
-                  {{/if}}
-                </span>
-              </td>
-            </tr>
-          {{/each}}
-        </tbody>
-      </table>
-    
+  {{#if registrations}}
+
+    <div class="row bg-dark-blue txt-white text-center pb-3 pt-3">
+      <div class="col-md-3">Dossier</div>
+      <div class="col-md-3">Participant</div>
+      <div class="col-md-2">Evènement</div>
+      <div class="col-md-2">Paiement</div>
+      <div class="col-md-1">Docs</div>
+      <div class="col-md-1">Actions</div>
     </div>
-  </div>
+
+    {{#each registrations}}
+      
+      <!-- dossier -->
+      <div class="row text-lowercase mt-2 pb-2 border border-top-0 border-right-0 border-left-0">
+        <div class="col-md-3">
+          <strong>
+            {{#if this.organisateur_validation.all}}
+              <i class="fa fa-check text-success mr-2" aria-hidden="true"></i>Validé par l'organisateur
+            {{else}}
+              <i class="fa fa-pause text-warning mr-2" aria-hidden="true"></i>En attente de validation par l'organisateur
+            {{/if}}
+          </strong>
+          <br>
+          <span class="text-secondary">du: {{date this.created_at}}</span>
+          <br>
+          <span class="text-secondary text-uppercase">n°: {{this.id}}</span>          
+        </div>
+
+        <!-- participant -->
+        <div class="col-md-3 text-capitalize">
+          {{#if this.options.epreuve_format.team}}
+            Equipe:  {{this.participant.team}}
+            <br>
+            Capitaine: <strong>{{this.participant.nom}}</strong> {{this.participant.prenom}}
+          {{else}}
+            <strong>{{this.participant.nom}}</strong> {{this.participant.prenom}}
+            <br>
+            <span class="text-secondary">{{this.participant.sex}}</span>
+            <br>
+            <span class="text-secondary">{{this.participant.dateNaissance}}</span>
+            <br>
+            <span class="text-secondary">{{this.participant.team}}</span>            
+          {{/if}}
+        </div>
+
+        <!-- événement -->
+        <div class="col-md-2">
+          <strong><a href="/event/{{this.event.id}}">{{this.event.name}}</a></strong>
+          <br>
+          <span class="text-secondary">{{this.event.adresse.codePostal}} {{this.event.adresse.ville}}</span>          
+        </div>
+
+        <!-- paiement -->
+        <div class="col-md-2">
+          {{#if this.event.paiement}}
+            Méthode : 
+            {{#if this.paiement.captured}}
+              CB
+              <br>
+              <span class="text-secondary">N°: {{this.paiement.id}}</span>
+            {{else}}
+              {{#if this.paiement.other_captured}}
+                Chèque / Espèce 
+              {{else}}
+                {{#if this.paiement.other}}
+                  Méthode : Chèque / Espèce
+                  <br>
+                  <span class="text-secondary">Paiement en direct à l'organisation</span>
+                {{else}}
+                  <span class="text-danger">Non Payé</span>
+                {{/if}}
+              {{/if}}             
+            {{/if}} 
+          {{else}}
+            L'organisateur n'a pas activé les paiements en ligne
+          {{/if}}
+        </div>
+ 
+        <!-- docs -->
+        <div class="col-md-1 text-center">
+          {{#if this.event.certificat_required}}
+            {{#if this.docs.certificat}}
+              <a href="{{this.docs.certificat}}" target="_blank"><i class="fa fa-file text-success" aria-hidden="true"></i></a>
+            {{else}}
+              <i class="fa fa-file text-danger" aria-hidden="true"></i>
+            {{/if}}  
+          {{else}}
+            <i class="fa fa-file text-muted" aria-hidden="true"></i>
+          {{/if}}
+        
+        </div>
+
+        <!-- actions -->
+        <div class="col-md-1 text-capitalize text-center">
+          <div class="btn-group w-80" role="group">
+            <button id="btnGroupDrop1" type="button" class="btn btn-outline-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="fa fa-pencil mr-2" aria-hidden="true"></i>
+            </button>
+            <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+              <a class="dropdown-item" href="/inscription/cart/{{this.id}}/participant?origine=recap_user">Participant</a>
+              {{#if event.paiement}}
+                <a class="dropdown-item" href="/inscription/checkout/{{this.id}}?origine=recap_user">Paiement</a>
+              {{/if}}
+              {{#if event.certificat_required}}
+                <a class="dropdown-item" href="/inscription/cart/{{this.id}}/certificat?origine=recap_user">Certificat</a>
+              {{/if}}
+            </div>
+          </div>        
+        </div>
+      </div>
+    {{/each}}
   {{else}}
   <div class="row">
     <div class="col-12">
@@ -129,7 +125,7 @@
   </div>
   {{/if}}
   <div class="row">
-    <div class="col-12 text-center spacer-sm-bottom">
+    <div class="col-sm-3 text-center mx-auto mt-3 mb-5 text-center">
       <a href="/event/finder" class="btn btn-default">Trouver une épreuve maintenant</a>
     </div>
   </div>

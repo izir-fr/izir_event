@@ -168,12 +168,16 @@
                   </div>
                   <div class="row">
                     <div class="col-12">
-                      <a id="certificat_viewer" class="btn btn-outline-secondary disabled" target="_blank" href="#">
+                      {{#if results.docs.certificat}}
+                        <a id="certificat_viewer" class="btn btn-success" target="_blank" href="{{results.docs.certificat}}">
+                      {{else}}
+                        <a id="certificat_viewer" class="btn btn-outline-secondary disabled" target="_blank" href="#">
+                      {{/if}}
                         <i class="fa fa-file" aria-hidden="true"></i> Voir le document
                       </a>
                     </div>
                     <!-- certificat input form -->
-                    <input name='certificat_file' class="input-participant-validation" value='' type='hidden' required>
+                    <input name='certificat_file' class="input-participant-validation" value='{{results.docs.certificat}}' type='hidden' required>
                   </div>
                   <div class="row">
                     <div class="col-12 mt-3 mb-3">

@@ -194,6 +194,15 @@ var registrationCtrl = {
     var jourNaissance
     var moisNaissance
     var anneeNaissance
+
+    // origine test
+    var origine = false
+    if (req.query.origine === 'recap_user') {
+      origine = {
+        'recap_user': true
+      }
+    }
+
     if (req.user.birthday !== '') {
       try {
         jourNaissance = req.user.birthday.split('/')[0]
@@ -225,7 +234,8 @@ var registrationCtrl = {
           anneeNaissance: anneeNaissance,
           date_list: dateList,
           category_list: catList,
-          discipline_list: disList
+          discipline_list: disList,
+          origine: origine
         }
         if (registration[0].options.epreuve_format.team === false && registration[0].options.epreuve_format.individuel === true) {
           res.render('partials/registration/step-participant', data)
@@ -273,7 +283,9 @@ var registrationCtrl = {
                 res.redirect('/inscription/cart/' + id + '/participant')
               } else {
                 var eventConfig = registration[0].event
-                if (eventConfig.paiement) {
+                if (req.query.origine === 'recap_user') {
+                  res.redirect('/inscription/recap/user/' + req.user.id)
+                } else if (eventConfig.paiement) {
                   res.redirect('/inscription/checkout/' + id)
                 } else if (eventConfig.certificat_required) {
                   res.redirect('/inscription/cart/' + id + '/certificat')
@@ -689,6 +701,14 @@ var registrationCtrl = {
   },
   // Get checkout form
   getCheckout: function (req, res) {
+    // origine test
+    var origine = false
+    if (req.query.origine === 'recap_user') {
+      origine = {
+        'recap_user': true
+      }
+    }
+
     Registration
       .find({_id: req.params.id})
       .populate('event')
@@ -704,7 +724,8 @@ var registrationCtrl = {
             stripeFrontKey: credentials.stripeKey.front,
             orderAmount: registration[0].orderAmount * 1 + 0.50
           },
-          results: registration[0]
+          results: registration[0],
+          origine: origine
         }
         res.render('partials/registration/step-checkout', data)
       })

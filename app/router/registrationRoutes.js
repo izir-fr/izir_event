@@ -75,4 +75,11 @@ REGISTRATION STEP 5
 // Get confirmation page
 router.get('/checkout/:id/confirmation', ensureAuthenticated, registrationCtrl.getConfirmation)
 
+/*
+Organisateur actions
+*/
+router.get('/cart/:id/certificat/reject', ensureAuthenticated, registrationCtrl.setCertificatReject)
+
+router.get('/checkout/:id/validate', ensureAuthenticated, registrationCtrl.setCheckoutValidate)
+
 module.exports = router

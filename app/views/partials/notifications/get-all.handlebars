@@ -1,0 +1,42 @@
+<div class="header container-fluid">
+  <div class="jumbotron">
+    <h1>Mes notifications</h1>
+  </div>
+</div>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-10 mx-auto mb-4">
+      {{#if notifications}}
+        <div class="row">
+          <div class="col-12 mt-5 mb-4 text-center text-md-left">
+            <h3>{{notifications.length}} Notifications</h3>
+          </div>
+        </div>
+        <a href="/notifications/receive/{{user.id}}/readen" class="btn btn-outline-primary mb-4">Tout marquer comme lu</a>
+        {{#each notifications}}
+          <div class="row mb-2">
+            <div class="col-1">
+              <span class="txt-dark-blue text-right">
+                <i class="fa fa-user-circle-o fa-3x float-right mt-2" aria-hidden="true"></i>
+              </span>
+            </div>
+            <div class="col-11 pb-3 pt-3  bg-light mx-auto">
+              <span>
+                <small class="text-muted">de: 
+                  {{#if this.sender}}
+                    {{this.sender.email}}
+                  {{else}}
+                    serviceclient@izir.fr
+                  {{/if}}
+                </small>
+                <span class="text-muted ml-3 mr-3">{{date this.created_at}}</span> {{this.message}}</span>
+            </div>                
+          </div>
+        {{/each}}
+        <a href="/notifications/receive/{{user.id}}/readen" class="btn btn-outline-primary mt-4">Tout marquer comme lu</a>
+      {{else}}
+        <p class="alert alert-success mt-5 text-center">Vous n'avez aucune notification pour le moment</p>
+      {{/if}}
+    </div>
+  </div>
+</div>

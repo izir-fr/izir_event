@@ -5,20 +5,23 @@
 </div>
 <div class="container-fluid">
   {{#if registrations}}
+  <div class="row bg-dark-blue txt-white">
+    <div class="col-md-3">Dossier</div>
+    <div class="col-md-3">Participant</div>
+    <div class="col-md-2">Evènement</div>
+    <div class="col-md-2">Paiement</div>
+    <div class="col-md-1">Docs</div>
+    <div class="col-md-1">Action</div>
+  </div>
   <div class="row">
-    <div class="col-12">
-      <table class="table">
-        <thead class="bg-dark-blue txt-white">
-          <tr class="text-center">
-            <th>Dossier</th>
-            <th>Participant</th>
-            <th>Evènement</th>
-            <th>Paiement</th>
-            <th>Docs</th>            
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
+    <div class="col-md-3"></div>
+    <div class="col-md-3"></div>
+    <div class="col-md-2"></div>
+    <div class="col-md-2"></div>
+    <div class="col-md-1"></div>
+    <div class="col-md-1"></div>
+  </div>
+
           {{#each registrations}}
             <tr class="text-lowercase">
               <td>

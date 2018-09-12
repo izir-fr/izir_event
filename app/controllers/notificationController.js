@@ -30,7 +30,7 @@ var notificationController = {
 
     Notification
       .update({
-        receiver: req.user.id,  'read_by.readerId': { $ne: req.user.id }
+        receiver: req.user.id, 'read_by.readerId': { $ne: req.user.id }
       }, {
         $push: { 'read_by': readBy }
       }, (err, doc) => {

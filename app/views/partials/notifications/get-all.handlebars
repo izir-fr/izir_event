@@ -12,7 +12,7 @@
             <h3>{{notifications.length}} Notifications</h3>
           </div>
         </div>
-        <a href="/notifications/receive/{{user.id}}/readen" class="btn btn-default mb-4">Tout marquer comme lu</a>
+        <a href="/notifications/receive/{{user.id}}/readen" class="btn btn-outline-primary mb-4">Tout marquer comme lu</a>
         {{#each notifications}}
           <div class="row mb-2">
             <div class="col-1">
@@ -33,7 +33,7 @@
             </div>                
           </div>
         {{/each}}
-        <a href="/notifications/receive/{{user.id}}/readen" class="btn btn-default mt-4">Tout marquer comme lu</a>
+        <a href="/notifications/receive/{{user.id}}/readen" class="btn btn-outline-primary mt-4">Tout marquer comme lu</a>
       {{else}}
         <p class="alert alert-success mt-5 text-center">Vous n'avez aucune notification pour le moment</p>
       {{/if}}

@@ -197,3 +197,5 @@ app.listen(app.get('port'), function () {
   console.log('app on : localhost:' + app.get('port'))
   console.log('==========>')
 })
+
+module.exports = app

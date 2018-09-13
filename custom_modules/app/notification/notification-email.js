@@ -14,8 +14,8 @@ var emailNotification = (userId) => {
       from: 'Notification Izir.fr <serviceclient@izir.fr>',
       subject: 'Une notification vous attend dans votre espace utilisateur',
       text: 'Bonjour,\n\n' +
-      'vous venez de recevoir une notification dans votre espace utilisateur.\n\n' +
-      'Pour la consulter rendez vous votre espace utilisateur.\n\n' +
+      'Vous venez de recevoir une notification dans votre espace utilisateur.\n\n' +
+      'Pour la consulter rendez vous sur votre espace utilisateur.\n\n' +
       '- http://event.izir.fr/notifications/receive/' + user.id + ' \n\n' +
       'Bonne course !\n\n' +
       'Nicolas de izir.fr'

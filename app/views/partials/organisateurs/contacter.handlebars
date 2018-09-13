@@ -9,24 +9,27 @@
       <div class="alert alert-danger">{{msg}}</div>
     {{/each}}
 	{{/if}}
-	<form method="post" action="/organisateur/contacter/{{data.id}}">
-		<input type="hidden" value="{{data.event.id}}" name="event_id">
-		<input type="hidden" value="{{data.user}}" name="id_participant">
-		<input type="hidden" value="{{data.eventName}}" name="event_name">
-	    <!-- MESSAGE-->
-	    <div class="row">
-	      <div class="col-sm-12 mt-5">
-	        <div class="form-group spacer-sm-top">
-	          <label>Messages pour le participant *</label><br>
-	          <textarea name="description" id="" class="form-control" cols="30" rows="10" placeholder="Description de l'évènement" required>Bonjour, nous avons constaté que votre inscription pour l'événement "{{data.eventName}}" à {{event.adresse.ville}} le {{date data.event.epreuves.[0].date_debut}} n'est pas complète. Merci de ...</textarea>
-	        </div>        
-	      </div>
-	    </div>
-<!-- 		<div class="form-group">
-			<label>Email de réponse *</label>
-			<input type="email" class="form-control" placeholder="votre@mail.ici" name="email_organisateur"  value="{{user.email}}" required>
-		</div> -->
-	  	<button type="submit" class="btn btn-default">Envoyer</button>
+	{{#if single}}
+		<form method="post" action="/organisateur/contacter/{{data.event.id}}/single/{{data.id}}">
+	{{/if}}
+	{{#if all}}
+		<form method="post" action="/organisateur/contacter/{{data.id}}/all">
+	{{/if}}
+    <!-- MESSAGE-->
+    <div class="row">
+      <div class="col-sm-12 mt-5">
+        <div class="form-group spacer-sm-top">
+        	{{#if all}}
+						<label>Messages pour les participants *</label><br>
+        	{{else}}
+        		<label>Messages pour le participant *</label><br>
+        	{{/if}}
+          <textarea name="description" id="" class="form-control" cols="30" rows="10" placeholder="Description de l'évènement" required>{{#if all}}Bonjour, nous vous contactons ce jour pour la raison suivante ...{{else}}Bonjour, nous avons constaté que votre inscription pour l'événement "{{data.eventName}}" à {{event.adresse.ville}} le {{date data.event.epreuves.[0].date_debut}} n'est pas complète. Merci de ...{{/if}}
+          </textarea>
+        </div>        
+      </div>
+    </div>
+  	<button type="submit" class="btn btn-default">Envoyer</button>
 	</form>
 	<p class="legend"><br><em>* Champs obligatoire</em></p>
 </div>

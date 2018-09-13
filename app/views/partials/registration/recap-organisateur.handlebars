@@ -113,6 +113,7 @@
       </button>
       <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
         <a href="/inscription/cart/{{event.id}}" class="dropdown-item">Ajouter un participant</a>
+        <a href="/organisateur/contacter/{{event.id}}/all" class="dropdown-item">Contacter tous participants</a>
       </div>
     </div>
   </div>
@@ -236,7 +237,7 @@
               {{else}}
                 <a class="dropdown-item organisateur-dashboard-confirm-action" href="/inscription/checkout/{{this.id}}/validate">Valider le dossier</a>
               {{/if}}
-              <a class="dropdown-item" href="/organisateur/contacter/{{this.id}}">Contacter le participant</a>
+              <a class="dropdown-item" href="/organisateur/contacter/{{this.event}}/single/{{this.id}}">Contacter le participant</a>
             </div>
           </div>
         </div>

@@ -24,7 +24,7 @@
         	{{else}}
         		<label>Messages pour le participant *</label><br>
         	{{/if}}
-          <textarea name="description" id="" class="form-control" cols="30" rows="10" placeholder="Description de l'évènement" required>{{#if all}}Bonjour, nous vous contactons ce jour pour la raison suivante ...{{else}}Bonjour, nous avons constaté que votre inscription pour l'événement "{{data.eventName}}" à {{event.adresse.ville}} le {{date data.event.epreuves.[0].date_debut}} n'est pas complète. Merci de ...{{/if}}
+          <textarea name="description" id="" class="form-control" cols="30" rows="10" placeholder="Description de l'évènement" required>{{#if all}}Bonjour, nous vous contactons ce jour pour la raison suivante ...{{else}}Bonjour, nous avons constaté que votre inscription pour l'événement "{{data.eventName}}" à {{event.adresse.ville}} le {{date data.event.epreuves.[0].date_debut}} n'est pas complète. Merci d'ajouter un certificat valide de moins d'un an. Sportivement{{/if}}
           </textarea>
         </div>        
       </div>

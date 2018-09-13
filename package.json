@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node ./node_modules/.bin/pm2 start app.js -i 1 --attach",
     "pretest": "./node_modules/.bin/eslint --ignore-path .eslintignore .",
-    "test": "./node_modules/.bin/mocha",
+    "test": "./node_modules/.bin/mocha --exit",
     "dev": "npm run test && node app",
     "build": "set NODE_ENV=production&& webpack"
   },

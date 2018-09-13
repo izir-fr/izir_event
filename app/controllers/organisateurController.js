@@ -20,41 +20,102 @@ var organsisateurCtrl = {
       })
   },
   // Get contact form
-  getContacter: function (req, res) {
+  getContacterSingle: function (req, res) {
     Registration
-      .findById(req.params.id)
+      .findOne({_id: req.params.registration})
       .populate('event')
       .exec((err, data) => {
         if (err) {
-          res.render('partials/user/profil/' + req.user.id, {error: err})
+          res.render('partials/user/profil', {error: err})
         } else {
-          res.render('partials/organisateurs/contacter', {data: data})
+          res.render('partials/organisateurs/contacter', {data: data, single: true})
         }
       })
   },
   // Post contact form
-  postContacter: function (req, res) {
-    var message = {
-      sender: req.user.id,
-      receiver: [req.body.id_participant],
-      message: 'informations complémentaires ' + req.body.event_name + ' - ' + req.body.description
-    }
+  postContacterSingle: function (req, res) {
+    Registration
+      .findOne({_id: req.params.registration})
+      .populate('user')
+      .exec((err, registration) => {
+        if (err) {
+          req.flash('error_msg', 'Une erreur est survenue')
+          res.redirect(req.headers.referer)
+        }
+        var message = {
+          sender: req.user.id,
+          receiver: [registration.user],
+          message: 'informations complémentaires ' + registration.eventName + ' - ' + req.body.description
+        }
 
-    // create notification paiement
-    var notification = new Notification(message)
+        // create notification paiement
+        var notification = new Notification(message)
 
-    // save notification
-    notification
-      .save((err, notification) => {
-        if (err) { req.flash('error_msg', 'Une erreur est survenue') }
-        // EMAIL NOTIFICATION
-        require('../../custom_modules/app/notification/notification-email')(req.body.id_participant)
+        // save notification
+        notification
+          .save((err, notification) => {
+            if (err) { req.flash('error_msg', 'Une erreur est survenue') }
+            // EMAIL NOTIFICATION
+            require('../../custom_modules/app/notification/notification-email')(registration.user)
 
-        // set headers
-        req.flash('success_msg', 'Votre message a bien été envoyé à ' + req.body.prenom_participant + ' ' + req.body.nom_participant)
+            // set headers
+            req.flash('success_msg', 'Votre message a bien été envoyé à ' + registration.user.name + ' ' + registration.user.surname)
 
-        // set redirection
-        res.redirect('/inscription/recap/organisateur/' + req.body.event_id)
+            // set redirection
+            res.redirect('/inscription/recap/organisateur/' + registration.event)
+          })
+      })
+  },
+  // Get contact form
+  getContacterAll: function (req, res) {
+    Event
+      .findOne({_id: req.params.event})
+      .exec((err, data) => {
+        if (err) {
+          res.render('partials/user/profil', {error: err})
+        } else {
+          res.render('partials/organisateurs/contacter', {data: data, all: true})
+        }
+      })
+  },
+  // Post contact form
+  postContacterAll: function (req, res) {
+    Registration
+      .find({'event': req.params.event})
+      .exec((err, data) => {
+        if (err) {
+          req.flash('error_msg', 'Une erreur est survenue')
+          res.redirect(req.headers.referer)
+        }
+        var receiver = []
+        data.forEach((val) => {
+          receiver.push(val.user)
+        })
+
+        var message = {
+          sender: req.user.id,
+          receiver: receiver,
+          message: 'informations complémentaires ' + data.eventName + ' - ' + req.body.description
+        }
+
+        // create notification paiement
+        var notification = new Notification(message)
+
+        // save notification
+        notification
+          .save((err, notification) => {
+            if (err) { req.flash('error_msg', 'Une erreur est survenue') }
+            // EMAIL NOTIFICATION
+            receiver.forEach((val) => {
+              require('../../custom_modules/app/notification/notification-email')(val)
+            })
+
+            // set headers
+            req.flash('success_msg', 'Votre message a bien été envoyé à tous les participants')
+
+            // set redirection
+            res.redirect('/inscription/recap/organisateur/' + req.params.event)
+          })
       })
   },
   // Get comptabilité

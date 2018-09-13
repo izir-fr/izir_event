@@ -11,10 +11,12 @@ var ensureAuthenticated = require('../../custom_modules/app/router/ensureAuthent
 router.get('/epreuves', ensureAuthenticated, organisateurCtrl.getEpreuves)
 
 // Get contact form
-router.get('/contacter/:id', ensureAuthenticated, organisateurCtrl.getContacter)
+router.get('/contacter/:event/single/:registration', ensureAuthenticated, organisateurCtrl.getContacterSingle)
+router.get('/contacter/:event/all', ensureAuthenticated, organisateurCtrl.getContacterAll)
 
 // Post contact form
-router.post('/contacter/:id', organisateurCtrl.postContacter)
+router.post('/contacter/:event/single/:registration', organisateurCtrl.postContacterSingle)
+router.post('/contacter/:event/all', organisateurCtrl.postContacterAll)
 
 // Get comptabilité
 router.get('/comptabilite/:id', ensureAuthenticated, organisateurCtrl.getComptabilite)

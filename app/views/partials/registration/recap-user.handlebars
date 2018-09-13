@@ -61,17 +61,16 @@
         <!-- paiement -->
         <div class="col-md-2">
           {{#if this.event.paiement}}
-            Méthode : 
             {{#if this.paiement.captured}}
-              CB
+              Payé CB
               <br>
               <span class="text-secondary">N°: {{this.paiement.id}}</span>
             {{else}}
               {{#if this.paiement.other_captured}}
-                Chèque / Espèce 
+                Payé Chèque / Espèce 
               {{else}}
                 {{#if this.paiement.other}}
-                  Méthode : Chèque / Espèce
+                  Paiement en cours Chèque / Espèce
                   <br>
                   <span class="text-secondary">Paiement en direct à l'organisation</span>
                 {{else}}

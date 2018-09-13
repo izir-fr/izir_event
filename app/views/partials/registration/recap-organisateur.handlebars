@@ -5,10 +5,10 @@
 </div>
 <div class="container-fluid">
   <div class="row bg-dark-blue">
-    <div class="col-md-3 mt-5 mb-4">
+    <div class="col-md-3 mt-3 mb-2">
       <strong class="spacer-sm-right text-capitalize text-light h3 text-left">{{event.name}}</strong>
     </div>
-    <div class="col-md-9 text-center mt-5 mb-5">
+    <div class="col-md-9 text-center mt-3 mb-2">
       <a href="/event/{{event.id}}" class="spacer-sm-right text-light" ><i class="fa fa-eye spacer-xs-right"></i>Voir</a>
       <a href="/event/edit/{{event.id}}" class="spacer-sm-right text-light"><i class="fa fa-pencil spacer-xs-right"></i>Modifier</a>
       <a href="/inscription/recap/organisateur/{{event.id}}" class="spacer-sm-right text-light"><strong><i class="fa fa-users spacer-xs-right "></i>Inscriptions</strong></a>
@@ -18,55 +18,26 @@
     </div>
   </div>
   <div class="row text-center ">
-    <div class="col-lg-3">
-      <div class="row">
-        <div class="col-12 spacer-sm-top spacer-sm-bottom">
-          Filtrer par épreuve
-        </div>
-      </div>
-      <form id="org-dashboard-filter">
-        <div class="row">
-          <div class="col-12 spacer-sm-top spacer-xs-bottom">
-            <select class="form-control" id="epreuve-filter" name="epreuve">
-              <option>Toutes</option>
-              {{#each event.epreuves}}
-                <option>{{this.name}}</option>
-              {{/each}}
-            </select>
-          </div>   
-        </div>
-        <div class="row">
-          <div class="col-12">
-            <button type="submit" class="btn btn-secondary d-block w-100 spacer-sm-top spacer-sm-bottom">Filtrer</button>
-          </div>
-        </div>
-      </form> 
-    </div>
-    <div class="col-lg-3 bg-light">
+    <div class="col-md-4  pt-4 pb-4 bg-light">
       <div class="row bg-light">
-        <div class="col-12 spacer-sm-top spacer-sm-bottom">
+        <div class="col-12 mb-2">
           <i class="fa fa-users spacer-xs-right"></i> Nombre d'inscrits
         </div>
       </div>
       <div class="row">
-        <div class="col-12 spacer-sm-top spacer-sm-bottom">
+        <div class="col-12">
           <strong class="spacer-sm-right">{{inscriptions.length}}</strong><br>
           <span class="text-muted">Inscriptions</span>
         </div>
       </div>
-      <div class="row">
-        <div class="col-12">
-          <a href="/inscription/cart/{{event.id}}" class="btn btn-danger spacer-xs-top spacer-sm-bottom text-center">Ajouter un participant</a>
-        </div>
-      </div>
     </div>    
-    <div class="col-lg-3">
+    <div class="col-md-4 pt-4 pb-4">
       <div class="row">
-        <div class="col-12 spacer-sm-top spacer-sm-bottom">
-          <i class="fa fa-credit-card-alt spacer-xs-right spacer-sm-left"></i> Paiements validés
+        <div class="col-12 mb-2">
+          <i class="fa fa-credit-card-alt"></i> Paiements validés
         </div>
       </div>
-      <div class="row spacer-md-top spacer-md-bottom">
+      <div class="row">
         <div class="col-6">
           <div class="row">
             <div class="col-12">
@@ -94,139 +65,189 @@
         </div>
       </div>
     </div>
-    <div class="col-lg-3 bg-light">
-      <div class="row bg-light">
-        <div class="col-12 spacer-sm-top spacer-sm-bottom">
-          <i class="fa fa-folder-open spacer-xs-right spacer-sm-left"></i> Dossiers complets
+    <div class="col-md-4 pt-4 pb-4 bg-light">
+      <div class="row bg-light mb-2">
+        <div class="col-12">
+          <i class="fa fa-folder-open"></i> Dossiers validés
         </div>
       </div>
       <div class="row">
-        <div class="col-12 spacer-md-top spacer-sm-bottom">
+        <div class="col-12">
           <strong><span id="dossier_complet">0</span> </strong>
         </div>
       </div>
     </div>
   </div>
-  <div class="row">
-    <div class="col-12 spacer-sm-top">
+
+  <div class="row mt-5 mb-4">
+    <div class="col-3">
       <h3>Liste des participants</h3>
     </div>
-  </div>
-  <div class="row">
-    <div class="col-12 ">
-    {{#if inscriptions}}
-    <table class="table text-center">
-      <thead class="table bg-dark-blue text-white position-sticky">
-        <tr>
-          <th class="text-center">Inscription</th>
-          <th class="text-center">Participant</th>
-          <th class="text-center">Paiement</th>
-          <th class="text-center">Certificat</th>
-          <th class="text-center">Complet</th>
-          <th class="text-center">Contacter</th>
-        </tr>
-      </thead>
-      <tbody class="">
-        {{#each inscriptions}}
-            <tr>
-              <td class="text-uppercase">
-                {{#each this.produits}}
-                  <p class="text-lowercase">{{produitsRef}} <span class="subtotal hidde">{{produitsSubTotal}}</span>
-                  <span class="ref hidde">{{produitsRef}}</span></p>
-                {{/each}}            
-                <span class="text-muted">N°: {{this.id}}</span>
-                <br>
-                <span class="text-muted">Du : {{date this.created_at}}</span>
-              </td>
-              <td class="text-uppercase">
-                <strong>{{this.participant.nom}}</strong> {{this.participant.prenom}}
-                <br>
-                <span class="text-muted">{{this.participant.team}}</span>
-                <br>
-                <span class="text-muted">{{this.participant.categorie}}</span>
-                <br>
-                <span class="text-muted">{{this.participant.sex}}</span>
-                <br>
-                <span class="text-muted">Licence N°:
-                  {{#if this.numLicence}}
-                    {{this.numLicence}}
-                  {{else}}
-                    NC
-                  {{/if}}
-                  </span>
-              </td>
-              <td>
-                {{#if this.paiement.captured}}
-                  <span class="paiementNumber">Validé <i class="fa fa-check text-success" aria-hidden="true"></i></span>
-                  <br>
-                  <span class="text-muted">CB</span>
-                  <br>
-                  <span class="text-muted">{{this.orderAmount}}€</span>
-                {{else}}
-                  {{#if this.paiement.other_captured}}
-                  <span class="paiementNumber">Validé <i class="fa fa-check text-success" aria-hidden="true"></i></span>
-                  <br>
-                  <span class="text-muted">Chèque / Espèce</span>
-                  <br>
-                  <span class="text-muted">{{this.orderAmount}}€</span>
-                  {{else}}
-                    <a href="/inscription/checkout/{{this.id}}/other-captured" title="Confirmer la réception du paiement" class="btn btn-warning other-captured">Confirmer</a>
-                    <!-- <span class="btn btn-warning">Confirmer</span> -->
-                    <br>
-                    <span class="text-muted">Chèque / Espèce</span>
-                    <br>
-                    <span class="text-muted">{{this.orderAmount}}€</span>
-                  {{/if}}
-                {{/if}}
-                <br>
-              </td>
-              <td>
-                {{#if this.docs.certificat}}
-                  <a href="{{this.docs.certificat}}" target="_blank"><i class="fa fa-file text-success" aria-hidden="true"></i></a>
-                {{else}}
-                  <i class="fa fa-times text-danger" aria-hidden="true"></i>
-                {{/if}}
-              </td>
-              <td>
-                {{#if this.paiement.captured}}
-                  {{#if ../event.certificat_required}}
-                    {{#if this.docs.certificat}}
-                      <i class="fa fa-check text-success complet" aria-hidden="true"></i>
-                    {{else}}
-                      <i class="fa fa-times text-danger" aria-hidden="true"></i>
-                    {{/if}}
-                  {{else}}
-                  <i class="fa fa-check text-success complet" aria-hidden="true"></i>
-                  {{/if}}
-                {{else}}
-                  {{#if this.paiement.other_captured}}
-                    {{#if ../event.certificat_required}}
-                      {{#if this.docs.certificat}}
-                        <i class="fa fa-check text-success complet" aria-hidden="true"></i>
-                      {{else}}
-                        <i class="fa fa-times text-danger" aria-hidden="true"></i>
-                      {{/if}}
-                    {{else}}
-                    <i class="fa fa-check text-success complet" aria-hidden="true"></i>
-                    {{/if}}
-                  {{else}}
-                  <i class="fa fa-times text-danger" aria-hidden="true"></i>
-                  {{/if}}
-                {{/if}}
-              </td>
-              <td>
-                <a href="/organisateur/contacter/{{this.id}}"><i class="fa fa-envelope spacer-xs-right" aria-hidden="true" title="contacter le participant par email"></i></a>
-              </td>
-            </tr>
-        {{/each}}
-      {{else}}
-      <div class="container">
-        <p class="alert alert-danger text-center">Vous n'avez pas encore de participants inscrit à votre épreuve, n'oubliez pas de faire la promotion de celle-ci sans plus attendre !</p>
-        <p>Besoin d'aide ? Contacter notre commercial Guenael (guenael.r@izir.fr) pour nouer un partenariat avec nous et profiter de l'audience de nos réseaux, ainsi que celle de runnerbreizh.fr</p>
-      </div>  
-      {{/if}} 
-      </tbody>
-    </table>      
+    <div class="col-md-8 col-sm-7 mx-auto">
+      <div class="row">
+        <div class="col-md-2 pt-2">
+          Filtrer par épreuve
+        </div>
+        <div class="col-md-8 ">
+          <form id="org-dashboard-filter">
+            <div class="row">
+              <div class="col-md-11 col-sm-10">
+                <select class="form-control" id="epreuve-filter" name="epreuve">
+                  <option>Toutes</option>
+                  {{#each event.epreuves}}
+                    <option>{{this.name}}</option>
+                  {{/each}}
+                </select>
+              </div>
+              <div class="col-md-1 col-sm-2">
+                <button type="submit" class="btn btn-secondary">Filtrer</button>
+              </div>          
+            </div>
+          </form>       
+        </div>        
+      </div>
+    </div>    
+    <div class="col-md-1 col-sm-2 text-center">    
+      <button id="btnGroupDrop1" type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <i class="fa fa-ellipsis-v mr-2" aria-hidden="true"></i>
+      </button>
+      <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+        <a href="/inscription/cart/{{event.id}}" class="dropdown-item">Ajouter un participant</a>
+      </div>
     </div>
   </div>
+
+  <div class="row text-center bg-dark-blue text-white mt-2 pt-3 pb-3">
+    <div class="col-md-3">
+      Inscription
+    </div>
+    <div class="col-md-3">
+      Participant
+    </div>
+    <div class="col-md-2">
+      Paiement
+    </div>
+    <div class="col-md-2">
+      Certificat
+    </div>
+    <div class="col-md-1">
+      Dossier validé
+    </div>
+    <div class="col-md-1">
+      Actions
+    </div>
+  </div>
+  {{#if inscriptions}}
+
+    {{#each inscriptions}}  
+      
+      <div class="row  pb-2 pt-2 border border-top-0 border-right-0 border-left-0">
+
+        <!-- dossier d'inscription -->
+        <div class="col-md-3 text-uppercase">
+          {{#each this.produits}}
+            <p class="text-lowercase">{{produitsRef}} <span class="subtotal hidde">{{produitsSubTotal}}</span>
+            <span class="ref hidde">{{produitsRef}}</span></p>
+          {{/each}}            
+          <span class="text-muted">N°: {{this.id}}</span>
+          <br>
+          <span class="text-muted">Du : {{date this.created_at}}</span>          
+        </div>
+
+        <!-- participant -->
+        <div class="col-md-3">
+          <strong>{{this.participant.nom}}</strong> {{this.participant.prenom}}
+          <br>
+          <span class="text-muted">{{this.participant.team}}</span>
+          <br>
+          <span class="text-muted">{{this.participant.categorie}}</span>
+          <br>
+          <span class="text-muted">{{this.participant.sex}}</span>
+          <br>
+          <span class="text-muted">Licence N°:
+            {{#if this.numLicence}}
+              {{this.numLicence}}
+            {{else}}
+              NC
+            {{/if}}
+          </span>          
+        </div>
+
+        <!-- paiement -->
+        <div class="col-md-3">
+          {{#if this.paiement.captured}}
+            <span class="paiementNumber">Validé <i class="fa fa-check text-success" aria-hidden="true"></i></span>
+            <br>
+            <span class="text-muted">CB</span>
+            <br>
+            <span class="text-muted">{{this.orderAmount}}€</span>
+          {{else}}
+            {{#if this.paiement.other_captured}}
+            <span class="paiementNumber">Validé <i class="fa fa-check text-success" aria-hidden="true"></i></span>
+            <br>
+            <span class="text-muted">Chèque / Espèce</span>
+            <br>
+            <span class="text-muted">{{this.orderAmount}}€</span>
+            {{else}}
+              <span class="text-warning text-capitalize">à Confirmer</span>
+              <!-- <span class="btn btn-warning">Confirmer</span> -->
+              <br>
+              <span class="text-muted">Chèque / Espèce</span>
+              <br>
+              <span class="text-muted">{{this.orderAmount}}€</span>
+            {{/if}}
+          {{/if}}        
+        </div>
+
+        <!-- certificat -->
+        <div class="col-md-1">
+          {{#if this.docs.certificat}}
+            <a href="{{this.docs.certificat}}" target="_blank"><i class="fa fa-file text-success" aria-hidden="true"></i></a>
+          {{else}}
+            <i class="fa fa-times text-danger" aria-hidden="true"></i>
+          {{/if}}          
+        </div>
+
+        <!-- dossier complet -->
+        <div class="col-md-1 text-center">
+          {{#if this.organisateur_validation.all}}
+            <i class="fa fa-check text-success complet" aria-hidden="true"></i>
+          {{else}}
+            <i class="fa fa-pause text-warning" aria-hidden="true"></i>
+          {{/if}}          
+        </div>
+
+        <!-- actions -->
+        <div class="col-md-1 text-center">
+          <div class="btn-group w-80" role="group">
+            <button id="btnGroupDrop1" type="button" class="btn btn-outline-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="fa fa-ellipsis-v mr-2" aria-hidden="true"></i>
+            </button>
+            <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+              {{#if this.paiement.captured}}
+              {{else}}
+                {{#if this.paiement.other_captured}}
+                {{else}}
+                  <a href="/inscription/checkout/{{this.id}}/other-captured" title="Confirmer la réception du paiement" class="dropdown-item organisateur-dashboard-confirm-action">Confirmer le paiement</a>
+                {{/if}}
+              {{/if}}
+              <a class="dropdown-item organisateur-dashboard-confirm-action" href="/inscription/cart/{{this.id}}/certificat/reject">Rejeter le certificat</a>
+              {{#if this.organisateur_validation.all}}
+              {{else}}
+                <a class="dropdown-item organisateur-dashboard-confirm-action" href="/inscription/checkout/{{this.id}}/validate">Valider le dossier</a>
+              {{/if}}
+              <a class="dropdown-item" href="/organisateur/contacter/{{this.id}}">Contacter le participant</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    {{/each}}
+
+  {{else}}
+
+    <div class="col-12">
+      <p class="alert alert-danger text-center">Vous n'avez pas encore de participants inscrit à votre épreuve, n'oubliez pas de faire la promotion de celle-ci sans plus attendre !</p>
+      <p>Besoin d'aide ? Contacter notre commercial Guenael (guenael.r@izir.fr) pour nouer un partenariat avec nous et profiter de l'audience de nos réseaux, ainsi que celle de runnerbreizh.fr</p>
+    </div>
+  {{/if}}     
 </div>

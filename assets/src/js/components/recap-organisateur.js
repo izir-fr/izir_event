@@ -5,6 +5,13 @@ var recap = () => {
       e.preventDefault()
     }
   })
+  $('.organisateur-dashboard-confirm-action').on('click', (e) => {
+    var confirm = window.confirm('Souhaitez-vous valider cette action ?')
+    if (!confirm) {
+      e.preventDefault()
+    }
+  })
+
   $(() => {
     // affichage des dons
     if ($('input[name=dons]').val() === '') {

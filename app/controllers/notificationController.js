@@ -13,8 +13,9 @@ var notificationController = {
   },
   getAllNotifications: (req, res) => {
     Notification
-      .find({ receiver: req.user.id })
+      .find({ receiver: req.user.id, 'read_by.readerId': { $ne: req.user.id } })
       .populate('sender')
+      .sort({created_at: -1})
       .exec((err, notifications) => {
         if (err) {
           throw err
@@ -33,6 +34,8 @@ var notificationController = {
         receiver: req.user.id, 'read_by.readerId': { $ne: req.user.id }
       }, {
         $push: { 'read_by': readBy }
+      }, {
+        multi: true
       }, (err, doc) => {
         if (err) {
           throw err

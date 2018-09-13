@@ -1,12 +1,8 @@
-// Credentials
-var credentials = require('../config/credentials')
-// Email config
-var smtpTransport = require('nodemailer').createTransport(credentials.smtpCredits)
-
 // Models
 var Event = require('../models/event')
 var Registration = require('../models/registration')
 var User = require('../models/user')
+var Notification = require('../models/notification')
 
 // Controllers
 var organsisateurCtrl = {
@@ -32,30 +28,34 @@ var organsisateurCtrl = {
         if (err) {
           res.render('partials/user/profil/' + req.user.id, {error: err})
         } else {
-          res.render('partials/organisateurs/contacter', data)
+          res.render('partials/organisateurs/contacter', {data: data})
         }
       })
   },
   // Post contact form
   postContacter: function (req, res) {
-    var event = req.body.event_id
-
-    var mailOptions = {
-      to: req.body.prenom_participant + ' ' + req.body.nom_participant + ' <' + req.body.email_participant + '>',
-      bcc: req.body.event_name + ' <' + req.body.email_organisateur + '>',
-      from: req.body.event_name + ' <' + req.body.email_organisateur + '>',
-      subject: 'informations complémentaires ' + req.body.event_name,
-      text: req.body.description
+    var message = {
+      sender: req.user.id,
+      receiver: [req.body.id_participant],
+      message: 'informations complémentaires ' + req.body.event_name + ' - ' + req.body.description
     }
 
-    smtpTransport.sendMail(mailOptions, function (err) {
-      if (err) {
-        req.flash('error_msg', 'Une erreur est survenue')
-      } else {
+    // create notification paiement
+    var notification = new Notification(message)
+
+    // save notification
+    notification
+      .save((err, notification) => {
+        if (err) { req.flash('error_msg', 'Une erreur est survenue') }
+        // EMAIL NOTIFICATION
+        require('../../custom_modules/app/notification/notification-email')(req.body.id_participant)
+
+        // set headers
         req.flash('success_msg', 'Votre message a bien été envoyé à ' + req.body.prenom_participant + ' ' + req.body.nom_participant)
-      }
-      res.redirect('/inscription/recap/organisateur/' + event)
-    })
+
+        // set redirection
+        res.redirect('/inscription/recap/organisateur/' + req.body.event_id)
+      })
   },
   // Get comptabilité
   getComptabilite: function (req, res) {

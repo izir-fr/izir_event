@@ -85,7 +85,6 @@ describe('routes : user', () => {
         server
           .get('/user/profil/edit/123')
           .set('cookie', cookie)
-          .set(header.locals, user)
           .end((err, res) => {
             // console.log(res)
             done()

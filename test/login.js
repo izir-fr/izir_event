@@ -3,6 +3,7 @@ const request = require('supertest')
 var login = (server, loginDetails, done) => {
   server
     .post('/user/login')
+    .set('cookie', null)
     .send(loginDetails)
     .expect(302)
     .end((err, res) => {

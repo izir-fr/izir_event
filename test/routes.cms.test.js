@@ -18,7 +18,7 @@ var user = {
 describe('routes : cms', () => {
   // /index
   describe('GET /', () => {
-    it('Not log should respond index page 200 status', (done) => {
+    it('Not log user should respond index page 200 status', (done) => {
       server
         .get('/')
         .end((err, res) => {
@@ -32,15 +32,16 @@ describe('routes : cms', () => {
   })
   // /index redirect to finder for logged user
   describe('GET /', () => {
-    it('Not log should respond index page 200 status', (done) => {
+    it('log user should redirect finder page 302 status', (done) => {
       login(server, user, (cookie) => {
         server
           .get('/')
           .set('cookie', cookie)
-          .expect(200, done)
           .end((err, res) =>{
-            console.log(err)
-            console.log(res)
+            // there should be a 302 status code
+            res.status.should.equal(302)
+            // redirect url should be '/event/finder'
+            res.header.location.should.equal('/event/finder')
             done()
           })
       })

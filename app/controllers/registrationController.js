@@ -741,7 +741,7 @@ var registrationCtrl = {
         var event = {}
         var paiement = []
         var dons = []
-        var inscriptions = require('../../custom_modules/app/registrationToTeam')(results.registration)
+        var inscriptions = require('../../custom_modules/app/chronometrage').registrationToTeam(results.registration)
 
         inscriptions.forEach((val) => {
           if (val.paiement.captured || val.paiement.other_captured) {

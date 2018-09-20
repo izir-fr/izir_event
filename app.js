@@ -66,8 +66,10 @@ if (process.env.LOCAL === 'true') {
 app.use(morgan('dev'))
 
 // Http to Https
-var redirectToHTTPS = require('express-http-to-https').redirectToHTTPS
-app.use(redirectToHTTPS([/localhost:(\d{4})/]))
+if (!process.env.DEV) {
+  var redirectToHTTPS = require('express-http-to-https').redirectToHTTPS
+  app.use(redirectToHTTPS([/localhost:(\d{4})/]))
+}
 
 // Handlebars
 var hbs = exphbs.create({

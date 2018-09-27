@@ -2,7 +2,7 @@
 	<div class="row">
 		<div class="col-12">
 			<span class="d-block spacer-xs-left bg-light spacer-sm-top spacer-sm-bottom">
-				<h1 class="text-center" id="event-details-header">{{result.event.name}}</h1>
+				<h1 class="text-center" id="event-details-header">{{utf8 result.event.name}}</h1>
 			</span>
 		</div>
 	</div>
@@ -69,12 +69,12 @@
 						<li><strong>Téléphone :</strong> NC</li>
 						{{/if}}
 						{{#if result.event.permanence.siteWeb}}
-						<li><strong>Site Internet : </strong><a href="{{result.event.permanence.siteWeb}}" target="_blank" rel="nofollow">{{result.event.permanence.siteWeb}}</a></li>
+						<li><strong>Site Internet : </strong><a href="{{utf8 result.event.permanence.siteWeb}}" target="_blank" rel="nofollow">{{utf8 result.event.permanence.siteWeb}}</a></li>
 						{{else}}
 						<li><strong>Site Internet : </strong>NC</li>
 						{{/if}}
 						{{#if result.event.permanence.facebook}}
-						<li><strong>Page Facebook : </strong><a href="{{result.event.permanence.facebook}}" target="_blank" rel="nofollow">{{result.event.permanence.facebook}}</a></li>
+						<li><strong>Page Facebook : </strong><a href="{{utf8 result.event.permanence.facebook}}" target="_blank" rel="nofollow">{{utf8 result.event.permanence.facebook}}</a></li>
 						{{else}}
 						<li><strong>Page Facebook :</strong> NC</li>
 						{{/if}}
@@ -126,7 +126,7 @@
 		          <select class="form-control" id="epreuve-filter" name="epreuve">
 		            <option>Toutes</option>
 		            {{#each result.event.epreuves}}
-		              <option value="{{this.name}}">{{this.name}}</option>
+		              <option value="{{this.name}}">{{utf8 this.name}}</option>
 		            {{/each}}
 		          </select>             
 		        </div>
@@ -150,9 +150,9 @@
 						<tbody>
 							{{#each result.participants}}
 							    <tr>
-							    	<td class="text-uppercase"><strong>{{this.participant.nom}}</strong></td>
-							    	<td class="text-capitalize">{{this.participant.prenom}}</td>
-							    	<td>{{this.participant.team}}</td>
+							    	<td class="text-uppercase"><strong>{{utf8 this.participant.nom}}</strong></td>
+							    	<td class="text-capitalize">{{utf8 this.participant.prenom}}</td>
+							    	<td>{{utf8 this.participant.team}}</td>
 							    	<td>{{this.participant.categorie}}</td>
 							    	<td class="text-lowercase">{{this.participant.sex}}</td>
 							    </tr>

@@ -80,7 +80,7 @@ var chronometrageCtrl = {
   // Get a file excell
   getFileExcell: function (req, res) {
     Registration
-      .find({event: req.params.id})
+      .find({event: req.params.id, 'participant.nom': { $gt: [] }, 'participant.prenom': { $gt: [] }})
       .populate('event')
       .exec((err, results) => {
         if (err) {
@@ -114,7 +114,7 @@ var chronometrageCtrl = {
     var inscriptions = []
 
     Registration
-      .find({'event': req.params.id})
+      .find({'event': req.params.id, 'participant.nom': { $gt: [] }, 'participant.prenom': { $gt: [] }})
       .populate('event')
       .exec((err, results) => {
         if (err) {

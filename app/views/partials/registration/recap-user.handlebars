@@ -37,11 +37,11 @@
         <!-- participant -->
         <div class="col-md-3 text-capitalize">
           {{#if this.options.epreuve_format.team}}
-            Equipe:  {{this.participant.team}}
+            Equipe:  {{utf8 this.participant.team}}
             <br>
-            Capitaine: <strong>{{this.participant.nom}}</strong> {{this.participant.prenom}}
+            Capitaine: <strong>{{utf8 this.participant.nom}}</strong> {{utf8 this.participant.prenom}}
           {{else}}
-            <strong>{{this.participant.nom}}</strong> {{this.participant.prenom}}
+            <strong>{{utf8 this.participant.nom}}</strong> {{utf8 this.participant.prenom}}
             <br>
             <span class="text-secondary">{{this.participant.sex}}</span>
             <br>

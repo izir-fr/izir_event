@@ -315,12 +315,13 @@ var eventCtrl = {
             .sort({ 'participant.nom': 1 })
             .exec(next)
         } else {
-          Registration.find({
-            event: req.params.id,
-            $or: [ { 'participant.nom': { $gt: [] } }, { 'participant.prenom': { $gt: [] } }, { 'paiement.captured': { $eq: true } }, { 'paiement.other_captured': { $eq: true } } ]
-          })
-          .sort({ 'participant.nom': 1 })
-          .exec(next)
+          Registration
+            .find({
+              event: req.params.id,
+              $or: [ { 'participant.nom': { $gt: [] } }, { 'participant.prenom': { $gt: [] } }, { 'paiement.captured': { $eq: true } }, { 'paiement.other_captured': { $eq: true } } ]
+            })
+            .sort({ 'participant.nom': 1 })
+            .exec(next)
         }
       }
     }, function (err, result) {

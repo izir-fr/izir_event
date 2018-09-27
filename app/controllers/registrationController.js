@@ -727,10 +727,16 @@ var registrationCtrl = {
       registration: function (next) {
         if (req.query.epreuve && req.query.epreuve !== 'Toutes') {
           Registration
-            .find({ event: req.params.id, 'participant.nom': { $gt: [] }, 'participant.prenom': { $gt: [] }, produits: { $elemMatch: { produitsRef: req.query.epreuve, produitsQuantite: { $ne: 0 } } } })
+            .find({
+              event: req.params.id,
+              $or: [ { 'participant.nom': { $gt: [] } }, { 'participant.prenom': { $gt: [] } }, { 'paiement.captured': { $eq: true } }, { 'paiement.other_captured': { $eq: true } } ],
+              produits: { $elemMatch: { produitsRef: req.query.epreuve, produitsQuantite: { $ne: 0 } } } })
             .exec(next)
         } else {
-          Registration.find({ event: req.params.id, 'participant.nom': { $gt: [] }, 'participant.prenom': { $gt: [] } }).populate('user').exec(next)
+          Registration.find({
+            event: req.params.id,
+            $or: [ { 'participant.nom': { $gt: [] } }, { 'participant.prenom': { $gt: [] } }, { 'paiement.captured': { $eq: true } }, { 'paiement.other_captured': { $eq: true } } ]
+          }).populate('user').exec(next)
         }
       }
     }, function (err, results) {

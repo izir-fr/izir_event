@@ -2,7 +2,7 @@ var utf8 = (val) => {
   if (val) {
     return decodeURIComponent(val)
   } else {
-    ''
+    return ''
   }
 }
 

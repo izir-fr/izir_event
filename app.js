@@ -86,7 +86,7 @@ var hbs = exphbs.create({
     userDateDay: (val) => { return val.split('/')[0] },
     userDateMonth: (val) => { return val.split('/')[1] },
     userDateYear: (val) => { return val.split('/')[2] },
-    utf8: (val) => { if (val) { return decodeURIComponent(val) } else { return ''} }
+    utf8: (val) => { if (val) { return decodeURIComponent(val) } else { return '' } }
   }
 })
 

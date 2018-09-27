@@ -111,10 +111,10 @@
           <div class="col-sm-12 text-xs-center text-sm-center text-md-left">
             <p>
               {{#if this.source}}
-                <span class="text-uppercase text-center eventName"><strong>{{this.name}}</strong></span>
+                <span class="text-uppercase text-center eventName"><strong>{{utf8 this.name}}</strong></span>
               {{else}}
                 <a href="/event/{{this.id}}">
-                  <span class="text-uppercase text-center eventName"><strong>{{this.name}}</strong></span>
+                  <span class="text-uppercase text-center eventName"><strong>{{utf8 this.name}}</strong></span>
                 </a>
               {{/if}}
             </p>

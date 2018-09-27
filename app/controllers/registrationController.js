@@ -720,16 +720,17 @@ var registrationCtrl = {
   getRecapOrganisateur: function (req, res) {
     async.parallel({
       event: function (next) {
-        Event.findById(req.params.id).exec(next)
+        Event
+          .findById(req.params.id)
+          .exec(next)
       },
       registration: function (next) {
         if (req.query.epreuve && req.query.epreuve !== 'Toutes') {
           Registration
-            .find({ event: req.params.id, produits: { $elemMatch: { produitsRef: req.query.epreuve, produitsQuantite: { $ne: 0 } } } })
-            .populate('user')
+            .find({ event: req.params.id, 'participant.nom': { $gt: [] }, 'participant.prenom': { $gt: [] }, produits: { $elemMatch: { produitsRef: req.query.epreuve, produitsQuantite: { $ne: 0 } } } })
             .exec(next)
         } else {
-          Registration.find({ event: req.params.id }).populate('user').exec(next)
+          Registration.find({ event: req.params.id, 'participant.nom': { $gt: [] }, 'participant.prenom': { $gt: [] } }).populate('user').exec(next)
         }
       }
     }, function (err, results) {

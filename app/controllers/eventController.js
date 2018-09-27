@@ -307,11 +307,10 @@ var eventCtrl = {
       participants: function (next) {
         if (req.query.epreuve && req.query.epreuve !== 'Toutes') {
           Registration
-            .find({ event: req.params.id, produits: { $elemMatch: { produitsRef: req.query.epreuve, produitsQuantite: { $ne: 0 } } } })
-            .populate('user')
+            .find({ event: req.params.id, 'participant.nom': { $gt: [] }, 'participant.prenom': { $gt: [] }, produits: { $elemMatch: { produitsRef: req.query.epreuve, produitsQuantite: { $ne: 0 } } } })
             .exec(next)
         } else {
-          Registration.find({event: req.params.id}).populate('user').exec(next)
+          Registration.find({event: req.params.id, 'participant.nom': { $gt: [] }, 'participant.prenom': { $gt: [] }}).exec(next)
         }
       }
     }, function (err, result) {
@@ -319,7 +318,8 @@ var eventCtrl = {
         req.flash('error_msg', 'Une erreur est survenue')
         res.redirect('/')
       }
-      res.render('partials/event/event-detail', {result: result})
+      var data = {result: result}
+      res.render('partials/event/event-detail', data)
     })
   }
 }

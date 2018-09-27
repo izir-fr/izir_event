@@ -1,3 +1,11 @@
+var utf8 = (val) => {
+  if (val) {
+    return decodeURIComponent(val)
+  } else {
+    ''
+  }
+}
+
 var exportModules = {
   registrationToTeam: (array) => {
     var inscriptions = []
@@ -164,12 +172,12 @@ var exportModules = {
     // génération de l'inscription
     return {
       'DOSSIER': val.id,
-      'NOM': nom,
-      'PRENOM': val.participant.prenom,
-      'ADRESSE1': val.participant.adresse1,
-      'ADRESSE2': val.participant.adresse2,
+      'NOM': utf8(nom),
+      'PRENOM': utf8(val.participant.prenom),
+      'ADRESSE1': utf8(val.participant.adresse1),
+      'ADRESSE2': utf8(val.participant.adresse2),
       'CODE': val.participant.codePostal,
-      'VILLE': val.participant.city,
+      'VILLE': utf8(val.participant.city),
       'ETAT': '',
       'PAYS': '',
       'EMAIL': val.participant.email,
@@ -184,11 +192,11 @@ var exportModules = {
       'JOURS_NAISSANCE': dateNaissance.jour,
       'CATEGORIE': categorie,
       'TEMPS': '',
-      'CLUB': val.participant.team,
+      'CLUB': utf8(val.participant.team),
       'CODECLUB': '',
-      'ORGANISME': organisme,
+      'ORGANISME': utf8(organisme),
       'NATION': '',
-      'COURSE': courses,
+      'COURSE': utf8(courses),
       'DISTANCE': val.distance,
       'PAYE': paiement,
       'INVITE': 'N',

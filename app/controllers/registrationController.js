@@ -771,7 +771,7 @@ var registrationCtrl = {
         })
 
         inscriptions.sort((a, b) => {
-          if(a.participant.nom !== undefined) {
+          if (a.participant.nom !== undefined) {
             return a.participant.nom.localeCompare(b.participant.nom)
           }
         })

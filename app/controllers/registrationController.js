@@ -748,7 +748,7 @@ var registrationCtrl = {
         req.flash('error_msg', 'Une erreur est survenue')
         res.redirect('/')
       }
-      if (String(req.user.id) === String(results.event.author)) {
+      if (String(req.user.id) === String(results.event.author) || String(req.user.id) === String(process.env.ADMIN)) {
         var event = {}
         var paiement = []
         var dons = []
@@ -771,7 +771,9 @@ var registrationCtrl = {
         })
 
         inscriptions.sort((a, b) => {
-          return a.participant.nom.localeCompare(b.participant.nom)
+          if(a.participant.nom !== undefined) {
+            return a.participant.nom.localeCompare(b.participant.nom)
+          }
         })
 
         event.event = results.event

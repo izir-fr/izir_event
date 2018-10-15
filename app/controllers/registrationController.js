@@ -718,77 +718,70 @@ var registrationCtrl = {
   },
   // Get organisateur a recap
   getRecapOrganisateur: function (req, res) {
-    async.parallel({
-      event: function (next) {
-        Event
-          .findById(req.params.id)
-          .exec(next)
-      },
-      registration: function (next) {
-        if (req.query.epreuve && req.query.epreuve !== 'Toutes') {
-          Registration
-            .find({
-              event: req.params.id,
-              $or: [ { 'participant.nom': { $gt: [] } }, { 'participant.prenom': { $gt: [] } }, { 'paiement.captured': { $eq: true } }, { 'paiement.other_captured': { $eq: true } } ],
-              produits: { $elemMatch: { produitsRef: req.query.epreuve, produitsQuantite: { $ne: 0 } } } })
-            .sort({ 'participant.nom': 1 })
-            .exec(next)
-        } else {
-          Registration
-            .find({
-              event: req.params.id,
-              $or: [ { 'participant.nom': { $gt: [] } }, { 'participant.prenom': { $gt: [] } }, { 'paiement.captured': { $eq: true } }, { 'paiement.other_captured': { $eq: true } } ]
-            })
-            .sort({ 'participant.nom': 1 })
-            .exec(next)
+    var query = {}
+
+    if (req.query.epreuve && req.query.epreuve !== 'Toutes') {
+      query = {
+        event: req.params.id,
+        $or: [ { 'participant.nom': { $gt: [] } }, { 'participant.prenom': { $gt: [] } }, { 'paiement.captured': { $eq: true } }, { 'paiement.other_captured': { $eq: true } } ],
+        produits: { $elemMatch: { produitsRef: req.query.epreuve, produitsQuantite: { $ne: 0 } } } }
+    } else {
+      query = {
+        event: req.params.id,
+        $or: [ { 'participant.nom': { $gt: [] } }, { 'participant.prenom': { $gt: [] } }, { 'paiement.captured': { $eq: true } }, { 'paiement.other_captured': { $eq: true } } ]
+      }
+    }
+
+    Registration
+      .find(query)
+      .populate('event')
+      .sort({ 'participant.nom': 1 })
+      .exec((err, registration) => {
+        if (err) {
+          req.flash('error_msg', 'Si l\'erreur persiste merci de contacter le service client')
+          res.redirect('/organisateur/epreuves')
         }
-      }
-    }, function (err, results) {
-      if (err) {
-        req.flash('error_msg', 'Une erreur est survenue')
-        res.redirect('/')
-      }
-      if (String(req.user.id) === String(results.event.author) || String(req.user.id) === String(process.env.ADMIN)) {
-        var event = {}
-        var paiement = []
-        var dons = []
-        var inscriptions = require('../../custom_modules/app/chronometrage').registrationToTeam(results.registration)
+        if (String(req.user.id) === String(registration[0].event.author) || String(req.user.id) === String(process.env.ADMIN)) {
+          var event = {}
+          var paiement = []
+          var dons = []
+          var inscriptions = require('../../custom_modules/app/chronometrage').registrationToTeam(registration)
 
-        inscriptions.forEach((val) => {
-          if (val.paiement.captured || val.paiement.other_captured) {
-            val.produits.forEach((val) => {
-              if (val.produitsRef === 'dons') {
-                if (val.produitsSubTotal > 0) {
-                  dons.push(val)
+          inscriptions.forEach((val) => {
+            if (val.paiement.captured || val.paiement.other_captured) {
+              val.produits.forEach((val) => {
+                if (val.produitsRef === 'dons') {
+                  if (val.produitsSubTotal > 0) {
+                    dons.push(val)
+                  }
                 }
-              } else {
-                if (val.produitsSubTotal > 0) {
-                  paiement.push(val)
-                }
-              }
-            })
-          }
-        })
+              })
+            }
+          })
 
-        inscriptions.sort((a, b) => {
-          if (a.participant.nom !== undefined) {
-            return a.participant.nom.localeCompare(b.participant.nom)
-          }
-        })
+          registration.forEach((val) => {
+            paiement.push(val.orderAmount)
+          })
 
-        event.event = results.event
-        event.inscriptions = inscriptions
-        event.paiement = paiement
-        event.totalPaiement = paiement.reduce((acc, curr) => {
-          return acc + curr.produitsSubTotal
-        }, 0)
-        event.dons = dons
-        res.render('partials/registration/recap-organisateur', event)
-      } else {
-        req.flash('error_msg', 'Vous n\'êtes pas l\'administrateur de cet événement')
-        res.redirect('/organisateur/epreuves')
-      }
-    })
+          inscriptions.sort((a, b) => {
+            if (a.participant.nom !== undefined) {
+              return a.participant.nom.localeCompare(b.participant.nom)
+            }
+          })
+
+          event.event = registration[0].event
+          event.inscriptions = inscriptions
+          event.paiement = paiement
+          event.totalPaiement = paiement.reduce((acc, curr) => {
+            return acc + curr
+          }, 0)
+          event.dons = dons
+          res.render('partials/registration/recap-organisateur', event)
+        } else {
+          req.flash('error_msg', 'Vous n\'êtes pas l\'administrateur de cet événement')
+          res.redirect('/organisateur/epreuves')
+        }
+      })
   },
   setCertificatReject: (req, res) => {
     var origine = req.headers.referer

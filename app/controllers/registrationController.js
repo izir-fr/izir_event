@@ -744,6 +744,7 @@ var registrationCtrl = {
         if (String(req.user.id) === String(registration[0].event.author) || String(req.user.id) === String(process.env.ADMIN)) {
           var event = {}
           var paiement = []
+          var paiementsCb = []
           var dons = []
           var inscriptions = require('../../custom_modules/app/chronometrage').registrationToTeam(registration)
 
@@ -760,22 +761,37 @@ var registrationCtrl = {
           })
 
           registration.forEach((val) => {
-            paiement.push(val.orderAmount)
+            // filtre uniquement les dosssiers payés, en cb et chèques
+            if (val.paiement.captured === true || val.paiement.other_captured === true) {
+              paiement.push(val.orderAmount)
+            }
+            // filtre uniquement les dossiers cb
+            if (val.paiement.captured === true) {
+              paiementsCb.push(val.orderAmount)
+            }
           })
 
+          // trie les dissuer par ordre alphanétique
           inscriptions.sort((a, b) => {
             if (a.participant.nom !== undefined) {
               return a.participant.nom.localeCompare(b.participant.nom)
             }
           })
 
+          // construction de l'objet renvoyé à l'api
           event.event = registration[0].event
           event.inscriptions = inscriptions
           event.paiement = paiement
+          event.paiementsCb = paiementsCb
           event.totalPaiement = paiement.reduce((acc, curr) => {
             return acc + curr
           }, 0)
+          event.totalPaiementCb = paiementsCb.reduce((acc, curr) => {
+            return acc + curr
+          }, 0)
           event.dons = dons
+
+          // génértion de la page
           res.render('partials/registration/recap-organisateur', event)
         } else {
           req.flash('error_msg', 'Vous n\'êtes pas l\'administrateur de cet événement')

@@ -27,7 +27,7 @@
           <div class="col-sm-12">
             <div class="form-group">
               <label>Description *</label><br>
-              <textarea name="description" class="form-control" cols="30" rows="10" placeholder="Description de l'évènement" required>{{event.description}}</textarea>
+              <textarea name="description" class="form-control" cols="30" rows="10" placeholder="Description de l'évènement" required>{{utf8 event.description}}</textarea>
             </div>
           </div>
         </div>
@@ -281,7 +281,7 @@
                       <div class="col-sm-12">
                         <div class="form-group">
                           <label>Description de l'épreuve</label><br>
-                          <textarea name="epreuveDescription" class="form-control" cols="30" rows="10" placeholder="Description de l'épreuve">{{description}}</textarea>
+                          <textarea name="epreuveDescription" class="form-control" cols="30" rows="10" placeholder="Description de l'épreuve">{{utf8 description}}</textarea>
                         </div>
                       </div>
                     </div>

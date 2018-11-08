@@ -4,37 +4,49 @@
     <div class="row">
       <div class="col-8 mx-auto spacer-xs-top">
         <form id="all-event-filter bg-light text-capitalize" action="">
-          <div class="input-group bg-light">
-            <div class="input-group-prepend mb-2">
-              <div class="input-group-text mt-2"><i class="fa fa-search spacer-sm-top spacer-sm-left spacer-sm-right " aria-hidden="true"></i></div>
+          <div class="d-flex bg-light">
+            <div class="flex-shrink-1 my-auto p-3">
+              <i class="fa fa-search d-block" aria-hidden="true"></i>
             </div>
-            <input id="lieuFilter" name="city" type="text" class="form-control" value="{{queries.city}}" placeholder="Recherche par ville ...">                
-            <div id="finder-button-desktop" class="input-group-append mb-2">
-              <button id="finder-submit-button" type="submit" class="btn btn-default spacer-xs-top spacer-sm-right spacer-sm-left">Rechercher</button>
+            <div class="w-100 pr-2 my-auto ">
+              <input id="lieuFilter" name="city" type="text" class="form-control border-0" value="{{queries.city}}" placeholder="Recherche par ville ...">
+            </div>                
+            <div id="finder-button-desktop" class="flex-shrink-1 float-right">
+              <button id="finder-submit-button" type="submit" class="btn btn-default rounded-0">Rechercher</button>
             </div>
           </div>
           <div class="row">
-            <div id="eventSearchBar" class="col-lg-4">
+            <div id="eventSearchBar" class="col-lg-3 col-md-6">
               <div class="input-group spacer-sm-top">
-                <select class="form-control" id="exampleFormControlSelect1" name="month">
-                  <option value="">Mois</option>
-                  {{#each date_list.month}}
-                    <option value="{{this.value}}">{{this.name}} 2018</option>
+                <select class="form-control" id="exampleFormControlSelect1" name="year">
+                  <option selected value="">Année</option>
+                  {{#each date_list.year}}
+                    <option value="{{this.value}}">{{this.value}}</option>
                   {{/each}}
                 </select>
               </div>             
             </div>
-            <div id="eventSearchBar" class="col-lg-4">
+            <div id="eventSearchBar" class="col-lg-3 col-md-6">
+              <div class="input-group spacer-sm-top">
+                <select class="form-control" id="exampleFormControlSelect1" name="month">
+                  <option selected value="">Mois</option>
+                  {{#each date_list.month}}
+                    <option value="{{this.value}}">{{this.name}}</option>
+                  {{/each}}
+                </select>
+              </div>             
+            </div>
+            <div id="eventSearchBar" class="col-lg-3 col-md-6">
               <div class="input-group spacer-sm-top">
                 <select class="form-control" id="exampleFormControlSelect1" name="discipline">
-                  <option value="">Discipline</option>
+                  <option selected value="">Discipline</option>
                   {{#each discipline_list}}
                     <option value="{{this.name}}">{{this.name}}</option>
                   {{/each}}
                 </select>
               </div>             
             </div>
-            <div id="eventSearchBar" class="col-lg-4">
+            <div id="eventSearchBar" class="col-lg-3 col-md-6">
               <div class="input-group spacer-sm-top">
                 <select class="form-control" id="exampleFormControlSelect1" name="activate">
                   <option value="">Tout le calendrier</option>

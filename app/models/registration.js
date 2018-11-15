@@ -10,6 +10,7 @@ var registrationSchema = mongoose.Schema({
     nom: { type: String },
     prenom: { type: String },
     email: { type: String },
+    phone: { type: String },
     sex: { type: String },
     dateNaissance: { type: String },
     team: { type: String },

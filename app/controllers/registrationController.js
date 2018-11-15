@@ -269,6 +269,7 @@ var registrationCtrl = {
           'nom': req.body.surname,
           'prenom': req.body.name,
           'email': req.body.email,
+          'phone': req.body.phone,
           'sex': req.body.sex,
           'dateNaissance': req.body.jourNaissance + '/' + req.body.moisNaissance + '/' + req.body.anneeNaissance,
           'team': req.body.team,

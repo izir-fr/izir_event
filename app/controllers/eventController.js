@@ -175,7 +175,7 @@ var eventFinderForm = (req, res) => {
 
   if (date.month === '') {
     date.month = dateNow.getMonth()
-    date.day = dateNow.getDay()
+    date.day = dateNow.getDate()
   } else {
     date.month = (date.month * 1) - 1
   }

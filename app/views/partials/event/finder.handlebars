@@ -65,7 +65,7 @@
   </div>
 
 </div>
-<div class="container-fluid">
+<div class="container">
 
   <div class="row">
     <div class="col-lg-8 col-sm-12  mt-5 mt-3 ">
@@ -74,88 +74,74 @@
           <h2 class="d-block">Calendrier </h2><span class="text-muted d-block my-auto ml-3">({{data.event.length}} résultats)</span>
         </div>
       </div>
-      {{#each data.event}}
-        <div class="row index event border border-top-0 border-left-0 border-right-0 pt-3 pb-3">
-          <div class="col-12">
-            <div class="row mt-3">
-              <div class="col-12 text-xs-center text-sm-center text-md-left">
-                <div class="d-flex">
-                  <!-- event city -->
-                  <div class="d-block mr-3">
-                    <small class="text-capitalize city font-weight-bold text-capitalize"> <i class="fa fa-map-marker" aria-hidden="true"></i> {{this.adresse.ville}}</small>
-                  </div>
-
-                  <!-- event name -->
-                  {{#if this.source}}
-                    <span class="text-uppercase text-center eventName"><strong>{{utf8 this.name}}</strong></span>
-                  {{else}}
-                    <a href="/event/{{this.id}}">
-                      <span class="text-uppercase text-center eventName"><strong>{{utf8 this.name}}</strong></span>
-                    </a>
-                  {{/if}}
-
-                  <!-- labels -->
-                  <div class="d-block ml-2 my-auto">
-                    {{#if this.paiement}}
-                      <i class="fa fa-credit-card-alt text-success spacer-xs-left" aria-hidden="true" title="le paiement en ligne est accepté"></i>
-                    {{else}}
-                      <i class="fa fa-credit-card-alt text-muted spacer-xs-left" aria-hidden="true" title="le paiement en ligne n'est pas accepté"></i>
-                    {{/if}}
-                    {{#if this.certificat_required}}
-                      <i class="fa fa-file text-success spacer-xs-left" title="le certificat médical est requis pour s'inscrire"></i>
-                    {{else}}
-                      <i class="fa fa-file text-muted spacer-xs-left" title="le certificat médical n'est pas requis pour s'inscrire"></i>
-                    {{/if}}                   
-                    {{#if this.dons}}
-                      <i class="fa fa-gratipay text-success spacer-xs-left" aria-hidden="true" title="L'événement accepte les dons"></i>
-                    {{else}}
-                      <i class="fa fa-gratipay text-muted spacer-xs-left" aria-hidden="true" title="L'événement n'accepte pas les dons"></i>
-                    {{/if}}                     
-                  </div>
+      <div class="row">
+        {{#each data.event}}
+          <div class="col-sm-12 col-md-4 col-lg-6 border border-rounded">
+            <div class="row p-2">
+              <div class="col-12 text-center d-flex">
+                <div class="d-block mr-3 bg-light p-2 ">
+                  <span class="d-block h5 text-danger font-weight-bold">
+                    {{dateDay this.epreuves.0.date_debut}}
+                  </span>
+                  <small class="d-block text-muted">
+                    {{dateMonth this.epreuves.0.date_debut}}-{{dateFullYear this.epreuves.0.date_debut}}
+                  </small>
                 </div>
+
+                <!-- event city -->
+                <div class="d-block mr-3 my-auto">
+                  <small class="text-capitalize city font-weight-bold text-capitalize"> <i class="fa fa-map-marker" aria-hidden="true"></i> {{this.adresse.ville}}</small>
+                </div>
+
+                <!-- labels -->
+                <div class="d-block my-auto">
+                  {{#if this.paiement}}
+                    <i class="fa fa-credit-card-alt text-success" aria-hidden="true" title="le paiement en ligne est accepté"></i>
+                  {{else}}
+                    <i class="fa fa-credit-card-alt text-muted" aria-hidden="true" title="le paiement en ligne n'est pas accepté"></i>
+                  {{/if}}
+                  {{#if this.certificat_required}}
+                    <i class="fa fa-file text-success spacer-xs-left" title="le certificat médical est requis pour s'inscrire"></i>
+                  {{else}}
+                    <i class="fa fa-file text-muted spacer-xs-left" title="le certificat médical n'est pas requis pour s'inscrire"></i>
+                  {{/if}}                   
+                  {{#if this.dons}}
+                    <i class="fa fa-gratipay text-success spacer-xs-left" aria-hidden="true" title="L'événement accepte les dons"></i>
+                  {{else}}
+                    <i class="fa fa-gratipay text-muted spacer-xs-left" aria-hidden="true" title="L'événement n'accepte pas les dons"></i>
+                  {{/if}}                     
+                </div>  
               </div>
             </div>
             <div class="row">
-              <div class="col-sm-12 col-md-9 spacer-xs-top">
-                <div class="row">
-                  <div class="col-sm-12 spacer-xs-bottom">
-                    {{#each this.epreuves}}
-                    <div class="row">
-                      <div class=" col-sm-12 col-sm-5 col-md-4 text-sm-left">
-                        <small>
-                          <span class=" date"><i class="fa fa-calendar-check-o" ></i> {{date this.date_debut}} à {{dateHours this.date_debut}}h{{dateMinutes this.date_debut}}</span>
-                        </small>
-                      </div>
-                      <div class="col-sm-7 col-md-8 spacer-xs-bottom">
-                        <small>
-                          <i class="fa fa-chevron-right" aria-hidden="true"></i><span class=" text-capitalize discipline">{{this.discipline}}</span> <span class=" text-lowercase"><strong>{{this.name}}</strong></span> <span class=" region">{{this.adresse.region}}</span>  <span class=" distance"> {{this.distance}}Km</span>  <span class=" denivele">d+  {{this.denivele}}m</span>  
-                          <span class="txt-dark-blue tarif">
-                            {{#if this.source}}
-                              {{this.tarif}}
-                            {{else}}
-                              {{this.tarif}}€
-                            {{/if}}           
-                          </span>                   
-                        </small>
+              
+              <div class="col-12 text-xs-center text-sm-center text-md-left">
+                <div class="d-flex mt-2 mb-2">
 
-                      </div>
-                    </div>
-                    <input type="hidden" name="filtre-mois" value="{{dateMonth this.date_debut}}">
-                    {{/each}}               
-                  </div>
-                </div>              
-              </div>
-            
-              <div class="col-lg-2 md-12 text-lg-right text-xs-center text-sm-center text-md-center margin-top-md-down event-source">
-                <a class="btn btn-outline-primary spacer-xs-bottom border-0 font-weight-bold" href="/event/{{this.id}}"><span class="border boder-2 border-right-0 border-left-0 border-top-0">Plus d'infos</span></a>
-                <a class="btn btn-danger spacer-xs-bottom" href="/inscription/cart/{{this.id}}?event_id={{this.id}}">S'inscrire</a>   
-              </div>
+                  <!-- event name -->
+                  {{#if this.source}}
+                    <span class="text-lowercase text-center text-dark"><strong>{{utf8 this.name}}</strong></span>
+                  {{else}}
+                    <a href="/event/{{this.id}}">
+                      <span class="text-lowercase text-center text-dark"><strong>{{utf8 this.name}}</strong></span>
+                    </a>
+                  {{/if}}
 
-            </div>  
+                </div>
+
+                <!-- CTA -->
+                <div class="d-block mt-4 text-center">
+
+                  <a class="btn btn-outline-primary spacer-xs-bottom border-0 font-weight-bold" href="/event/{{this.id}}"><span class="border boder-2 border-right-0 border-left-0 border-top-0">En savoir +</span></a>
+                  <a class="btn btn-outline-danger spacer-xs-bottom" href="/inscription/cart/{{this.id}}?event_id={{this.id}}">S'inscrire</a>                        
+                   
+                </div>                
+              </div>
+            </div>
           </div>
-        </div>    
-      {{/each}}
-      
+           
+        {{/each}}
+      </div> 
 
       <div class="row spacer-sm-top alert alert-warning text-center">
         <div class="col-sm-12">
@@ -181,15 +167,16 @@
               <iframe height="315" src="https://www.youtube.com/embed/psgP_DFQTq4" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="w-100"></iframe>
             </div>
           </div>   
-          <div class="row border border-top-0 border-left-0 border-right-0 mb-3">
+          <div class="row border border-top-0 border-left-0 border-right-0 mb-3 text-center">
             <div class="col-12 pb-3">
               <span class="d-block font-weight-bold mb-3">Trail de pontivy - 2019</span>
               <iframe width="560" height="315" src="https://www.youtube.com/embed/yroDl4qPrHk" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen  class="w-100"></iframe>
+              <a href="/event/5bcb08d4c8478f0023cc0cf1" class="btn btn-outline-primary d-block">S'inscrire à cette épreuve</a>
             </div>
           </div> 
           <div class="row">
            <div class="col-12 text-center mt-3 mb-5">
-             <a href="#" class="btn btn-outline-primary">Voir toutes les découvertes</a>
+             <a href="#" class="btn btn-default">Voir toutes les découvertes</a>
            </div>
          </div>                   
         </div>

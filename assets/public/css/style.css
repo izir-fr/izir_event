@@ -505,6 +505,10 @@ START => BOOTSTRAPP CUSTOM
   border-radius: 50%;
 }
 
+.text-primary {
+  color: #23717e !important;
+}
+
 /*////////////////////////// 
 END <= BOOTSTRAPP CUSTOM
 //////////////////////////*/

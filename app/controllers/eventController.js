@@ -228,7 +228,8 @@ var eventFinderForm = (req, res) => {
 
       var finderResult = {
         data: {
-          event: allEvents
+          event: allEvents,
+          posts: require('../../newsfeed/post.js')
         },
         date_list: dateList,
         discipline_list: disList,
@@ -343,6 +344,10 @@ var eventCtrl = {
       var data = {result: result}
       res.render('partials/event/event-detail', data)
     })
+  },
+  getNewsfeed: (req, res) => {
+    var posts = require('../../newsfeed/post.js')
+    res.render('partials/event/newsfeed', { posts: posts })
   }
 }
 

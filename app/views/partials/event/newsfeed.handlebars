@@ -1,0 +1,27 @@
+<div class="container">
+  <div class="row">
+    <div class="col-12 mt-5 mb-3">
+      <h1>Découvrir un événement</h1>
+    </div>
+  </div>
+  <!-- dispalay posts -->
+  {{#each posts}}
+    <div class="row border border-top-0 border-left-0 border-right-0 mb-3">
+      <div class="col-12 pb-3">
+        <span class="d-block font-weight-bold mb-2">{{this.titre}}</span>
+        <small class="d-block text-muted mb-3">Publié le: {{this.published_date}}</small>
+
+        <!-- video youtube -->
+        {{#if this.youtube_id}}
+          <iframe height="315" src="https://www.youtube.com/embed/{{this.youtube_id}}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="w-100"></iframe>
+        {{/if}}
+        
+        <!-- inscription cta -->
+        {{#if this.event_id}}
+          <a href="/event/{{this.event_id}}" class="btn btn-outline-primary d-block">S'inscrire à cette épreuve</a>
+        {{/if}}
+        
+      </div>
+    </div>             
+  {{/each}}  
+</div>

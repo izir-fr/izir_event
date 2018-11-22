@@ -22,22 +22,35 @@
   <body>
   	<div class="container-fluid">
       <div class="row">
-        <div class="col-3">
-          <div class="row">
-            <div class="col-md-8 mt-3 mb-3">
-              <a href="/" alt ="EventIzir" id="">
-                <img src="/img/logo.png" alt="event.izir.fr" class="img img-fluid">
-              </a>              
-            </div>
+        <div class="col-12">
+          <div class="d-inline-block p-2 my-auto">
+            <a href="/" alt ="EventIzir" id="">
+              <img src="/img/logo.png" alt="event.izir.fr" class="img img-fluid" style="max-height: 50px;">
+            </a>
           </div>
-        </div>
-        <div class="col-9">
-          <div class="row text-right" id="desktop-user-menu">
+          <div class="d-inline-block float-right my-auto" id="desktop-user-menu">
             <div class="col-12 mt-4" id="user-menu">
-              <span class=""><strong><a href="/event/create" class="btn btn-menu txt-dark-blue">Créer un événement</a></strong></span>
-              <span class="text-muted ">|</span>
-              <span class=""><a href="/event/finder" class="text-muted btn btn-menu">Trouver un évènement</a></span>
-              <span class="">
+              <span class="text-center d-md-inline-block d-sm-block">
+                <a href="/event/create" class="btn btn-menu txt-dark-blue">
+                  <span class="d-block">Créer</span>
+                  <small class="d-block text-muted">un événement</small>
+                </a>
+              </span>
+              <span class="text-muted d-sm-none">|</span>
+              <span class="text-center d-md-inline-block d-sm-block">
+                <a href="/event/finder" class="text-muted btn btn-menu">
+                  <span class="d-block">Trouver</span>
+                  <small class="d-block text-muted">un événement</small>
+                </a>
+              </span>
+              <span class="text-muted d-sm-none">|</span>
+              <span class="text-center d-md-inline-block d-sm-block">
+                <a href="/event/newsfeed" class="text-muted btn btn-menu">
+                  <span class="d-block">Découvrir <small class="d-inline text-danger border border-danger border-top-0 border-right-0 border-left-0">new</small></span>
+                  <small class="d-block text-muted">un événement</small>
+                </a>
+              </span>
+              <span class="text-center">
                 {{#if user}}
                   <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="user-menu">Mon compte</button>
                   <div class="dropdown-menu">
@@ -67,22 +80,20 @@
                 {{else}}
                   <a href="#" class="btn btn-outline-secondary border-0">
                 {{/if}}
-                    <i class="fa fa-bell-o mr-2" aria-hidden="true"></i>
+                    <i class="fa fa-bell-o" aria-hidden="true"></i>
                     <span class="badge badge-light" id="user-notifications"></span>
                   </a>
               </span>
             </div>
           </div>
-          <div id="mobile-menu" class="d-sm-down">
-            <div class="col-12 text-right">
-              
-              <i id="mobile-menu-trigger" class="fa fa-bars fa-2x spacer-sm-top spacer-xs-bottom" aria-hidden="true"></i>
-
-            </div>
-            <div class="col-12 mt-3 mb-3">
+          <div id="mobile-menu" class="d-inline-block float-right">
+            <span class="d-sm-down">
+              <i id="mobile-menu-trigger" class="fa fa-bars fa-2x spacer-sm-top spacer-xs-bottom" aria-hidden="true"></i>  
+            </span>      
+          </div>  
+          <div class="col-12 mt-3 mb-3">
               <div class="col-12" id="mobile-user-menu"></div>
-            </div>
-          </div>          
+            </div>        
         </div>
       </div>
 

@@ -31,7 +31,7 @@ var organsisateurCtrl = {
           if (err) {
             reject(err)
           }
-          resolve(product)
+          resolve(product[0])
         })
     })
 
@@ -41,7 +41,6 @@ var organsisateurCtrl = {
         product: product
       })
       .then((val) => {
-        console.log(val)
         res.render('partials/organisateurs/event-list', val)
       })
       .catch((err) => {

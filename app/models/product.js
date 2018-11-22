@@ -14,7 +14,8 @@ var productSchema = mongoose.Schema({
   inventory: { type: Number },
   created_at: { type: Date, default: Date.now }, // required: true,
   updated: { type: Date },
-  published: { type: Boolean, default: false }
+  published: { type: Boolean, default: false },
+  featured: { type: Boolean, default: false }
 })
 
 module.exports = mongoose.model('Product', productSchema)

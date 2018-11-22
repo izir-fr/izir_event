@@ -3,20 +3,52 @@ var Event = require('../models/event')
 var Registration = require('../models/registration')
 var User = require('../models/user')
 var Notification = require('../models/notification')
+var Product = require('../models/product')
+
+var Promise = require('bluebird')
 
 // Controllers
 var organsisateurCtrl = {
   // Get all épreuves
   getEpreuves: function (req, res) {
-    Event
-      .find({ author: req.user.id })
-      .sort({ created_at: -1 })
-      .exec((err, event) => {
+    var events = new Promise((resolve, reject) => {
+      Event
+        .find({ author: req.user.id })
+        .sort({ created_at: -1 })
+        .exec((err, event) => {
+          if (err) {
+            reject(err)
+          }
+          resolve(event)
+        })
+    })
+
+    var product = new Promise((resolve, reject) => {
+      Product
+        .find({ featured: true, published: true })
+        .limit(1)
+        .exec((err, product) => {
+          if (err) {
+            reject(err)
+          }
+          resolve(product)
+        })
+    })
+
+    Promise
+      .props({
+        event: events,
+        product: product
+      })
+      .then((val) => {
+        console.log(val)
+        res.render('partials/organisateurs/event-list', val)
+      })
+      .catch((err) => {
         if (err) {
           req.flash('error_msg', 'Une erreur est survenue')
           res.redirect('/')
         }
-        res.render('partials/organisateurs/event-list', {event: event})
       })
   },
   // Get contact form
@@ -26,16 +58,16 @@ var organsisateurCtrl = {
       .populate('event')
       .exec((err, data) => {
         if (err) {
-          res.render('partials/user/profil', {error: err})
+          res.render('partials/user/profil', { error: err })
         } else {
-          res.render('partials/organisateurs/contacter', {data: data, single: true})
+          res.render('partials/organisateurs/contacter', { data: data, single: true })
         }
       })
   },
   // Post contact form
   postContacterSingle: function (req, res) {
     Registration
-      .findOne({_id: req.params.registration})
+      .findOne({ _id: req.params.registration })
       .populate('user')
       .exec((err, registration) => {
         if (err) {

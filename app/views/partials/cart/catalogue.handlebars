@@ -32,7 +32,7 @@
 			{{#each products}}
 				{{#if this.published}}
 					<div class="col-sm-12 col-md-6 col-lg-3 p-2 text-center">
-						<div class="d-block border rounded h-100">
+						<a href="/catalogue/produit/{{this.id}}" class="d-block d-block border rounded h-100">
 							<div class="bg-light d-block rounded-top p-2">
 								<strong class="d-block">{{this.name}}</strong>
 								<span class="d-block text-center text-danger mt-2 mb-2"><small>A partir de : </small><strong>{{this.public_price}}€</strong></span>
@@ -63,8 +63,10 @@
 									<a href="/catalogue/add/{{this.id}}" class="btn btn-outline-primary" role="button">Ajouter au devis</a>
 								</div>
 							</div> -->							
-						</div>
-					</div>			
+
+											
+						</a>
+					</div>	
 				{{/if}}
 
 			{{/each}}			

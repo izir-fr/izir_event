@@ -11,7 +11,7 @@ var productSchema = mongoose.Schema({
   buy_price: { type: Number },
   public_price: { type: Number, required: true },
   promo_price: { type: Number },
-  inventory: { type: Number, required: true },
+  inventory: { type: Number },
   created_at: { type: Date, default: Date.now }, // required: true,
   updated: { type: Date },
   published: { type: Boolean, default: false }

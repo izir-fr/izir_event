@@ -68,15 +68,15 @@
 			<a href="/catalogue/" class="d-block mx-auto border p-3">
 				<h3 class="h5">Avez-vous pensez à vos lots ?</h3>
 				<div class="d-block">
-					<span class="d-block">
+					<span class="d-block border border-top-0 border-right-0 border-left-0 text-muted">
 						L'exemple du moment
 					</span>
-					<span class="d-block">
-						{{product.title}}
+					<div class="d-block mt-3">
+						<strong class="text-dark">{{product.name}}</strong>
 						{{product.image.0.url}}
-					</span>
+					</div>
 					<img src="{{product.images.0.url}}" alt="{{product.title}}" class="img-fluid">
-					<span class="h5 text-danger">{{product.public_price}}</span>
+					<span class="text-muted">à partir de : </span><span class="h5 text-danger font-weight-bold">{{product.public_price}}€</span>
 				</div>
 			</a>
 		</div>

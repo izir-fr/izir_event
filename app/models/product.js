@@ -10,7 +10,7 @@ var productSchema = mongoose.Schema({
   images: [ { url: { type: String, required: true } } ],
   buy_price: { type: Number },
   public_price: { type: Number, required: true },
-  price: { type: Number },
+  promo_price: { type: Number },
   inventory: { type: Number, required: true },
   created_at: { type: Date, default: Date.now }, // required: true,
   updated: { type: Date },

@@ -3,9 +3,9 @@
 		<h1>Gérer mes épreuves</h1>
 	</div>
 </div>
-<div class="container-fluid">
+<div class="container">
 	<div class="row">
-		<div class="col-10 mx-auto mb-4">
+		<div class="col-md-9 mx-auto mb-4">
 			{{#if event}}
 				<div class="row">
 					<div class="col-12 mt-5 mb-4 text-center text-md-left">
@@ -63,6 +63,22 @@
 				<p class="alert alert-danger">Vous n'avez pas encore créé d'épreuve</p>
 				<a href="/event/create" class="btn btn-default">Créer maintenant</a>
 			{{/if}}		
+		</div>
+		<div class="col-md-3 mt-5">
+			<a href="/catalogue/" class="d-block mx-auto border p-3">
+				<h3 class="h5">Avez-vous pensez à vos lots ?</h3>
+				<div class="d-block">
+					<span class="d-block">
+						L'exemple du moment
+					</span>
+					<span class="d-block">
+						{{product.title}}
+						{{product.image.0.url}}
+					</span>
+					<img src="{{product.images.0.url}}" alt="{{product.title}}" class="img-fluid">
+					<span class="h5 text-danger">{{product.public_price}}</span>
+				</div>
+			</a>
 		</div>
 	</div>
 </div>

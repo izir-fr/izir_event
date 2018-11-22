@@ -14,8 +14,20 @@
         <!-- video youtube -->
         {{#if this.youtube_id}}
           <iframe height="315" src="https://www.youtube.com/embed/{{this.youtube_id}}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="w-100"></iframe>
+        {{else if this.featured_image}}
+          <img src="{{this.featured_image}}" alt="{{this.titre}}" class="img-fluid">
         {{/if}}
-        
+
+        <!-- short_text -->
+        {{#if this.short_text}}
+          <em class="d-block pt-2 pb-2 font-weight-bold">{{this.short_text}}</em>
+        {{/if}}
+
+        <!-- long_text -->
+        {{#if this.long_text}}
+          <p class="d-block pt-2 pb-2">{{this.long_text}}</p>
+        {{/if}}
+
         <!-- inscription cta -->
         {{#if this.event_id}}
           <a href="/event/{{this.event_id}}" class="btn btn-outline-primary d-block">S'inscrire à cette épreuve</a>

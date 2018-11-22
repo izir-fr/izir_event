@@ -4,36 +4,70 @@
       <h1>Découvrir un événement</h1>
     </div>
   </div>
-  <!-- dispalay posts -->
-  {{#each posts}}
-    <div class="row border border-top-0 border-left-0 border-right-0 mb-3">
-      <div class="col-12 pb-3">
-        <span class="d-block font-weight-bold mb-2">{{this.titre}}</span>
-        <small class="d-block text-muted mb-3">Publié le: {{this.published_date}}</small>
+  <div class="row">
+    <div class="col-md-8">
+      <!-- dispalay posts -->
+      {{#each posts}}
+        <div class="row border border-top-0 border-left-0 border-right-0 mb-3">
+          <div class="col-12 pb-3">
+            <span class="d-block font-weight-bold mb-2">{{this.titre}}</span>
+            <small class="d-block text-muted mb-3">Publié le: {{this.published_date}}</small>
 
-        <!-- video youtube -->
-        {{#if this.youtube_id}}
-          <iframe height="315" src="https://www.youtube.com/embed/{{this.youtube_id}}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="w-100"></iframe>
-        {{else if this.featured_image}}
-          <img src="{{this.featured_image}}" alt="{{this.titre}}" class="img-fluid">
-        {{/if}}
+            <!-- video youtube -->
+            {{#if this.youtube_id}}
+              <iframe height="315" src="https://www.youtube.com/embed/{{this.youtube_id}}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="w-100"></iframe>
+            {{else if this.featured_image}}
+              <img src="{{this.featured_image}}" alt="{{this.titre}}" class="img-fluid">
+            {{/if}}
 
-        <!-- short_text -->
-        {{#if this.short_text}}
-          <em class="d-block pt-2 pb-2 font-weight-bold">{{this.short_text}}</em>
-        {{/if}}
+            <!-- short_text -->
+            {{#if this.short_text}}
+              <em class="d-block pt-2 pb-2 font-weight-bold">{{this.short_text}}</em>
+            {{/if}}
 
-        <!-- long_text -->
-        {{#if this.long_text}}
-          <p class="d-block pt-2 pb-2">{{this.long_text}}</p>
-        {{/if}}
+            <!-- long_text -->
+            {{#if this.long_text}}
+              <p class="d-block pt-2 pb-2">{{this.long_text}}</p>
+            {{/if}}
 
-        <!-- inscription cta -->
-        {{#if this.event_id}}
-          <a href="/event/{{this.event_id}}" class="btn btn-outline-primary d-block">S'inscrire à cette épreuve</a>
-        {{/if}}
-        
+            <!-- inscription cta -->
+            {{#if this.event_id}}
+              <a href="/event/{{this.event_id}}" class="btn btn-outline-primary d-block">S'inscrire à cette épreuve</a>
+            {{/if}}
+            
+          </div>
+        </div>             
+      {{/each}}        
+    </div>
+    <div class="col-md-4">
+      <div class="d-block sticky-top pt-3">
+        <div class="d-block bg-light p-3 pt-5 pb-5 border">
+          <h3>Newsletter</h3>
+          <span class="d-block mb-3">
+            <strong>
+              Recevez chaque semaine un résumé des derniers événements à découvrir, par email.
+            </strong>
+          </span>
+          <span class="d-block">
+            <!-- SendinBlue Signup Form HTML Code -->
+            <form class="description" id="theform" name="theform" action="https://my.sendinblue.com/users/subscribeembed/js_id/2wjr4/id/2" method="POST">
+              <input type="hidden" name="js_id" id="js_id" value="2wjr4">
+              <input type="hidden" name="listid" id="listid" value="21">
+              <input type="hidden" name="from_url" id="from_url" value="yes">
+              <input type="hidden" name="hdn_email_txt" id="hdn_email_txt" value="">
+              <input type="hidden" name="sib_simple" value="simple">
+              <input type="hidden" name="sib_forward_url" value="https://event.izir.fr/event/newsfeed" id="sib_forward_url">
+              <div class="form-group">
+                <input type="email" name="email" id="email" value="" data-kwimpalastatus="alive" data-kwimpalaid="1542898883095-2" class="form-control">
+              </div>
+              
+
+              <button class="btn btn-outline-danger " type="submit" data-editfield="subscribe">S'inscrire</button>
+            </form>
+          </span>
+        </div>
       </div>
-    </div>             
-  {{/each}}  
+    </div>
+  </div>
+
 </div>

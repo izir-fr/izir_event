@@ -76,28 +76,7 @@ var hbs = exphbs.create({
   defaultLayout: 'main',
   layoutsDir: 'app/views/layouts',
   partialsDir: 'app/views/partials',
-  helpers: {
-    date: (val) => { return val.getDate() + '/' + (parseInt(val.getMonth()) + 1) + '/' + val.getFullYear() },
-    dateFullYear: (val) => { return val.getUTCFullYear() },
-    dateMonth: (val) => { return (val.getUTCMonth() + 1) },
-    dateDay: (val) => { return val.getUTCDate() },
-    dateHours: (val) => { return val.getUTCHours() },
-    dateMinutes: (val) => { return val.getUTCMinutes() },
-    userDateDay: (val) => { return val.split('/')[0] },
-    userDateMonth: (val) => { return val.split('/')[1] },
-    userDateYear: (val) => { return val.split('/')[2] },
-    utf8: (val) => {
-      if (val) {
-        try {
-          return decodeURIComponent(val)
-        } catch (err) {
-          return ''
-        }
-      } else {
-        return ''
-      }
-    }
-  }
+  helpers: require('./custom_modules/handlebarsHelpers')
 })
 
 app.engine('handlebars', hbs.engine)

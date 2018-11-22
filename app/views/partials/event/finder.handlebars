@@ -74,74 +74,62 @@
           <h2 class="d-block">Calendrier </h2><span class="text-muted d-block my-auto ml-3">({{data.event.length}} résultats)</span>
         </div>
       </div>
-      <div class="row">
-        {{#each data.event}}
-          <div class="col-sm-12 col-md-4 col-lg-6 border border-rounded">
-            <div class="row p-2">
-              <div class="col-12 text-center d-flex">
-                <div class="d-block mr-3 bg-light p-2 ">
-                  <span class="d-block h5 text-danger font-weight-bold">
-                    {{dateDay this.epreuves.0.date_debut}}
-                  </span>
-                  <small class="d-block text-muted">
-                    {{dateMonth this.epreuves.0.date_debut}}-{{dateFullYear this.epreuves.0.date_debut}}
-                  </small>
-                </div>
-
-                <!-- event city -->
-                <div class="d-block mr-3 my-auto">
-                  <small class="text-capitalize city font-weight-bold text-capitalize"> <i class="fa fa-map-marker" aria-hidden="true"></i> {{this.adresse.ville}}</small>
-                </div>
-
-                <!-- labels -->
-                <div class="d-block my-auto">
-                  {{#if this.paiement}}
-                    <i class="fa fa-credit-card-alt text-success" aria-hidden="true" title="le paiement en ligne est accepté"></i>
-                  {{else}}
-                    <i class="fa fa-credit-card-alt text-muted" aria-hidden="true" title="le paiement en ligne n'est pas accepté"></i>
-                  {{/if}}
-                  {{#if this.certificat_required}}
-                    <i class="fa fa-file text-success spacer-xs-left" title="le certificat médical est requis pour s'inscrire"></i>
-                  {{else}}
-                    <i class="fa fa-file text-muted spacer-xs-left" title="le certificat médical n'est pas requis pour s'inscrire"></i>
-                  {{/if}}                   
-                  {{#if this.dons}}
-                    <i class="fa fa-gratipay text-success spacer-xs-left" aria-hidden="true" title="L'événement accepte les dons"></i>
-                  {{else}}
-                    <i class="fa fa-gratipay text-muted spacer-xs-left" aria-hidden="true" title="L'événement n'accepte pas les dons"></i>
-                  {{/if}}                     
-                </div>  
-              </div>
-            </div>
-            <div class="row">
-              
-              <div class="col-12 text-xs-center text-sm-center text-md-left">
-                <div class="d-flex mt-2 mb-2">
-
-                  <!-- event name -->
-                  {{#if this.source}}
-                    <span class="text-lowercase text-center text-dark"><strong>{{utf8 this.name}}</strong></span>
-                  {{else}}
-                    <a href="/event/{{this.id}}">
-                      <span class="text-lowercase text-center text-dark"><strong>{{utf8 this.name}}</strong></span>
-                    </a>
-                  {{/if}}
-
-                </div>
-
-                <!-- CTA -->
-                <div class="d-block mt-4 text-center">
-
-                  <a class="btn btn-outline-primary spacer-xs-bottom border-0 font-weight-bold" href="/event/{{this.id}}"><span class="border boder-2 border-right-0 border-left-0 border-top-0">En savoir +</span></a>
-                  <a class="btn btn-outline-danger spacer-xs-bottom" href="/inscription/cart/{{this.id}}?event_id={{this.id}}">S'inscrire</a>                        
-                   
-                </div>                
-              </div>
+      {{#each data.event}}
+        <div class="row p-2 border border-top-0 border-right-0 border-left-0">
+          <!-- date -->
+          <div class="col-md-2 col-sm-6 rounded bg-light p-2 my-auto text-center">
+            <div class="d-block">
+              <span class="d-block h5 text-danger font-weight-bold">
+                {{dateDay this.epreuves.0.date_debut}}
+              </span>
+              <small class="d-block text-muted">
+                {{dateMonthText this.epreuves.0.date_debut}}<br>{{dateFullYear this.epreuves.0.date_debut}}
+              </small>                
             </div>
           </div>
-           
-        {{/each}}
-      </div> 
+
+          <!-- event city -->
+          <div class="col-md-2 col-sm-6 pl-3 pr-3 my-auto">
+            <small class="text-capitalize city font-weight-bold d-block mb-2"> <i class="fa fa-map-marker" aria-hidden="true"></i> {{this.adresse.ville}}</small>
+            <!-- labels -->
+            {{#if this.paiement}}
+              <i class="fa fa-credit-card-alt text-success" aria-hidden="true" title="le paiement en ligne est accepté"></i>
+            {{else}}
+              <i class="fa fa-credit-card-alt text-muted" aria-hidden="true" title="le paiement en ligne n'est pas accepté"></i>
+            {{/if}}
+            {{#if this.certificat_required}}
+              <i class="fa fa-file text-success spacer-xs-left" title="le certificat médical est requis pour s'inscrire"></i>
+            {{else}}
+              <i class="fa fa-file text-muted spacer-xs-left" title="le certificat médical n'est pas requis pour s'inscrire"></i>
+            {{/if}}                   
+            {{#if this.dons}}
+              <i class="fa fa-gratipay text-success spacer-xs-left" aria-hidden="true" title="L'événement accepte les dons"></i>
+            {{else}}
+              <i class="fa fa-gratipay text-muted spacer-xs-left" aria-hidden="true" title="L'événement n'accepte pas les dons"></i>
+            {{/if}}                    
+          </div>
+
+          
+          <div class="col-md-5 col-sm-6 my-auto">
+            <!-- event name -->
+            {{#if this.source}}
+              <span class="text-lowercase text-center text-dark"><strong>{{utf8 this.name}}</strong></span>
+            {{else}}
+              <a href="/event/{{this.id}}">
+                <span class="text-lowercase text-center text-dark"><strong>{{utf8 this.name}}</strong></span>
+              </a>
+            {{/if}}                   
+          </div>  
+
+          <!-- CTA -->
+          <div class="col-md-3 col-sm-6 my-auto text-center float-right">
+
+            <a class="btn btn-outline-primary spacer-xs-bottom border-0 font-weight-bold" href="/event/{{this.id}}"><span class="border boder-2 border-right-0 border-left-0 border-top-0">En savoir +</span></a>
+            <a class="btn btn-outline-danger spacer-xs-bottom" href="/inscription/cart/{{this.id}}?event_id={{this.id}}">S'inscrire</a>                        
+             
+          </div>
+        </div>        
+      {{/each}}
 
       <div class="row spacer-sm-top alert alert-warning text-center">
         <div class="col-sm-12">

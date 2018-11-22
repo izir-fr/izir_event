@@ -4,16 +4,15 @@ var Cart = require('../models/cart')
 var cartCtrl = {
   // Get add to cart a product
   getAllProduct: (req, res) => {
-    // Product.find({published: {$ne: false}})
-    //   .exec(function (err, products) {
-    //     if (err) {
-    //       req.flash('error_msg', 'Une erreur est survenue')
-    //       res.redirect('/')
-    //     }
-    //     res.render('partials/cart/catalogue', {products: products})
-    //   })
-    var products = require('../../catalogue/products')
-    res.render('partials/cart/catalogue', { products: products })
+    Product
+      .find({published: {$ne: false}})
+      .exec(function (err, dbProducts) {
+        if (err) {
+          req.flash('error_msg', 'Une erreur est survenue')
+          res.redirect('/')
+        }
+        res.render('partials/cart/catalogue', {products: dbProducts})
+      })
   },
   // Get reduce product cart quantity by one
   getAddToCart: (req, res) => {
@@ -84,7 +83,7 @@ var cartCtrl = {
         res.redirect('/')
       }
       if (produit.published) {
-        res.render('partials/shop/produit', {product: produit})
+        res.render('partials/cart/produit', {product: produit})
       } else {
         res.redirect('/catalogue/')
       }

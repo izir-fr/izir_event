@@ -12,7 +12,7 @@
 		</div>
 	</div>
 </div>
-<div class="container-fluid">
+<div class="container">
 	<div class="row spacer-md-top">
 		<div class="col-md-6">
 			<div class="row spacer-xs-bottom">
@@ -32,30 +32,36 @@
 			</div>
 		</div>
 		<div class="col-md-6">
-			<div class="border sticky-top">
-				<div class="row ">
-					<div class="col-12 spacer-xs-top spacer-xs-bottom text-center">
-						<h1>{{product.name}}</h1>	
+			<div class="border sticky-top d-block mb-5">
+				<div class="row">
+					<div class="col-11 mx-auto spacer-xs-top spacer-xs-bottom text-center">
+						<h1 class="h3">{{product.name}}</h1>	
 					</div>
 				</div>
-				<div class="row">
+<!-- 				<div class="row">
 					<div class="col-12 spacer-xs-bottom text-center">
 						<a href="/catalogue/add/{{product.id}}" class="btn btn-outline-primary" role="button">Ajouter au devis</a>
+					</div>
+				</div> -->
+				<div class="row">
+					<div class="col-12 spacer-xs-bottom spacer-sm-left">
+						<span class="text-muted">ref: {{product.ref}}</span>
 					</div>
 				</div>
 				<div class="row">
 					<div class="col-12 spacer-xs-bottom spacer-sm-left">
-						<span class="text-secondary">{{product.ref}}</span>
+						<strong class=" h2 text-danger">{{product.public_price}}€</strong>
 					</div>
 				</div>
+
 				<div class="row">
 					<div class="col-12 spacer-xs-bottom spacer-sm-left">
 						<span>{{product.categorie}} | {{product.brand}}</span>
 					</div>
 				</div>
 				<div class="row">
-					<div class="col-12 spacer-xs-bottom spacer-sm-left">
-						<span>{{product.description}}</span>
+					<div class="col-11 spacer-xs-bottom spacer-sm-left">
+						<p>{{product.description}}</p>
 					</div>
 				</div>		
 			</div>

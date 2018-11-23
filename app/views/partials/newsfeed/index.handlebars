@@ -19,24 +19,32 @@
             {{else if this.featured_image}}
               <img src="{{this.featured_image}}" alt="{{this.titre}}" class="img-fluid">
             {{/if}}
-
-            <!-- short_text -->
-            {{#if this.short_text}}
-              <em class="d-block pt-2 pb-2 font-weight-bold">{{this.short_text}}</em>
-            {{/if}}
-
-            <!-- long_text -->
-            {{#if this.long_text}}
-              <p class="d-block pt-2 pb-2">{{this.long_text}}</p>
-            {{/if}}
-
-            <!-- inscription cta -->
-            {{#if this.event_id}}
-              <a href="/event/{{this.event_id}}" class="btn btn-outline-primary d-block">S'inscrire à cette épreuve</a>
-            {{/if}}
             
+            {{#if this.blog_post}}
+              <!-- short_text -->
+              {{#if this.short_text}}
+                <em class="d-block pt-2 pb-2 font-weight-bold">{{this.short_text}}</em>
+              {{/if}}
+              <a href="/newsfeed/{{this._id}}" class="btn btn-outline-primary d-block">Lire l'article</a>
+            {{else}}
+              <!-- short_text -->
+              {{#if this.short_text}}
+                <em class="d-block pt-2 pb-2 font-weight-bold">{{this.short_text}}</em>
+              {{/if}}
+
+              <!-- long_text -->
+              {{#if this.long_text}}
+                <p class="d-block pt-2 pb-2">{{{this.long_text}}}</p>
+              {{/if}}
+
+              <!-- inscription cta -->
+              {{#if this.event_id}}
+                <a href="/event/{{this.event_id}}" class="btn btn-outline-primary d-block">S'inscrire à cette épreuve</a>
+              {{/if}}            
+            {{/if}}
+
           </div>
-        </div>             
+        </div>          
       {{/each}}        
     </div>
     <div class="col-md-4">

@@ -1,4 +1,5 @@
 var async = require('async')
+var Promise = require('bluebird')
 
 // custom modules
 var catList = require('../../custom_modules/lists/category-list')
@@ -8,6 +9,7 @@ var disList = require('../../custom_modules/lists/discipline-list')
 // Models
 var Event = require('../models/event')
 var Registration = require('../models/registration')
+var Post = require('../models/post')
 
 // Date
 var dateNow = new Date(Date.now())
@@ -196,47 +198,74 @@ var eventFinderForm = (req, res) => {
     queryDiscipline = { $ne: '' }
   }
 
-  Event
-    .find({
-      $and: [
-        { epreuves: { $elemMatch: queryDate } },
-        { 'epreuves.discipline': queryDiscipline }
-      ]
-    })
-    .sort({ 'epreuves.0.date_debut': 1 })
-    .exec((err, results) => {
-      if (err) {
-        req.flash('error_msg', 'Une erreur est survenue')
-        res.redirect('/')
-      }
-
-      // city filter
-      if (results !== undefined) {
-        if (citySearch !== '' || citySearch !== null) {
-          results.forEach((val) => {
-            // city query filter
-            if (val.adresse.ville) {
-              if (val.adresse.ville.toLowerCase().indexOf(citySearch) !== -1) {
-                allEvents.push(val)
-              }
-            }
-          })
-        } else {
-          allEvents = results
+  var dbEvents = new Promise((resolve, reject) => {
+    Event
+      .find({
+        $and: [
+          { epreuves: { $elemMatch: queryDate } },
+          { 'epreuves.discipline': queryDiscipline }
+        ]
+      })
+      .sort({ 'epreuves.0.date_debut': 1 })
+      .exec((err, results) => {
+        if (err) {
+          reject(err)
         }
-      }
 
+        // city filter
+        if (results !== undefined) {
+          if (citySearch !== '' || citySearch !== null) {
+            results.forEach((val) => {
+              // city query filter
+              if (val.adresse.ville) {
+                if (val.adresse.ville.toLowerCase().indexOf(citySearch) !== -1) {
+                  allEvents.push(val)
+                }
+              }
+            })
+          } else {
+            allEvents = results
+          }
+          resolve(allEvents)
+        }
+      })
+  })
+
+  var featuredPosts = new Promise((resolve, reject) => {
+    Post
+      .find({ 'published_date': { $lte: Date(Date.now()) }, 'featured': true })
+      .sort({ 'published_date': -1 })
+      .limit(2)
+      .exec((err, posts) => {
+        if (err) {
+          reject(err)
+        }
+        resolve(posts)
+      })
+  })
+
+  Promise
+    .props({
+      events: dbEvents,
+      posts: featuredPosts
+    })
+    .then((val) => {
       var finderResult = {
         data: {
-          event: allEvents,
-          posts: require('../../newsfeed/post.js')
+          event: val.events,
+          posts: val.posts
         },
         date_list: dateList,
         discipline_list: disList,
         queries: req.query
       }
-
       res.render('partials/event/finder', finderResult)
+    })
+    .catch((err) => {
+      if (err) {
+        req.flash('error_msg', 'Une erreur est survenue')
+        res.redirect('/')
+      }
     })
 }
 

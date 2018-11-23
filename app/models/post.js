@@ -10,9 +10,10 @@ var postSchema = mongoose.Schema({
   featured_image: { type: String },
   event_id: { type: Schema.ObjectId, ref: 'Event' },
   featured: { type: Boolean, default: false },
-  blog_poost: { type: Boolean, default: false },
+  blog_post: { type: Boolean, default: false },
   published_date: { type: Date },
-  created_at: { type: Date, default: Date.now }
+  created_at: { type: Date, default: Date.now },
+  archived: { type: Boolean, default: false }
 })
 
 module.exports = mongoose.model('Post', postSchema)

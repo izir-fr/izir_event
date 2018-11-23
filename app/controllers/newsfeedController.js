@@ -12,6 +12,16 @@ var newsfeedController = {
         }
         res.render('partials/newsfeed/index', { posts: posts })
       })
+  },
+  getSinglePost: (req, res) => {
+    Post
+      .findOne({ _id: req.params.id })
+      .exec((err, post) => {
+        if (err) {
+          res.redirect('/event/finder')
+        }
+        res.render('partials/newsfeed/single', { post: post })
+      })
   }
 }
 

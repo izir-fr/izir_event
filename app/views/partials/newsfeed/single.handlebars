@@ -1,0 +1,37 @@
+<div class="container pb-5">
+  <div class="row mt-5 mb-3">
+    <div class="col-12">
+      <h1>{{post.titre}}</h1>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      {{{post.long_text}}}
+      <div class="d-block pt-3">
+        <div class="d-block bg-light p-3 pt-5 pb-5 border">
+          <h3>Newsletter</h3>
+          <span class="d-block mb-3">
+            <strong>
+              Recevez chaque semaine un résumé des derniers événements à découvrir, par email.
+            </strong>
+          </span>
+          <span class="d-block">
+            <!-- SendinBlue Signup Form HTML Code -->
+            <form class="description" id="theform" name="theform" action="https://my.sendinblue.com/users/subscribeembed/js_id/2wjr4/id/2" method="POST">
+              <input type="hidden" name="js_id" id="js_id" value="2wjr4">
+              <input type="hidden" name="listid" id="listid" value="21">
+              <input type="hidden" name="from_url" id="from_url" value="yes">
+              <input type="hidden" name="hdn_email_txt" id="hdn_email_txt" value="">
+              <input type="hidden" name="sib_simple" value="simple">
+              <input type="hidden" name="sib_forward_url" value="https://event.izir.fr/event/newsfeed" id="sib_forward_url">
+              <div class="form-group">
+                <input type="email" name="email" id="email" value="" data-kwimpalastatus="alive" data-kwimpalaid="1542898883095-2" class="form-control">
+              </div>
+              <button class="btn btn-outline-danger " type="submit" data-editfield="subscribe">S'inscrire</button>
+            </form>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

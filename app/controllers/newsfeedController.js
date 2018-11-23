@@ -4,7 +4,7 @@ var Post = require('../models/post')
 var newsfeedController = {
   getAllPosts: (req, res) => {
     Post
-      .find({ 'published_date': { $gte: 0 } })
+      .find({ 'published_date': { $lte: Date(Date.now()) }, 'archived': false })
       .sort({ 'published_date': -1 })
       .exec((err, posts) => {
         if (err) {

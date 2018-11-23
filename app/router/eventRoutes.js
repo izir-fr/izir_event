@@ -14,9 +14,6 @@ START APP =>
 // Get all event
 router.get('/finder', eventCtrl.getAllEvent)
 
-// Get newsfeed
-router.get('/newsfeed', eventCtrl.getNewsfeed)
-
 // Get create event page
 router.get('/create', ensureAuthenticated, eventCtrl.getCreateEvent)
 

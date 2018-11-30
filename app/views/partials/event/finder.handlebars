@@ -159,6 +159,8 @@
                 <!-- video youtube -->
                 {{#if this.youtube_id}}
                   <iframe height="315" src="https://www.youtube.com/embed/{{this.youtube_id}}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="w-100"></iframe>
+                {{else if this.featured_image}}
+                  <img src="{{this.featured_image}}" alt="{{this.titre}}" class="img-fluid mb-2">
                 {{/if}}
                 
                 <!-- inscription cta -->

@@ -181,7 +181,7 @@ var exportModules = {
       'ETAT': '',
       'PAYS': '',
       'EMAIL': val.participant.email,
-      'TEL': val.telephone,
+      'TEL': val.phone,
       'SEXE': val.participant.sex,
       'NUMERO': '',
       'HANDICAP': '',

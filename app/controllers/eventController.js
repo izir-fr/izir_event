@@ -8,7 +8,6 @@ var disList = require('../../custom_modules/lists/discipline-list')
 
 // Models
 var Event = require('../models/event')
-var Race = require('../models/race')
 var Registration = require('../models/registration')
 var Post = require('../models/post')
 
@@ -280,11 +279,11 @@ var eventCtrl = {
     }
   },
   // Get create event page
-  getCreateEvent: (req, res) => {
+  getCreateEvent: function (req, res) {
     res.render('partials/event/create-event', { date_list: dateList, category_list: catList, discipline_list: disList })
   },
   // Post a create event
-  postCreateEvent: (req, res) => {
+  postCreateEvent: function (req, res) {
     /// ///EVENT CONSTRUCTOR//////
     var epreuves = epreuveConstructor(req)
     var options = optionConstructor(req)
@@ -306,7 +305,7 @@ var eventCtrl = {
     })
   },
   // Get a edit event page
-  getEditEvent: (req, res) => {
+  getEditEvent: function (req, res) {
     Event.findOne({_id: req.params.id}, function (err, event) {
       if (err) {
         req.flash('error_msg', 'Une erreur est survenue')
@@ -323,7 +322,7 @@ var eventCtrl = {
     })
   },
   // Post a edit event
-  postEditEvent: (req, res) => {
+  postEditEvent: function (req, res) {
     // EVENT CONSTRUCTOR
     var epreuves = epreuveConstructor(req)
     var options = optionConstructor(req)
@@ -341,12 +340,12 @@ var eventCtrl = {
     })
   },
   // Get a event
-  GetSingleEvent: (req, res) => {
+  GetSingleEvent: function (req, res) {
     async.parallel({
-      event: (next) => {
+      event: function (next) {
         Event.findById(req.params.id).exec(next)
       },
-      participants: (next) => {
+      participants: function (next) {
         if (req.query.epreuve && req.query.epreuve !== 'Toutes') {
           Registration
             .find({
@@ -366,7 +365,7 @@ var eventCtrl = {
             .exec(next)
         }
       }
-    }, (err, result) => {
+    }, function (err, result) {
       if (err) {
         req.flash('error_msg', 'Une erreur est survenue')
         res.redirect('/')
@@ -374,26 +373,6 @@ var eventCtrl = {
       var data = {result: result}
       res.render('partials/event/event-detail', data)
     })
-  },
-  getCreateRace: (req, res) => {
-
-  },
-  postCreateRace: (req, res) => {
-
-  },
-  getEditRace: (req, res) => {
-    Race
-      .findById(req.params.race)
-      .exec((err, race) => {
-        if (err) {
-          res.redirect('/organisateur/epreuves')
-        }
-
-        console.log(race)
-      })
-  },
-  postEditRace: (req, res) => {
-
   }
 }
 

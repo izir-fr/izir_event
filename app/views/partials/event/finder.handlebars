@@ -70,8 +70,8 @@
   <div class="row">
     <div class="col-lg-8 col-sm-12  mt-5 mt-3 ">
       <div class="row">
-        <div class="col-12 d-flex">
-          <h2 class="d-block">Calendrier </h2><span class="text-muted d-block my-auto ml-3">({{data.event.length}} résultats)</span>
+        <div class="col-12 d-flex my-3">
+          <h2 class="d-block font-weight-bold">Calendrier </h2><span class="text-muted d-block my-auto ml-3">({{data.event.length}} résultats)</span>
         </div>
       </div>
       {{#each data.event}}
@@ -79,11 +79,12 @@
           <!-- date -->
           <div class="col-md-2 col-sm-6 rounded bg-light p-2 my-auto text-center">
             <div class="d-block">
-              <span class="d-block h5 text-danger font-weight-bold">
+              <small class="d-block text-uppercase text-danger font-weight-bold">{{dateMonthText this.epreuves.0.date_debut}}</small>
+              <span class="d-block h3 text-dark font-weight-bold my-2">
                 {{dateDay this.epreuves.0.date_debut}}
               </span>
               <small class="d-block text-muted">
-                {{dateMonthText this.epreuves.0.date_debut}}<br>{{dateFullYear this.epreuves.0.date_debut}}
+                {{dateFullYear this.epreuves.0.date_debut}}
               </small>                
             </div>
           </div>
@@ -146,7 +147,7 @@
         <div class="col-12">
           <div class="row">
             <div class="col-12">
-              <h3 class="h4 pt-5 pb-3 text-center mt-2 d-block">A découvrir</h3>
+              <h3 class="h4 pt-5 pb-3 text-center mt-2 d-block font-weight-bold">A découvrir</h3>
             </div>
           </div>
           <!-- dispalay posts -->

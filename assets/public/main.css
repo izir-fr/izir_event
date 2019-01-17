@@ -6993,6 +6993,8 @@ p.footer {
 
 .header h1{
   color: #FFF;
+  font-size: 4rem;
+  margin-bottom: 50px;
 }
 
 .header h3 {
@@ -7063,7 +7065,7 @@ a.login > p{
 
 #map {
   width: 100%;
-  height: 180px;
+  height: 280px;
   background-color: grey;
 }
 

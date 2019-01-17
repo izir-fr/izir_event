@@ -1,34 +1,44 @@
 <div class="container-fluid">
+
 	<div class="row">
-		<div class="col-12">
-			<span class="d-block spacer-xs-left bg-light spacer-sm-top spacer-sm-bottom">
-				<h1 class="text-center" id="event-details-header">{{utf8 result.event.name}}</h1>
-			</span>
-		</div>
-	</div>
-	<div class="row">
+
+		<!-- left column -->
 		<div class="col-lg-9 order-xs-2 order-sm-2 order-lg-1">
+	    <div class="row">
+	    	<div class="col-12 py-3 d-flex py-5 mb-5">
+	    		<!-- date -->
+	        <div class="d-inline-block ml-3 text-center">
+	          <small class="d-block text-uppercase text-danger font-weight-bold">{{dateMonthText result.event.epreuves.0.date_debut}}</small>
+	          <span class="d-block h3 text-dark font-weight-bold my-2">
+	            {{dateDay result.event.epreuves.0.date_debut}}
+	          </span>
+	          <small class="d-block text-muted">
+	            {{dateFullYear result.event.epreuves.0.date_debut}}
+	          </small>                
+	        </div>
+	        <!-- event name -->
+	        <div class="d-inline-block px-5">
+	        	<h1 class="text-center font-weight-bold">{{utf8 result.event.name}}</h1>
+	        </div>
+	    	</div>
+	    </div>    
 			<div class="row">
-				<div class="col-12">
-					<div id="map"></div>
-				</div>
-			</div>
-			<div class="row">
-				<!-- SLIDER -->
-				<div class="col-md-4">
+
+				<div class="col-md-6">
+					<!-- slider -->
 					<div id="event-detail-slider">
 						<div id="carouselExampleControls" class="carousel slide spacer-xs-top" data-ride="carousel">
 						  <div class="carousel-inner">
-						   {{#each result.event.docs.img}}
-						   	{{#if @first}}
-						    <div class="carousel-item active">
-						    {{else}}
-						    <div class="carousel-item">
-						    {{/if}}
-						      <a href="{{this}}" target="_blank">
-						      	<img class="d-block w-100" src="{{this}}" alt="{{this.index}}">
-						      </a>
-						    </div>
+						    {{#each result.event.docs.img}}
+							   	{{#if @first}}
+							    	<div class="carousel-item active">
+							    {{else}}
+							    	<div class="carousel-item">
+							    {{/if}}
+							      <a href="{{this}}" target="_blank">
+							      	<img class="d-block w-100" src="{{this}}" alt="{{this.index}}">
+							      </a>
+							    </div>
 						    {{/each}}
 						  </div>
 						  <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
@@ -38,79 +48,45 @@
 						  <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
 						    <span class="carousel-control-next-icon" aria-hidden="true"></span>
 						    <span class="sr-only">Next</span>
-						  </a>						
+						  </a>
 						</div>
-					</div>					
+					</div>
 				</div>
-
-				<div class="col-md-4 spacer-sm-top">
-					<h3 class="border-bottom-box">Adresse</h3>
-					<p>
-					{{result.event.adresse.adresse1}}<br>
-					{{result.event.adresse.adresse2}}<br>
-					{{result.event.adresse.codePostal}} {{result.event.adresse.ville}}<br>
-					{{result.event.adresse.region}}<br>
-					{{result.event.adresse.pays}}
-					</p>
-					<input type="hidden" name="latitude" id="latitude" value="{{result.event.adresse.latitude}}">
-			        <input type="hidden" name="longitude" id="longitude" value="{{result.event.adresse.longitude}}">
+				<div class="col-md-6">
+					<!-- map -->
+					<div id="map"></div>
 				</div>
-				<div class="col-md-4 spacer-sm-top">
-					<h3 class="border-bottom-box">Permanence</h3>
-					<ul>
-						{{#if result.event.permanence.email}}
-						<li><strong>Email :</strong> {{result.event.permanence.email}}</li>
-						{{else}}
-						<li><strong>Email :</strong> NC</li>
-						{{/if}}
-						{{#if result.event.permanence.telephone}}
-						<li><strong>Téléphone :</strong> {{result.event.permanence.telephone}}</li>
-						{{else}}
-						<li><strong>Téléphone :</strong> NC</li>
-						{{/if}}
-						{{#if result.event.permanence.siteWeb}}
-						<li><strong>Site Internet : </strong><a href="{{utf8 result.event.permanence.siteWeb}}" target="_blank" rel="nofollow">{{utf8 result.event.permanence.siteWeb}}</a></li>
-						{{else}}
-						<li><strong>Site Internet : </strong>NC</li>
-						{{/if}}
-						{{#if result.event.permanence.facebook}}
-						<li><strong>Page Facebook : </strong><a href="{{utf8 result.event.permanence.facebook}}" target="_blank" rel="nofollow">{{utf8 result.event.permanence.facebook}}</a></li>
-						{{else}}
-						<li><strong>Page Facebook :</strong> NC</li>
-						{{/if}}
-					</ul>							
-				</div>				
 			</div>
 			<!-- DESCRIPTION -->
 			<div class="row spacer-sm-top">
 				<div class="col-12">
-					<h3 class="border-bottom-box">Présentation</h3>
-					<p class="text-lowercase text-justify">{{utf8 result.event.description}}</p>
+					<h3 class="font-weight-bold my-5">Description</h3>
+					<p class="text-lowercase text-justify text-muted mb-3">{{utf8 result.event.description}}</p>
 				</div>
 			</div>
 
 			<!-- EPREUVES -->
 			<div class="row spacer-sm-top">
 				<div class="col-12">
-					<h3 class="border-bottom-box">Les épreuves</h3>
+					<h3 class="font-weight-bold">Les épreuves</h3>
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-12">
 					{{#each result.event.epreuves}}
-					<div class="row spacer-sm-top">
+					<div class="row spacer-sm-top px-3">
 						<div class="col-12 bg-light">
-							<h4 class="spacer-sm-top text-lowercase">{{this.name}}</h4>
-							 <span class="badge badge-light"><i class="fa fa-calendar-check-o" > </i> {{date this.date_debut}} à {{dateHours this.date_debut}}h{{dateMinutes this.date_debut}}</span>
+							<span class="badge badge-light m-3"><i class="fa fa-calendar-check-o" > </i> {{date this.date_debut}} à {{dateHours this.date_debut}}h{{dateMinutes this.date_debut}}</span>
+							<h4 class="spacer-sm-top text-lowercase d-inline-block font-weight-bold">{{this.name}}</h4>
+							
 							{{#if description}}
-							<p class="text-lowercase text-justify spacer-sm-top">{{ utf8 this.description }}</p>
+							<p class="text-lowercase text-justify my-5">{{ utf8 this.description }}</p>
 							{{/if}}
-							<div class="d-block my-3">
-								<i class="fa fa-chevron-right mr-2" aria-hidden="true"></i>
-								<span class="badge badge-light text-capitalize p-3">{{this.discipline}}</span>
-								<span class="badge badge-light p-3">Distance: {{this.distance}}Km</span>
-								<span class="badge badge-light p-3">Denivelé +: {{this.denivele}} mètres</span>
-								<span class="badge badge-warning p-3">Tarif: {{this.tarif}}€</span></p>								
+							<div class="d-block my-3 py-3">
+								<span class="border border-muted text-muted text-capitalize p-3 mx-2">{{this.discipline}}</span>
+								<span class="border border-muted text-muted p-3 mx-2">Distance: {{this.distance}}Km</span>
+								<span class="border border-muted text-muted p-3 mx-2">Denivelé +: {{this.denivele}} mètres</span>
+								<span class="border border-muted text-muted p-3 mx-2">Tarif: {{this.tarif}}€</span></p>								
 							</div>
 						</div>
 					</div>
@@ -122,11 +98,11 @@
 			<!-- PARTICPANTS -->
 			<div class="row spacer-md-top" id="inscrits">
 				<div class="col-sm-12">
-					<h3 class="border-bottom-box">Liste des participants</h3>
+					<h3 class="font-weight-bold">Liste des participants</h3>
 				</div>
 
 		    <div class="col-12 spacer-xs-top">
-		      <span class="text-muted d-block w-100"><strong>Filtrer par épreuve</strong></span>
+		      <span class="text-muted d-block w-100 py-3"><strong>Filtrer par épreuve</strong></span>
 		      <form id="org-dashboard-filter" class="row" action="#inscrits">
 		        <div class="col-9">
 		          <select class="form-control" id="epreuve-filter" name="epreuve">
@@ -168,10 +144,11 @@
 				</div>
 			</div>			
 		</div>
-		<div class="col-lg-3 order-xs-1 order-sm-1 order-lg-2">
-			<div class="sticky-top">
+		<!-- right column -->
+		<div class="col-lg-3 order-xs-1 order-sm-1 order-lg-2 text-justify">
+			<div class="">
 				<div id="spacer-box"></div>
-				<div id="event-details-cta-box">
+				<div id="" class="bg-light border border-muted p-5">
 					<div class="row border-bottom-box">
 						<div class="col-12">
 							<p>
@@ -191,66 +168,114 @@
 								<i class="fa fa-gratipay text-muted spacer-xs-left" aria-hidden="true" title="L'événement n'accepte pas les dons"></i>
 							{{/if}}
 								<strong class="spacer-sm-left">
-									<a href="/event/{{this.id}}">
+									<a href="/event/finder?year=&city={{result.event.adresse.ville}}&month=&discipline=&activate=">
 										<span class="text-capitalize city"><i class="fa fa-map-marker" aria-hidden="true"></i> {{result.event.adresse.codePostal}} {{result.event.adresse.ville}} </span>
 									</a>
 								</strong>
 							</p>						
 						</div>
 					</div>
-					{{#each result.event.epreuves}}
+					
+					<!-- tarif -->
 					<div class="row">
-						<div class="col-12">
-							<p><strong>{{this.name}} - {{this.distance}}km : </strong> {{this.tarif}}€</p>
+						<div class="col-12 py-3">
+							<span class="d-block font-weight-bold py-3 text-muted">Tarifs</span>
+							{{#each result.event.epreuves}}
+								<div class="d-block py-2"><span class="font-weight-bold">{{this.name}}</span> <small class="text-muted">{{this.distance}}km - {{this.tarif}}€</small> </div>
+							{{/each}}
 						</div>
 					</div>
-					{{/each}}
+					
 					<!-- OPTIONS -->
 					{{#if result.event.options}}
-					<div class="row border-top-box">
-						<div class="col-12">
-							<strong>Options</strong>
+					<div class="row">
+						<div class="col-12 pb-3">
+							<span class="d-block font-weight-bold">Options</span>
 							{{#each result.event.options}}
-							<p>{{this.reference}} <span class="badge badge-danger">Tarif: {{this.prix}}€</span></p>
+								<span class="text-muted">{{this.reference}} - {{this.prix}}€</span>
 							{{/each}}
 						</div>						
 					</div>
 					{{/if}}
-					<!--
+					<div class="row" id="inscriptionButton">
+						<div class="col-12 mb-5">
+							<div class="d-block">
+								<a class="btn btn-danger spacer-xs-top d-block" href="/inscription/cart/{{result.event.id}}?event_id={{result.event.id}}">
+									S'inscrire
+								</a>										
+							</div>
+							<div class="d-block">
+								<a class="btn btn-outline-primary spacer-xs-top d-block" href="#inscrits">Liste des {{result.participants.length}} inscrits</a>
+							</div>
+						</div>
+					</div>
+					<div class="row border-top-box border-bottom-box pb-2">
+						<div class="col-12">
+							<span class="d-block font-weight-bold text-muted my-3">Clôture des inscriptions le {{dateDay result.event.date_cloture_inscription}}/{{dateMonth result.event.date_cloture_inscription}}/{{dateFullYear result.event.date_cloture_inscription}} à {{dateHours result.event.date_cloture_inscription}}h{{dateMinutes result.event.date_cloture_inscription}}</span>
+						</div>
+					</div>
+
 					<div class="row">
-						<div class="col-12">
-							<p><strong>{{participants.length}} / {{result.event.epreuves.[0].placesDispo}} participants</strong> inscrits pour cette épreuve</p>
-						</div>
-					</div>
-				-->
-					<div class="row border-top-box">
-						<div class="col-12">
+						<div class="col-12 spacer-sm-top">
+							<strong class="py-3 d-block">Adresse</strong>
 							<p>
-								<strong>Clôture des inscriptions: </strong><span class="badge badge-warning" id="date-info">le {{dateDay result.event.date_cloture_inscription}}/{{dateMonth result.event.date_cloture_inscription}}/{{dateFullYear result.event.date_cloture_inscription}} à {{dateHours result.event.date_cloture_inscription}}h{{dateMinutes result.event.date_cloture_inscription}}</span>
+							{{utf8 result.event.adresse.adresse1}}<br>
+							{{utf8 result.event.adresse.adresse2}}<br>
+							{{utf8 result.event.adresse.codePostal}} {{utf8 result.event.adresse.ville}}<br>
+							{{utf8 result.event.adresse.region}}<br>
+							{{utf8 result.event.adresse.pays}}
 							</p>
+							<input type="hidden" name="latitude" id="latitude" value="{{result.event.adresse.latitude}}">
+					    <input type="hidden" name="longitude" id="longitude" value="{{result.event.adresse.longitude}}">
 						</div>
 					</div>
+					<div class="row">
+						<div class="col-12 spacer-sm-top">
+							<strong class="py-3 d-block">Permanence</strong>
+							{{#if result.event.permanence.email}}
+								<div class="d-block my-2">
+									<span class="text-muted font-weight-bold">Email</span>
+								</div>							
+								<div class="d-block my-2">{{result.event.permanence.email}}</div>
+							{{/if}}
+
+							{{#if result.event.permanence.telephone}}
+								<div class="d-block mb-2 mt-4">
+									<span class="text-muted font-weight-bold">Téléphone</span>
+								</div>
+							
+								<div class="d-block my-2"> {{result.event.permanence.telephone}}</div>
+							{{/if}}
+							{{#if result.event.permanence.siteWeb}}		
+								<div class="d-block mb-2 mt-4">
+									<span class="text-muted font-weight-bold">www</span>
+								</div>
+								
+								<div class="d-block my-2">
+									<a href="{{utf8 result.event.permanence.siteWeb}}" target="_blank" rel="nofollow">{{utf8 result.event.permanence.siteWeb}}</a>
+								</div>
+							{{/if}}	
+							{{#if result.event.permanence.facebook}}	
+								<div class="d-block mb-2 mt-4">
+									<span class="text-muted font-weight-bold">Facebook</span>
+								</div>
+								<div class="d-block my-2">
+									<a href="{{utf8 result.event.permanence.facebook}}" target="_blank" rel="nofollow">{{utf8 result.event.permanence.facebook}}</a>
+								</div>
+							{{/if}}	
+							</ul>							
+						</div>	
+		
+					</div>
 					<div class="row border-top-box">
-						<div class="col-12">
+						<div class="col-12 pt-3">
 						{{#if result.event.docs.legales.[0]}}
 							<p>Règlement de l'épreuve : <strong><a href="{{result.event.docs.legales.[0]}}" target="_blank">télécharger</a></p></strong>
 							{{else}}
 							<p>Règlement de l'épreuve : <strong>NON FOURNI</strong></p>
 						{{/if}}
 						</div>
-					</div>
-					<div class="row border-top-box" id="inscriptionButton">
-						<div class="col-12">
-							<a class="btn btn-danger spacer-xs-top d-block" href="/inscription/cart/{{result.event.id}}?event_id={{result.event.id}}">
-								S'inscrire
-							</a>							
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-12">
-							<a class="btn btn-outline-primary spacer-xs-top d-block" href="#inscrits">Liste des {{result.participants.length}} inscrits</a>			
-						</div>
-					</div>
+					</div>						
 				</div>
 			</div>
 		</div>

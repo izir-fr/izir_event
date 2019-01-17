@@ -14,6 +14,12 @@ import './components/event-config'
 import './components/registration-flow/registrationFlow'
 import './components/facebook'
 
-if (module.hot) {
-  module.hot.accept()
-}
+// css
+
+import './../css/bootstrap.css'
+import './../css/main.css'
+
+// img
+
+import './../img/headerHome.jpg'
+import './../img/home-banner/slide1.jpg'

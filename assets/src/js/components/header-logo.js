@@ -12,7 +12,9 @@ var headerLogo = () => {
         $('#smallscreen-logo').append(logo)
         $('#mobile-user-menu').append(userLink)
         $('#smallscreen-search').append(searchBlock)
-        $('#user-menu').addClass('d-sm-up')
+        $('#mobile-user-menu').addClass('d-none')
+        $('#user-menu').removeClass('d-flex')
+        $('#user-menu').addClass('d-block')
       } else {
         logo.remove()
         userLink.remove()
@@ -20,11 +22,14 @@ var headerLogo = () => {
         $('#fullscreen-logo').append(logo)
         $('#desktop-user-menu').append(userLink)
         $('#fullscreen-search').append(searchBlock)
+        $('#user-menu').addClass('d-flex')
+        $('#user-menu').removeClass('d-block')
       }
     }
     if (windowTest === true) {
       logo.remove()
       $('#smallscreen-logo').append(logo)
+      // $('#user-menu').toggleClass('d-none')
     }
 
     windowTest()
@@ -32,8 +37,8 @@ var headerLogo = () => {
     $(window).on('resize', () => {
       windowTest()
     })
-    $('#mobile-menu-trigger').on('click', () => {
-      $('#user-menu').toggleClass('d-sm-up')
+    $('#mobile-menu').on('click', (e) => {
+      $('#mobile-user-menu').toggleClass('d-none')
     })
   })
 }

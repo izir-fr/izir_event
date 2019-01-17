@@ -37,32 +37,6 @@ var chronometrage = require('./app/router/chronometrageRoutes')
 var notifications = require('./app/router/notificationRoutes')
 var newsfeed = require('./app/router/newsfeedRoutes')
 
-// cutom modules
-// var useCron = () => {
-//   require('./custom_modules/cron')
-// }
-
-// useCron()
-
-if (process.env.LOCAL === 'true') {
-  // Webpack
-  var webpack = require('webpack')
-  var webpackConfig = require('./webpack.config')
-  var compiler = webpack(webpackConfig)
-  var webpackDevMiddleware = require('webpack-dev-middleware')
-  var webpackHotMiddleware = require('webpack-hot-middleware')
-  app.use(webpackDevMiddleware(compiler, {
-    publicPath: webpackConfig.output.publicPath,
-    stats: {colors: true},
-    reload: true,
-    inline: true
-    // headers: {'Access-Control-Allow-Origin': '*'}
-  })
-  )
-  app.use(webpackHotMiddleware(compiler))
-}
-
-// app.use(cronConfig)
 // morgan
 app.use(morgan('dev'))
 
@@ -136,6 +110,7 @@ app.use(flash())
 
 // Global Vars
 app.use(function (req, res, next) {
+  res.locals.localhost = process.env.LOCAL === 'true'
   res.locals.success_msg = req.flash('success_msg')
   res.locals.error_msg = req.flash('error_msg')
   res.locals.info_msg = req.flash('info_msg')

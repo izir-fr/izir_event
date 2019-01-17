@@ -105,7 +105,13 @@
 							{{#if description}}
 							<p class="text-lowercase text-justify spacer-sm-top">{{ utf8 this.description }}</p>
 							{{/if}}
-							<p><i class="fa fa-chevron-right" aria-hidden="true"></i><span class="badge badge-light text-capitalize">{{this.discipline}}</span> <span class="badge badge-light">Distance: {{this.distance}}Km</span> <span class="badge badge-light">Denivelé +: {{this.denivele}} mètres</span> <span class="badge badge-warning">Tarif: {{this.tarif}}€</span></p>
+							<div class="d-block my-3">
+								<i class="fa fa-chevron-right mr-2" aria-hidden="true"></i>
+								<span class="badge badge-light text-capitalize p-3">{{this.discipline}}</span>
+								<span class="badge badge-light p-3">Distance: {{this.distance}}Km</span>
+								<span class="badge badge-light p-3">Denivelé +: {{this.denivele}} mètres</span>
+								<span class="badge badge-warning p-3">Tarif: {{this.tarif}}€</span></p>								
+							</div>
 						</div>
 					</div>
 					{{/each}}					

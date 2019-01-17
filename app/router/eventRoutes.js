@@ -11,6 +11,9 @@ var ensureAuthenticated = require('../../custom_modules/app/router/ensureAuthent
 START APP =>
 ========== */
 
+// Get single event
+router.get('/:id', eventCtrl.GetSingleEvent)
+
 // Get all event
 router.get('/finder', eventCtrl.getAllEvent)
 
@@ -26,7 +29,16 @@ router.get('/edit/:id', ensureAuthenticated, eventCtrl.getEditEvent)
 // Post a edit event
 router.post('/edit/:id', eventCtrl.postEditEvent)
 
-// Get a event
-router.get('/:id', eventCtrl.GetSingleEvent)
+// Get create race page
+router.get('/:event/race/create', ensureAuthenticated, eventCtrl.getCreateRace)
+
+// Post a create race
+router.post('/:event/race/create', eventCtrl.postCreateRace)
+
+// Get a edit race page
+router.get('/:event/race/:race/edit/', ensureAuthenticated, eventCtrl.getEditRace)
+
+// Post a edit race
+router.post('/:event/race/:race/edit/', eventCtrl.postEditRace)
 
 module.exports = router

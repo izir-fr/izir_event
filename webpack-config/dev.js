@@ -1,4 +1,4 @@
-const path = require("path")
+const path = require('path')
 var data = require('./default').dev
 
 let config = {
@@ -10,7 +10,7 @@ let config = {
   },
   plugins: [],
   devServer: {
-    contentBase: path.resolve(__dirname, "./"),
+    contentBase: path.resolve(__dirname, './'),
     historyApiFallback: true,
     inline: true,
     hot: true,

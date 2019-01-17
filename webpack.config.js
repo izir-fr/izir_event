@@ -23,12 +23,7 @@ cssConfig.push(
     loader: MiniCssExtractPlugin.loader
   },
   {
-    loader: 'css-loader',
-    // options: {
-    //   url: false,
-    //   minimize: true,
-    //   sourceMap: true
-    // }
+    loader: 'css-loader'
   }
 )
 
@@ -75,7 +70,6 @@ config.module = {
     }
   ]
 }
-
 
 config.externals = { cloudinary: 'cloudinary' }
 

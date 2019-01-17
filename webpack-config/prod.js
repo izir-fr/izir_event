@@ -1,5 +1,5 @@
 var data = require('./default').prod
-const MinifyPlugin = require("babel-minify-webpack-plugin")
+const MinifyPlugin = require('babel-minify-webpack-plugin')
 
 let config = {
   mode: data.mode,

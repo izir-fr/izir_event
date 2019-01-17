@@ -19,6 +19,9 @@ var EventSchema = mongoose.Schema({
   dons: { type: Boolean, default: false },
   certificat_required: { type: Boolean, default: false },
   paiement: { type: Boolean, default: true },
+  races: [
+    { type: Schema.ObjectId, ref: 'Race', required: true }
+  ],
   epreuves: [
     {
       name: { type: String },

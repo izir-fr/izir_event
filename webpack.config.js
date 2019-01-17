@@ -1,98 +1,91 @@
-const webpack = require('webpack')
-const path = require('path')
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
-const CleanWebpackPlugin = require('clean-webpack-plugin')
-
-let configWatch, configDevtool, configOutput, configEntry, configMode
-let config
-
 const env = (process.env.NODE_ENV === 'production')
-const local = (process.env.LOCAL === 'true')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const CleanWebpackPlugin = require('clean-webpack-plugin')
+const webpack = require('webpack')
 
-if (env) {
-  configMode = 'production'
-  configWatch = false
-  configDevtool = false
-  configEntry = './assets/src/js/main.js'
-  configOutput = {
-    path: path.resolve(__dirname, './assets/public/js/'),
-    filename: 'app.js'
-  }
+let config
+let cssConfig = []
+
+// global config
+if (!env) {
+  console.log('dev mode')
+  // DEVELOPPEMENT CONFIG
+  config = require('./webpack-config/dev')
+  cssConfig.push('style-loader')
 } else {
-  configMode = 'development'
-  configWatch = true
-  configDevtool = 'cheap-module-eval-source-map'
-  configEntry = [
-    'webpack-hot-middleware/client', // ?http://localhost:3000/
-    './assets/src/js/main.js'
-  ]
-  configOutput = {
-    path: path.resolve('public/'),
-    sourceMapFilename: '[file].map',
-    filename: 'app.js',
-    publicPath: '/js/'
-  }
+  console.log('prod mode')
+  // PRODUCTION CONFIG
+  config = require('./webpack-config/prod')
 }
 
-if (local || env) {
-  config = {
-    entry: configEntry,
-    output: configOutput,
-    devtool: configDevtool,
-    watch: configWatch,
-    mode: configMode,
-    module: {
-      rules: [
-        {
-          enforce: 'pre',
-          test: /\.js?$/,
-          exclude: /node_modules/,
-          use: ['eslint-loader']
-        },
-        {
-          test: /\.jsx?$/,
-          exclude: /node_modules/,
-          loader: 'babel-loader',
-          query: {
-            presets: ['env']
-          }
-        }
-      ]
+cssConfig.push(
+  {
+    loader: MiniCssExtractPlugin.loader
+  },
+  {
+    loader: 'css-loader'
+  }
+)
+
+// global loader config
+config.module = {
+  rules: [
+    {
+      enforce: 'pre',
+      test: /\.js?$/,
+      exclude: /node_modules/,
+      use: ['babel-loader', 'eslint-loader']
     },
-    plugins: [
-      new webpack.ProvidePlugin({
-        jQuery: 'jquery',
-        $: 'jquery',
-        jquery: 'jquery',
-        'window.jQuery': 'jquery',
-        Popper: ['popper.js', 'default']
-      })
-    ],
-    externals: {
-      cloudinary: 'cloudinary'
+    {
+      test: /\.jsx?$/,
+      exclude: /node_modules/,
+      loader: 'babel-loader',
+      query: {
+        presets: ['env']
+      }
+    },
+    {
+      test: /\.(png|svg|jpg|gif)$/,
+      use: [{
+        loader: 'file-loader',
+        options: {
+          name: '[name].[ext]',
+          outputPath: 'images/'
+        }
+      }]
+    },
+    {
+      test: /\.(css|scss)$/,
+      use: cssConfig
+    },
+    {
+      test: /\.(eot|ttf|woff|woff2)$/,
+      use: [{
+        loader: 'file-loader',
+        options: {
+          name: '[name].[ext]',
+          outputPath: 'fonts/'
+        }
+      }]
     }
-  }
-
-  if (env) {
-    config.plugins.push(new UglifyJsPlugin())
-  } else {
-    config.plugins.push(new webpack.NamedModulesPlugin())
-    config.plugins.push(new CleanWebpackPlugin())
-    config.plugins.push(new webpack.HotModuleReplacementPlugin())
-    config.plugins.push(new webpack.NoEmitOnErrorsPlugin())
-    config.devServer = {
-      contentBase: path.resolve(__dirname),
-      historyApiFallback: true,
-      publicPath: '/js/',
-      inline: true,
-      noInfo: true,
-      stats: {colors: true},
-      hot: true,
-      headers: {'Access-Control-Allow-Origin': '*'},
-      compress: true,
-      port: 8080
-    }
-  }
+  ]
 }
+
+config.externals = { cloudinary: 'cloudinary' }
+
+// global plugins config
+config.plugins.push(
+  new webpack.ProvidePlugin({
+    jQuery: 'jquery',
+    $: 'jquery',
+    jquery: 'jquery',
+    'window.jQuery': 'jquery',
+    Popper: ['popper.js', 'default']
+  }),
+  new MiniCssExtractPlugin({
+    filename: '[name].css'
+  }),
+  new CleanWebpackPlugin(['assets/public/app.js', 'assets/public/main.css', 'assets/public/fonts'])
+)
 
 module.exports = config

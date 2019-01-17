@@ -8,9 +8,7 @@ START => IZIR MAIN
 /* GENERAL */
 
 body {
-  padding-bottom: 20px;
   font-family: Montserrat, arial, sans-serif;
-  font-size: 0.9em;
 }
 
 a {
@@ -22,13 +20,9 @@ a:hover {
   text-decoration: none;
 }
 
-p {
-  font-size: 0.9em;
-}
-
 footer{
   text-align: center;
-  font-size: 0.8em;
+  font-size: 1.2rem;
 }
 
 footer h2, footer h3, footer h4 {

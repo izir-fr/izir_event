@@ -14,6 +14,7 @@ var organsisateurCtrl = {
     var events = new Promise((resolve, reject) => {
       Event
         .find({ author: req.user.id })
+        .populate('epreuves')
         .sort({ created_at: -1 })
         .exec((err, event) => {
           if (err) {

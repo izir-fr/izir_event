@@ -20,29 +20,7 @@ var EventSchema = mongoose.Schema({
   certificat_required: { type: Boolean, default: false },
   paiement: { type: Boolean, default: true },
   epreuves: [
-    {
-      name: { type: String },
-      discipline: { type: String },
-      description: { type: String },
-      /*
-      dateDebut : {
-        jourDebut: { type: Number },
-        moisDebut: { type: Number },
-        anneeDebut: { type: Number },
-        heureDebut: { type: Number },
-        minuteDebut: { type: Number }
-      },
-      */
-      tarif: { type: Number },
-      distance: { type: Number },
-      denivele: { type: Number },
-      placesDispo: { type: Number },
-      date_debut: { type: Date },
-      // team
-      team: { type: Boolean },
-      team_qty_min: { type: Number },
-      team_qty_max: { type: Number }
-    }
+    { type: Schema.ObjectId, ref: 'Race', required: true }
   ],
   docs: {
     img: [{ type: String }],
@@ -55,15 +33,6 @@ var EventSchema = mongoose.Schema({
     }
   ],
   date_cloture_inscription: { type: Date },
-  /*
-  inscriptionCloture : {
-    jourCloture: { type: Number },
-    moisCloture: { type: Number },
-    anneeCloture: { type: Number },
-    heureCloture: { type: Number },
-    minuteCloture: { type: Number }
-  },
-  */
   permanence: {
     email: { type: String },
     telephone: { type: String },

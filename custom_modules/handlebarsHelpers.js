@@ -1,12 +1,51 @@
 module.exports = {
-  date: (val) => { return val.getDate() + '/' + (parseInt(val.getMonth()) + 1) + '/' + val.getFullYear() },
-  dateFullYear: (val) => { return val.getUTCFullYear() },
-  dateMonth: (val) => { return (val.getUTCMonth() + 1) },
-  dateDay: (val) => { return val.getUTCDate() },
-  dateHours: (val) => { return val.getUTCHours() },
-  dateMinutes: (val) => { return val.getUTCMinutes() },
+  date: (val) => {
+    if (val !== undefined) {
+      return val.getDate() + '/' + (parseInt(val.getMonth()) + 1) + '/' + val.getFullYear()
+    } else {
+      return ''
+    }
+  },
+  dateFullYear: (val) => {
+    if (val !== undefined) {
+      return val.getUTCFullYear()
+    } else {
+      return ''
+    }
+  },
+  dateMonth: (val) => {
+    if (val !== undefined) {
+      return (val.getUTCMonth() + 1)
+    } else {
+      return ''
+    }
+  },
+  dateDay: (val) => {
+    if (val !== undefined) {
+      return val.getUTCDate()
+    } else {
+      return ''
+    }
+  },
+  dateHours: (val) => {
+    if (val !== undefined) {
+      return val.getUTCHours()
+    } else {
+      return ''
+    }
+  },
+  dateMinutes: (val) => {
+    if (val !== undefined) {
+      return val.getUTCMinutes()
+    } else {
+      return ''
+    }
+  },
   dateMonthText: (val) => {
-    var month = parseInt(val.getMonth()) + 1
+    if (val !== undefined) {
+      var month = parseInt(val.getMonth()) + 1
+    }
+
     if (month === 1) {
       return 'Janvier'
     } else if (month === 2) {

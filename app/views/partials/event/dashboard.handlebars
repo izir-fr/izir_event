@@ -1,0 +1,62 @@
+<div class="header container-fluid">
+  <div class="jumbotron">
+    <h1>Tableau de bord</h1>
+  </div>
+</div>
+<div class="container pb-5">
+  <div class="row">
+    <div class="col-md-9 mx-auto mb-4">
+      <div class="row">
+        <div class="col-12 mt-5 mb-4 text-center text-md-left">
+          <h3 class="text-capitalize">{{event.name}}</h3>
+        </div>
+      </div>      
+      <div class="row">
+        <div class="col-12">
+          <a href="/event/{{event.id}}" class="btn btn-secondary"><i class="fa fa-eye spacer-xs-right"></i>Aperçu</a>
+          <a href="/event/edit/{{event.id}}" class="btn btn-secondary"><i class="fa fa-pencil spacer-xs-right"></i>Modifier</a>
+          <a href="/inscription/recap/organisateur/{{event.id}}" class="btn btn-secondary"><i class="fa fa-users spacer-xs-right"></i>Inscriptions</a>
+          <a href="/chronometrage/event/{{event.id}}" class="btn btn-secondary"><i class="fa fa-clock-o spacer-xs-right"></i>Chronométrage</a>
+          <a href="/organisateur/comptabilite/{{user.id}}" class="btn btn-secondary"><i class="fa fa-university spacer-xs-right"></i>Comptabilité</a>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 mt-5 mb-4 text-center text-md-left">
+          <h3 class="text-capitalize">épreuves</h3>
+        </div>
+      </div>
+      {{#each event.epreuves}}
+        <div class="row my-2">
+          <div class="col-12 bg-light p-3 border border-muted">
+            <span class="d-inline-block font-weight-bold mt-2">
+              {{this.name}}
+            </span>
+            <span class="d-inline-block float-right mx-2">
+              <a href="/event/{{../event._id}}/race/{{this._id}}/delete" class="btn btn-outline-dark btn-sm race-delete"><i class="fa fa-trash spacer-xs-right"></i>Supprimer</a>
+            </span>
+            <span class="d-inline-block float-right mx-2">
+              <a href="/event/{{../event._id}}/race/{{this._id}}/edit" class="btn btn-muted btn-sm"><i class="fa fa-pencil spacer-xs-right"></i>Modifier</a>
+            </span>
+          </div>
+        </div>        
+      {{/each}}
+      <a href="/event/{{event.id}}/race/create" class="btn btn-secondary my-5">Ajouter</a>
+    </div>
+    <div class="col-md-3 mt-5">
+      <a href="/catalogue/" class="d-block mx-auto border p-3 bg-light rounded">
+        <h3 class="h5">Avez-vous pensez à vos lots ?</h3>
+        <div class="d-block">
+          <span class="d-block border border-top-0 border-right-0 border-left-0 text-muted">
+            L'exemple du moment
+          </span>
+          <div class="d-block mt-3">
+            <strong class="d-block text-dark pb-2">{{product.name}}</strong>
+            {{product.image.0.url}}
+          </div>
+          <img src="{{product.images.0.url}}" alt="{{product.title}}" class="img-fluid">
+          <span class="text-muted">à partir de : </span><span class="h5 text-danger font-weight-bold">{{product.public_price}}€</span>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>

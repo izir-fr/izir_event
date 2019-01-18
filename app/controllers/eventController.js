@@ -9,77 +9,14 @@ var disList = require('../../custom_modules/lists/discipline-list')
 // Models
 var Event = require('../models/event')
 var Registration = require('../models/registration')
-var Post = require('../models/post')
+var Race = require('../models/race')
+var Product = require('../models/product')
 
-// Date
-var dateNow = new Date(Date.now())
-
+// event finder
+var eventFinderForm = require('../../custom_modules/app/event/finder-algo')
 /* ==========
 START APP =>
 ========== */
-
-/// ///EPREUVES//////
-var epreuveConstructor = (req, res, next) => {
-  var epreuves = []
-  var epreuve
-  // req.body
-  var name = req.body.epreuveName
-  var discipline = req.body.discipline
-  var description = req.body.epreuveDescription
-  var jourDebut = req.body.jourDebut
-  var moisDebut = req.body.moisDebut
-  var anneeDebut = req.body.anneeDebut
-  var heureDebut = req.body.heureDebut
-  var minuteDebut = req.body.minuteDebut
-  var tarif = req.body.tarif
-  var distance = req.body.distance
-  var denivele = req.body.denivele
-  var placesDispo = req.body.placesDispo
-  var epreuveId = req.body.epreuve_id
-  var team = req.body.team
-  var teamQtyMin = req.body.team_qty_min
-  var teamQtyMax = req.body.team_qty_max
-
-  // Ajout de l'épreuve de l'évènement
-  if (epreuveId.constructor === Array) {
-    for (var i = 0; i < epreuveId.length; i++) {
-      // config de l'épreuve
-      epreuve = {
-        name: name[i], // req.body.epreuveName,
-        discipline: discipline[i], // req.body.discipline,
-        description: description[i], // req.body.epreuveDescription,
-        date_debut: new Date(Date.UTC(anneeDebut[i], (moisDebut[i] - 1), jourDebut[i], heureDebut[i], minuteDebut[i])),
-        tarif: tarif[i], // req.body.tarif,
-        distance: distance[i], // req.body.distance,
-        denivele: denivele[i], // req.body.denivele,
-        placesDispo: placesDispo[i], // req.body.placesDispo,
-        // team
-        team: reqBolleanTest(team[i]),
-        team_qty_min: teamQtyMin[i],
-        team_qty_max: teamQtyMax[i]
-      }
-      epreuves.push(epreuve)
-    }
-  } else {
-    // config de l'épreuve
-    epreuve = {
-      name: name, // req.body.epreuveName,
-      discipline: discipline, // req.body.discipline,
-      description: description, // req.body.epreuveDescription,
-      date_debut: new Date(Date.UTC(anneeDebut, (moisDebut - 1), jourDebut, heureDebut, minuteDebut)),
-      tarif: tarif, // req.body.tarif,
-      distance: distance, // req.body.distance,
-      denivele: denivele, // req.body.denivele,
-      placesDispo: placesDispo, // req.body.placesDispo,
-      // team
-      team: reqBolleanTest(team),
-      team_qty_min: teamQtyMin,
-      team_qty_max: teamQtyMax
-    }
-    epreuves.push(epreuve)
-  }
-  return epreuves
-}
 
 /// ///OPTIONS//////
 var optionConstructor = (req, res, next) => {
@@ -121,7 +58,7 @@ var reqBolleanTest = (value) => {
 }
 
 /// ///EVENTS//////
-var eventConstructor = (req, epreuves, options, res, next) => {
+var eventConstructor = (req, options, res, next) => {
   var event = {
     name: req.body.name,
     author: req.user.id,
@@ -139,7 +76,6 @@ var eventConstructor = (req, epreuves, options, res, next) => {
     dons: reqBolleanTest(req.body.dons),
     certificat_required: reqBolleanTest(req.body.certificat_required),
     paiement: reqBolleanTest(req.body.paiement),
-    epreuves: epreuves,
     docs: {
       img: req.body.img,
       legales: req.body.legales
@@ -158,175 +94,84 @@ var eventConstructor = (req, epreuves, options, res, next) => {
   return event
 }
 
-// event finder
-var eventFinderForm = (req, res) => {
-  var allEvents = []
-  var discipline = req.query.discipline
-  var date = {
-    month: req.query.month,
-    year: req.query.year,
-    day: 1
-  }
-
-  // var activate = req.query.activate
-  var queryDate, queryDiscipline, citySearch
-
-  if (date.year === '') {
-    date.year = dateNow.getFullYear()
-  }
-
-  if (date.month === '') {
-    date.month = dateNow.getMonth()
-    date.day = dateNow.getDate()
-  } else {
-    date.month = (date.month * 1) - 1
-  }
-
-  // date query
-  queryDate = { date_debut: { $gte: new Date(date.year, date.month, date.day), $lt: new Date(date.year + 1, date.month, date.day) } }
-  // city query
-  if (req.query.city) {
-    citySearch = req.query.city.toLowerCase()
-  } else {
-    citySearch = ''
-  }
-
-  // discipline query
-  if (discipline !== '') {
-    queryDiscipline = { $eq: discipline }
-  } else {
-    queryDiscipline = { $ne: '' }
-  }
-
-  var dbEvents = new Promise((resolve, reject) => {
-    Event
-      .find({
-        $and: [
-          { epreuves: { $elemMatch: queryDate } },
-          { 'epreuves.discipline': queryDiscipline }
-        ]
-      })
-      .sort({ 'epreuves.0.date_debut': 1 })
-      .exec((err, results) => {
-        if (err) {
-          reject(err)
-        }
-
-        // city filter
-        if (results !== undefined) {
-          if (citySearch !== '' || citySearch !== null) {
-            results.forEach((val) => {
-              // city query filter
-              if (val.adresse.ville) {
-                if (val.adresse.ville.toLowerCase().indexOf(citySearch) !== -1) {
-                  allEvents.push(val)
-                }
-              }
-            })
-          } else {
-            allEvents = results
-          }
-          resolve(allEvents)
-        }
-      })
-  })
-
-  var featuredPosts = new Promise((resolve, reject) => {
-    Post
-      .find({ 'published_date': { $lte: Date(Date.now()) }, 'featured': true })
-      .sort({ 'published_date': -1 })
-      .limit(2)
-      .exec((err, posts) => {
-        if (err) {
-          reject(err)
-        }
-        resolve(posts)
-      })
-  })
-
-  Promise
-    .props({
-      events: dbEvents,
-      posts: featuredPosts
-    })
-    .then((val) => {
-      var finderResult = {
-        data: {
-          event: val.events,
-          posts: val.posts
-        },
-        date_list: dateList,
-        discipline_list: disList,
-        queries: req.query
-      }
-      res.render('partials/event/finder', finderResult)
-    })
-    .catch((err) => {
-      if (err) {
-        req.flash('error_msg', 'Une erreur est survenue')
-        res.redirect('/')
-      }
-    })
-}
-
 var eventCtrl = {
   // Get all event
   getAllEvent: (req, res) => {
     if (JSON.stringify(req.query) !== '{}') {
-      eventFinderForm(req, res)
+      eventFinderForm(req, res, (finderResult) => {
+        finderResult.date_list = dateList
+        finderResult.discipline_list = disList
+        res.render('partials/event/finder', finderResult)
+      }, (err) => {
+        if (err) {
+          req.flash('error_msg', 'Une erreur est survenue')
+          res.redirect('/')
+        }
+      })
     } else {
       res.redirect('/event/finder?year=&city=&month=&discipline=&activate=')
     }
   },
   // Get create event page
-  getCreateEvent: function (req, res) {
-    res.render('partials/event/create-event', { date_list: dateList, category_list: catList, discipline_list: disList })
+  getCreateEvent: (req, res) => {
+    var config = {
+      action_text: 'Créer',
+      action_url: '/event/create'
+    }
+    res.render('partials/event/event-form', { date_list: dateList, category_list: catList, discipline_list: disList, config: config })
   },
   // Post a create event
-  postCreateEvent: function (req, res) {
+  postCreateEvent: (req, res) => {
     /// ///EVENT CONSTRUCTOR//////
-    var epreuves = epreuveConstructor(req)
     var options = optionConstructor(req)
-    var event = eventConstructor(req, epreuves, options)
+    var event = eventConstructor(req, options)
 
     var newEvent = new Event(
       event
     )
 
     // AJOUT DE L'EVENT A LA BDD
-    Event.createEvent(newEvent, function (err, user) {
+    Event.createEvent(newEvent, function (err, event) {
       if (err) {
         req.flash('error_msg', 'Une erreur est survenue')
         res.redirect('/')
       }
       // REDIRECTION & CONFIRMATION
       req.flash('success_msg', 'Votre évènement est ajouté au calendrier')
-      res.redirect('/organisateur/epreuves')
+      res.redirect('/event/' + event.id + '/race/create')
     })
   },
   // Get a edit event page
-  getEditEvent: function (req, res) {
-    Event.findOne({_id: req.params.id}, function (err, event) {
-      if (err) {
-        req.flash('error_msg', 'Une erreur est survenue')
-        res.redirect('/')
-      }
-      var adminId = process.env.ADMIN
-      var eventUserId = String(event.author)
+  getEditEvent: (req, res) => {
+    Event
+      .findOne({_id: req.params.id})
+      .exec((err, event) => {
+        if (err) {
+          req.flash('error_msg', 'Une erreur est survenue')
+          res.redirect('/')
+        }
 
-      if (req.user.id === eventUserId || req.user.id === adminId) { // propriétaire ou ADMIN
-        res.render('partials/event/edit-event', {event: event, date_list: dateList, category_list: catList, discipline_list: disList})// si la personne est bien la propriétaire
-      } else {
-        res.redirect('/organisateur/epreuves')// sinon res.render('partials/event/finder')
-      }
-    })
+        var config = {
+          action_text: 'Modifer',
+          action_url: '/event/edit/' + req.params.id
+        }
+
+        var adminId = process.env.ADMIN
+        var eventUserId = String(event.author)
+
+        if (req.user.id === eventUserId || req.user.id === adminId) {
+          // propriétaire ou ADMIN
+          res.render('partials/event/event-form', { event: event, date_list: dateList, category_list: catList, discipline_list: disList, config: config })// si la personne est bien la propriétaire
+        } else {
+          res.redirect('/organisateur/epreuves')// sinon res.render('partials/event/finder')
+        }
+      })
   },
   // Post a edit event
-  postEditEvent: function (req, res) {
+  postEditEvent: (req, res) => {
     // EVENT CONSTRUCTOR
-    var epreuves = epreuveConstructor(req)
     var options = optionConstructor(req)
-    var updateEvent = eventConstructor(req, epreuves, options)
+    var updateEvent = eventConstructor(req, options)
 
     // MODIFICATION DE L'EVENT DANS LA BDD
     Event.findByIdAndUpdate(req.params.id, updateEvent, function (err, user) {
@@ -335,17 +180,20 @@ var eventCtrl = {
         res.redirect('/')
       }
       // REDIRECTION & CONFIRMATION
-      req.flash('success_msg', 'Votre épreuve est modifié avec succès')
+      req.flash('success_msg', 'Votre événement est modifié avec succès')
       res.redirect('/organisateur/epreuves')
     })
   },
   // Get a event
-  GetSingleEvent: function (req, res) {
+  GetSingleEvent: (req, res) => {
     async.parallel({
-      event: function (next) {
-        Event.findById(req.params.id).exec(next)
+      event: (next) => {
+        Event
+          .findById(req.params.id)
+          .populate('epreuves')
+          .exec(next)
       },
-      participants: function (next) {
+      participants: (next) => {
         if (req.query.epreuve && req.query.epreuve !== 'Toutes') {
           Registration
             .find({
@@ -365,7 +213,7 @@ var eventCtrl = {
             .exec(next)
         }
       }
-    }, function (err, result) {
+    }, (err, result) => {
       if (err) {
         req.flash('error_msg', 'Une erreur est survenue')
         res.redirect('/')
@@ -373,6 +221,175 @@ var eventCtrl = {
       var data = {result: result}
       res.render('partials/event/event-detail', data)
     })
+  },
+  getCreateRace: (req, res) => {
+    var config = {
+      action_text: 'Ajouter',
+      action_url: '/event/' + req.params.event + '/race/create'
+    }
+
+    Event
+      .findById(req.params.event)
+      .exec((err, event) => {
+        if (err) {
+          res.redirect('/event/' + req.params.event + '/dashboard')
+        }
+        res.render('partials/event/race-form', { race: { event: event }, date_list: dateList, category_list: catList, discipline_list: disList, config: config })
+      })
+  },
+  postCreateRace: (req, res) => {
+    var jourDebut = req.body.jourDebut
+    var moisDebut = req.body.moisDebut
+    var anneeDebut = req.body.anneeDebut
+    var heureDebut = req.body.heureDebut
+    var minuteDebut = req.body.minuteDebut
+
+    var epreuve = new Race({
+      name: req.body.name, // req.body.epreuveName,
+      event: req.params.event,
+      author: req.user._id,
+      discipline: req.body.discipline, // req.body.discipline,
+      description: req.body.description, // req.body.epreuveDescription,
+      date_debut: new Date(Date.UTC(anneeDebut, (moisDebut - 1), jourDebut, heureDebut, minuteDebut)),
+      tarif: req.body.tarif, // req.body.tarif,
+      distance: req.body.distance, // req.body.distance,
+      denivele: req.body.denivele, // req.body.denivele,
+      placesDispo: req.body.placesDispo, // req.body.placesDispo,
+      // team
+      team: reqBolleanTest(req.body.team),
+      team_qty_min: req.body.team_qty_min,
+      team_qty_max: req.body.team_qty_max
+    })
+
+    epreuve.save((err, race) => {
+      if (err) {
+        res.redirect('/event/' + req.params.event + '/race/create')
+      }
+
+      Event
+        .findOneAndUpdate({ _id: req.params.event }, { $push: { epreuves: [ race._id ] } }, { multi: true }, (err, updated) => {
+          if (err) {
+            req.flash('error_msg', 'Une erreur est survenue')
+            res.redirect('/event/' + req.params.event + '/race/create')
+          }
+          req.flash('success_msg', 'Votre épreuve est ajoutée avec succès')
+          res.redirect('/event/' + req.params.event + '/dashboard')
+        })
+    })
+  },
+  getEditRace: (req, res) => {
+    Race
+      .findOne({ _id: req.params.race })
+      .populate('event')
+      .exec((err, race) => {
+        if (err) {
+          res.redirect('/event/' + req.params.event + '/race/create')
+        }
+        var config = {
+          action_text: 'Modifier',
+          action_url: '/event/' + req.params.event + '/race/' + req.params.race + '/edit'
+        }
+        res.render('partials/event/race-form', { race: race, date_list: dateList, category_list: catList, discipline_list: disList, config: config })
+      })
+  },
+  postEditRace: (req, res) => {
+    var jourDebut = req.body.jourDebut
+    var moisDebut = req.body.moisDebut
+    var anneeDebut = req.body.anneeDebut
+    var heureDebut = req.body.heureDebut
+    var minuteDebut = req.body.minuteDebut
+
+    var epreuve = {
+      name: req.body.name, // req.body.epreuveName,
+      event: req.params.event,
+      author: req.user._id,
+      discipline: req.body.discipline, // req.body.discipline,
+      description: req.body.description, // req.body.epreuveDescription,
+      date_debut: new Date(Date.UTC(anneeDebut, (moisDebut - 1), jourDebut, heureDebut, minuteDebut)),
+      tarif: req.body.tarif, // req.body.tarif,
+      distance: req.body.distance, // req.body.distance,
+      denivele: req.body.denivele, // req.body.denivele,
+      placesDispo: req.body.placesDispo, // req.body.placesDispo,
+      // team
+      team: reqBolleanTest(req.body.team),
+      team_qty_min: req.body.team_qty_min,
+      team_qty_max: req.body.team_qty_max
+    }
+
+    Race
+      .findOneAndUpdate({ _id: req.params.race }, epreuve, (err, updated) => {
+        if (err) {
+          req.flash('error_msg', 'Une erreur est survenue')
+          res.redirect('/event/' + req.params.event + '/race/create')
+        }
+        req.flash('success_msg', 'Votre épreuve est modifiée avec succès')
+        res.redirect('/event/' + req.params.event + '/dashboard')
+      })
+  },
+  getDeleteRace: (req, res) => {
+    Race
+      .findById(req.params.race)
+      .exec((err, race) => {
+        if (err) {
+          req.flash('error_msg', 'Une erreur est survenue')
+          res.redirect('/event/' + req.params.event + '/dashboard')
+        }
+
+        if (String(race.author) === String(req.user.id)) {
+          Event
+            .findOneAndUpdate({ _id: req.params.event }, { $pull: { epreuves: req.params.race } }, (err, updated) => {
+              if (err) {
+                req.flash('error_msg', 'Une erreur est survenue')
+                res.redirect('/event/' + req.params.event + '/dashboard')
+              }
+              req.flash('success_msg', 'Votre épreuve a été supprimée avec succès')
+              res.redirect('/event/' + req.params.event + '/dashboard')
+            })
+        } else {
+          req.flash('error_msg', 'Une Vous n\'êtes pas autoriser à supprimer cet évenement')
+          res.redirect('/event/' + req.params.event + '/dashboard')
+        }
+      })
+  },
+  getDashboardEvent: (req, res) => {
+    var events = new Promise((resolve, reject) => {
+      Event
+        .findOne({ _id: req.params.event })
+        .populate('epreuves')
+        .exec((err, event) => {
+          if (err) {
+            reject(err)
+          }
+          resolve(event)
+        })
+    })
+
+    var product = new Promise((resolve, reject) => {
+      Product
+        .find({ featured: true, published: true })
+        .limit(1)
+        .exec((err, product) => {
+          if (err) {
+            reject(err)
+          }
+          resolve(product[0])
+        })
+    })
+
+    Promise
+      .props({
+        event: events,
+        product: product
+      })
+      .then((val) => {
+        res.render('partials/event/dashboard', val)
+      })
+      .catch((err) => {
+        if (err) {
+          req.flash('error_msg', 'Une erreur est survenue')
+          res.redirect('/')
+        }
+      })
   }
 }
 

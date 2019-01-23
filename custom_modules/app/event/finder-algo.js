@@ -67,7 +67,6 @@ var eventFinderForm = (req, res, callback, error) => {
         Event
           .find({ _id: eventsId })
           .populate('epreuves')
-          .sort({ 'epreuves.0.date_debut': 1 })
           .exec((err, events) => {
             if (err) {
               reject(err)
@@ -86,6 +85,9 @@ var eventFinderForm = (req, res, callback, error) => {
               } else {
                 allEvents = events
               }
+              allEvents.sort((a, b) => {
+                return a.epreuves[0].date_debut - b.epreuves[0].date_debut
+              })
             }
             resolve(allEvents)
           })

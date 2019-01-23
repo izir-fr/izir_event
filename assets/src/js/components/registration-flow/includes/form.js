@@ -12,6 +12,7 @@ var form = {
   data: {
     cart: {
       epreuve: [{
+        id: null,
         produit: null,
         qty: null,
         price: null,

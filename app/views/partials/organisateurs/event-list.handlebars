@@ -1,78 +1,64 @@
 <div class="header container-fluid">
 	<div class="jumbotron">
-		<h1>Gérer mes épreuves</h1>
+		<h1>Gérer mes événements</h1>
 	</div>
 </div>
-<div class="container">
+<div class="container pb-5">
 	<div class="row">
 		<div class="col-md-9 mx-auto mb-4">
-			{{#if event}}
-				<div class="row">
-					<div class="col-12 mt-5 mb-4 text-center text-md-left">
-						<h3>{{event.length}} évènements</h3>
-					</div>
+			<div class="row">
+				<div class="col-12 mt-5 mb-4 text-center text-md-left">
+					<h3>{{event.length}} évènements</h3>
 				</div>
-				{{#each event}}
-					<div class="row spacer-sm-top bg-light organisateur-event-list">
-						<div class="col-md-4 spacer-sm-top spacer-sm-bottom text-center text-md-left">
-							<strong>{{this.name}}</strong>				
-							{{#if this.paiement}}
-								<i class="fa fa-credit-card-alt text-success spacer-xs-left" aria-hidden="true" title="le paiement en ligne est accepté"></i>
-							{{else}}
-								<i class="fa fa-credit-card-alt text-muted spacer-xs-left" aria-hidden="true" title="le paiement en ligne n'est pas accepté"></i>
-							{{/if}}
-							{{#if this.certificat_required}}
-								<i class="fa fa-file text-success spacer-xs-left" title="le certificat médical est requis pour s'inscrire"></i>
-							{{else}}
-								<i class="fa fa-file text-muted spacer-xs-left" title="le certificat médical n'est pas requis pour s'inscrire"></i>
-							{{/if}}										
-							{{#if this.dons}}
-								<i class="fa fa-gratipay text-success spacer-xs-left" aria-hidden="true" title="L'événement accepte les dons"></i>
-							{{else}}
-								<i class="fa fa-gratipay text-muted spacer-xs-left" aria-hidden="true" title="L'événement n'accepte pas les dons"></i>
-							{{/if}}	
-							<br>
-							<span class="text-secondary">
-								{{this.adresse.ville}}. 
+			</div>			
+			<div class="row">
+				{{#if event}}
+					{{#each event}}
+						<div class="col-md-4 p-3">
+							<a href="/event/{{this.id}}/dashboard" class="d-block h-100 w-100 bg-light border border-muted p-3 rounded">
+								<span class="d-block font-weight-bold mb-3">{{this.name}}</span>
+								<div class="d-block">
+									{{#if this.paiement}}
+										<i class="fa fa-credit-card-alt text-success spacer-xs-left" aria-hidden="true" title="le paiement en ligne est accepté"></i>
+									{{else}}
+										<i class="fa fa-credit-card-alt text-muted spacer-xs-left" aria-hidden="true" title="le paiement en ligne n'est pas accepté"></i>
+									{{/if}}
+									{{#if this.certificat_required}}
+										<i class="fa fa-file text-success spacer-xs-left" title="le certificat médical est requis pour s'inscrire"></i>
+									{{else}}
+										<i class="fa fa-file text-muted spacer-xs-left" title="le certificat médical n'est pas requis pour s'inscrire"></i>
+									{{/if}}										
+									{{#if this.dons}}
+										<i class="fa fa-gratipay text-success spacer-xs-left" aria-hidden="true" title="L'événement accepte les dons"></i>
+									{{else}}
+										<i class="fa fa-gratipay text-muted spacer-xs-left" aria-hidden="true" title="L'événement n'accepte pas les dons"></i>
+									{{/if}}										
+								</div>			
 								<br>
-								Clôture des inscriptions: {{date this.date_cloture_inscription}}
-							</span>
+								<span class="d-block text-muted font-weight-bold py-2">
+									<i class="fa fa-map-marker mr-2" aria-hidden="true"></i>{{this.adresse.ville}}
+								</span>
+								<small class="d-block">
+									Clôture des inscriptions: {{date this.date_cloture_inscription}}		
+								</small>							
+							</a>
 						</div>
-						<div class="col-md-5 mt-3 text-center">
-			    		<p class="mt-2">
-			    			<i class="fa fa-link spacer-xs-right txt-light-blue" aria-hidden="true"></i><strong>Lien pour les inscriptions : </strong><a href="/event/{{this.id}}" target="_blank">https://event.izir.fr/event/{{this.id}}</a>
-			    			<br>
-			    			<strong>partagez moi sur </strong><i class="fa fa-facebook-official" aria-hidden="true"></i> <i class="fa fa-twitter-square" aria-hidden="true"></i>
-			    		</p>
-						</div>
-						<div class="col-sm-3 mt-4">
-							<div class="dropdown text-center text-md-right">
-							  <button class="btn btn-secondary dropdown-toggle " type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Action</button>
-							  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-									<a href="/event/{{this.id}}" class="dropdown-item"><i class="fa fa-eye spacer-xs-right"></i>Aperçu</a>
-									<a href="/event/edit/{{this.id}}" class="dropdown-item"><i class="fa fa-pencil spacer-xs-right"></i>Editer</a>
-									<a href="/inscription/recap/organisateur/{{this.id}}" class="dropdown-item"><i class="fa fa-users spacer-xs-right"></i>Inscriptions</a>
-									<a href="/chronometrage/event/{{this.id}}" class="dropdown-item"><i class="fa fa-clock-o spacer-xs-right"></i>Chronométrage</a>
-									<a href="/organisateur/comptabilite/{{../user.id}}" class="dropdown-item"><i class="fa fa-university spacer-xs-right"></i>Comptabilité</a>
-							  </div>
-							</div>
-						</div>									
-					</div>
-				{{/each}}
+					{{/each}}						
+				</div>
 			{{else}}
 				<p class="alert alert-danger">Vous n'avez pas encore créé d'épreuve</p>
 				<a href="/event/create" class="btn btn-default">Créer maintenant</a>
-			{{/if}}		
-		</div>
+			{{/if}}					
+			</div>
 		<div class="col-md-3 mt-5">
-			<a href="/catalogue/" class="d-block mx-auto border p-3">
+			<a href="/catalogue/" class="d-block mx-auto border p-3 bg-light rounded">
 				<h3 class="h5">Avez-vous pensez à vos lots ?</h3>
 				<div class="d-block">
 					<span class="d-block border border-top-0 border-right-0 border-left-0 text-muted">
 						L'exemple du moment
 					</span>
 					<div class="d-block mt-3">
-						<strong class="text-dark">{{product.name}}</strong>
+						<strong class="d-block text-dark pb-2">{{product.name}}</strong>
 						{{product.image.0.url}}
 					</div>
 					<img src="{{product.images.0.url}}" alt="{{product.title}}" class="img-fluid">

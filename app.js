@@ -167,4 +167,59 @@ app.listen(app.get('port'), function () {
   console.log('==========>')
 })
 
+// var Event = require('./app/models/event')
+// var Race = require('./app/models/race')
+
+// Event
+//   .find()
+//   .populate('epreuves')
+//   .exec((err, events) => {
+//     events.forEach((event) => {
+//       event.epreuves.forEach((epreuve) => {
+//         postCreateRace(event, epreuve)
+//       })
+//     })
+//   })
+
+// var postCreateRace = (baseEvent, baseRace) => {
+//   var epreuve = new Race({
+//     name: baseRace.name, // req.body.epreuveName,
+//     event: baseEvent._id,
+//     author: baseEvent._id,
+//     discipline: baseRace.discipline, // req.body.discipline,
+//     description: baseRace.description, // req.body.epreuveDescription,
+//     date_debut: baseRace.date_debut,
+//     tarif: baseRace.tarif, // req.body.tarif,
+//     distance: baseRace.distance, // req.body.distance,
+//     denivele: baseRace.denivele, // req.body.denivele,
+//     placesDispo: baseRace.placesDispo, // req.body.placesDispo,
+//     // team
+//     team: baseRace.team,
+//     team_qty_min: baseRace.team_qty_min,
+//     team_qty_max: baseRace.team_qty_max
+//   })
+
+//   epreuve.save((err, race) => {
+//     if (err) {
+//       console.log(err)
+//     } else {
+//       Event
+//         .findOneAndUpdate({ _id: baseEvent._id }, { $push: { epreuves: [ race._id ] } }, { multi: true }, (err, updated) => {
+//           if (err) {
+//             console.log(err)
+//           } else {
+//             Event
+//               .findOneAndUpdate({ _id: baseEvent._id }, { $pull: { epreuves: { _id: baseRace._id } } }, { multi: true }, (err, updated) => {
+//                 if (err) {
+//                   console.log(err)
+//                 } else {
+//                   console.log('done')
+//                 }
+//               })
+//           }
+//         })
+//     }
+//   })
+// }
+
 module.exports = app

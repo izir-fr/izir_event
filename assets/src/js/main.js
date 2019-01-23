@@ -13,6 +13,7 @@ import './components/form-query-completion'
 import './components/event-config'
 import './components/registration-flow/registrationFlow'
 import './components/facebook'
+import './components/race-delete'
 
 // css
 

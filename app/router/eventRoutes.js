@@ -29,4 +29,22 @@ router.post('/edit/:id', eventCtrl.postEditEvent)
 // Get a event
 router.get('/:id', eventCtrl.GetSingleEvent)
 
+// Get create race page
+router.get('/:event/race/create', ensureAuthenticated, eventCtrl.getCreateRace)
+
+// Post a create race
+router.post('/:event/race/create', eventCtrl.postCreateRace)
+
+// Get a edit race page
+router.get('/:event/race/:race/edit', ensureAuthenticated, eventCtrl.getEditRace)
+
+// Post a edit race
+router.post('/:event/race/:race/edit', eventCtrl.postEditRace)
+
+// Get delete race
+router.get('/:event/race/:race/delete', eventCtrl.getDeleteRace)
+
+// dashboard
+router.get('/:event/dashboard', ensureAuthenticated, eventCtrl.getDashboardEvent)
+
 module.exports = router

@@ -12,6 +12,7 @@ var chronometrageCtrl = {
   getAllChronometrageEvent: (req, res) => {
     Event
       .find({ chronometreur: req.user.id })
+      .populate('epreuves')
       .exec((err, events) => {
         if (err) {
           res.redirect('/')
@@ -25,6 +26,7 @@ var chronometrageCtrl = {
   getChronometrageEvent: (req, res) => {
     Event
       .findOne({ _id: req.params.id })
+      .populate('epreuves')
       .populate('chronometreur')
       .exec((err, event) => {
         if (err) {

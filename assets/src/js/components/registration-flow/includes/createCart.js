@@ -2,6 +2,7 @@
 var getSelectedEpreuve = (form) => {
   var totalCart = 0
   var defautArray = {
+    id: null,
     produit: null,
     qty: null,
     price: null,
@@ -14,6 +15,7 @@ var getSelectedEpreuve = (form) => {
   form.option.epreuve_format.individuel = false
 
   $('.epreuves').each((key, val) => {
+    var id = $(val).find('input[name=id]')[0].value
     var produit = $(val).find('input[name=ref]')[0].value
     var qty = $(val).find('.quantity')[0].value
     var price = $(val).find('input[name=tarif]')[0].value
@@ -21,6 +23,7 @@ var getSelectedEpreuve = (form) => {
     $(val).find('.cart-subtotal').text(subTotal)
 
     var eventChoice = {
+      id: id,
       produit: produit,
       qty: qty,
       price: price,

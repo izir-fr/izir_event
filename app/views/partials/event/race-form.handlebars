@@ -1,0 +1,447 @@
+<div class="header container-fluid">
+  <div class="jumbotron">
+    <h1>{{config.action_text}} une épreuve</h1>
+  </div>
+</div>
+<div class="container">
+  <div class="row">
+  {{#if errors}}
+    {{#each errors}}
+      <div class="alert alert-danger">{{msg}}</div>
+    {{/each}}
+  {{/if}}
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <h2 class="my-5">{{race.event.name}}</h2>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12">
+      <form method="post" action="{{config.action_url}}" accept-charset="UTF-8" id="postEvent">
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="form-group ">
+              <div class="row">
+                <div class="col-12">
+                  <div class="form-group spacer-sm-top">
+                    <label>Nom de l'épreuve *</label>
+                    <input type="text" class="form-control" placeholder="ex: 15km, adultes, femmes, ..." value="{{race.name}}" name="name" required>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="form-group">
+                    <label>Description de l'épreuve</label><br>
+                    <textarea name="description" class="form-control" cols="30" rows="10" placeholder="Description de l'épreuve">{{race.description}}</textarea>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-12">
+                  <div class="alert alert-warning" role="alert">
+                    <div class="row">
+                      <div class="col-12">
+                        <strong class="d-block mb-2">Inscription en équipe</strong>
+                        <span>
+                          En activant cette option, vous indiquer que cette épreuve se court en équipe. Vous recevrez donc une seule inscription pour une équipe avec un seul paiement pour tous les membres de cette équipe. Merci d'adapter votre prix de l'inscription, ci-dessous, en conséquent.
+                        </span>
+                        <p class="mt-2">
+                          Ex: inscription indivuelle, Prix de l'inscription 10€; inscription équipe (2 personnes), Prix de l'inscription 20€.
+                        </p>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-12">
+                        <div class="form-group">
+                          <div class="row">
+                            <div class="col-lg-4">
+                              <div class="row mb-2">
+                                <label class="col-lg-9 col-sm-4 d-inline text-right">Inscription en équipe :</label>  
+                                <select name="team" class="form-control col-lg-3 col-sm-8 d-inline">
+                                  {{#if race.team}}
+                                    <option value="true">Oui</option>
+                                  {{/if}}
+                                  <option value="false">Non</option>
+                                  <option value="true">Oui</option>
+                                </select>                                        
+                              </div>
+                            </div>
+                            <div class="col-lg-8">
+                              <div class="row">
+                                <label class="col-sm-4 text-right">Nombre de membres composants une équipe :</label>
+                                <div class="input-group col-sm-4">
+                                  <div class="input-group-addon">min</div>
+                                  {{#if race.team_qty_min}}
+                                    <input type="number" class="form-control" placeholder="0" name="team_qty_min" min="2" step="1" value="{{race.team_qty_min}}">
+                                  {{else}}
+                                    <input type="number" class="form-control" placeholder="0" name="team_qty_min" min="2" step="1" value="2">
+                                  {{/if}}
+                                </div>
+                                <div class="input-group col-sm-4">
+                                  <div class="input-group-addon">max</div>
+                                  {{#if race.team_qty_max}}
+                                    <input type="number" class="form-control" placeholder="0" name="team_qty_max" min="2" step="1" value="{{race.team_qty_max}}">
+                                  {{else}}
+                                    <input type="number" class="form-control" placeholder="0" name="team_qty_max" min="2" step="1" value="2">
+                                  {{/if}}
+                                </div>                                     
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <label class="spacer-sm-top">Discipline *</label>
+              <select name="discipline" class="form-control" required>
+                {{#if race.discipline}}
+                  <option value="{{race.discipline}}">{{race.discipline}}</option>
+                {{/if}}
+                {{#each discipline_list}}
+                  <option value="{{this.name}}">{{this.name}}</option>
+                {{/each}}
+              </select>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label>Date de début (jour/mois/année) *</label>
+              <div class="row">
+                <div class="col-4">
+                  <select class="form-control" name="jourDebut" required>
+                    {{#if race.date_debut}}
+                      <option value="{{dateDay race.date_debut}}">{{dateDay race.date_debut}}</option>
+                    {{/if}}
+                    {{#each date_list.day}}
+                      <option value="{{this.value}}">{{this.value}}</option>
+                    {{/each}}
+                  </select>
+                </div>
+                <div class="col-4">
+                  <select class="form-control" name="moisDebut" required>
+                    {{#if race.date_debut}}
+                      <option value="{{dateMonth race.date_debut}}">{{dateMonth race.date_debut}}</option>
+                    {{/if}}
+                    {{#each date_list.month}}
+                      <option value="{{this.value}}">{{this.value}}</option>
+                    {{/each}}
+                  </select>
+                </div>
+                <div class="col-4">
+                  <select class="form-control" name="anneeDebut" required>
+                    {{#if race.date_debut}}
+                      <option value="{{dateFullYear race.date_debut}}">{{dateFullYear race.date_debut}}</option>
+                    {{/if}}
+                    {{#each date_list.year}}
+                      <option value="{{this.value}}">{{this.value}}</option>
+                    {{/each}}
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-1">
+            <span></span>  
+          </div>
+          <div class="col-sm-5">
+            <div class="form-group" required>
+              <label>Heure de début (heure/minute) *</label>
+              <div class="row">
+                <div class="col-6">
+                  <select class="form-control" name="heureDebut" required>
+                    {{#if race.date_debut}}
+                      <option value="{{dateHours race.date_debut}}">{{dateHours race.date_debut}}</option>
+                    {{/if}}
+                    {{#each date_list.hour}}
+                      <option value="{{this.value}}">{{this.value}}</option>
+                    {{/each}}
+                  </select>
+                </div>
+                <div class="col-6">
+                  <select class="form-control" name="minuteDebut" required>
+                    {{#if race.date_debut}}
+                      <option value="{{dateMinutes race.date_debut}}">{{dateMinutes race.date_debut}}</option>
+                    {{/if}}
+                    <option value="00">00</option>
+                    <option value="15">15</option>
+                    <option value="30" selected="selected">30</option>
+                    <option value="45">45</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-3">
+            <div class="form-group">
+              <label>Prix de l'inscription *</label>
+                <div class="input-group">
+                  <input type="number" class="form-control" placeholder="0" name="tarif" min="00" step=".01" value="{{race.tarif}}" required>
+                  <div class="input-group-addon">€</div>
+                </div>
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="form-group">
+              <label>Distance *</label>
+              <div class="input-group">
+                <input type="number" class="form-control" placeholder="0" name="distance" min="00" step=".01" value="{{race.distance}}" required>
+                <div class="input-group-addon">Km</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="form-group">
+              <label>Dénivele +</label>
+              <div class="input-group">
+                <input type="number" class="form-control" placeholder="0" name="denivele" min="00"value="{{race.denivele}}" >
+                <div class="input-group-addon">m</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="form-group">
+              <label>Nombre de participants maxi *</em></label>
+              <input type="number" class="form-control" placeholder="1" name="placesDispo" value="{{race.placesDispo}}" required>
+            </div>
+          </div>
+        </div>
+        <div class="row my-5">
+          <div class="col-12">
+            <button type="submit" class="btn btn-default">{{config.action_text}}</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- EPREUVES-->
+<!-- 
+<div class="row spacer-md-top">
+  <div class="col-sm-12">
+    <h2>Détails de l'épreuve</h2>
+  </div>
+</div>
+<div>
+  {{#each event.epreuves}}
+  <div id="epreuveFrom" class="d-flex border border-left-0 border-right-0 border-top-0 mt-2 mb-2">
+    <div>
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="form-group ">
+            <div class="row">
+              <div class="col-sm-11">
+                <div class="form-group spacer-sm-top">
+                  <label>Nom de l'épreuve *</label>
+                  <input type="text" class="form-control" placeholder="ex: 15km, adultes, femmes, ..." value="{{name}}" name="displayEventName" required disabled>
+                  <input type="hidden" class="form-control" placeholder="ex: 15km, adultes, femmes, ..." value="{{name}}" name="epreuveName" required>
+                </div>
+              </div>
+              <div class="col-sm-1">
+                <div class="delete-epreuve">
+                  <span class="badge badge-danger ">X</span>
+                </div>
+              </div> 
+            </div>
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="form-group">
+                  <label>Description de l'épreuve</label><br>
+                  <textarea name="epreuveDescription" class="form-control" cols="30" rows="10" placeholder="Description de l'épreuve">{{utf8 description}}</textarea>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12">
+                <div class="alert alert-warning" role="alert">
+                  <div class="row">
+                    <div class="col-12">
+                      <strong class="d-block mb-2">Inscription en équipe</strong>
+                      <span>
+                        En activant cette option, vous indiquer que cette épreuve se court en équipe. Vous recevrez donc une seule inscription pour une équipe avec un seul paiement pour tous les membres de cette équipe. Merci d'adapter votre prix de l'inscription, ci-dessous, en conséquent.
+                      </span>
+                      <p class="mt-2">
+                        Ex: inscription indivuelle, Prix de l'inscription 10€; inscription équipe (2 personnes), Prix de l'inscription 20€.
+                      </p>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-12">
+                      <div class="form-group">
+                        <div class="row">
+                          <div class="col-lg-4">
+                            <div class="row mb-2">
+                              <label class="col-lg-9 col-sm-4 d-inline text-right">Inscription en équipe :</label>  
+                              <select name="team" class="form-control col-lg-3 col-sm-8 d-inline">
+                                {{#if this.team}}
+                                  <option value="true" selected>Oui</option>
+                                  <option value="false">Non</option>
+                                {{else}}
+                                  <option value="true">Oui</option>
+                                  <option value="false" selected>Non</option>
+                                {{/if}}
+                              </select>                                        
+                            </div>
+                          </div>
+                          <div class="col-lg-8">
+                            <div class="row">
+                              <label class="col-sm-4 text-right">Nombre de membres composants une équipe :</label>
+                              {{#if this.team}}
+                                <div class="input-group col-sm-4">
+                                  <div class="input-group-addon">min</div>
+                                  <input type="number" class="form-control" placeholder="0" name="team_qty_min" min="2" step="1" value="{{team_qty_min}}">
+                                </div>
+                                <div class="input-group col-sm-4">
+                                  <div class="input-group-addon">max</div>
+                                  <input type="number" class="form-control" placeholder="0" name="team_qty_max" min="2" step="1" value="{{team_qty_max}}">
+                                </div>
+                              {{else}}
+                                <div class="input-group col-sm-4">
+                                  <div class="input-group-addon">min</div>
+                                  <input type="number" class="form-control" placeholder="0" name="team_qty_min" min="2" step="1" value="2">
+                                </div>
+                                <div class="input-group col-sm-4">
+                                  <div class="input-group-addon">max</div>
+                                  <input type="number" class="form-control" placeholder="0" name="team_qty_max" min="2" step="1" value="2">
+                                </div>
+                              {{/if}}                                        
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <label class="spacer-sm-top">Discipline *</label>
+            <select name="discipline" class="form-control" required>
+              <option value="{{this.discipline}}" selected>{{this.discipline}}</option>
+              {{#each ../discipline_list}}
+                <option value="{{this.name}}">{{this.name}}</option>
+              {{/each}}
+            </select>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div class="form-group">
+            <label>Date de début (jour/mois/année) *</label>
+            <div class="row">
+              <div class="col-4">
+                <select class="form-control" name="jourDebut" required>
+                  <option value="{{dateDay this.date_debut}}" selected>{{dateDay this.date_debut}}</option>
+                  {{#each ../date_list.day}}
+                    <option value="{{this.value}}">{{this.value}}</option>
+                  {{/each}}
+                </select>
+              </div>
+              <div class="col-4">
+                <select class="form-control" name="moisDebut" required>
+                  <option value="{{dateMonth this.date_debut}}" selected>{{ dateMonth this.date_debut}}</option>
+                  {{#each ../date_list.month}}
+                    <option value="{{this.value}}">{{this.value}}</option>
+                  {{/each}}
+                </select>
+              </div>
+              <div class="col-4">
+                <select class="form-control" name="anneeDebut" required>
+                  <option value="{{dateFullYear this.date_debut}}" selected>{{dateFullYear this.date_debut}}</option>
+                  {{#each ../date_list.year}}
+                    <option value="{{this.value}}">{{this.value}}</option>
+                  {{/each}}
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-1">
+          <span></span>  
+        </div>
+        <div class="col-sm-5">
+          <div class="form-group" required>
+            <label>Heure de début (heure/minute) *</label>
+            <div class="row">
+              <div class="col-6">
+                <select class="form-control" name="heureDebut" required>
+                  <option value="{{dateHours this.date_debut}}" selected>{{dateHours this.date_debut}}</option>
+                  {{#each ../date_list.hour}}
+                    <option value="{{this.value}}">{{this.value}}</option>
+                  {{/each}}
+                </select>
+              </div>
+              <div class="col-6">
+                <select class="form-control" name="minuteDebut" required>
+                  <option value="{{dateMinutes this.date_debut}}" selected>{{dateMinutes this.date_debut}}</option>
+                  <option value="00">00</option>
+                  <option value="15">15</option>
+                  <option value="30">30</option>
+                  <option value="45">45</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-3">
+          <div class="form-group">
+            <label>Prix de l'inscription *</label>
+              <div class="input-group">
+                <input type="number" class="form-control" placeholder="0" name="tarif" min="00" step=".01"  value="{{tarif}}"required>
+                <div class="input-group-addon">€</div>
+              </div>
+          </div>
+        </div>
+        <div class="col-sm-3">
+          <div class="form-group">
+            <label>Distance *</label>
+            <div class="input-group">
+              <input type="number" class="form-control" placeholder="0" name="distance" min="00" step=".01"  value="{{distance}}"required>
+              <div class="input-group-addon">Km</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-3">
+          <div class="form-group">
+            <label>Dénivele +</label>
+            <div class="input-group">
+              <input type="number" class="form-control" placeholder="0" name="denivele" min="00" value="{{denivele}}">
+              <div class="input-group-addon">m</div>
+            </div>
+          </div>
+        </div>                
+        <div class="col-sm-3">
+          <div class="form-group">
+            <label>Nombre de participants maxi *</em></label>
+            <input type="number" class="form-control" placeholder="1" name="placesDispo" value="{{placesDispo}}" required>
+          </div>
+        </div>
+      </div>
+    </div>
+    <input type="hidden" name="epreuve_id" value="true">
+  </div>
+  {{/each}}
+
+
+    </div>
+    <input type="hidden" name="epreuve_id" value="true">
+  </div> 
+  <div id="epreuveAdd"></div>
+</div>
+<div class="row" id="epreuveButton">
+  <div class="col-sm-12 spacer-sm-top">
+    <div class="col-sm-12">
+      <div class="row">
+        <div class="col-sm-12">
+          <button class="btn btn-default" id="addEpreuve">Ajouter une épreuve</button>
+        </div>
+      </div>              
+    </div>
+  </div>      
+</div> -->

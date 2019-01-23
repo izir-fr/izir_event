@@ -39,6 +39,7 @@ var registrationSchema = mongoose.Schema({
   ],
   produits: [
     {
+      race: { type: Schema.ObjectId, ref: 'Race', required: true },
       produitsRef: { type: String },
       produitsPrix: { type: Number },
       produitsQuantite: { type: Number },

@@ -21,7 +21,10 @@ var registrationCtrl = {
   getPreinscription: function (req, res) {
     async.parallel({
       event: function (next) {
-        Event.findById(req.params.id).exec(next)
+        Event
+          .findById(req.params.id)
+          .populate('epreuves')
+          .exec(next)
       },
       participants: function (next) {
         Registration.find({event: req.params.id}).exec(next)
@@ -40,6 +43,7 @@ var registrationCtrl = {
       // Single epreuve init participants
       maxParticipant.forEach((val) => {
         var epreuve = {
+          id: val._id,
           name: val.name,
           max: val.placesDispo,
           quantity: 0,
@@ -124,6 +128,7 @@ var registrationCtrl = {
         // ajout des produits dans la commande
         cart.epreuve.forEach((val) => {
           produits.push({
+            race: val.id,
             produitsRef: val.produit,
             produitsPrix: val.price,
             produitsQuantite: val.qty,
@@ -177,7 +182,7 @@ var registrationCtrl = {
         })
 
         // enregistrement de la pré-commande
-        registration.save(function (err, registration) {
+        registration.save((err, registration) => {
           if (err) {
             res.send({ error_msg: 'Une erreur est survenue lors de l\'enregistrement de votre inscription' })
           } else {
@@ -719,81 +724,95 @@ var registrationCtrl = {
   },
   // Get organisateur a recap
   getRecapOrganisateur: function (req, res) {
-    var query = {}
-
-    if (req.query.epreuve && req.query.epreuve !== 'Toutes') {
-      query = {
-        event: req.params.id,
-        $or: [ { 'participant.nom': { $gt: [] } }, { 'participant.prenom': { $gt: [] } }, { 'paiement.captured': { $eq: true } }, { 'paiement.other_captured': { $eq: true } } ],
-        produits: { $elemMatch: { produitsRef: req.query.epreuve, produitsQuantite: { $ne: 0 } } } }
-    } else {
-      query = {
-        event: req.params.id,
-        $or: [ { 'participant.nom': { $gt: [] } }, { 'participant.prenom': { $gt: [] } }, { 'paiement.captured': { $eq: true } }, { 'paiement.other_captured': { $eq: true } } ]
-      }
-    }
-
-    Registration
-      .find(query)
-      .populate('event')
-      .sort({ 'participant.nom': 1 })
-      .exec((err, registration) => {
+    Event
+      .findById(req.params.id)
+      .populate('epreuves')
+      .exec((err, event) => {
         if (err) {
-          req.flash('error_msg', 'Si l\'erreur persiste merci de contacter le service client')
+          req.flash('error_msg', 'Une erreur est survenue, si le problème persiste merci de nous contacter à serviceclient@izir.fr')
           res.redirect('/organisateur/epreuves')
         }
-        if (String(req.user.id) === String(registration[0].event.author) || String(req.user.id) === String(process.env.ADMIN)) {
-          var event = {}
-          var paiement = []
-          var paiementsCb = []
-          var dons = []
-          var inscriptions = require('../../custom_modules/app/chronometrage').registrationToTeam(registration)
+        if (String(req.user.id) === String(event.author) || String(req.user.id) === String(process.env.ADMIN)) {
+          var query = {}
 
-          inscriptions.forEach((val) => {
-            if (val.paiement.captured || val.paiement.other_captured) {
-              val.produits.forEach((val) => {
-                if (val.produitsRef === 'dons') {
-                  if (val.produitsSubTotal > 0) {
-                    dons.push(val)
+          if (req.query.epreuve && req.query.epreuve !== 'Toutes') {
+            query = {
+              event: req.params.id,
+              $or: [ { 'participant.nom': { $gt: [] } }, { 'participant.prenom': { $gt: [] } }, { 'paiement.captured': { $eq: true } }, { 'paiement.other_captured': { $eq: true } } ],
+              produits: { $elemMatch: { _id: req.query.epreuve, produitsQuantite: { $ne: 0 } } } }
+          } else {
+            query = {
+              event: req.params.id,
+              $or: [ { 'participant.nom': { $gt: [] } }, { 'participant.prenom': { $gt: [] } }, { 'paiement.captured': { $eq: true } }, { 'paiement.other_captured': { $eq: true } } ]
+            }
+          }
+
+          Registration
+            .find(query)
+            .populate('race')
+            .sort({ 'participant.nom': 1 })
+            .exec((err, registration) => {
+              if (err) {
+                req.flash('error_msg', 'Si l\'erreur persiste merci de contacter le service client')
+                res.redirect('/organisateur/epreuves')
+              }
+
+              if (registration.length >= 1) {
+                var paiement = []
+                var paiementsCb = []
+                var dons = []
+                var inscriptions = require('../../custom_modules/app/chronometrage').registrationToTeam(registration)
+
+                inscriptions.forEach((val) => {
+                  if (val.paiement.captured || val.paiement.other_captured) {
+                    val.produits.forEach((val) => {
+                      if (val.produitsRef === 'dons') {
+                        if (val.produitsSubTotal > 0) {
+                          dons.push(val)
+                        }
+                      }
+                    })
                   }
-                }
-              })
-            }
-          })
+                })
 
-          registration.forEach((val) => {
-            // filtre uniquement les dosssiers payés, en cb et chèques
-            if (val.paiement.captured === true || val.paiement.other_captured === true) {
-              paiement.push(val.orderAmount)
-            }
-            // filtre uniquement les dossiers cb
-            if (val.paiement.captured === true) {
-              paiementsCb.push(val.orderAmount)
-            }
-          })
+                registration.forEach((val) => {
+                  // filtre uniquement les dosssiers payés, en cb et chèques
+                  if (val.paiement.captured === true || val.paiement.other_captured === true) {
+                    paiement.push(val.orderAmount)
+                  }
+                  // filtre uniquement les dossiers cb
+                  if (val.paiement.captured === true) {
+                    paiementsCb.push(val.orderAmount)
+                  }
+                })
 
-          // trie les dissuer par ordre alphanétique
-          inscriptions.sort((a, b) => {
-            if (a.participant.nom !== undefined) {
-              return a.participant.nom.localeCompare(b.participant.nom)
-            }
-          })
+                // trie les dissuer par ordre alphanétique
+                inscriptions.sort((a, b) => {
+                  if (a.participant.nom !== undefined) {
+                    return a.participant.nom.localeCompare(b.participant.nom)
+                  }
+                })
 
-          // construction de l'objet renvoyé à l'api
-          event.event = registration[0].event
-          event.inscriptions = inscriptions
-          event.paiement = paiement
-          event.paiementsCb = paiementsCb
-          event.totalPaiement = paiement.reduce((acc, curr) => {
-            return acc + curr
-          }, 0)
-          event.totalPaiementCb = paiementsCb.reduce((acc, curr) => {
-            return acc + curr
-          }, 0)
-          event.dons = dons
+                var data = {}
+                // construction de l'objet renvoyé à l'api
+                data.event = event
+                data.inscriptions = inscriptions
+                data.paiement = paiement
+                data.paiementsCb = paiementsCb
+                data.totalPaiement = paiement.reduce((acc, curr) => {
+                  return acc + curr
+                }, 0)
+                data.totalPaiementCb = paiementsCb.reduce((acc, curr) => {
+                  return acc + curr
+                }, 0)
+                data.dons = dons
 
-          // génértion de la page
-          res.render('partials/registration/recap-organisateur', event)
+                // génértion de la page
+                res.render('partials/registration/recap-organisateur', data)
+              } else {
+                res.render('partials/registration/recap-organisateur', { event: null })
+              }
+            })
         } else {
           req.flash('error_msg', 'Vous n\'êtes pas l\'administrateur de cet événement')
           res.redirect('/organisateur/epreuves')

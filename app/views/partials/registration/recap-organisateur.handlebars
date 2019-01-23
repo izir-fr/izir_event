@@ -10,7 +10,7 @@
     </div>
     <div class="col-md-9 text-center mt-3 mb-2">
       <a href="/event/{{event.id}}" class="spacer-sm-right text-light" ><i class="fa fa-eye spacer-xs-right"></i>Voir</a>
-      <a href="/event/edit/{{event.id}}" class="spacer-sm-right text-light"><i class="fa fa-pencil spacer-xs-right"></i>Modifier</a>
+      <a href="/event/{{event.id}}/dashboard" class="spacer-sm-right text-light"><i class="fa fa-pencil spacer-xs-right"></i>Modifier</a>
       <a href="/inscription/recap/organisateur/{{event.id}}" class="spacer-sm-right text-light"><strong><i class="fa fa-users spacer-xs-right "></i>Inscriptions</strong></a>
       <a href="/chronometrage/event/{{event.id}}" class="spacer-sm-right text-light"><i class="fa fa-file spacer-xs-right"></i>Chronométrage</a>
       <a href="/organisateur/comptabilite/{{user.id}}" class="spacer-sm-right text-light"><i class="fa fa-university spacer-xs-right"></i>Comptabilité</a>
@@ -18,7 +18,7 @@
     </div>
   </div>
 </div>
-<div class="container">
+<div class="container mb-5">
   <div class="row text-center ">
     <div class="col-md-4  pt-4 pb-4 bg-light">
       <div class="row bg-light">
@@ -92,7 +92,7 @@
                 <select class="form-control" id="epreuve-filter" name="epreuve">
                   <option>Toutes</option>
                   {{#each event.epreuves}}
-                    <option>{{this.name}}</option>
+                    <option value="{{this.id}}">{{this.name}}</option>
                   {{/each}}
                 </select>
               </div>
@@ -242,10 +242,12 @@
     {{/each}}
 
   {{else}}
-
-    <div class="col-12">
-      <p class="alert alert-danger text-center">Vous n'avez pas encore de participants inscrit à votre épreuve, n'oubliez pas de faire la promotion de celle-ci sans plus attendre !</p>
-      <p>Besoin d'aide ? Contacter notre commercial Guenael (guenael.r@izir.fr) pour nouer un partenariat avec nous et profiter de l'audience de nos réseaux, ainsi que celle de runnerbreizh.fr</p>
+    <div class="row my-5">
+      <div class="col-12">
+        <p class="alert alert-danger text-center">Vous n'avez pas encore de participants inscrit à votre épreuve, n'oubliez pas de faire la promotion de celle-ci sans plus attendre !</p>
+        <p>Besoin d'aide ? Contacter notre commercial Guenael (guenael.r@izir.fr) pour nouer un partenariat avec nous et profiter de l'audience de nos réseaux, ainsi que celle de runnerbreizh.fr</p>
+      </div>      
     </div>
+
   {{/if}}     
 </div>

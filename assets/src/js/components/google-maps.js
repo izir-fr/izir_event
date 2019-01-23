@@ -62,9 +62,9 @@ var googleMap = () => {
       // Get the place details from the autocomplete object.
       var place = autocomplete.getPlace()
       // GMAPS
-      console.log(place.geometry.viewport)
-      var longitude = (place.geometry.viewport.j.j + place.geometry.viewport.j.l) / 2
-      var latitude = (place.geometry.viewport.l.j + place.geometry.viewport.l.l) / 2
+      // console.log(place.geometry.viewport)
+      var longitude = (place.geometry.viewport.ga.j + place.geometry.viewport.ga.l) / 2
+      var latitude = (place.geometry.viewport.ma.j + place.geometry.viewport.ma.l) / 2
 
       initMap(latitude, longitude)
       document.getElementById('latitude').value = latitude

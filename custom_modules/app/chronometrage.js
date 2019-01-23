@@ -107,7 +107,11 @@ var exportModules = {
     // epreuve setup
     val.produits.forEach((val) => {
       if (val.produitsQuantite > 0 && val.produitsRef !== 'don') {
-        courses.push(val.produitsRef)
+        if (val.race !== undefined) {
+          courses.push(val.race.name)
+        } else {
+          courses.push(val.produitsRef)
+        }
       }
     })
 

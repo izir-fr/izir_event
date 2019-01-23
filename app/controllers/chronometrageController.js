@@ -87,6 +87,7 @@ var chronometrageCtrl = {
         $or: [ { 'participant.nom': { $gt: [] } }, { 'participant.prenom': { $gt: [] } }, { 'paiement.captured': { $eq: true } }, { 'paiement.other_captured': { $eq: true } } ]
       })
       .populate('event')
+      .populate('produits.race')
       .exec((err, results) => {
         if (err) {
           req.flash('error_msg', 'Une erreur est survenue')
@@ -124,6 +125,7 @@ var chronometrageCtrl = {
         $or: [ { 'participant.nom': { $gt: [] } }, { 'participant.prenom': { $gt: [] } }, { 'paiement.captured': { $eq: true } }, { 'paiement.other_captured': { $eq: true } } ]
       })
       .populate('event')
+      .populate('produits.race')
       .exec((err, results) => {
         if (err) {
           req.flash('error_msg', 'Une erreur est survenue')

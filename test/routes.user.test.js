@@ -10,8 +10,8 @@ const assert = chai.assert
 const should = chai.should()
 
 var user = {
-  'username': 'admin',
-  'password': process.env.PASSWORD
+  'email': process.env.LOGIN_EMAIL,
+  'password': process.env.LOGIN_PASSWORD
 }
 
 // test routes CMS

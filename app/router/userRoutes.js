@@ -16,9 +16,13 @@ var ensureAuthenticated = require('../../custom_modules/app/router/ensureAuthent
 
 // Passport config
 passport.use(
-  new LocalStrategy(
-    function (username, password, done) {
-      User.getUserByUsername(username.toLowerCase(), function (err, user) {
+  new LocalStrategy({
+    usernameField: 'email',
+    passwordField: 'password'
+  }, (email, password, done) => {
+    User
+      .findOne({ email: email.toLowerCase() })
+      .exec((err, user) => {
         if (err) throw err
         if (!user) {
           return done(null, false, {message: 'Utilisateur inconnu'})
@@ -33,8 +37,7 @@ passport.use(
           }
         })
       })
-    }
-  )
+  })
 )
 
 passport.serializeUser(function (user, done) {

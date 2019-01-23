@@ -807,8 +807,6 @@ var registrationCtrl = {
                 }, 0)
                 data.dons = dons
 
-                console.log(data)
-
                 // génértion de la page
                 res.render('partials/registration/recap-organisateur', data)
               } else {

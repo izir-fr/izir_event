@@ -10,8 +10,8 @@ var login = (server, loginDetails, done) => {
         if (err) {
           throw err
         }
-        var loginCookie = res.headers['set-cookie'];
-        done(loginCookie);
+        var loginCookie = res.headers['set-cookie']
+        done(loginCookie)
     });
 }
 

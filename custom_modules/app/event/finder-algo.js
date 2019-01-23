@@ -1,4 +1,5 @@
 var Event = require('../../../app/models/event')
+var Race = require('../../../app/models/race')
 var Post = require('../../../app/models/post')
 var dateNow = new Date(Date.now())
 var Promise = require('bluebird')
@@ -44,36 +45,50 @@ var eventFinderForm = (req, res, callback, error) => {
   }
 
   var dbEvents = new Promise((resolve, reject) => {
-    Event
+    Race
       .find({
         $and: [
-          { epreuves: { $elemMatch: queryDate } },
-          { 'epreuves.discipline': queryDiscipline }
+          queryDate,
+          { discipline: queryDiscipline }
         ]
       })
-      .populate('epreuves')
-      .sort({ 'epreuves.0.date_debut': 1 })
-      .exec((err, results) => {
+      .exec((err, races) => {
         if (err) {
           reject(err)
         }
 
-        // city filter
-        if (results !== undefined) {
-          if (citySearch !== '' || citySearch !== null) {
-            results.forEach((val) => {
-              // city query filter
-              if (val.adresse.ville) {
-                if (val.adresse.ville.toLowerCase().indexOf(citySearch) !== -1) {
-                  allEvents.push(val)
-                }
-              }
-            })
-          } else {
-            allEvents = results
-          }
-          resolve(allEvents)
+        var eventsId = []
+        if (races.length >= 1) {
+          races.forEach((race) => {
+            eventsId.push(race.event)
+          })
         }
+
+        Event
+          .find({ _id: eventsId })
+          .populate('epreuves')
+          .sort({ 'epreuves.0.date_debut': 1 })
+          .exec((err, events) => {
+            if (err) {
+              reject(err)
+            }
+            // city filter
+            if (events !== undefined && events.length >= 1) {
+              if (citySearch !== '' || citySearch !== null) {
+                events.forEach((val) => {
+                  // city query filter
+                  if (val.adresse.ville) {
+                    if (val.adresse.ville.toLowerCase().indexOf(citySearch) !== -1) {
+                      allEvents.push(val)
+                    }
+                  }
+                })
+              } else {
+                allEvents = events
+              }
+            }
+            resolve(allEvents)
+          })
       })
   })
 

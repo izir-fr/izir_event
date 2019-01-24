@@ -662,6 +662,11 @@ START => DEVICE BREAKPOINT DISPLAY
 
 }
 
+
+.row:before, .row:after {
+    display: inline-block !important;
+}
+
 /*////////////////////////// 
 <= END DEVICE BREAKPOINT DISPLAY
 //////////////////////////*/

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
   <head>
   	<title>Event Izir - Application de gestion d'évènements sportif</title>
     <meta dname="description" content="Inscrivez-vous en ligne à votre prochaine épreuve sportive: Running - Trail - Triathlon - Cyclisme - VTT - Billeterie - Randonnée - Marche">
@@ -8,213 +8,193 @@
       <link rel="stylesheet" href="http://localhost:8000/main.css" />
     {{else}}
       <link rel="stylesheet" href="/main.css" />
+      <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-19844527-4', 'auto');
+        ga('send', 'pageview');
+      </script>      
     {{/if}}
     <link rel="stylesheet" href="/css/font-awesome/css/font-awesome.min.css">
-    
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
     <link rel="icon" href="/img/favicon.ico" />
-    <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-      ga('create', 'UA-19844527-4', 'auto');
-      ga('send', 'pageview');
-    </script>
   </head>
 
   <body>
-  	<div class="container-fluid">
-      <div class="row">
+    <header class="container-fluid">
+      <div class="row mt-4">
         <div class="col-12">
-          <div class="row mt-4">
-            <div class="col-12">
-              <div class="d-inline-block w-25 h-100">
-                <a href="/" alt ="EventIzir" class="d-block">
-                  <img src="/img/logo.png" alt="event.izir.fr" class="img img-fluid my-3" style="max-height: 40px;">
+          <div class="d-inline-block w-25 h-100">
+            <a href="/" alt ="EventIzir" class="d-block">
+              <img src="/img/logo.png" alt="event.izir.fr" class="img img-fluid my-3" style="max-height: 40px;">
+            </a>
+          </div>
+
+          <div class="d-inline-block float-right w-75 h-100" id="desktop-user-menu">
+            <div class="d-flex float-right my-3" id="user-menu">
+              <span class="text-center d-md-inline-block d-block">
+                <a href="/event/create" class="btn btn-menu txt-dark-blue border-0">
+                  <span class="d-block">Créer</span>
+                  <small class="d-block text-muted">un événement</small>
                 </a>
-              </div>
-
-              <div class="d-inline-block float-right w-75 h-100" id="desktop-user-menu">
-                <div class="d-flex float-right my-3" id="user-menu">
-                  <span class="text-center d-md-inline-block d-block">
-                    <a href="/event/create" class="btn btn-menu txt-dark-blue border-0">
-                      <span class="d-block">Créer</span>
-                      <small class="d-block text-muted">un événement</small>
-                    </a>
-                  </span>
-                  <span class="text-muted d-none d-md-block">|</span>
-                  <span class="text-center d-md-inline-block d-block">
-                    <a href="/event/finder" class="text-muted btn btn-menu border-0">
-                      <span class="d-block">Trouver</span>
-                      <small class="d-block text-muted">un événement</small>
-                    </a>
-                  </span>
-                  <span class="text-muted d-none d-md-block">|</span>
-                  <span class="text-center d-md-inline-block d-block">
-                    <a href="/newsfeed/" class="text-muted btn btn-menu border-0">
-                      <span class="d-block">Découvrir <small class="d-inline text-danger border border-danger border-top-0 border-right-0 border-left-0">new</small></span>
-                      <small class="d-block text-muted">un événement</small>
-                    </a>
-                  </span>
-                  <span class="text-center d-block my-2">
-                    {{#if user}}
-                      <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="user-menu">Mon compte</button>
-                      <div class="dropdown-menu">
-                        <span class="ml-2"><strong>Participant</strong></span>
-                        <a class="dropdown-item" href="/inscription/recap/user/{{user.id}}/">Mes inscriptions</a>
-                        <a class="dropdown-item" href="http://www.runnerbreizh.fr/coureur.php?CoureurNom={{user.surname}}&CoureurPrenom={{user.name}}" target="_blank">Mes classements</a>
-                        <a class="dropdown-item" href="/user/certificat/{{user.id}}/">Mon certificat médical</a>
-                        <a class="dropdown-item" href="/user/amis">Invitez des amis</a>
-                        <a class="dropdown-item" href="/user/profil/edit/{{user.id}}/">Editer mon profil</a>
-                        <a class="dropdown-item" href="/user/password-forgot">Mot de passe</a>
-                        <div role="separator" class="dropdown-divider"></div>
-                        <span class="ml-2"><strong>Catalogue</strong></span>
-                        <a class="dropdown-item" href="/catalogue/">Lots d'événement</a>
-                        <div role="separator" class="dropdown-divider"></div>
-                        <span class="ml-2"><strong>Organisateur</strong></span>
-                        <a class="dropdown-item" href="/event/create">Créer un événement</a>
-                        <a class="dropdown-item" href="/organisateur/epreuves">Gérer mes événements</a>
-                        <a class="dropdown-item" href="/organisateur/comptabilite/{{user.id}}">Comptabilité</a>
-                        <div role="separator" class="dropdown-divider"></div>
-                        <span class="ml-2"><strong>Chronométreur</strong></span>
-                        <a class="dropdown-item" href="/chronometrage/epreuves">Mes événements</a>
-                        <div role="separator" class="dropdown-divider"></div>
-                        <a class="dropdown-item text-danger" href="/user/logout"><i class="fa fa-sign-out  spacer-xs-left"></i>Se déconnecter</a>
-                      </div>
-                    {{else}}
-                      <a href="/user/profil/{{user.id}}" class="btn btn-outline-secondary" id="user-menu">Connection</a>
-                    {{/if}}
-                    {{#if user}}
-                      <a href="/notifications/receive/{{user.id}}" class="btn btn-outline-secondary border-0">
-                    {{else}}
-                      <a href="#" class="btn btn-outline-secondary border-0">
-                    {{/if}}
-                        <i class="fa fa-bell-o" aria-hidden="true"></i>
-                        <span class="badge badge-light" id="user-notifications"></span>
-                      </a>
-                  </span>
-                </div>
-                <div  class="d-inline-block float-right">
-                  <span class="d-sm-down">
-                    <i class="fa fa-bars fa-2x m-3" aria-hidden="true" id="mobile-menu"></i>  
-                  </span>      
-                </div>              
-              </div>              
+              </span>
+              <span class="text-muted d-none d-md-block">|</span>
+              <span class="text-center d-md-inline-block d-block">
+                <a href="/event/finder" class="text-muted btn btn-menu border-0">
+                  <span class="d-block">Trouver</span>
+                  <small class="d-block text-muted">un événement</small>
+                </a>
+              </span>
+              <span class="text-muted d-none d-md-block">|</span>
+              <span class="text-center d-md-inline-block d-block">
+                <a href="/newsfeed/" class="text-muted btn btn-menu border-0">
+                  <span class="d-block">Découvrir <small class="d-inline text-danger border border-danger border-top-0 border-right-0 border-left-0">new</small></span>
+                  <small class="d-block text-muted">un événement</small>
+                </a>
+              </span>
+              <span class="text-center d-block my-2">
+                {{#if user}}
+                  <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="user-menu">Mon compte</button>
+                  <div class="dropdown-menu">
+                    <span class="ml-2"><strong>Participant</strong></span>
+                    <a class="dropdown-item" href="/inscription/recap/user/{{user.id}}/">Mes inscriptions</a>
+                    <a class="dropdown-item" href="http://www.runnerbreizh.fr/coureur.php?CoureurNom={{user.surname}}&CoureurPrenom={{user.name}}" target="_blank">Mes classements</a>
+                    <a class="dropdown-item" href="/user/certificat/{{user.id}}/">Mon certificat médical</a>
+                    <a class="dropdown-item" href="/user/amis">Invitez des amis</a>
+                    <a class="dropdown-item" href="/user/profil/edit/{{user.id}}/">Editer mon profil</a>
+                    <a class="dropdown-item" href="/user/password-forgot">Mot de passe</a>
+                    <div role="separator" class="dropdown-divider"></div>
+                    <span class="ml-2"><strong>Catalogue</strong></span>
+                    <a class="dropdown-item" href="/catalogue/">Lots d'événement</a>
+                    <div role="separator" class="dropdown-divider"></div>
+                    <span class="ml-2"><strong>Organisateur</strong></span>
+                    <a class="dropdown-item" href="/event/create">Créer un événement</a>
+                    <a class="dropdown-item" href="/organisateur/epreuves">Gérer mes événements</a>
+                    <a class="dropdown-item" href="/organisateur/comptabilite/{{user.id}}">Comptabilité</a>
+                    <div role="separator" class="dropdown-divider"></div>
+                    <span class="ml-2"><strong>Chronométreur</strong></span>
+                    <a class="dropdown-item" href="/chronometrage/epreuves">Mes événements</a>
+                    <div role="separator" class="dropdown-divider"></div>
+                    <a class="dropdown-item text-danger" href="/user/logout"><i class="fa fa-sign-out  spacer-xs-left"></i>Se déconnecter</a>
+                  </div>
+                {{else}}
+                  <a href="/user/profil/{{user.id}}" class="btn btn-outline-secondary" id="user-menu">Connection</a>
+                {{/if}}
+                {{#if user}}
+                  <a href="/notifications/receive/{{user.id}}" class="btn btn-outline-secondary border-0">
+                {{else}}
+                  <a href="#" class="btn btn-outline-secondary border-0">
+                {{/if}}
+                    <i class="fa fa-bell-o" aria-hidden="true"></i>
+                    <span class="badge badge-light" id="user-notifications"></span>
+                  </a>
+              </span>
             </div>
-          </div>
-
-
-          <div class="row mt-3 mb-3">
-            <div class="col-12" id="mobile-user-menu"></div>
-          </div>        
+            <div  class="d-inline-block float-right">
+              <span class="d-sm-down">
+                <i class="fa fa-bars fa-2x m-3" aria-hidden="true" id="mobile-menu"></i>  
+              </span>      
+            </div>              
+          </div>              
         </div>
       </div>
 
-      <div class="row">
-        <div class="col-md-12">
-          <main role="main">
-            <div class="container">
-              <div class="row text-center">
-                <div class="col-12">
-                  {{#if success_msg}}
-                    <div class="alert alert-success mt-3">{{success_msg}}</div>
-                  {{/if}}
+      <div class="row mt-3 mb-3">
+        <div class="col-12" id="mobile-user-menu"></div>
+      </div>
 
-                  {{#if error_msg}}
-                    <div class="alert alert-danger mt-3">{{error_msg}}</div>
-                  {{/if}}
+      <div class="row text-center">
+        <div class="col-12">
+          {{#if success_msg}}
+            <div class="alert alert-success mt-3">{{success_msg}}</div>
+          {{/if}}
 
-                  {{#if info_msg}}
-                    <div class="alert alert-info mt-3">{{info_msg}}</div>
-                  {{/if}}                
-                </div>
-              </div>
-            </div>
-            
-            <section class="row">
+          {{#if error_msg}}
+            <div class="alert alert-danger mt-3">{{error_msg}}</div>
+          {{/if}}
 
-              {{{body}}}
-<!--               <div class="col-12 p-5 bg-light">
-                Une opération de maintenance est en cours merci de revenir d'ici quelques minutes.
-              </div> -->
+          {{#if info_msg}}
+            <div class="alert alert-info mt-3">{{info_msg}}</div>
+          {{/if}}                
+        </div>
+      </div>            
+    </header>
 
-            </section>
+    <article role="main">
 
-          </main>
+          {{{body}}}
+    <!--               <div class="col-12 p-5 bg-light">
+                  Une opération de maintenance est en cours merci de revenir d'ici quelques minutes.
+                </div> -->          
+    </article>
+
+    <footer class="container-fluid py-5">
+      <div class="row py-5">
+        <div class="col-md-3">
+          <p><a href="/" alt="EventIzir"><img src="/img/logo.png" alt="event.izir.fr" width="150px" height="auto"></a></p>
+          <p>Gestion en ligne des engagements des épreuves sportives</p>
+          <p>
+            <a href="https://www.facebook.com/izir.fr" alt="Facebook Izir"><i class="fa fa-facebook fa-2x"> </i></a>
+            <a href="https://twitter.com/izir_fr" alt="Twitter Izir"><i class="fa fa-twitter fa-2x"> </i></a>
+            <a href="https://www.instagram.com/izir_fr/" alt="Instagram Izir"><i class="fa fa-instagram fa-2x"> </i></a>
+            <a href="/info/contact" alt="Nous contacter"><i class="fa fa-envelope fa-2x"> </i></a>
+          </p>
+          <ul>
+            <li>Running - Trail - Triathlon</li>
+            <li>Cyclisme - VTT - Billeterie</li>
+            <li>Randonnée - Marche</li>
+          </ul>
+        </div>
+
+        <div class="col-md-3">
+          <h4>Event Izir</h4>
+          <ul>
+            <li><a href="/info/entreprise" alt="L'entreprise">L'entreprise</a></li>
+            <li><a href="/info/partenaires" alt="Nos partenaires">Nos partenaires</a></li>
+            <li><a href="/info/contact" alt="Nous contacter">Nous contacter</a></li>
+            <li><a href="/info/medias" alt="Médias">Médias</a></li>
+            <li><a href="/info/mentions-legales" alt="Mentions légales">Mentions légales</a></li>
+          </ul>
+        </div>
+
+        <div class="col-md-3">
+          <h4>Organisateurs</h4>
+          <ul>
+            <li><a href="/info/tarifs" alt="Tarifs">Tarifs</a></li>
+            <li><a href="/info/comptabilite" alt="Comptabilité">Comptabilité</a></li>
+            <li><a href="/info/securite" alt="Sécurité">Sécurité</a></li>
+            <li><a href="/info/faq" alt="FAQ">FAQ</a></li>
+          </ul>
+        </div>
+
+        <div class="col-md-3">
+          <h4>Mon compte</h4>
+          <ul>
+             {{#if user}}
+            <li><a href="/user/profil/{{user.id}}" alt="Mon compte">Mon compte</a></li>
+            <li><a href="/user/logout" class="nav-link" alt="Se déconnecter">Se déconnecter</a></li>
+            {{else}}
+            <li><a href="/user/login" alt="Se connecter">Se connecter</a></li>
+            <li><a href="/user/register" alt="S'inscrire">S'inscrire</a></li>
+            <li><a href="/user/password-forgot" alt="Mot de passe oublié">Mot de passe oublié</a></li>
+            {{/if}}
+            <li><a href="/info/cgu" alt="CGU">CGU</a></li>
+            <li><a href="/info/cgv" alt="CGV">CGV</a></li>
+          </ul>
         </div>
       </div>
 
-      <footer class="footer d-block py-5">
-        <div class="row">
-          <div class="col-md-3">
-            <p><a href="/" alt="EventIzir"><img src="/img/logo.png" alt="event.izir.fr" width="150px" height="auto"></a></p>
-            <p>Gestion en ligne des engagements des épreuves sportives</p>
-            <p>
-              <a href="https://www.facebook.com/izir.fr" alt="Facebook Izir"><i class="fa fa-facebook fa-2x"> </i></a>
-              <a href="https://twitter.com/izir_fr" alt="Twitter Izir"><i class="fa fa-twitter fa-2x"> </i></a>
-              <a href="https://www.instagram.com/izir_fr/" alt="Instagram Izir"><i class="fa fa-instagram fa-2x"> </i></a>
-              <a href="https://plus.google.com/+Cyclesportauray56400" alt="Google+ Izir"><i class="fa fa-google-plus fa-2x"> </i></a>
-              <a href="https://www.youtube.com/channel/UC1eWRAWxqtZogldtVn1MdHQ" alt="Youtube Izir"><i class="fa fa-youtube fa-2x"> </i></a>
-              <a href="https://www.pinterest.com/izir_fr/"><i class="fa fa-pinterest fa-2x" alt="Pinterest Izir"> </i></a>
-              <a href="/info/contact" alt="Nous contacter"><i class="fa fa-envelope fa-2x"> </i></a>
-            </p>
-            <ul>
-              <li>Running - Trail - Triathlon</li>
-              <li>Cyclisme - VTT - Billeterie</li>
-              <li>Randonnée - Marche</li>
-            </ul>
-          </div>
-
-          <div class="col-md-3">
-            <h4>Event Izir</h4>
-            <ul>
-              <li><a href="/info/entreprise" alt="L'entreprise">L'entreprise</a></li>
-              <li><a href="/info/partenaires" alt="Nos partenaires">Nos partenaires</a></li>
-              <li><a href="/info/contact" alt="Nous contacter">Nous contacter</a></li>
-              <li><a href="/info/medias" alt="Médias">Médias</a></li>
-              <li><a href="/info/mentions-legales" alt="Mentions légales">Mentions légales</a></li>
-            </ul>
-          </div>
-
-          <div class="col-md-3">
-            <h4>Organisateurs</h4>
-            <ul>
-              <li><a href="/info/tarifs" alt="Tarifs">Tarifs</a></li>
-              <li><a href="/info/comptabilite" alt="Comptabilité">Comptabilité</a></li>
-              <li><a href="/info/securite" alt="Sécurité">Sécurité</a></li>
-              <li><a href="/info/faq" alt="FAQ">FAQ</a></li>
-            </ul>
-          </div>
-
-          <div class="col-md-3">
-            <h4>Mon compte</h4>
-            <ul>
-               {{#if user}}
-              <li><a href="/user/profil/{{user.id}}" alt="Mon compte">Mon compte</a></li>
-              <li><a href="/user/logout" class="nav-link" alt="Se déconnecter">Se déconnecter</a></li>
-              {{else}}
-              <li><a href="/user/login" alt="Se connecter">Se connecter</a></li>
-              <li><a href="/user/register" alt="S'inscrire">S'inscrire</a></li>
-              <li><a href="/user/password-forgot" alt="Mot de passe oublié">Mot de passe oublié</a></li>
-              {{/if}}
-              <li><a href="/info/cgu" alt="CGU">CGU</a></li>
-              <li><a href="/info/cgv" alt="CGV">CGV</a></li>
-            </ul>
-          </div>
+      <div class="row py-3">
+        <div class="col-sm-12">
+          <p class="text-center">Copyright 2013-2017 - Izir.fr . Tous droits réservés. N SIRET: 328 790 480 00060 - N CNIL: 1730143. Réalisation: <a title="Nicolas Jouanno - PRODUCT MANAGER, skills MARKETING, DESIGN & TECH" href="https://nicolasjouanno.com" target="_blank">Nicolas Jouanno</a> &copy; 2017 Event Izir, Inc.</p>
         </div>
-
-        <div class="row">
-          <div class="col-sm-12">
-            <p class="text-center">Copyright 2013-2017 - Izir.fr . Tous droits réservés. N SIRET: 328 790 480 00060 - N CNIL: 1730143. Réalisation: <a title="Nicolas Jouanno - PRODUCT MANAGER, skills MARKETING, DESIGN & TECH" href="https://nicolasjouanno.com" target="_blank">Nicolas Jouanno</a> &copy; 2017 Event Izir, Inc.</p>
-          </div>
-        </div>
-        
-      </footer>
-
-    </div>
+      </div>
+      
+    </footer>
     
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <!-- cloudinary -->

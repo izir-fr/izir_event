@@ -1,253 +1,234 @@
-<div class="header container-fluid">
-  <div class="jumbotron">
-    <h1>Inscriptions de {{event.name}}</h1>
-  </div>
-</div>
 <div class="container-fluid">
   <div class="row bg-dark-blue">
-    <div class="col-md-3 mt-3 mb-2">
-      <strong class="spacer-sm-right text-capitalize text-light h3 text-left">{{event.name}}</strong>
-    </div>
-    <div class="col-md-9 text-center mt-3 mb-2">
-      <a href="/event/{{event.id}}" class="spacer-sm-right text-light" ><i class="fa fa-eye spacer-xs-right"></i>Voir</a>
-      <a href="/event/{{event.id}}/dashboard" class="spacer-sm-right text-light"><i class="fa fa-pencil spacer-xs-right"></i>Modifier</a>
-      <a href="/inscription/recap/organisateur/{{event.id}}" class="spacer-sm-right text-light"><strong><i class="fa fa-users spacer-xs-right "></i>Inscriptions</strong></a>
-      <a href="/chronometrage/event/{{event.id}}" class="spacer-sm-right text-light"><i class="fa fa-file spacer-xs-right"></i>Chronométrage</a>
-      <a href="/organisateur/comptabilite/{{user.id}}" class="spacer-sm-right text-light"><i class="fa fa-university spacer-xs-right"></i>Comptabilité</a>
-      <a href="/organisateur/epreuves" class="text-light"><i class="fa fa-undo spacer-xs-right" aria-hidden="true"></i>Quitter</a>
-    </div>
-  </div>
-</div>
-<div class="container mb-5">
-  <div class="row text-center ">
-    <div class="col-md-4  pt-4 pb-4 bg-light">
-      <div class="row bg-light">
-        <div class="col-12 mb-2">
-          <i class="fa fa-users spacer-xs-right"></i> Nombre d'inscrits
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-12">
-          <strong class="spacer-sm-right">{{inscriptions.length}}</strong><br>
-          <span class="text-muted">Inscriptions</span>
-        </div>
-      </div>
-    </div>    
-    <div class="col-md-4 pt-4 pb-4">
-      <div class="row">
-        <div class="col-12 mb-2">
-          <i class="fa fa-credit-card-alt"></i> Paiements validés
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-6">
-          <div class="row">
-            <div class="col-12">
-              <span class="d-block">
-                <strong>{{paiement.length}}</strong> Dossiers
-              </span>
-              <em class="text-muted">Carte Bancaire: {{paiementsCb.length}}</em>
-            </div>
-          </div>
-        </div>
-        <div class="col-6">
-          <div class="row">
-            <div class="col-12">
-              <span class="d-block">
-                <strong>{{totalPaiement}}€ encaissés</strong>
-              </span>
-              <em class="text-muted">Carte Bancaire: {{totalPaiementCb}}€</em>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-4 pt-4 pb-4 bg-light">
-      <div class="row bg-light mb-2">
-        <div class="col-12">
-          <i class="fa fa-folder-open"></i> Dossiers validés
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-12">
-          <strong><span id="dossier_complet">0</span> </strong>
-        </div>
-      </div>
+    <div class="col-12 text-center mt-3 pt-4 pb-5">
+      <a href="/organisateur/epreuves" class="btn btn-outline-light border-0 m-2"><i class="fa fa-calendar-o mr-2" aria-hidden="true"></i>Mes événements</a>
+      <span class="d-inline-block mx-3 text-white"><i class="fa fa-angle-right" aria-hidden="true"></i></span>
+      <a href="/event/{{event.id}}/dashboard" class="btn btn-outline-light border-0 m-2">{{event.name}}</a>
+      <span class="d-inline-block mx-3 text-white"><i class="fa fa-angle-right" aria-hidden="true"></i></span>
+      <a href="/event/{{event.id}}" class="btn btn-outline-light m-2" ><i class="fa fa-eye mr-2"></i>Voir</a>
+      <a href="/event/{{event.id}}/dashboard" class="btn btn-outline-light m-2"><i class="fa fa-cog mr-2" aria-hidden="true"></i>Configurer</a>
+      <a href="/inscription/recap/organisateur/{{event.id}}" class="btn btn-light m-2"><i class="fa fa-users mr-2 "></i>Participants</a>
+      <a href="#" class="btn btn-outline-light m-2"><i class="fa fa-comments mr-2" aria-hidden="true"></i>Communiquer</a>
+      <a href="/chronometrage/event/{{event.id}}" class="btn btn-outline-light m-2"><i class="fa fa-file mr-2"></i>Chronométrage</a>
+      <a href="/organisateur/comptabilite/{{user.id}}" class="btn btn-outline-light m-2"><i class="fa fa-university mr-2"></i>Comptabilité</a>
+      <a href="/catalogue" class="btn btn-outline-light m-2"><i class="fa fa-shopping-cart mr-2" aria-hidden="true"></i>Lots</a>
     </div>
   </div>
-
-  <div class="row mt-5 mb-4">
-    <div class="col-3">
-      <h3>Liste des participants</h3>
-    </div>
-    <div class="col-md-8 col-sm-7 mx-auto">
-      <div class="row">
-        <div class="col-md-2 pt-2">
-          Filtrer par épreuve
+  <div class="row">
+    <div class="col-md-2 pt-5 bg-light text-center">
+      <div class="d-block">
+        <a href="/inscription/cart/{{event.id}}" class="d-block btn btn-default rounded-0 border-0">Ajouter un participant</a>
+        <a href="/organisateur/contacter/{{event.id}}/all" class="d-block btn btn-default rounded-0 border-0">Contacter les participants</a>
+      </div>
+      
+      <div class="d-block">
+        <span class="h3 d-block pb-3">Récapitulatif</span>
+      </div>
+      <div class="d-block p-4">
+        <div class="d-block p-2">
+          <span class="h1">
+            <i class="fa fa-users mr-2 text-muted"></i>{{inscriptions.length}}
+          </span>
+          <span class="text-muted d-block">Inscriptions</span>
         </div>
-        <div class="col-md-8 ">
-          <form id="org-dashboard-filter">
-            <div class="row">
-              <div class="col-md-11 col-sm-10">
-                <select class="form-control" id="epreuve-filter" name="epreuve">
-                  <option>Toutes</option>
+      </div>
+      <div class="d-block p-4">
+        <div class="d-block p-2">
+          <span class="h1">
+            <i class="fa fa-folder mr-2 text-muted" aria-hidden="true"></i>{{dossiers_complets}}
+          </span>
+          <span class="text-muted d-block">inscriptions complêtes</span>
+        </div>
+        <span class="text-muted d-block">{{paiements.paiements_all.length}} dossiers payés</span>
+        <span class="d-block text-muted">
+          <i class="fa fa-credit-card-alt mr-2"></i>{{paiements.paiements_cb.length}} cartes bancaires
+        </span>
+      </div>
+      <div class="d-block p-4">
+        <div class="d-block p-2">
+          <span class="h1">
+            {{paiements.total.paiements_all}}€
+          </span>
+          <span class="text-muted d-block">encaissés</span>
+        </div>
+        <span class="d-block text-muted">
+          <i class="fa fa-credit-card-alt mr-2"></i>{{paiements.total.paiements_cb}}€ cartes bancaires
+        </span>    
+      </div>   
+    </div>
+    <div class="col-md-10">
+      <div class="row my-5 ">
+        <div class="col-12 px-3">
+          <div class="d-md-flex d-sm-block justify-content-between bg-light py-4 border border-muted">
+            <div class="my-auto d-sm-block d-md-flex px-3 font-weight-bold w-50 my-2">
+              {{inscriptions.length}} participants
+            </div>
+            <form id="org-dashboard-filter" class="d-md-flex d-sm-block mx-auto w-100 justify-content-between pr-3 my-2">
+              <div class="my-auto px-3 d-flex w-100">
+                <span class="font-weight-bold  d-block w-100 text-right pr-2 pt-2">
+                  Filtrer l'épreuve: 
+                </span>
+                <select class="form-control " id="epreuve-filter" name="epreuve">
+                  <option value="all">Toutes</option>
                   {{#each event.epreuves}}
                     <option value="{{this.id}}">{{this.name}}</option>
                   {{/each}}
                 </select>
               </div>
-              <div class="col-md-1 col-sm-2">
-                <button type="submit" class="btn btn-secondary">Filtrer</button>
-              </div>          
+              <div class="my-auto px-3 d-flex w-100">
+                <span class="font-weight-bold d-block w-100 text-right pr-2 pt-2">
+                  Trier par: 
+                </span>
+                <select name="sort" class="form-control " >
+                  <option value="alpha">Ordre alphabétique</option>
+                  <option value="date">Dernières inscriptions</option>
+                  <option value="certificats">Certificat invalidés en premier</option>
+                  <option value="paiements">Non payé en premier</option>
+                </select>
+              </div> 
+              <button type="submit" class="btn btn-secondary">Appliquer</button>
+            </form>            
+          </div>
+ 
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <div class="row text-center bg-dark-blue text-white mt-2 pt-3 pb-3">
+            <div class="col-md-3">
+              Inscription
             </div>
-          </form>       
-        </div>        
-      </div>
-    </div>    
-    <div class="col-md-1 col-sm-2 text-center">    
-      <button id="btnGroupDrop1" type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <i class="fa fa-ellipsis-v mr-2" aria-hidden="true"></i>
-      </button>
-      <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-        <a href="/inscription/cart/{{event.id}}" class="dropdown-item">Ajouter un participant</a>
-        <a href="/organisateur/contacter/{{event.id}}/all" class="dropdown-item">Contacter tous participants</a>
-      </div>
-    </div>
-  </div>
-
-  <div class="row text-center bg-dark-blue text-white mt-2 pt-3 pb-3">
-    <div class="col-md-3">
-      Inscription
-    </div>
-    <div class="col-md-3">
-      Participant
-    </div>
-    <div class="col-md-2">
-      Paiement
-    </div>
-    <div class="col-md-2">
-      Certificat
-    </div>
-    <div class="col-md-1">
-      Dossier validé
-    </div>
-    <div class="col-md-1">
-      Actions
-    </div>
-  </div>
-  {{#if inscriptions}}
-
-    {{#each inscriptions}}  
-      
-      <div class="row  pb-2 pt-2 border border-top-0 border-right-0 border-left-0">
-
-        <!-- dossier d'inscription -->
-        <div class="col-md-3 text-uppercase">
-          {{#each this.produits}}
-            <p class="text-lowercase">{{produitsRef}} <span class="subtotal hidde">{{produitsSubTotal}}</span>
-            <span class="ref hidde">{{produitsRef}}</span></p>
-          {{/each}}            
-          <span class="text-muted">N°: {{this.id}}</span>
-          <br>
-          <span class="text-muted">Du : {{date this.created_at}}</span>          
-        </div>
-
-        <!-- participant -->
-        <div class="col-md-3">
-          <span class="text-capitalize"><strong>{{utf8 this.participant.nom}}</strong> {{utf8 this.participant.prenom}}</span>
-          <br>
-          <span class="text-muted text-uppercase">{{utf8 this.participant.team}}</span>
-          <br>
-          <span class="text-muted">{{this.participant.categorie}}</span>
-          <br>
-          <span class="text-muted">{{this.participant.sex}}</span>
-          <br>
-          <span class="text-muted">Licence N°:
-            {{#if this.numLicence}}
-              {{this.numLicence}}
-            {{else}}
-              NC
-            {{/if}}
-          </span>          
-        </div>
-
-        <!-- paiement -->
-        <div class="col-md-3">
-          {{#if this.paiement.captured}}
-            <span class="paiementNumber">Validé <i class="fa fa-check text-success" aria-hidden="true"></i></span>
-            <br>
-            <span class="text-muted">CB</span>
-            <br>
-            <span class="text-muted">{{this.orderAmount}}€</span>
-          {{else}}
-            {{#if this.paiement.other_captured}}
-            <span class="paiementNumber">Validé <i class="fa fa-check text-success" aria-hidden="true"></i></span>
-            <br>
-            <span class="text-muted">Chèque / Espèce</span>
-            <br>
-            <span class="text-muted">{{this.orderAmount}}€</span>
-            {{else}}
-              <span class="text-warning text-capitalize">à Confirmer</span>
-              <!-- <span class="btn btn-warning">Confirmer</span> -->
-              <br>
-              <span class="text-muted">Chèque / Espèce</span>
-              <br>
-              <span class="text-muted">{{this.orderAmount}}€</span>
-            {{/if}}
-          {{/if}}        
-        </div>
-
-        <!-- certificat -->
-        <div class="col-md-1">
-          {{#if this.docs.certificat}}
-            <a href="{{this.docs.certificat}}" target="_blank"><i class="fa fa-file text-success" aria-hidden="true"></i></a>
-          {{else}}
-            <i class="fa fa-times text-danger" aria-hidden="true"></i>
-          {{/if}}          
-        </div>
-
-        <!-- dossier complet -->
-        <div class="col-md-1 text-center">
-          {{#if this.organisateur_validation.all}}
-            <i class="fa fa-check text-success complet" aria-hidden="true"></i>
-          {{else}}
-            <i class="fa fa-pause text-warning" aria-hidden="true"></i>
-          {{/if}}          
-        </div>
-
-        <!-- actions -->
-        <div class="col-md-1 text-center">
-          <div class="btn-group w-80" role="group">
-            <button id="btnGroupDrop1" type="button" class="btn btn-outline-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              <i class="fa fa-ellipsis-v mr-2" aria-hidden="true"></i>
-            </button>
-            <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-              {{#if this.paiement.captured}}
-              {{else}}
-                {{#if this.paiement.other_captured}}
-                {{else}}
-                  <a href="/inscription/checkout/{{this.id}}/other-captured" title="Confirmer la réception du paiement" class="dropdown-item organisateur-dashboard-confirm-action">Confirmer le paiement</a>
-                {{/if}}
-              {{/if}}
-              <a class="dropdown-item organisateur-dashboard-confirm-action" href="/inscription/cart/{{this.id}}/certificat/reject">Rejeter le certificat</a>
-              {{#if this.organisateur_validation.all}}
-              {{else}}
-                <a class="dropdown-item organisateur-dashboard-confirm-action" href="/inscription/checkout/{{this.id}}/validate">Valider le dossier</a>
-              {{/if}}
-              <a class="dropdown-item" href="/organisateur/contacter/{{../event.id}}/single/{{this.id}}">Contacter le participant</a>
+            <div class="col-md-3">
+              Participant
+            </div>
+            <div class="col-md-2">
+              Paiement
+            </div>
+            <div class="col-md-2">
+              Certificat
+            </div>
+            <div class="col-md-1">
+              Dossier validé
+            </div>
+            <div class="col-md-1">
+              Actions
             </div>
           </div>
+          {{#if inscriptions}}
+
+            {{#each inscriptions}}  
+              
+              <div class="row  pb-2 pt-2 border border-top-0 border-right-0 border-left-0">
+
+                <!-- dossier d'inscription -->
+                <div class="col-md-3 text-uppercase">
+                  {{#each this.produits}}
+                    <p class="text-lowercase">{{produitsRef}} <span class="subtotal hidde">{{produitsSubTotal}}</span>
+                    <span class="ref hidde">{{produitsRef}}</span></p>
+                  {{/each}}            
+                  <span class="text-muted">N°: {{this.id}}</span>
+                  <br>
+                  <span class="text-muted">Du : {{date this.created_at}}</span>          
+                </div>
+
+                <!-- participant -->
+                <div class="col-md-3">
+                  <span class="text-capitalize"><strong>{{utf8 this.participant.nom}}</strong> {{utf8 this.participant.prenom}}</span>
+                  <br>
+                  <span class="text-muted text-uppercase">{{utf8 this.participant.team}}</span>
+                  <br>
+                  <span class="text-muted">{{this.participant.categorie}}</span>
+                  <br>
+                  <span class="text-muted">{{this.participant.sex}}</span>
+                  <br>
+                  <span class="text-muted">Licence N°:
+                    {{#if this.numLicence}}
+                      {{this.numLicence}}
+                    {{else}}
+                      NC
+                    {{/if}}
+                  </span>          
+                </div>
+
+                <!-- paiement -->
+                <div class="col-md-3">
+                  {{#if this.paiement.captured}}
+                    <span class="paiementNumber">Validé <i class="fa fa-check text-success" aria-hidden="true"></i></span>
+                    <br>
+                    <span class="text-muted">CB</span>
+                    <br>
+                    <span class="text-muted">{{this.orderAmount}}€</span>
+                  {{else}}
+                    {{#if this.paiement.other_captured}}
+                    <span class="paiementNumber">Validé <i class="fa fa-check text-success" aria-hidden="true"></i></span>
+                    <br>
+                    <span class="text-muted">Chèque / Espèce</span>
+                    <br>
+                    <span class="text-muted">{{this.orderAmount}}€</span>
+                    {{else}}
+                      <span class="text-warning text-capitalize">à Confirmer</span>
+                      <!-- <span class="btn btn-warning">Confirmer</span> -->
+                      <br>
+                      <span class="text-muted">Chèque / Espèce</span>
+                      <br>
+                      <span class="text-muted">{{this.orderAmount}}€</span>
+                    {{/if}}
+                  {{/if}}        
+                </div>
+
+                <!-- certificat -->
+                <div class="col-md-1">
+                  {{#if this.docs.certificat}}
+                    <a href="{{this.docs.certificat}}" target="_blank"><i class="fa fa-file text-success" aria-hidden="true"></i></a>
+                  {{else}}
+                    <i class="fa fa-times text-danger" aria-hidden="true"></i>
+                  {{/if}}          
+                </div>
+
+                <!-- dossier complet -->
+                <div class="col-md-1 text-center">
+                  {{#if this.organisateur_validation.all}}
+                    <i class="fa fa-check text-success complet" aria-hidden="true"></i>
+                  {{else}}
+                    <i class="fa fa-pause text-warning" aria-hidden="true"></i>
+                  {{/if}}          
+                </div>
+
+                <!-- actions -->
+                <div class="col-md-1 text-center">
+                  <div class="btn-group w-80" role="group">
+                    <button id="btnGroupDrop1" type="button" class="btn btn-outline-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="fa fa-ellipsis-v mr-2" aria-hidden="true"></i>
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                      {{#if this.paiement.captured}}
+                      {{else}}
+                        {{#if this.paiement.other_captured}}
+                        {{else}}
+                          <a href="/inscription/checkout/{{this.id}}/other-captured" title="Confirmer la réception du paiement" class="dropdown-item organisateur-dashboard-confirm-action">Confirmer le paiement</a>
+                        {{/if}}
+                      {{/if}}
+                      <a class="dropdown-item organisateur-dashboard-confirm-action" href="/inscription/cart/{{this.id}}/certificat/reject">Rejeter le certificat</a>
+                      {{#if this.organisateur_validation.all}}
+                      {{else}}
+                        <a class="dropdown-item organisateur-dashboard-confirm-action" href="/inscription/checkout/{{this.id}}/validate">Valider le dossier</a>
+                      {{/if}}
+                      <a class="dropdown-item" href="/organisateur/contacter/{{../event.id}}/single/{{this.id}}">Contacter le participant</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {{/each}}
+          {{else}}
+            <div class="row my-5">
+              <div class="col-12">
+                <p class="alert alert-danger text-center">Vous n'avez pas encore de participants inscrit à votre épreuve, n'oubliez pas de faire la promotion de celle-ci sans plus attendre !</p>
+                <p>Besoin d'aide ? Contacter notre commercial Guenael (guenael.r@izir.fr) pour nouer un partenariat avec nous et profiter de l'audience de nos réseaux, ainsi que celle de runnerbreizh.fr</p>
+              </div>      
+            </div>
+          {{/if}}            
         </div>
       </div>
-    {{/each}}
-
-  {{else}}
-    <div class="row my-5">
-      <div class="col-12">
-        <p class="alert alert-danger text-center">Vous n'avez pas encore de participants inscrit à votre épreuve, n'oubliez pas de faire la promotion de celle-ci sans plus attendre !</p>
-        <p>Besoin d'aide ? Contacter notre commercial Guenael (guenael.r@izir.fr) pour nouer un partenariat avec nous et profiter de l'audience de nos réseaux, ainsi que celle de runnerbreizh.fr</p>
-      </div>      
-    </div>
-
-  {{/if}}     
+    </div>    
+  </div>
 </div>

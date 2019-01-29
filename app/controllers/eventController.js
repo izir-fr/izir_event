@@ -153,7 +153,8 @@ var eventCtrl = {
 
         var config = {
           action_text: 'Modifer',
-          action_url: '/event/edit/' + req.params.id
+          action_url: '/event/edit/' + req.params.id,
+          edit: true
         }
 
         var adminId = process.env.ADMIN
@@ -287,7 +288,8 @@ var eventCtrl = {
         }
         var config = {
           action_text: 'Modifier',
-          action_url: '/event/' + req.params.event + '/race/' + req.params.race + '/edit'
+          action_url: '/event/' + req.params.event + '/race/' + req.params.race + '/edit',
+          edit: true
         }
         res.render('partials/event/race-form', { race: race, date_list: dateList, category_list: catList, discipline_list: disList, config: config })
       })

@@ -16,6 +16,83 @@ var Event = require('../models/event')
 var Registration = require('../models/registration')
 var Notification = require('../models/notification')
 
+var tableauDons = (inscriptions) => {
+  var tableauFinal = []
+  if (inscriptions.length >= 1) {
+    inscriptions.forEach((inscription) => {
+      if (inscription.paiement.captured || inscription.paiement.other_captured) {
+        inscription.produits.forEach((produit) => {
+          if (produit.produitsRef === 'dons') {
+            if (produit.produitsSubTotal > 0) {
+              tableauFinal.push(produit)
+            }
+          }
+        })
+      }
+    })
+  }
+  return tableauFinal
+}
+
+var tableauPaiements = (registrations) => {
+  var tableauxFinaux = {
+    dossiers: registrations,
+    paiements_all: [],
+    paiements_cb: [],
+    total: {
+      paiements_all: null,
+      paiements_cb: null
+    }
+  }
+
+  if (registrations.length >= 1) {
+    registrations.forEach((registration) => {
+      // filtre uniquement les dosssiers payés, en cb et chèques
+      if (registration.paiement.captured === true || registration.paiement.other_captured === true) {
+        tableauxFinaux.paiements_all.push(registration.orderAmount)
+      }
+      // filtre uniquement les dossiers cb
+      if (registration.paiement.captured === true) {
+        tableauxFinaux.paiements_cb.push(registration.orderAmount)
+      }
+    })
+  }
+
+  tableauxFinaux.total.paiements_all = tableauxFinaux.paiements_all.reduce((acc, curr) => {
+    return acc + curr
+  }, 0)
+  tableauxFinaux.total.paiements_cb = tableauxFinaux.paiements_cb.reduce((acc, curr) => {
+    return acc + curr
+  }, 0)
+
+  return tableauxFinaux
+}
+
+var dossiersValides = (inscriptions) => {
+  var dossiers = 0
+  if (inscriptions.length >= 1 && inscriptions !== undefined) {
+    inscriptions.forEach((inscription) => {
+      var testPaiement, testCertificat
+      if (inscription.paiement.captured === true || inscription.paiement.other_captured === true) {
+        testPaiement = true
+      } else {
+        testPaiement = false
+      }
+
+      if (inscription.docs.certificat !== '' && inscription.docs.certificat !== undefined && inscription.docs.certificat !== null) {
+        testCertificat = true
+      } else {
+        testCertificat = false
+      }
+
+      if (testPaiement === true && testCertificat === true) {
+        dossiers++
+      }
+    })
+  }
+  return dossiers
+}
+
 var registrationCtrl = {
   // Get a pre-inscription form
   getPreinscription: function (req, res) {
@@ -733,85 +810,108 @@ var registrationCtrl = {
           res.redirect('/organisateur/epreuves')
         }
         if (String(req.user.id) === String(event.author) || String(req.user.id) === String(process.env.ADMIN)) {
-          var query = {}
-
-          if (req.query.epreuve && req.query.epreuve !== 'Toutes') {
-            query = {
-              event: req.params.id,
-              $or: [ { 'participant.nom': { $gt: [] } }, { 'participant.prenom': { $gt: [] } }, { 'paiement.captured': { $eq: true } }, { 'paiement.other_captured': { $eq: true } } ],
-              produits: { $elemMatch: { _id: req.query.epreuve, produitsQuantite: { $ne: 0 } } } }
-          } else {
-            query = {
-              event: req.params.id,
-              $or: [ { 'participant.nom': { $gt: [] } }, { 'participant.prenom': { $gt: [] } }, { 'paiement.captured': { $eq: true } }, { 'paiement.other_captured': { $eq: true } } ]
-            }
+          var query = {
+            event: req.params.id,
+            $or: [ { 'participant.nom': { $gt: [] } }, { 'participant.prenom': { $gt: [] } }, { 'paiement.captured': { $eq: true } }, { 'paiement.other_captured': { $eq: true } } ]
           }
 
           Registration
             .find(query)
-            .populate('race')
             .sort({ 'participant.nom': 1 })
-            .exec((err, registration) => {
+            .exec((err, registrations) => {
+              var data = {}
+              // construction de l'objet renvoyé à l'api
+              data.event = event
+
               if (err) {
                 req.flash('error_msg', 'Si l\'erreur persiste merci de contacter le service client')
                 res.redirect('/organisateur/epreuves')
               }
 
-              if (registration.length >= 1) {
-                var paiement = []
-                var paiementsCb = []
-                var dons = []
-                var inscriptions = require('../../custom_modules/app/chronometrage').registrationToTeam(registration)
+              if (registrations.length >= 1) {
+                // convert dossiers to inscriptions
+                data.inscriptions = require('../../custom_modules/app/chronometrage').registrationToTeam(registrations)
 
-                inscriptions.forEach((val) => {
-                  if (val.paiement.captured || val.paiement.other_captured) {
-                    val.produits.forEach((val) => {
-                      if (val.produitsRef === 'dons') {
-                        if (val.produitsSubTotal > 0) {
-                          dons.push(val)
+                // calcul des dons
+                data.dons = tableauDons(data.inscriptions)
+
+                // calcul des dossiers payés
+                data.paiements = tableauPaiements(registrations)
+
+                data.dossiers_complets = dossiersValides(data.inscriptions)
+              }
+
+              if (data.inscriptions.length >= 1 && req.query !== undefined) {
+                // filter init
+                if (req.query.epreuve !== 'all' && req.query.epreuve !== undefined) {
+                  data.inscriptions = data.inscriptions.filter((inscription) => {
+                    var validation = 0
+                    inscription.produits.forEach((produit) => {
+                      if (produit.race !== undefined) {
+                        if (String(produit.race) === String(req.query.epreuve)) {
+                          console.log(inscription)
+                          validation++
                         }
                       }
                     })
-                  }
-                })
 
-                registration.forEach((val) => {
-                  // filtre uniquement les dosssiers payés, en cb et chèques
-                  if (val.paiement.captured === true || val.paiement.other_captured === true) {
-                    paiement.push(val.orderAmount)
-                  }
-                  // filtre uniquement les dossiers cb
-                  if (val.paiement.captured === true) {
-                    paiementsCb.push(val.orderAmount)
-                  }
-                })
+                    if (validation > 0) {
+                      return true
+                    }
+                  })
+                }
 
                 // trie les dissuer par ordre alphanétique
-                inscriptions.sort((a, b) => {
-                  if (a.participant.nom !== undefined) {
-                    return a.participant.nom.localeCompare(b.participant.nom)
-                  }
-                })
-
-                var data = {}
-                // construction de l'objet renvoyé à l'api
-                data.event = event
-                data.inscriptions = inscriptions
-                data.paiement = paiement
-                data.paiementsCb = paiementsCb
-                data.totalPaiement = paiement.reduce((acc, curr) => {
-                  return acc + curr
-                }, 0)
-                data.totalPaiementCb = paiementsCb.reduce((acc, curr) => {
-                  return acc + curr
-                }, 0)
-                data.dons = dons
-
-                // génértion de la page
-                res.render('partials/registration/recap-organisateur', data)
-              } else {
-                res.render('partials/registration/recap-organisateur', { event: null })
+                if (req.query.sort === 'alpha') {
+                  data.inscriptions.sort((a, b) => {
+                    if (a.participant.nom !== undefined) {
+                      return a.participant.nom.localeCompare(b.participant.nom)
+                    }
+                  })
+                } else if (req.query.sort === 'date') {
+                  data.inscriptions.sort((a, b) => {
+                    if (a.created_at !== undefined) {
+                      return new Date(b.created_at) - new Date(a.created_at)
+                    }
+                  })
+                } else if (req.query.sort === 'certificats') {
+                  data.inscriptions.sort((a, b) => {
+                    if (a.docs.certificat === '' || a.docs.certificat === undefined) {
+                      a.test = 1
+                    } else {
+                      a.test = 0
+                    }
+                    if (b.docs.certificat === '' || b.docs.certificat === undefined) {
+                      b.test = 1
+                    } else {
+                      b.test = 0
+                    }
+                    return b.test - a.test
+                  })
+                } else if (req.query.sort === 'paiements') {
+                  data.inscriptions.sort((a, b) => {
+                    if (a.paiement.captured === true || a.paiement.other_captured === true) {
+                      a.test = 1
+                    } else {
+                      a.test = 0
+                    }
+                    if (b.paiement.captured === true || b.paiement.other_captured === true) {
+                      b.test = 1
+                    } else {
+                      b.test = 0
+                    }
+                    return a.test - b.test
+                  })
+                } else {
+                  data.inscriptions.sort((a, b) => {
+                    if (a.participant.nom !== undefined) {
+                      return a.participant.nom.localeCompare(b.participant.nom)
+                    }
+                  })
+                }
               }
+
+              res.render('partials/registration/recap-organisateur', data)
             })
         } else {
           req.flash('error_msg', 'Vous n\'êtes pas l\'administrateur de cet événement')

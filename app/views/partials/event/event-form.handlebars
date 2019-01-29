@@ -1,8 +1,29 @@
-<div class="header container-fluid">
-  <div class="jumbotron">
-    <h1>{{config.action_text}} un évènement</h1>
+{{#if config.edit}}
+  <div class="container-fluid">
+    <div class="row bg-dark-blue">
+      <div class="col-12 text-center mt-3 pt-4 pb-5">
+        <a href="/organisateur/epreuves" class="btn btn-outline-light border-0 m-2"><i class="fa fa-calendar-o mr-2" aria-hidden="true"></i>Mes événements</a>
+        <span class="d-inline-block mx-3 text-white"><i class="fa fa-angle-right" aria-hidden="true"></i></span>
+        <a href="/event/{{event.id}}/dashboard" class="btn btn-outline-light border-0 m-2">{{event.name}}</a>
+        <span class="d-inline-block mx-3 text-white"><i class="fa fa-angle-right" aria-hidden="true"></i></span>
+        <a href="/event/{{event.id}}" class="btn btn-outline-light m-2" ><i class="fa fa-eye mr-2"></i>Voir</a>
+        <a href="/event/{{event.id}}/dashboard" class="btn btn-light m-2"><i class="fa fa-cog mr-2" aria-hidden="true"></i>Configurer</a>
+        <a href="/inscription/recap/organisateur/{{event.id}}" class="btn btn-outline-light m-2"><i class="fa fa-users mr-2 "></i>Participants</a>
+        <a href="#" class="btn btn-outline-light m-2"><i class="fa fa-comments mr-2" aria-hidden="true"></i>Communiquer</a>
+        <a href="/chronometrage/event/{{event.id}}" class="btn btn-outline-light m-2"><i class="fa fa-file mr-2"></i>Chronométrage</a>
+        <a href="/organisateur/comptabilite/{{user.id}}" class="btn btn-outline-light m-2"><i class="fa fa-university mr-2"></i>Comptabilité</a>
+        <a href="/catalogue" class="btn btn-outline-light m-2"><i class="fa fa-shopping-cart mr-2" aria-hidden="true"></i>Lots</a>
+      </div>
+    </div>  
   </div>
-</div>
+{{else}}
+  <div class="header container-fluid">
+    <div class="jumbotron">
+      <h1>{{config.action_text}} un évènement</h1>
+    </div>
+  </div>
+{{/if}}
+
 <div class="container">
   <div class="row">
   {{#if errors}}
@@ -18,11 +39,7 @@
           <div class="col-sm-12 mt-5">
             <div class="form-group">
               <label>Nom de l'évènement *</label>
-              {{#if event.name}}
-                <input type="text" class="form-control" placeholder="ex: Marathon de Paris" name="name" value="{{event.name}}" disabled>
-              {{else}}
                 <input type="text" class="form-control" placeholder="ex: Marathon de Paris" name="name" value="{{event.name}}" required>
-              {{/if}}
             </div>
           </div>
         </div>

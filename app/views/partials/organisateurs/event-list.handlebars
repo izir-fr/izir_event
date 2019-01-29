@@ -1,7 +1,12 @@
-<div class="header container-fluid">
-	<div class="jumbotron">
-		<h1>Gérer mes événements</h1>
-	</div>
+<div class="container-fluid">
+  <div class="row bg-dark-blue">
+    <div class="col-12 text-center mt-3 pt-4 pb-5">
+      <a href="/organisateur/epreuves" class="btn btn-light border-0 m-2"><i class="fa fa-calendar-o mr-2" aria-hidden="true"></i>Mes événements</a>
+      <span class="d-inline-block mx-3 text-white"><i class="fa fa-angle-right" aria-hidden="true"></i></span>
+      <a href="/organisateur/comptabilite/{{user.id}}" class="btn btn-outline-light m-2"><i class="fa fa-university mr-2"></i>Comptabilité</a>
+      <a href="/catalogue" class="btn btn-outline-light m-2"><i class="fa fa-shopping-cart mr-2" aria-hidden="true"></i>Lots</a>
+    </div>
+  </div>
 </div>
 <div class="container pb-5">
 	<div class="row">
@@ -43,7 +48,17 @@
 								</small>							
 							</a>
 						</div>
-					{{/each}}						
+					{{/each}}
+					<div class="col-md-4 p-3">
+						<a href="/event/create" class="row align-items-center h-100 w-100 bg-light border border-danger p-3 rounded text-center">
+							<div class="col">
+								<span class="d-block text-danger">
+									<i class="fa fa-plus" aria-hidden="true"></i>
+								</span>
+								<span class="d-block font-weight-bold mb-3 text-center text-dark">Créer un nouvel événement</span>	
+							</div>		
+						</a>
+					</div>						
 				</div>
 			{{else}}
 				<p class="alert alert-danger">Vous n'avez pas encore créé d'épreuve</p>

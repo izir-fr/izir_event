@@ -8,15 +8,13 @@ var organisateurCtrl = require('../controllers/organisateurController')
 var ensureAuthenticated = require('../../custom_modules/app/router/ensureAuthenticated')
 
 // Get all épreuves
-router.get('/epreuves', ensureAuthenticated, organisateurCtrl.getEpreuves)
+router.get('/events', ensureAuthenticated, organisateurCtrl.getEpreuves)
 
-// Get contact form
-router.get('/contacter/:event/single/:registration', ensureAuthenticated, organisateurCtrl.getContacterSingle)
-router.get('/contacter/:event/all', ensureAuthenticated, organisateurCtrl.getContacterAll)
+// Get messages page
+router.get('/event/:event/messages', ensureAuthenticated, organisateurCtrl.getMessagesPage)
 
-// Post contact form
-router.post('/contacter/:event/single/:registration', organisateurCtrl.postContacterSingle)
-router.post('/contacter/:event/all', organisateurCtrl.postContacterAll)
+// Post message form
+router.post('/event/:event/message/create', organisateurCtrl.postMessage)
 
 // Get comptabilité
 router.get('/comptabilite/:id', ensureAuthenticated, organisateurCtrl.getComptabilite)

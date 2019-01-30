@@ -37,13 +37,6 @@
           <div class="d-inline-block float-right w-75 h-100" id="desktop-user-menu">
             <div class="d-flex float-right my-3" id="user-menu">
               <span class="text-center d-md-inline-block d-block">
-                <a href="/event/create" class="btn btn-menu txt-dark-blue border-0">
-                  <span class="d-block">Créer</span>
-                  <small class="d-block text-muted">un événement</small>
-                </a>
-              </span>
-              <span class="text-muted d-none d-md-block">|</span>
-              <span class="text-center d-md-inline-block d-block">
                 <a href="/event/finder" class="text-muted btn btn-menu border-0">
                   <span class="d-block">Trouver</span>
                   <small class="d-block text-muted">un événement</small>
@@ -56,11 +49,21 @@
                   <small class="d-block text-muted">un événement</small>
                 </a>
               </span>
+              <span class="text-muted d-none d-md-block">|</span>
+              <span class="text-center d-md-inline-block d-block">
+                <a href="https://goo.gl/forms/PGIXIQVaMVliCYWK2" class="btn btn-menu txt-dark-blue border-0" target="_blank">
+                  <span class="d-block">Demander une démo</span>
+                  <small class="d-block text-muted">organisateur</small>
+                </a>
+              </span>
               <span class="text-center d-block my-2">
                 {{#if user}}
-                  <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="user-menu">Mon compte</button>
+                  <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="user-menu">
+                    <small class="font-weight-bold text-lowercase">{{user.name}} {{user.surname}}</small>
+                    <i class="fa fa-user" aria-hidden="true"></i>
+                  </button>
                   <div class="dropdown-menu">
-                    <span class="ml-2"><strong>Participant</strong></span>
+                    <span class="ml-2"><strong>Espace participant</strong></span>
                     <a class="dropdown-item" href="/inscription/recap/user/{{user.id}}/">Mes inscriptions</a>
                     <a class="dropdown-item" href="http://www.runnerbreizh.fr/coureur.php?CoureurNom={{user.surname}}&CoureurPrenom={{user.name}}" target="_blank">Mes classements</a>
                     <a class="dropdown-item" href="/user/certificat/{{user.id}}/">Mon certificat médical</a>
@@ -68,16 +71,10 @@
                     <a class="dropdown-item" href="/user/profil/edit/{{user.id}}/">Editer mon profil</a>
                     <a class="dropdown-item" href="/user/password-forgot">Mot de passe</a>
                     <div role="separator" class="dropdown-divider"></div>
-                    <span class="ml-2"><strong>Catalogue</strong></span>
-                    <a class="dropdown-item" href="/catalogue/">Lots d'événement</a>
-                    <div role="separator" class="dropdown-divider"></div>
-                    <span class="ml-2"><strong>Organisateur</strong></span>
-                    <a class="dropdown-item" href="/event/create">Créer un événement</a>
-                    <a class="dropdown-item" href="/organisateur/epreuves">Gérer mes événements</a>
-                    <a class="dropdown-item" href="/organisateur/comptabilite/{{user.id}}">Comptabilité</a>
-                    <div role="separator" class="dropdown-divider"></div>
-                    <span class="ml-2"><strong>Chronométreur</strong></span>
-                    <a class="dropdown-item" href="/chronometrage/epreuves">Mes événements</a>
+                    <span class="ml-2"><strong>Espace événements</strong></span>
+                    <a class="dropdown-item" href="/organisateur/events">Organisateur</a>
+                    <a class="dropdown-item" href="/chronometrage/epreuves">Chronométreur</a>
+                    <a class="dropdown-item" href="/catalogue/">Lots</a>
                     <div role="separator" class="dropdown-divider"></div>
                     <a class="dropdown-item text-danger" href="/user/logout"><i class="fa fa-sign-out  spacer-xs-left"></i>Se déconnecter</a>
                   </div>

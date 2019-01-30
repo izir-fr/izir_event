@@ -29,6 +29,11 @@
                     serviceclient@izir.fr
                   {{/if}}
                 </small>
+                {{#if this.registration}}
+                  <div class="d-inline-block my-2">
+                    <small class="text-muted">dossier N°: {{this.registration}}</small>
+                  </div>
+                {{/if}}
                 <span class="text-muted ml-3 mr-3">{{date this.created_at}}</span> {{this.message}}</span>
             </div>                
           </div>

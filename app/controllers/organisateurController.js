@@ -51,105 +51,6 @@ var organsisateurCtrl = {
         }
       })
   },
-  // Get contact form
-  getContacterSingle: function (req, res) {
-    Registration
-      .findOne({_id: req.params.registration})
-      .populate('event')
-      .exec((err, data) => {
-        if (err) {
-          res.render('partials/user/profil', { error: err })
-        } else {
-          res.render('partials/organisateurs/contacter', { data: data, single: true })
-        }
-      })
-  },
-  // Post contact form
-  postContacterSingle: function (req, res) {
-    Registration
-      .findOne({ _id: req.params.registration })
-      .populate('user')
-      .exec((err, registration) => {
-        if (err) {
-          req.flash('error_msg', 'Une erreur est survenue')
-          res.redirect(req.headers.referer)
-        }
-        var message = {
-          sender: req.user.id,
-          receiver: [registration.user],
-          message: 'informations complémentaires ' + registration.eventName + ' - ' + req.body.description
-        }
-
-        // create notification paiement
-        var notification = new Notification(message)
-
-        // save notification
-        notification
-          .save((err, notification) => {
-            if (err) { req.flash('error_msg', 'Une erreur est survenue') }
-            // EMAIL NOTIFICATION
-            require('../../custom_modules/app/notification/notification-email')(registration.user)
-
-            // set headers
-            req.flash('success_msg', 'Votre message a bien été envoyé à ' + registration.user.name + ' ' + registration.user.surname)
-
-            // set redirection
-            res.redirect('/inscription/recap/organisateur/' + registration.event)
-          })
-      })
-  },
-  // Get contact form
-  getContacterAll: function (req, res) {
-    Event
-      .findOne({_id: req.params.event})
-      .exec((err, data) => {
-        if (err) {
-          res.render('partials/user/profil', {error: err})
-        } else {
-          res.render('partials/organisateurs/contacter', {data: data, all: true})
-        }
-      })
-  },
-  // Post contact form
-  postContacterAll: function (req, res) {
-    Registration
-      .find({'event': req.params.event})
-      .exec((err, data) => {
-        if (err) {
-          req.flash('error_msg', 'Une erreur est survenue')
-          res.redirect(req.headers.referer)
-        }
-        var receiver = []
-        data.forEach((val) => {
-          receiver.push(val.user)
-        })
-
-        var message = {
-          sender: req.user.id,
-          receiver: receiver,
-          message: 'informations complémentaires ' + data.eventName + ' - ' + req.body.description
-        }
-
-        // create notification paiement
-        var notification = new Notification(message)
-
-        // save notification
-        notification
-          .save((err, notification) => {
-            if (err) { req.flash('error_msg', 'Une erreur est survenue') }
-            // EMAIL NOTIFICATION
-            receiver.forEach((val) => {
-              require('../../custom_modules/app/notification/notification-email')(val)
-            })
-
-            // set headers
-            req.flash('success_msg', 'Votre message a bien été envoyé à tous les participants')
-
-            // set redirection
-            res.redirect('/inscription/recap/organisateur/' + req.params.event)
-          })
-      })
-  },
   // Get comptabilité
   getComptabilite: function (req, res) {
     res.render('partials/organisateurs/comptabilite')
@@ -179,6 +80,145 @@ var organsisateurCtrl = {
         res.redirect('/user/profil/' + req.user.id + '/')
       }
     })
+  },
+  getMessagesPage: (req, res) => {
+    var inscriptions = new Promise((resolve, reject) => {
+      Registration
+        .find({ event: req.params.event })
+        .populate('user')
+        .exec((err, registrations) => {
+          if (err) {
+            reject(err)
+          }
+
+          var contacts = []
+
+          if (registrations.length >= 1) {
+            // convert dossiers to inscriptions
+            registrations.forEach((registration) => {
+              var contactExist = contacts.find((search) => {
+                return registration.user._id === search.user._id
+              })
+              if (!contactExist) {
+                contacts.push(registration)
+              }
+            })
+
+            contacts.sort((a, b) => {
+              if (a.participant.nom !== undefined) {
+                return a.participant.nom.localeCompare(b.participant.nom)
+              }
+            })
+          } else {
+            contacts = registrations
+          }
+
+          resolve(contacts)
+        })
+    })
+
+    var event = new Promise((resolve, reject) => {
+      Event
+        .findById(req.params.event)
+        .exec((err, event) => {
+          if (err) {
+            reject(err)
+          }
+          resolve(event)
+        })
+    })
+
+    var notifications = new Promise((resolve, reject) => {
+      Notification
+        .find({ $or: [ { event: req.params.event }, { sender: req.user._id } ] })
+        .populate('receiver')
+        .sort({created_at: -1})
+        .exec((err, notifications) => {
+          if (err) {
+            reject(err)
+          }
+          resolve(notifications)
+        })
+    })
+
+    Promise
+      .props({
+        event: event,
+        inscriptions: inscriptions,
+        notifications: notifications
+      })
+      .then((data) => {
+        if (String(data.event.author) === String(req.user._id)) {
+          res.render('partials/organisateurs/messages', data)
+        } else {
+          req.flash('error_msg', 'Vous n\'êtes pas autorisé à accéder à cette page')
+          res.redirect(req.headers.referer)
+        }
+      })
+      .catch((err) => {
+        if (err) {
+          req.flash('error_msg', 'Une erreur est survenue lors du chargement de la page de messagerie')
+          res.redirect('/organisateur/events')
+        }
+      })
+  },
+  // Post contact form
+  postMessage: function (req, res) {
+    Event
+      .findById(req.params.event)
+      .exec((err, event) => {
+        if (err) {
+          req.flash('error_msg', 'Une erreur est survenue')
+          res.redirect(req.headers.referer)
+        }
+
+        if (String(event.author) === String(req.user._id)) {
+          var receivers = []
+          if (req.body.receiver !== undefined) {
+            if (req.body.receiver.constructor === Array) {
+              receivers = req.body.receiver
+            } else {
+              if (req.body.receiver !== undefined && req.body.receiver !== null && req.body.receiver !== '') {
+                receivers.push(req.body.receiver)
+              }
+            }
+          }
+
+          var message = {
+            sender: req.user.id,
+            receiver: receivers,
+            event: event._id,
+            registration: req.body.registration,
+            message: 'informations complémentaires ' + event.name + ' - ' + req.body.description
+          }
+
+          if (receivers.length >= 1) {
+            // create notification paiement
+            var notification = new Notification(message)
+            // save notification
+            notification
+              .save((err, notification) => {
+                if (err) { req.flash('error_msg', 'Une erreur est survenue') }
+                // EMAIL NOTIFICATION
+                receivers.forEach((val) => {
+                  require('../../custom_modules/app/notification/notification-email')(val)
+                })
+
+                // set headers
+                req.flash('success_msg', 'Votre message a bien été envoyé à tous les participants')
+
+                // set redirection
+                res.redirect('/organisateur/event/' + req.params.event + '/messages')
+              })
+          } else {
+            req.flash('error_msg', 'Vous n\'avez sélectionné de participant à contacter')
+            res.redirect(req.headers.referer)
+          }
+        } else {
+          req.flash('error_msg', 'Vous n\'avez les droits pour envoyer des messages aux participants de cette événements')
+          res.redirect(req.headers.referer)
+        }
+      })
   }
 }
 

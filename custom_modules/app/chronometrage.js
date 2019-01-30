@@ -27,6 +27,7 @@ var exportModules = {
             // member registration format
             id: val.id,
             event: val.event,
+            user: val.user,
             eventName: val.eventName,
             produits: val.produits,
             orderAmount: val.orderAmount,

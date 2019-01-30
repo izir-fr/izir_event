@@ -14,6 +14,7 @@ import './components/event-config'
 import './components/registration-flow/registrationFlow'
 import './components/facebook'
 import './components/race-delete'
+import './components/messages'
 
 // css
 

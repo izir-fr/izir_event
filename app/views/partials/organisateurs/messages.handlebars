@@ -1,0 +1,128 @@
+<div class="container-fluid">
+  <div class="row bg-dark-blue">
+    <div class="col-12 text-center mt-3 pt-4 pb-5">
+      <a href="/organisateur/events" class="btn btn-outline-light border-0 m-2"><i class="fa fa-calendar-o mr-2" aria-hidden="true"></i>Mes événements</a>
+      <span class="d-inline-block mx-3 text-white"><i class="fa fa-angle-right" aria-hidden="true"></i></span>
+      <a href="/event/{{event.id}}/dashboard" class="btn btn-outline-light border-0 m-2">{{event.name}}</a>
+      <span class="d-inline-block mx-3 text-white"><i class="fa fa-angle-right" aria-hidden="true"></i></span>
+      <a href="/event/{{event.id}}" class="btn btn-outline-light m-2" ><i class="fa fa-eye mr-2"></i>Voir</a>
+      <a href="/event/{{event.id}}/dashboard" class="btn btn-outline-light m-2"><i class="fa fa-cog mr-2" aria-hidden="true"></i>Configurer</a>
+      <a href="/inscription/recap/organisateur/{{event.id}}" class="btn btn-outline-light m-2"><i class="fa fa-users mr-2 "></i>Participants</a>
+      <a href="/organisateur/event/{{event.id}}/messages" class="btn btn-light m-2"><i class="fa fa-comments mr-2" aria-hidden="true"></i>Messagerie</a>
+      <a href="/chronometrage/event/{{event.id}}" class="btn btn-outline-light m-2"><i class="fa fa-file mr-2"></i>Chronométrage</a>
+      <a href="/organisateur/comptabilite/{{user.id}}" class="btn btn-outline-light m-2"><i class="fa fa-university mr-2"></i>Comptabilité</a>
+      <a href="/catalogue" class="btn btn-outline-light m-2"><i class="fa fa-shopping-cart mr-2" aria-hidden="true"></i>Lots</a>
+    </div>
+  </div>
+  
+	{{#if errors}}
+    {{#each errors}}
+      <div class="alert alert-danger">{{msg}}</div>
+    {{/each}}
+	{{/if}}
+
+  <div class="row">
+    <div class="col-md-3 bg-light p-5">
+      <div class="d-block pl-5 py-5">
+        <span class="h2">Contacts</span>
+      </div>
+      <div class="d-block my-2">
+        <span class="font-weight-bold text-muted">
+          <input type="checkbox" aria-label="Checkbox for following text input" class="mr-2" name="select_all">Tout sélectionner
+        </span>
+      </div>
+      <div class="d-block" id="contacts">
+        {{#if inscriptions}}
+          {{#each inscriptions}}
+            <div class="btn btn-outline-primary my-2 contact">
+              <span class="d-inline-block mr-2 text-lowercase nom">@{{utf8 this.user.surname}}.{{utf8 this.user.name}}</span>
+              <span class="id d-none">{{this.user._id}}</span>
+            </div>
+          {{/each}}
+        {{/if}}        
+      </div>
+    </div>
+    <div class="col-md-9 p-3">
+      <div class="d-block bg-light border border-muted p-4 rounded">
+        <span class="font-weight-bold d-block">
+          Nouveau message pour les participants
+        </span>
+        <form method="post" action="/organisateur/event/{{event.id}}/message/create">
+          <div class="row">
+            <div class="col-12 my-2" >
+              <div class="d-block p-3 bg-white border border-muted rounded" id="receivers">
+                
+                <!-- append receiver in JS -->
+                <div class="d-inline-block m-2 " id="receiver_helper">
+                  <span class="text-muted">Ajouter un contact en cliquant sur celui-ci dans la barre latérale</span>
+                </div>
+                
+
+              </div>
+            </div>
+          </div>
+          <div class="d-none my-3" id="registration">
+            <div class="d-block mb-3 font-weight-bold">
+              Dossier n°
+            </div>
+            <!-- element add in JS -->
+          </div>
+          <!-- MESSAGE-->
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="d-block mb-3 font-weight-bold">
+                Message
+              </div>
+              <div class="form-group">
+                <textarea name="description" id="" class="form-control" cols="30" rows="10" placeholder="Description de l'évènement" required>Bonjour, nous avons constaté que votre inscription pour l'événement "{{event.name}}" à {{event.adresse.ville}} le {{date event.event.epreuves.[0].date_debut}} n'est pas complète. Merci d'ajouter un certificat valide de moins d'un an. Sportivement
+                </textarea>
+              </div>        
+            </div>
+          </div>
+          <button type="submit" class="btn btn-secondary">Envoyer</button>
+        </form>          
+      </div>
+      <div class="row">
+        <div class="col-12 my-4">
+          <div class="d-block pl-5 pt-5">
+            <span class="h2">Messages envoyés</span>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 p-3">
+          {{#if notifications}}
+            {{#each notifications}}
+              <div class="d-block p-4 bg-light my-3 mx-auto notification">
+                <div class="d-inline-block my-2">
+                  <small class="text-muted">le: {{date this.created_at}} -</small>
+                </div>
+                <div class="d-inline-block my-2">
+                  <small class="text-muted">de: vous -</small>
+                </div>
+                {{#if this.registration}}
+                  <div class="d-inline-block my-2">
+                    <small class="text-muted">dossier N°: {{this.registration}}</small>
+                  </div>
+                {{/if}}
+                <div class="d-block my-2">
+                  <small class="text-muted">à: {{#each this.receiver}}@{{this.surname}}.{{this.name}} {{/each}}</small>
+                </div>
+                <span class="d-block">{{this.message}}</span>
+                <span class="d-none id">{{#each this.receiver}}{{this._id}},{{/each}}</span>
+              </div>
+            {{/each}}
+            </div>
+          {{else}}
+            <div class="d-block bg-light rounded my-2 p-3 text-center">
+              <span class="font-weight-bold">
+                Vous n'avez envoyé aucun message pour le moment
+              </span>
+            </div>
+          {{/if}}
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

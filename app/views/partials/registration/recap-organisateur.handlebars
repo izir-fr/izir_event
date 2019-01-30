@@ -1,14 +1,14 @@
 <div class="container-fluid">
   <div class="row bg-dark-blue">
     <div class="col-12 text-center mt-3 pt-4 pb-5">
-      <a href="/organisateur/epreuves" class="btn btn-outline-light border-0 m-2"><i class="fa fa-calendar-o mr-2" aria-hidden="true"></i>Mes événements</a>
+      <a href="/organisateur/events" class="btn btn-outline-light border-0 m-2"><i class="fa fa-calendar-o mr-2" aria-hidden="true"></i>Mes événements</a>
       <span class="d-inline-block mx-3 text-white"><i class="fa fa-angle-right" aria-hidden="true"></i></span>
       <a href="/event/{{event.id}}/dashboard" class="btn btn-outline-light border-0 m-2">{{event.name}}</a>
       <span class="d-inline-block mx-3 text-white"><i class="fa fa-angle-right" aria-hidden="true"></i></span>
       <a href="/event/{{event.id}}" class="btn btn-outline-light m-2" ><i class="fa fa-eye mr-2"></i>Voir</a>
       <a href="/event/{{event.id}}/dashboard" class="btn btn-outline-light m-2"><i class="fa fa-cog mr-2" aria-hidden="true"></i>Configurer</a>
       <a href="/inscription/recap/organisateur/{{event.id}}" class="btn btn-light m-2"><i class="fa fa-users mr-2 "></i>Participants</a>
-      <a href="#" class="btn btn-outline-light m-2"><i class="fa fa-comments mr-2" aria-hidden="true"></i>Communiquer</a>
+      <a href="/organisateur/event/{{event.id}}/messages" class="btn btn-outline-light m-2"><i class="fa fa-comments mr-2" aria-hidden="true"></i>Messagerie</a>
       <a href="/chronometrage/event/{{event.id}}" class="btn btn-outline-light m-2"><i class="fa fa-file mr-2"></i>Chronométrage</a>
       <a href="/organisateur/comptabilite/{{user.id}}" class="btn btn-outline-light m-2"><i class="fa fa-university mr-2"></i>Comptabilité</a>
       <a href="/catalogue" class="btn btn-outline-light m-2"><i class="fa fa-shopping-cart mr-2" aria-hidden="true"></i>Lots</a>
@@ -18,7 +18,7 @@
     <div class="col-md-2 pt-5 bg-light text-center">
       <div class="d-block">
         <a href="/inscription/cart/{{event.id}}" class="d-block btn btn-default rounded-0 border-0">Ajouter un participant</a>
-        <a href="/organisateur/contacter/{{event.id}}/all" class="d-block btn btn-default rounded-0 border-0">Contacter les participants</a>
+        <a href="/organisateur/event/{{event.id}}/messages" class="d-block btn btn-default rounded-0 border-0">Contacter les participants</a>
       </div>
       
       <div class="d-block">
@@ -123,31 +123,28 @@
                 <!-- dossier d'inscription -->
                 <div class="col-md-3 text-uppercase">
                   {{#each this.produits}}
-                    <p class="text-lowercase">{{produitsRef}} <span class="subtotal hidde">{{produitsSubTotal}}</span>
-                    <span class="ref hidde">{{produitsRef}}</span></p>
+                    <div class="font-weight-bold text-lowercase">{{produitsRef}} <span class="subtotal hidde">{{produitsSubTotal}}</span>
+                    <span class="ref hidde">{{produitsRef}}</span></div>
                   {{/each}}            
-                  <span class="text-muted">N°: {{this.id}}</span>
-                  <br>
-                  <span class="text-muted">Du : {{date this.created_at}}</span>          
+                  <small class="d-block text-muted">N°: {{this.id}}</small>
+                  <small class="d-block text-muted">Du : {{date this.created_at}}</small>  
+                  <small class="d-block mr-2 text-muted nom">CONTACT: @{{utf8 this.user.surname}}.{{utf8 this.user.name}}</small>        
                 </div>
 
                 <!-- participant -->
                 <div class="col-md-3">
                   <span class="text-capitalize"><strong>{{utf8 this.participant.nom}}</strong> {{utf8 this.participant.prenom}}</span>
                   <br>
-                  <span class="text-muted text-uppercase">{{utf8 this.participant.team}}</span>
-                  <br>
-                  <span class="text-muted">{{this.participant.categorie}}</span>
-                  <br>
-                  <span class="text-muted">{{this.participant.sex}}</span>
-                  <br>
-                  <span class="text-muted">Licence N°:
+                  <small class="d-block text-muted text-uppercase">{{utf8 this.participant.team}}</small>
+                  <small class="d-block text-muted">{{this.participant.categorie}}</small>
+                  <small class="d-block text-muted">{{this.participant.sex}}</small>
+                  <small class="d-block text-muted">Licence N°:
                     {{#if this.numLicence}}
                       {{this.numLicence}}
                     {{else}}
                       NC
                     {{/if}}
-                  </span>          
+                  </small>          
                 </div>
 
                 <!-- paiement -->
@@ -213,7 +210,7 @@
                       {{else}}
                         <a class="dropdown-item organisateur-dashboard-confirm-action" href="/inscription/checkout/{{this.id}}/validate">Valider le dossier</a>
                       {{/if}}
-                      <a class="dropdown-item" href="/organisateur/contacter/{{../event.id}}/single/{{this.id}}">Contacter le participant</a>
+                      <a class="dropdown-item" href="/organisateur/event/{{../event.id}}/messages?contact={{this.user._id}}&registration={{this.id}}">Contacter le participant</a>
                     </div>
                   </div>
                 </div>

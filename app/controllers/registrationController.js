@@ -817,6 +817,7 @@ var registrationCtrl = {
 
           Registration
             .find(query)
+            .populate('user')
             .sort({ 'participant.nom': 1 })
             .exec((err, registrations) => {
               var data = {}
@@ -849,7 +850,6 @@ var registrationCtrl = {
                     inscription.produits.forEach((produit) => {
                       if (produit.race !== undefined) {
                         if (String(produit.race) === String(req.query.epreuve)) {
-                          console.log(inscription)
                           validation++
                         }
                       }

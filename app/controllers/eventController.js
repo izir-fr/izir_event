@@ -200,7 +200,7 @@ var eventCtrl = {
             .find({
               event: req.params.id,
               $or: [ { 'participant.nom': { $gt: [] } }, { 'participant.prenom': { $gt: [] } }, { 'paiement.captured': { $eq: true } }, { 'paiement.other_captured': { $eq: true } } ],
-              produits: { $elemMatch: { produitsRef: req.query.epreuve, produitsQuantite: { $ne: 0 } } }
+              produits: { $elemMatch: { race: req.query.epreuve, produitsQuantite: { $ne: 0 } } }
             })
             .sort({ 'participant.nom': 1 })
             .exec(next)

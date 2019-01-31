@@ -80,7 +80,7 @@ module.exports = {
       try {
         return decodeURIComponent(val)
       } catch (err) {
-        return ''
+        return val
       }
     } else {
       return ''

@@ -219,6 +219,28 @@ var organsisateurCtrl = {
           res.redirect(req.headers.referer)
         }
       })
+  },
+  getGroupNoCertificat: (req, res) => {
+    Registration
+      .find({ event: req.params.event, 'docs.certificat': '' })
+      .select({ 'participant.nom': 1, 'participant.prenom': 1, user: 1 })
+      .exec((err, registrations) => {
+        if (err) {
+          res.send({ error: true })
+        }
+        res.send(registrations)
+      })
+  },
+  getGroupNoPaiement: (req, res) => {
+    Registration
+      .find({ event: req.params.event, 'paiement.captured': false, 'paiement.other_captured': false })
+      .select({ 'participant.nom': 1, 'participant.prenom': 1, user: 1 })
+      .exec((err, registrations) => {
+        if (err) {
+          res.send({ error: true })
+        }
+        res.send(registrations)
+      })
   }
 }
 

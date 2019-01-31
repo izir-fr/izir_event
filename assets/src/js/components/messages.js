@@ -1,7 +1,20 @@
 var messages = () => {
   if ($('#receivers').length >= 1) {
     var url = $(document)[0].URL
+    // var event = $('input[name=event]')[0].value
     var receiverHtml = $('#receivers')[0].innerHTML
+
+    var utf8 = (val) => {
+      if (val) {
+        try {
+          return decodeURIComponent(val)
+        } catch (err) {
+          return ''
+        }
+      } else {
+        return ''
+      }
+    }
 
     var resetInputRegistration = () => {
       if ($('input[name=registration]').length >= 1) {
@@ -10,8 +23,15 @@ var messages = () => {
       }
     }
 
+    var receiverHelperTest = () => {
+      if ($('.receiver').length >= 1) {
+        $('#receiver_helper').remove()
+      } else {
+        $('#receivers').append(receiverHtml)
+      }
+    }
+
     var currentContactMessage = () => {
-      console.log('run')
       $('.notification').each((key, notification) => {
         $(notification).addClass('d-block').removeClass('d-none')
         var display = 0
@@ -24,7 +44,6 @@ var messages = () => {
                 display++
               }
             })
-            // var receiverId = receiver.value
           })
 
           if (display === 0) {
@@ -41,9 +60,12 @@ var messages = () => {
       '</div>'
     }
 
+    var cleanReceivers = () => {
+      $('.receiver').remove()
+    }
+
     $('input[name=select_all]').on('click', (e) => {
       if (e.target.checked === true) {
-        $('#receivers')[0].innerHTML = ''
         $('.contact').each((key, contact) => {
           var html = receiverContructor(contact.innerText, $('.id')[key].innerText)
           $('#receivers').append(html)
@@ -51,12 +73,12 @@ var messages = () => {
         })
         $('')
       } else if (e.target.checked === false) {
-        $('#receivers')[0].innerHTML = ''
-        $('#receivers').append(receiverHtml)
         $('.contact').each((key, contact) => {
           $(contact).removeClass('btn-secondary').addClass('btn-outline-primary')
         })
+        cleanReceivers()
       }
+      receiverHelperTest()
       resetInputRegistration()
     })
 
@@ -90,11 +112,7 @@ var messages = () => {
         })
       }
 
-      if ($('.receiver').length >= 1) {
-        $('#receiver_helper').remove()
-      } else {
-        $('#receivers').append(receiverHtml)
-      }
+      receiverHelperTest()
       resetInputRegistration()
       currentContactMessage()
     })
@@ -132,6 +150,30 @@ var messages = () => {
       }
       currentContactMessage()
     }
+
+    $('#group_no_certificat').on('click', (e) => {
+      cleanReceivers()
+      $.get('messages/group/no-certificat', (data) => {
+        data.forEach((contact) => {
+          var handle = '@' + contact.participant.nom + '.' + contact.participant.prenom
+          var html = receiverContructor(handle, contact.user)
+          $('#receivers').append(html)
+        })
+        receiverHelperTest()
+      })
+    })
+
+    $('#group_no_paiement').on('click', (e) => {
+      cleanReceivers()
+      $.get('messages/group/no-paiement', (data) => {
+        data.forEach((contact) => {
+          var handle = '@' + utf8(contact.participant.nom) + '.' + utf8(contact.participant.prenom)
+          var html = receiverContructor(handle, contact.user)
+          $('#receivers').append(html)
+        })
+        receiverHelperTest()
+      })
+    })
 
     queryContact(url)
   }

@@ -935,15 +935,18 @@ var registrationCtrl = {
         res.redirect(origine)
       } else {
         Registration
-          .findOne({_id: req.params.id}, (err, registration) => {
+          .findOne({_id: req.params.id})
+          .populate('event')
+          .exec((err, registration) => {
             if (err) {
               req.flash('error_msg', 'Une erreur est survenue')
               res.redirect(origine)
             } else {
               var notification = new Notification({
                 sender: req.user.id,
+                registration: registration.id,
                 receiver: [registration.user],
-                message: 'Le certificat médicale de votre inscription N°' + registration.id + ' à ' + registration.eventName + ' vient d\'être rejeté par l\'organisateur.'
+                message: 'Le certificat médicale de votre inscription N°' + registration.id + ' à ' + registration.event.name + ' vient d\'être rejeté par l\'organisateur.'
               })
 
               notification.save((err, notification) => {
@@ -951,7 +954,7 @@ var registrationCtrl = {
                   req.flash('error_msg', 'Une erreur est survenue')
                 } else {
                   require('../../custom_modules/app/notification/notification-email')(registration.user)
-                  req.flash('success_msg', 'Le dossier N°' + req.params.id + ' a été mis à jour avec un reject du certificat médical')
+                  req.flash('success_msg', 'Vous venez de refuser le certificat médical du dossier N°' + req.params.id + ', une notification a été envoyée au participant')
                 }
                 res.redirect(origine)
               })

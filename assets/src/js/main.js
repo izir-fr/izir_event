@@ -1,5 +1,4 @@
 import './components/init'
-import './components/getSiteControl'
 import './components/header-logo'
 import './components/google-maps'
 import './components/recap-organisateur'

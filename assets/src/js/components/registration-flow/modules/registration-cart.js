@@ -13,22 +13,36 @@ var registrationValidation = () => {
     // ajax
     var ajaxPostForm = require('../includes/ajaxCreateCart')
 
-    var cartAction = () => {
+    var cartAction = (e) => {
+      // get form
       form = getSelectedEpreuve(form)
-      form.data.participant.event = $('input[name=eventName]').val()
-      // UX helper and alert
+      // form.data.participant.event = $('input[name=eventName]').val()
+      var config = {
+        helper: false
+      }
+
+      // form validation
       if (form.data.cart.epreuve.length < 1 || form.data.cart.epreuve[0].qty === null) {
-        epreuveValidationWarning.removeClass('hidde')
-        $('#cart').addClass('disabled')
+        config.helper = true
       } else if (form.data.cart.epreuve.length > 1) {
+        config.helper = true
+        window.alert("Vous ne pouvez vous inscrire qu'à une épreuve à la fois")
+        e.currentTarget.value = 0
+      } else {
+        config.helper = false
+      }
+
+      // UX helper and alert
+      if (config.helper === true) {
         epreuveValidationWarning.removeClass('hidde')
         $('#cart').addClass('disabled')
-        window.alert("Vous ne pouvez vous inscrire qu'à une épreuve à la fois")
-        epreuveValidationWarning.removeClass('hidde')
       } else {
         epreuveValidationWarning.addClass('hidde')
         $('#cart').removeClass('disabled')
       }
+
+      // form after validation
+      form = getSelectedEpreuve(form)
     }
 
     $(() => {
@@ -39,7 +53,7 @@ var registrationValidation = () => {
       // TRIGGER
       // ----
       $('.cart-trigger').on('change', (e) => {
-        cartAction()
+        cartAction(e)
       })
 
       // ----

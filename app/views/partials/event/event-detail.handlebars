@@ -23,7 +23,6 @@
 	    	</div>
 	    </div>    
 			<div class="row">
-
 				<div class="col-md-6">
 					<!-- slider -->
 					<div id="event-detail-slider">
@@ -176,34 +175,78 @@
 						</div>
 					</div>
 					
-					<!-- tarif -->
-					<div class="row">
-						<div class="col-12 py-3">
-							<span class="d-block font-weight-bold py-3 text-muted">Tarifs</span>
-							{{#each result.event.epreuves}}
-								<div class="d-block py-2"><span class="font-weight-bold">{{this.name}}</span> <small class="text-muted">{{this.distance}}km - {{this.tarif}}€</small> </div>
-							{{/each}}
+					<form method="post" action="/cart/add/registration?event={{result.event._id}}" >
+						<!-- tarif -->
+						<div class="row">
+							<div class="col-12 py-3">
+								<span class="d-block font-weight-bold py-3 text-muted">Tarifs</span>
+								{{#each result.races}}
+									<div class="d-block py-2">
+										<div class="form-check">
+											{{#if this.active}}
+											  <input class="form-check-input" type="checkbox" value="{{this.id}}" name="race">
+											  <label class="form-check-label ml-4 d-block" for="defaultCheck1">
+											    {{this.name}}
+											    <small class="text-muted">
+											    	{{this.distance}}km -
+											    	{{#if this.team}} 
+											    		Equipe
+											    	{{else}}
+															Individuel
+											    	{{/if}}
+											    	 - {{this.tarif}}€
+											    </small>
+											  </label>											  
+											 {{else}}
+												 	<span class="text-muted d-block">
+												 		{{this.name}} 
+												 		<small>
+												    	{{this.distance}}km -
+												    	{{#if this.team}} 
+												    		Equipe
+												    	{{else}}
+																Individuel
+												    	{{/if}}
+												    	- {{this.tarif}}€
+													 		- <u>Complet</u>												 	
+												 		</small>
+												 	</span>
+											 {{/if}}
+										</div>
+									</div>
+								{{/each}}
+							</div>
 						</div>
-					</div>
-					
-					<!-- OPTIONS -->
-					{{#if result.event.options}}
-					<div class="row">
-						<div class="col-12 pb-3">
-							<span class="d-block font-weight-bold">Options</span>
-							{{#each result.event.options}}
-								<span class="text-muted">{{this.reference}} - {{this.prix}}€</span>
-							{{/each}}
-						</div>						
-					</div>
-					{{/if}}
+						
+						<!-- OPTIONS -->
+						{{#if result.event.options}}
+						<div class="row">
+							<div class="col-12 pb-3">
+								<span class="d-block font-weight-bold py-3 text-muted">Options</span>
+								{{#each result.event.options}}
+									<div class="form-check">
+									  <input class="form-check-input" type="checkbox" value="{{this._id}}" name="option">
+									  <label class="form-check-label ml-4 d-block" for="defaultCheck1">
+									    {{this.name}}
+									    <span class="text-muted">{{this.reference}} - {{this.prix}}€</span>
+									  </label>
+									</div>
+								{{/each}}
+							</div>						
+						</div>
+						{{/if}}		
+						<div class="d-block">
+							{{#if config.registration.active}}
+								<button class="btn btn-danger mt-3 d-block w-100" type="submit">Ajouter au panier</button>					
+							{{else}}
+								<div class="alert alert-warning">Les inscriptions à cette événement sont closes</div>	
+							{{/if}}
+						</div>										
+					</form>
+
+					<!-- BUTTON -->
 					<div class="row" id="inscriptionButton">
 						<div class="col-12 mb-5">
-							<div class="d-block">
-								<a class="btn btn-danger spacer-xs-top d-block" href="/inscription/cart/{{result.event.id}}?event_id={{result.event.id}}">
-									S'inscrire
-								</a>										
-							</div>
 							<div class="d-block">
 								<a class="btn btn-outline-primary spacer-xs-top d-block" href="#inscrits">Liste des {{result.participants.length}} inscrits</a>
 							</div>

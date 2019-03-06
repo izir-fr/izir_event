@@ -1,7 +1,453 @@
 var Product = require('../models/product')
 var Cart = require('../models/cart')
+var Event = require('../models/event')
+var Race = require('../models/race')
+var Registration = require('../models/registration')
+var Notification = require('../models/notification')
+var Promise = require('bluebird')
+
+// Credentials
+var credentials = require('../config/credentials')
+
+// STRIPE
+var stripe = require('stripe')(credentials.stripeKey.serveur)
+
+var raceData = (query) => {
+  return new Promise((resolve, reject) => {
+    Race
+      .findById(query.ref)
+      .populate('event')
+      .exec((err, race) => {
+        if (err) {
+          reject(err)
+        }
+        var res = {
+          ref: query.ref,
+          qty: query.qty,
+          description: race.description,
+          event: race.event,
+          name: race.name,
+          price: race.tarif,
+          team: race.team,
+          race: true,
+          paiement_cb_required: race.event.paiement_cb_required,
+          subtotal: query.qty * race.tarif
+        }
+        resolve(res)
+      })
+  })
+}
+
+var optionData = (query) => {
+  return new Promise((resolve, reject) => {
+    Event
+      .findOne({ 'options._id': query.ref })
+      .exec((err, event) => {
+        if (err) {
+          reject(err)
+        }
+        event.options.forEach((option) => {
+          if (String(option._id) === String(query.ref)) {
+            var res = {
+              ref: query.ref,
+              qty: query.qty,
+              event: event._id,
+              name: option.reference,
+              price: option.prix,
+              option: true,
+              paiement_cb_required: event.paiement_cb_required,
+              subtotal: query.qty * option.prix
+            }
+            resolve(res)
+          }
+        })
+      })
+  })
+}
+
+var cartCalc = (products) => {
+  var total = 0
+  if (products.length >= 1) {
+    products.forEach((product) => {
+      total += product.price * product.qty
+    })
+  }
+  return total
+}
+
+var formatProducts = (products) => {
+  var reachedProducts = []
+
+  if (products.length >= 1) {
+    products.forEach((product) => {
+      if (product.ref !== '' && product.ref !== null && product.ref !== undefined) {
+        if (product.race === true) {
+          reachedProducts.push(raceData(product))
+        }
+
+        if (product.option === true) {
+          reachedProducts.push(optionData(product))
+        }
+      }
+    })
+  }
+
+  return reachedProducts
+}
+
+var checkIfProductIsAlreadyInTheCart = (products) => {
+  var cleanedProducts = []
+  if (products.length >= 1) {
+    products.forEach((product) => {
+      var exist = 0
+      cleanedProducts.forEach((find, key) => {
+        if (String(product.ref) === String(find.ref)) {
+          exist++
+          cleanedProducts[key].qty++
+        }
+      })
+      if (exist === 0) {
+        cleanedProducts.push(product)
+      }
+    })
+  }
+  return cleanedProducts
+}
+
+var cleanProducts = (products) => {
+  var cleanedProducts = []
+
+  if (products.length >= 1) {
+    products.forEach((product) => {
+      if (product !== null && product !== undefined) {
+        cleanedProducts.push(product)
+      }
+    })
+  }
+
+  return checkIfProductIsAlreadyInTheCart(cleanedProducts)
+}
+
+var finalCart = (req) => {
+  var products
+  var reachedProducts = []
+
+  if (!req.session.cart) {
+    return { products: null }
+  } else {
+    products = cleanProducts(req.session.cart.products)
+  }
+
+  reachedProducts = formatProducts(products)
+
+  return new Promise((resolve, reject) => {
+    Promise
+      .all(reachedProducts)
+      .then((products) => {
+        resolve({ products: products, totalPrice: cartCalc(products) })
+      })
+      .catch((err) => {
+        reject(err)
+      })
+  })
+}
+
+var formatTest = (format, data) => {
+  if (format.name === 'race') {
+    return {
+      ref: data,
+      race: true,
+      qty: 1
+    }
+  } else if (format.name === 'option') {
+    return {
+      ref: data,
+      option: true,
+      qty: 1
+    }
+  }
+}
+
+var checkIfCreditRequired = (cart) => {
+  var response = 0
+
+  if (cart.products.length >= 1) {
+    cart.products.forEach((product) => {
+      if (product.paiement_cb_required === true) {
+        response++
+      }
+    })
+  }
+
+  if (response >= 1) {
+    return true
+  } else {
+    return false
+  }
+}
+
+var getCart = (cartId) => {
+  return new Promise((resolve, reject) => {
+    Cart
+      .findById(cartId)
+      .exec((err, cart) => {
+        if (err) {
+          reject(err)
+        } else {
+          resolve(cart)
+        }
+      })
+  })
+}
+
+var stripeProcess = (cart, stripeConfig) => {
+  return new Promise((resolve, reject) => {
+    stripe.charges.create(
+      stripeConfig, (err, charge) => {
+        if (err) {
+          reject(err)
+        } else {
+          try {
+            var paiement = {
+              'amount': Number(charge.amount) / 100,
+              'cb': charge.captured,
+              'stripe_id': charge.id,
+              'object': charge.object,
+              'date': Date(charge.created),
+              'captured': charge.captured
+            }
+          } catch (err) {
+            reject(err)
+          }
+
+          if (charge.captured === true && charge.paid === true && charge.status === 'succeeded') {
+            resolve(paiement)
+          } else {
+            reject(charge.captured, charge.paid)
+          }
+        }
+      })
+  })
+}
+
+var updateCartPaiement = (cartId, paiement) => {
+  return new Promise((resolve, reject) => {
+    // UPDATE registration.statut : 'payé' + paiementCaptured
+    Cart
+      .update({ _id: cartId }, { $set: { 'paiement': paiement } }, (err, cart) => {
+        if (err) {
+          reject(err)
+        } else {
+          resolve(cart)
+        }
+      })
+  })
+}
+
+var createNotificationAndSendEmail = (notification, userId) => {
+  notification
+    .save((err, notification) => {
+      if (err) throw err
+      // EMAIL NOTIFICATION
+      require('../../custom_modules/app/notification/notification-email')(userId)
+    })
+}
+
+var createRegistration = (cart, paiement) => {
+  return new Promise((resolve, reject) => {
+    var races = []
+
+    if (cart.products.length >= 1) {
+      cart.products.forEach((product) => {
+        if (product.race === true) {
+          var qty = product.qty
+          for (var i = 0; i < qty; i++) {
+            races.push({
+              cart: cart._id,
+              event: product.event,
+              ref: product.ref,
+              team: product.team,
+              user: cart.user
+            })
+          }
+        }
+      })
+    }
+
+    if (races.length >= 1) {
+      races.forEach((race, key) => {
+        var newRegistration = new Registration({
+          user: race.user,
+          event: race.event,
+          cart: race.cart,
+          produits: [ { race: race.ref } ],
+          options: {
+            epreuve_format: {
+              team: race.team
+            }
+          },
+          paiement: {
+            captured: paiement.captured
+          }
+        })
+
+        newRegistration
+          .save((err, registration) => {
+            if (err) {
+              err({err: err})
+            }
+          })
+
+        if ((key + 1) === races.length) {
+          resolve({ done: true })
+        }
+      })
+    } else {
+      resolve({ done: true })
+    }
+  })
+}
+
+// set cart registration created ok
+var setCartRegistrationOk = (cartId) => {
+  return new Promise((resolve, reject) => {
+    Cart
+      .update({ _id: cartId }, { $set: { 'registrations_created': true } }, (err, cart) => {
+        if (err) {
+          resolve(err)
+        } else {
+          reject(cart)
+        }
+      })
+  })
+}
 
 var cartCtrl = {
+  // Get all product
+  getCart: (req, res) => {
+    var request = req
+    finalCart(request)
+      .then((cart) => {
+        var config = {}
+        config.paiement_cb_required = checkIfCreditRequired(cart)
+
+        req.session.cart = { products: cart.products }
+        res.render('partials/cart/panier', { checkout: cart, config: config })
+      })
+      .catch((err) => {
+        if (err) {
+          res.redirect('/')
+        }
+      })
+  },
+  postAddRegistration: (req, res) => {
+    var productsCart = []
+    var form = req.body
+
+    if (req.session.cart) {
+      productsCart = req.session.cart.products
+    }
+
+    // if session value set session cart as cart default value
+    if (!req.user) {
+      res.redirect('/user/login?event_id=' + req.query.event)
+    } else {
+      if (form.race !== undefined || form.option !== undefined) {
+        if (form.race !== undefined) {
+          if (form.race.constructor === Array) {
+            form.race.forEach((val) => {
+              productsCart.push(formatTest({ name: 'race' }, val))
+            })
+          } else {
+            productsCart.push({
+              ref: form.race,
+              race: true,
+              qty: 1
+            })
+          }
+        }
+
+        if (form.option !== undefined) {
+          if (form.option.constructor === Array) {
+            form.option.forEach((val) => {
+              productsCart.push(formatTest({ name: 'option' }, val))
+            })
+          } else {
+            productsCart.push({
+              ref: form.option,
+              option: true,
+              qty: 1
+            })
+          }
+        }
+
+        req.session.cart = { products: productsCart }
+
+        res.redirect('/cart')
+      } else {
+        res.redirect(req.headers.referer)
+      }
+    }
+  },
+  // Get reduce product cart quantity by one
+  getAddToCart: (req, res) => {
+    var productId = req.params.product
+    var cart = new Cart(req.session.cart ? req.session.cart : {items: {}})
+
+    Product
+      .findById(productId, (err, product) => {
+        if (err) {
+          res.redirect('/')
+        }
+        cart.add(product, product.product)
+        req.session.cart = cart
+        res.redirect('/catalogue/')
+      })
+  },
+  // Change products quantity
+  postChangeQty: (req, res) => {
+    var productsCart = []
+    if (req.session.cart) {
+      if (req.session.cart.products) {
+        productsCart = cleanProducts(req.session.cart.products)
+      }
+    }
+
+    if (productsCart.length >= 1) {
+      productsCart.forEach((product, key) => {
+        if (String(product.ref) === String(req.params.product)) {
+          if (Number(req.body.quantity) === 0) {
+            delete productsCart[key]
+          } else {
+            productsCart[key].qty = req.body.quantity
+          }
+        }
+      })
+    }
+
+    req.session.cart = { products: cleanProducts(productsCart) }
+    res.redirect('/cart/')
+  },
+  // Remove a product
+  getRemoveProductCart: (req, res) => {
+    var productsCart = []
+    if (req.session.cart) {
+      if (req.session.cart.products) {
+        productsCart = cleanProducts(req.session.cart.products)
+      }
+    }
+
+    if (productsCart.length >= 1) {
+      productsCart.forEach((product, key) => {
+        if (String(product.ref) === String(req.params.product)) {
+          delete productsCart[key]
+        }
+      })
+    }
+
+    req.session.cart = { products: cleanProducts(productsCart) }
+    res.redirect('/cart/')
+  },
   // Get add to cart a product
   getAllProduct: (req, res) => {
     Product
@@ -11,91 +457,233 @@ var cartCtrl = {
           req.flash('error_msg', 'Une erreur est survenue')
           res.redirect('/')
         }
-        res.render('partials/cart/catalogue', {products: dbProducts})
+        res.render('partials/shop/catalogue', {products: dbProducts})
       })
-  },
-  // Get reduce product cart quantity by one
-  getAddToCart: (req, res) => {
-    var productId = req.params.id
-    var cart = new Cart(req.session.cart ? req.session.cart : {items: {}})
-
-    Product.findById(productId, (err, product) => {
-      if (err) {
-        res.redirect('/')
-      }
-      cart.add(product, product.id)
-      req.session.cart = cart
-      res.redirect('/catalogue/')
-    })
-  },
-  // Get increase product cart quantity by one
-  getReduceByOne: (req, res) => {
-    var productId = req.params.id
-    var cart = new Cart(req.session.cart ? req.session.cart : {})
-
-    cart.reduceByOne(productId)
-    req.session.cart = cart
-    res.redirect('/catalogue/panier')
-  },
-  // Get reduce product cart quantity by X
-  getIncreaseByOne: (req, res) => {
-    var productId = req.params.id
-    var cart = new Cart(req.session.cart ? req.session.cart : {})
-
-    cart.increaseByOne(productId)
-    req.session.cart = cart
-    res.redirect('/catalogue/panier')
-  },
-  // Get increase product cart quantity by X
-  getReduceByX: (req, res) => {
-    var productId = req.params.id
-    var qtyX = req.query.remove * 1
-    var cart = new Cart(req.session.cart ? req.session.cart : {})
-
-    cart.reduceByX(productId, qtyX)
-    req.session.cart = cart
-    res.redirect('/catalogue/panier')
-  },
-  // Get remove a product in cart
-  getIncreaseByX: (req, res) => {
-    var productId = req.params.id
-    var qtyX = req.query.add * 1
-    var cart = new Cart(req.session.cart ? req.session.cart : {})
-
-    cart.increaseByX(productId, qtyX)
-    req.session.cart = cart
-    res.redirect('/catalogue/panier')
-  },
-  // Get a product
-  getRemoveProductCart: (req, res) => {
-    var productId = req.params.id
-    var cart = new Cart(req.session.cart ? req.session.cart : {})
-
-    cart.removeItem(productId)
-    req.session.cart = cart
-    res.redirect('/catalogue/panier')
   },
   // Get cart
   getProductById: (req, res) => {
-    Product.findById(req.params.id, (err, produit) => {
-      if (err) {
-        req.flash('error_msg', 'Une erreur est survenue')
-        res.redirect('/')
-      }
-      if (produit.published) {
-        res.render('partials/cart/produit', {product: produit})
-      } else {
-        res.redirect('/catalogue/')
-      }
-    })
+    Product
+      .findById(req.params.id, (err, produit) => {
+        if (err) {
+          req.flash('error_msg', 'Une erreur est survenue')
+          res.redirect('/')
+        }
+        if (produit.published) {
+          res.render('partials/shop/produit', {product: produit})
+        } else {
+          res.redirect('/catalogue/')
+        }
+      })
   },
-  // Get all product
-  getCart: (req, res) => {
-    if (!req.session.cart) {
-      return res.render('partials/cart/panier', {products: null})
-    }
-    var cart = new Cart(req.session.cart)
-    res.render('partials/cart/panier', {products: cart.generateArray(), totalPrice: cart.totalPrice})
+  getPaiementCredit: (req, res) => {
+    var request = req
+    finalCart(request)
+      .then((checkout) => {
+        var config = {}
+
+        var newCart = new Cart({
+          user: req.user.id,
+          products: checkout.products,
+          total_price: Number(checkout.totalPrice)
+        })
+
+        newCart.save((err, cart) => {
+          if (err) {
+            res.redirect('/cart')
+          }
+          config.stripe = {
+            amount: parseInt(cart.total_price * 100 + 50),
+            key: credentials.stripeKey.front,
+            cart_id: cart._id,
+            checkout_amout: cart.total_price + 0.50
+          }
+
+          req.session.cart = { products: cart.products }
+          res.render('partials/cart/credit', { checkout: cart, config: config })
+        })
+      })
+      .catch((err) => {
+        if (err) {
+          res.redirect('/')
+        }
+      })
+  },
+  postPaiementCredit: (req, res) => {
+    var id = req.params.cart
+    var user = req.user._id
+
+    // start with get cart data
+    getCart(id)
+      .then((cart) => {
+        // console.log('1. cart: ', cart)
+        // STIPE
+        var stripeConfig = {
+          amount: parseInt(cart.total_price * 100 + 50),
+          currency: 'eur',
+          description: id,
+          // customer: String(user),
+          source: req.body.stripeToken
+        }
+
+        // continue with stripe checkout API
+        stripeProcess(cart, stripeConfig)
+          .then((paiement) => {
+            // console.log('2. Paiement: ', stripeConfig, paiement)
+            // continue to update cart if stripe return a validate paiement
+
+            updateCartPaiement(id, paiement)
+              .then((checkout) => {
+                // console.log('3. Checkout: ', checkout, cart)
+
+                // remove session cart
+                req.session.cart = { products: [] }
+
+                // créer les inscriptions à compléter
+                createRegistration(cart, paiement)
+                  .then((val) => {
+                    if (val.done) {
+                      // créer la notification de paiement
+                      var notification = new Notification({
+                        receiver: [user],
+                        message: 'Nous vous confirmons le paiement N°' + paiement.stripe_id + ' pour la commande N°' + id + '.'
+                      })
+
+                      // save notification
+                      createNotificationAndSendEmail(notification, user)
+
+                      // update cart : set registration created ok
+                      setCartRegistrationOk(id)
+                        .then((val) => {
+                          // console.log(val)
+                        })
+                        .catch((err) => {
+                          throw err
+                        })
+
+                      // REDIRECTION + HEADERS
+                      req.flash('success_msg', 'Votre paiement à bien été pris en compte')
+                      res.redirect('/inscription/recap/user/' + user)
+                    }
+                  })
+                  .catch((err) => {
+                    if (err) {
+                      req.flash('error_msg', 'Une erreur est survenue lors de la création de vos formulaire d\'inscription, contactez le service client.')
+                      res.redirect('/inscription/recap/user/' + user)
+                    }
+                  })
+              })
+              .catch((err) => {
+                if (err) {
+                  req.flash('error_msg', 'Une erreur est survenue lors de la mise à jours du statut de votre panier, contactez le service client.')
+                  res.redirect('/inscription/recap/user/' + user)
+                }
+              })
+          })
+          .catch((err) => {
+            if (err) {
+              req.flash('error_msg', 'Une erreur est survenue lors du paiement.')
+              res.redirect('/cart/checkout/credit')
+            }
+          })
+      })
+      .catch((err) => {
+        if (err) {
+          req.flash('error_msg', 'Une erreur est survenue, ce panier n\'existe pas.')
+          res.redirect('/cart/checkout/credit')
+        }
+      })
+  },
+  getPaiementCheck: (req, res) => {
+    var user = req.user._id
+    var request = req
+
+    finalCart(request)
+      .then((checkout) => {
+        var newCart = new Cart({
+          user: user,
+          products: checkout.products,
+          total_price: Number(checkout.totalPrice)
+        })
+
+        newCart.save((err, savedCart) => {
+          var id = savedCart._id
+          if (err) {
+            res.redirect('/cart')
+          }
+          // start with get cart data
+          getCart(id)
+            .then((cart) => {
+              // console.log('1. cart: ', cart)
+
+              // continue to update cart if stripe return a validate paiement
+              var paiement = {
+                'amount': cart.total_price,
+                'check': true,
+                'date': Date(Date.now()),
+                'captured': false
+              }
+
+              updateCartPaiement(id, paiement)
+                .then((checkout) => {
+                  // console.log('3. Checkout: ', checkout, cart)
+
+                  // remove session cart
+                  req.session.cart = { products: [] }
+
+                  // créer les inscriptions à compléter
+                  createRegistration(cart, paiement)
+                    .then((val) => {
+                      if (val.done) {
+                        // créer la notification de paiement
+                        var notification = new Notification({
+                          receiver: [user],
+                          message: 'Nous vous confirmons le paiement N°' + paiement.stripe_id + ' pour la commande N°' + id + '.'
+                        })
+
+                        // save notification
+                        createNotificationAndSendEmail(notification, user)
+
+                        // update cart : set registration created ok
+                        setCartRegistrationOk(id)
+                          .then((val) => {
+                            // console.log(val)
+                          })
+                          .catch((err) => {
+                            throw err
+                          })
+
+                        // REDIRECTION + HEADERS
+                        req.flash('success_msg', 'Votre paiement à bien été pris en compte')
+                        res.redirect('/inscription/recap/user/' + user)
+                      }
+                    })
+                    .catch((err) => {
+                      if (err) {
+                        req.flash('error_msg', 'Une erreur est survenue lors de la création de vos formulaire d\'inscription, contactez le service client.')
+                        res.redirect('/inscription/recap/user/' + user)
+                      }
+                    })
+                })
+                .catch((err) => {
+                  if (err) {
+                    req.flash('error_msg', 'Une erreur est survenue lors de la mise à jours du statut de votre panier, contactez le service client.')
+                    res.redirect('/inscription/recap/user/' + user)
+                  }
+                })
+            })
+            .catch((err) => {
+              if (err) {
+                req.flash('error_msg', 'Une erreur est survenue, ce panier n\'existe pas.')
+                res.redirect('/cart/checkout/credit')
+              }
+            })
+        })
+      })
+      .catch((err) => {
+        if (err) {
+          res.redirect('/cart')
+        }
+      })
   }
 }
 

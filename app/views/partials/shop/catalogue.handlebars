@@ -11,7 +11,7 @@
 				<ol class="breadcrumb d-inline-block w-100">
 					<li class="breadcrumb-item d-inline"><a href="/">Accueil</a></li>
 					<li class="breadcrumb-item active d-inline" aria-current="page">Catalogue</li>
-					<span class="d-inline float-right"><a href="/catalogue/panier/"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Devis  <span class="badge badge-dark">{{session.cart.totalQty}}</span> </a></span>	
+					
 				</ol>
 
 			</nav>	
@@ -32,18 +32,18 @@
 			{{#each products}}
 				{{#if this.published}}
 					<div class="col-sm-12 col-md-6 col-lg-3 p-2 text-center">
-						<a href="/catalogue/produit/{{this.id}}" class="d-block d-block border rounded h-100">
+						<a href="/shop/produit/{{this.id}}" class="d-block d-block border rounded h-100">
 							<div class="bg-light d-block rounded-top p-2">
 								<strong class="d-block">{{this.name}}</strong>
 								<span class="d-block text-center text-danger mt-2 mb-2"><small>A partir de : </small><strong>{{this.public_price}}€</strong></span>
 								<small class="d-block text-muted">{{this.categorie}} | {{this.brand}}</small>
 								<small class="d-block text-muted">ref: {{this.ref}}</small>
-								<!-- <strong><a href="/catalogue/produit/{{this.id}}">{{this.name}}</a></strong> -->
+								<!-- <strong><a href="/shop/produit/{{this.id}}">{{this.name}}</a></strong> -->
 							</div>					
 							<div class="row p-2">
 								<div class="col-12">
 									<img src="{{this.images.0.url}}" alt="{{this.name}}" class="img img-fluid catalogue-main-img">
-									<!-- <a href="/catalogue/produit/{{this.id}}"><img src="{{this.images.0.url}}" alt="{{this.name}}" class="img img-fluid catalogue-main-img"></a> -->
+									<!-- <a href="/shop/produit/{{this.id}}"><img src="{{this.images.0.url}}" alt="{{this.name}}" class="img img-fluid catalogue-main-img"></a> -->
 								</div>
 							</div>
 
@@ -53,7 +53,7 @@
 									{{else}}
 									<div class="col-sm-6 col-md-4">
 										<img src="{{this.url}}" alt="{{../this.name}}" class="img img-fluid catalogue-secondary-img">
-										<!-- <a href="/catalogue/produit/{{../this.id}}"><img src="{{this.url}}" alt="{{../this.name}}" class="img img-fluid catalogue-secondary-img"></a> -->
+										<!-- <a href="/shop/produit/{{../this.id}}"><img src="{{this.url}}" alt="{{../this.name}}" class="img img-fluid catalogue-secondary-img"></a> -->
 									</div>	
 									{{/if}}
 								{{/each}}

@@ -1,0 +1,176 @@
+<div class="container">
+  <div class="row">
+    <div class="col-12 spacer-sm-top">
+      <nav aria-label="breadcrumb ">
+
+        <a href="/">
+          <i class="fa fa-home" aria-hidden="true"></i>
+          <i class="fa fa-angle-right mx-2" aria-hidden="true"></i>
+        </a>
+
+        <a href="/cart/" class="btn">
+          <span class="badge badge-pill badge-light">
+            1
+          </span>
+          <span class="text-muted">Panier</span>
+          <i class="fa fa-angle-right mx-2" aria-hidden="true"></i>
+        </a>
+
+        <div class="btn btn-light">
+          <span class="badge badge-pill badge-info">
+            2
+          </span>
+          <span class="text-primary">Paiement</span>
+          <i class="fa fa-angle-right mx-2" aria-hidden="true"></i>
+        </div>          
+
+        <div class="btn">
+          <span class="badge badge-pill badge-light">
+            3
+          </span>
+          <span class="text-muted">Information</span>
+          <i class="fa fa-angle-right mx-2" aria-hidden="true"></i>
+        </div>
+        <div class="btn">
+          <span class="badge badge-pill badge-light">
+            4
+          </span>
+          <span class="text-muted">Téléchargement</span>
+        </div>  
+
+      </nav>
+    </div>
+  </div>
+</div>
+<div class="container">
+  <div class="row">
+    <div class="col-12 spacer-md-top">
+      <h1>Paiement</h1>
+    </div>
+  </div>
+  <div class="row spacer-md-top spacer-md-bottom">
+    <div class="col-md-7">
+      {{#if checkout.products}}
+
+        <div class="row">
+          <div class="col-12 border border-top-0 border-right-0 border-left-0 border-dark spacer-sm-bottom spacer-xs-top">
+            <strong class="text-uppercase ">Paiement</strong>
+          </div>
+        </div>
+
+        <!-- paiement to action -->
+        <div id="helper">
+          <span><i class="fa fa-exclamation-triangle mr-2" aria-hidden="true"></i>Votre inscription ne sera envoyée à l'oganisateur qu'après son paiement. Pour valider votre inscription, merci saisir les informations demandées.</span>
+        </div>
+
+        <!-- cb block -->
+        <div class="row border border-muted mb-3 paiement_option mt-3 shadow">
+          <div class="col-10 mx-auto mt-2 mb-2 p-2 ">
+            <div class="row">
+              <div class="col-12">
+                <span class="btn btn-muted border-0 mr-3"><i class="fa fa-check-square paiement_option_checkbox" aria-hidden="true"></i></span><strong>Paiement par carte bancaire</strong>                            
+              </div>
+            </div>
+            <div class="paiement_option_sub">
+              <div class="row">
+                <div class="col-12">
+                  <p>Informations sur ce moyen de paiement</p>
+                  <p>Ce règlement garantie votre place et valide votre inscription instantanément. En le choississant, finie la queue au gichet le jour de l'événement pour payer l'inscription.</p>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <img class="img-fluid mt-2 mb-2" src="/img/rect3737.png" alt="Paiement sécurisé" width="50" height="50">
+                    </div>
+                    <div class="col-sm-9">
+                      <p class="mb-2 mt-2 "><strong>Paiement 100% sécurisé</strong></p>
+                      <img class="img-fluid" src="/img/cb-visa-mastercard.png" alt="Paiement sécurisé" width="auto" height="100%">
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-12 py-3">
+                      <form action="/cart/checkout/credit/{{checkout._id}}" id="checkout-form" method="POST">
+                        <script 
+                          src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                          input-type="submit"
+                          data-label="Valider mon paiement"
+                          data-email="{{user.email}}"
+                          data-key="{{config.stripe.key}}"
+                          data-amount="{{config.stripe.amount}}"
+                          data-name="event.izir.fr"
+                          data-description="{{config.stripe.cart_id}}"
+                          data-locale="auto"
+                          data-currency="EUR"
+                          > 
+                        </script> 
+                    </form>
+                    </div>
+                  </div>
+                </div>
+              </div>                        
+            </div>
+          </div>
+        </div>
+      {{else}}
+        <p>Il n'y pas de produits dans le panier</p>
+      {{/if}}
+    </div>
+    <div class="col-md-4 ml-md-auto">
+      <div class="row sticky-top py-5">
+        <div class="col-12 bg-light shadow rounded p-3">
+          <div class="row">
+            <div class="col-12 border border-top-0 border-right-0 border-left-0 border-dark spacer-sm-bottom spacer-xs-top">
+              <strong class="text-uppercase ">récapitulatif du panier</strong>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <span class="d-block spacer-sm-top spacer-sm-bottom">
+                <div class="row">
+                  <div class="col-8">
+                    <strong>Total Produit</strong>
+                  </div>
+                  <div class="col-4 text-right">
+                    <strong>{{checkout.total_price}}€</strong>
+                  </div>
+                </div>
+              </span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <span class="d-block spacer-sm-top spacer-sm-bottom">
+                <div class="row">
+                  <div class="col-8">
+                    <strong>Frais de dossier</strong>
+                  </div>
+                  <div class="col-4 text-right">
+                    <strong>0,50€</strong>
+                  </div>
+                </div>
+              </span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <span class="d-block spacer-sm-top spacer-sm-bottom">
+                <div class="row">
+                  <div class="col-8">
+                    <strong>Estimation des frais de port</strong>
+                  </div>
+                  <div class="col-4 text-right">
+                    <strong>GRATUIT</strong>
+                  </div>
+                </div>
+              </span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <span class="d-block spacer-sm-top spacer-sm-bottom border border-dark border-bottom-0 border-right-0 border-left-0"><strong class="d-block spacer-sm-top">Total : <span class="float-right">{{config.stripe.checkout_amout}}€</span></strong></span>
+            </div>
+          </div>
+        </div>
+        <div class="d-block" id="helper"></div>
+      </div>
+    </div>
+  </div>
+</div>

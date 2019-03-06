@@ -1,34 +1,33 @@
 var express = require('express')
 var router = express.Router()
 
+// Custom Modules
+var ensureAuthenticated = require('../../custom_modules/app/router/ensureAuthenticated')
+
 // Controllers
 var cartCtrl = require('../controllers/cartController')
 
-// Get add to cart a product
-router.get('/', cartCtrl.getAllProduct)
+// Get all product
+router.get('/', cartCtrl.getCart)
+
+// add races and options to cart
+router.post('/add/registration', cartCtrl.postAddRegistration)
 
 // Get reduce product cart quantity by one
-router.get('/add/:id', cartCtrl.getAddToCart)
+router.get('/add/:product', ensureAuthenticated, cartCtrl.getAddToCart)
 
-// Get increase product cart quantity by one
-router.get('/reduce-by-one/:id', cartCtrl.getReduceByOne)
+// Change product quantity in cart
+router.post('/change-quantity/:product', ensureAuthenticated, cartCtrl.postChangeQty)
 
-// Get reduce product cart quantity by X
-router.get('/increase-by-one/:id', cartCtrl.getIncreaseByOne)
+// Remove au product
+router.get('/remove/:product', ensureAuthenticated, cartCtrl.getRemoveProductCart)
 
-// Get increase product cart quantity by X
-router.get('/reduce-by-x/:id', cartCtrl.getReduceByX)
+// Checkout with credit card
+router.get('/checkout/credit', ensureAuthenticated, cartCtrl.getPaiementCredit)
 
-// Get remove a product in cart
-router.get('/increase-by-x/:id', cartCtrl.getIncreaseByX)
+router.post('/checkout/credit/:cart', ensureAuthenticated, cartCtrl.postPaiementCredit)
 
-// Get a product
-router.get('/remove/:id', cartCtrl.getRemoveProductCart)
-
-// Get cart
-router.get('/produit/:id', cartCtrl.getProductById)
-
-// Get all product
-router.get('/panier', cartCtrl.getCart)
+// Checkout with stripe
+router.get('/checkout/check', ensureAuthenticated, cartCtrl.getPaiementCheck)
 
 module.exports = router

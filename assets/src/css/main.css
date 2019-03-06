@@ -20,9 +20,9 @@ a:hover {
   text-decoration: none;
 }
 
-footer{
+footer {
   text-align: center;
-  font-size: 1.2rem;
+  font-size: 0.8rem;
 }
 
 footer h2, footer h3, footer h4 {
@@ -484,12 +484,6 @@ START => BOOTSTRAPP CUSTOM
   font-size: 0.95em;
   background-color: #23717e !important;;
   color: #FFF;
-}
-
-.badge-warning {
-  border: solid 1px #23717e;
-  background: none !important;
-  color: #23717e;
 }
 
 /* IMG */

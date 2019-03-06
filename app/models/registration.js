@@ -5,6 +5,7 @@ var Schema = mongoose.Schema
 var registrationSchema = mongoose.Schema({
   user: { type: Schema.ObjectId, ref: 'User', required: true },
   event: { type: Schema.ObjectId, ref: 'Event', required: true },
+  cart: { type: Schema.ObjectId, ref: 'Cart' },
   eventName: { type: String },
   participant: {
     nom: { type: String },

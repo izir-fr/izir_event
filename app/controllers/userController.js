@@ -143,7 +143,7 @@ var userCtrl = {
   // Post a login
   postLogin: function (req, res) {
     if (req.query.event_id) {
-      res.redirect('/inscription/cart/' + req.query.event_id)
+      res.redirect('/event/' + req.query.event_id)
     } else {
       res.redirect('/event/finder')
     }

@@ -1,6 +1,8 @@
 var async = require('async')
 var Promise = require('bluebird')
 
+var dateNow = new Date(Date.now())
+
 // custom modules
 var catList = require('../../custom_modules/lists/category-list')
 var dateList = require('../../custom_modules/lists/date-list')
@@ -17,6 +19,108 @@ var eventFinderForm = require('../../custom_modules/app/event/finder-algo')
 /* ==========
 START APP =>
 ========== */
+
+var getOneEvent = (eventId) => {
+  return new Promise((resolve, reject) => {
+    Event
+      .findOne({ _id: eventId })
+      .populate('epreuves')
+      .exec((err, event) => {
+        if (err) {
+          reject(err)
+        }
+        resolve(event)
+      })
+  })
+}
+
+var searchRegistrations = (query) => {
+  return new Promise((resolve, reject) => {
+    Registration
+      .find(query)
+      .sort({ 'participant.nom': 1 })
+      .exec((err, registrations) => {
+        if (err) {
+          reject(err)
+        }
+        resolve(registrations)
+      })
+  })
+}
+
+var getOpenRaces = (query) => {
+  return new Promise((resolve, reject) => {
+    async.parallel({
+      event: (next) => {
+        Event
+          .findById(query)
+          .populate('epreuves')
+          .exec(next)
+      },
+      participants: (next) => {
+        Registration.find({event: query}).exec(next)
+      }
+    }, (err, results) => {
+      if (err) {
+        reject(err)
+      }
+
+      var produisParticipant = results.participants
+      var maxParticipant = results.event.epreuves
+      var allProduits = []
+      var uniqueProduit = []
+
+      // Single epreuve init participants
+      maxParticipant.forEach((val) => {
+        var epreuve = {
+          id: val._id,
+          name: val.name,
+          max: val.placesDispo,
+          distance: val.distance,
+          quantity: 0,
+          tarif: val.tarif,
+          active: true,
+          team: val.team
+        }
+        uniqueProduit.push(epreuve)
+      })
+
+      // allProduits create
+      produisParticipant.forEach((val) => {
+        var details = val.produits
+        details.forEach((val) => {
+          if (val.produitsSubTotal > 0) {
+            allProduits.push(val.produitsRef)
+          }
+        })
+      })
+
+      // uniqueProduit calc
+      allProduits.forEach((val) => {
+        var unique = uniqueProduit.find((element) => {
+          if (element.name === val) {
+            return true
+          }
+        })
+        if (unique !== undefined) {
+          uniqueProduit.forEach((single) => {
+            if (single.name === val) {
+              single.quantity++
+            }
+          })
+        }
+      })
+
+      uniqueProduit.forEach((val) => {
+        if (val.quantity >= val.max) {
+          val.active = false
+        }
+      })
+
+      resolve(uniqueProduit)
+    })
+  })
+}
 
 /// ///OPTIONS//////
 var optionConstructor = (req, res, next) => {
@@ -182,46 +286,61 @@ var eventCtrl = {
       }
       // REDIRECTION & CONFIRMATION
       req.flash('success_msg', 'Votre événement est modifié avec succès')
-      res.redirect('/organisateur/epreuves')
+      res.redirect('/event/' + req.params.id + '/dashboard')
     })
   },
   // Get a event
   GetSingleEvent: (req, res) => {
-    async.parallel({
-      event: (next) => {
-        Event
-          .findById(req.params.id)
-          .populate('epreuves')
-          .exec(next)
-      },
-      participants: (next) => {
-        if (req.query.epreuve && req.query.epreuve !== 'Toutes') {
-          Registration
-            .find({
-              event: req.params.id,
-              $or: [ { 'participant.nom': { $gt: [] } }, { 'participant.prenom': { $gt: [] } }, { 'paiement.captured': { $eq: true } }, { 'paiement.other_captured': { $eq: true } } ],
-              produits: { $elemMatch: { race: req.query.epreuve, produitsQuantite: { $ne: 0 } } }
-            })
-            .sort({ 'participant.nom': 1 })
-            .exec(next)
-        } else {
-          Registration
-            .find({
-              event: req.params.id,
-              $or: [ { 'participant.nom': { $gt: [] } }, { 'participant.prenom': { $gt: [] } }, { 'paiement.captured': { $eq: true } }, { 'paiement.other_captured': { $eq: true } } ]
-            })
-            .sort({ 'participant.nom': 1 })
-            .exec(next)
+    var participantsQuery
+
+    if (req.query.epreuve && req.query.epreuve !== 'Toutes') {
+      participantsQuery = {
+        event: req.params.id,
+        $or: [
+          { 'participant.nom': { $gt: [] } },
+          { 'participant.prenom': { $gt: [] } },
+          { 'paiement.captured': { $eq: true } },
+          { 'paiement.other_captured': { $eq: true } }
+        ],
+        produits: { $elemMatch: { race: req.query.epreuve, produitsQuantite: { $ne: 0 } } }
+      }
+    } else {
+      participantsQuery = {
+        event: req.params.id,
+        $or: [
+          { 'participant.nom': { $gt: [] } },
+          { 'participant.prenom': { $gt: [] } },
+          { 'paiement.captured': { $eq: true } },
+          { 'paiement.other_captured': { $eq: true } }
+        ]
+      }
+    }
+
+    Promise
+      .props({
+        event: getOneEvent(req.params.id),
+        participants: searchRegistrations(participantsQuery),
+        races: getOpenRaces(req.params.id)
+      })
+      .then((api) => {
+        var active = new Date(api.event.date_cloture_inscription) > dateNow
+
+        var data = {
+          result: api,
+          config: {
+            registration: {
+              active: active
+            }
+          }
         }
-      }
-    }, (err, result) => {
-      if (err) {
-        req.flash('error_msg', 'Une erreur est survenue')
-        res.redirect('/')
-      }
-      var data = {result: result}
-      res.render('partials/event/event-detail', data)
-    })
+        res.render('partials/event/event-detail', data)
+      })
+      .catch((err) => {
+        if (err) {
+          req.flash('error_msg', 'Une erreur est survenue lors du chargement de la page. Si l\'erreur persiste contactez le service client.')
+          res.redirect('/event/' + req.params.event)
+        }
+      })
   },
   getCreateRace: (req, res) => {
     var config = {
@@ -354,18 +473,6 @@ var eventCtrl = {
       })
   },
   getDashboardEvent: (req, res) => {
-    var events = new Promise((resolve, reject) => {
-      Event
-        .findOne({ _id: req.params.event })
-        .populate('epreuves')
-        .exec((err, event) => {
-          if (err) {
-            reject(err)
-          }
-          resolve(event)
-        })
-    })
-
     var product = new Promise((resolve, reject) => {
       Product
         .find({ featured: true, published: true })
@@ -380,7 +487,7 @@ var eventCtrl = {
 
     Promise
       .props({
-        event: events,
+        event: getOneEvent(req.params.event),
         product: product
       })
       .then((val) => {

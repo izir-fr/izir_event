@@ -59,7 +59,7 @@
     <div class="col-md-10">
       <div class="row my-5 ">
         <div class="col-12 px-3">
-          <div class="d-md-flex d-sm-block justify-content-between bg-light py-4 border border-muted">
+          <div class="d-md-flex d-sm-block justify-content-between bg-light py-4 border border-muted shadow">
             <div class="my-auto d-sm-block d-md-flex px-3 font-weight-bold w-50 my-2">
               {{inscriptions.length}} participants
             </div>
@@ -123,8 +123,17 @@
                 <!-- dossier d'inscription -->
                 <div class="col-md-3 text-uppercase">
                   {{#each this.produits}}
-                    <div class="font-weight-bold text-lowercase">{{produitsRef}} <span class="subtotal hidde">{{produitsSubTotal}}</span>
-                    <span class="ref hidde">{{produitsRef}}</span></div>
+                    <div class="font-weight-bold text-lowercase">
+                      <div>
+                          {{#if this.race.name}}
+                            {{this.race.name}}
+                          {{else}}
+                            {{produitsRef}}
+                            <span class="subtotal hidde">{{produitsSubTotal}}</span>
+                            <span class="ref hidde">{{produitsRef}}</span>             
+                          {{/if}}                    
+                      </div>
+                    </div>
                   {{/each}}            
                   <small class="d-block text-muted">N°: {{this.id}}</small>
                   <small class="d-block text-muted">Du : {{date this.created_at}}</small>  

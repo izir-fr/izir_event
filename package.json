@@ -7,7 +7,7 @@
     "start": "node ./node_modules/.bin/pm2 start app.js -i 1 --attach",
     "server": "node app",
     "webpack:server": "webpack-dev-server -d --hot --config webpack.config.js --watch",
-    "dev:server": "concurrently \"npm run webpack:server\" \"npm run server\"",
+    "dev:server": "npm run pretest&& concurrently \"npm run webpack:server\" \"npm run server\"",
     "pretest": "./node_modules/.bin/eslint --ignore-path .eslintignore .",
     "test": "./node_modules/.bin/mocha --exit",
     "build:win": "set NODE_ENV=production&& webpack --config webpack.config.js",

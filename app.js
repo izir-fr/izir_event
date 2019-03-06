@@ -31,6 +31,7 @@ var cms = require('./app/router/cmsRoutes')
 var users = require('./app/router/userRoutes')
 var events = require('./app/router/eventRoutes')
 var cart = require('./app/router/cartRoutes')
+var shop = require('./app/router/shopRoutes')
 var registration = require('./app/router/registrationRoutes')
 var organisateur = require('./app/router/organisateurRoutes')
 var chronometrage = require('./app/router/chronometrageRoutes')
@@ -115,6 +116,7 @@ app.use(function (req, res, next) {
   res.locals.error_msg = req.flash('error_msg')
   res.locals.info_msg = req.flash('info_msg')
   res.locals.user = req.user || null
+  res.locals.cart = req.session.cart || { products: [] }
   res.locals.session = req.session
   next()
 })
@@ -122,7 +124,8 @@ app.use(function (req, res, next) {
 app.use('/', cms)
 app.use('/user', users)
 app.use('/event', events)
-app.use('/catalogue', cart)
+app.use('/cart', cart)
+app.use('/shop', shop)
 app.use('/inscription', registration)
 app.use('/organisateur', organisateur)
 app.use('/chronometrage', chronometrage)

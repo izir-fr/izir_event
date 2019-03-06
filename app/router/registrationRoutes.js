@@ -7,78 +7,51 @@ var registrationCtrl = require('../controllers/registrationController')
 // Custom Modules
 var ensureAuthenticated = require('../../custom_modules/app/router/ensureAuthenticated')
 
-// Get a pre-inscription form
-router.get('/recap/user/:id', ensureAuthenticated, registrationCtrl.getRecapUser)
+/*
+USER
+*/
 
-// Post a pre-inscription
+// Get a pre-inscription form  => VERIFIE OK
+router.get('/recap/user/:user', ensureAuthenticated, registrationCtrl.getRecapUser)
+
+// Get user all inscription recap =>  VERIFIE OK
+router.get('/:registration/delete', ensureAuthenticated, registrationCtrl.postDelete)
+
+// Get user all inscription recap =>  VERIFIE OK
+router.get('/:registration/participant', ensureAuthenticated, registrationCtrl.cartParticipantUpdate)
+
+// Post Ajax pre-inscription  => VERIFIE OK
+router.post('/:registration/participant/post', registrationCtrl.postParticipantUpdate)
+
+// Get render certificat update form => VERIFIE OK
+router.get('/:id/certificat', ensureAuthenticated, registrationCtrl.getCertificat)
+
+// Post a certificat  => VERIFIE OK
+router.post('/:id/certificat/post', registrationCtrl.postCertificat)
+
+// Get user all inscription recap
+router.get('/:id/team', ensureAuthenticated, registrationCtrl.cartTeamUpdate)
+
+// Post Ajax pre-inscription
+router.post('/:id/team/post', registrationCtrl.postAjaxCartTeamUpdate)
+
+// Get render certificat update form
+router.get('/:id/certificat/team', ensureAuthenticated, registrationCtrl.getCertificatTeam)
+
+// Post a certificat
+router.post('/:id/certificat/team/:member/post', registrationCtrl.postCertificatTeam)
+
+/*
+ORGANISATEUR
+*/
+
+// Post a pre-inscription  => VERIFIE OK
 router.get('/recap/organisateur/:id', ensureAuthenticated, registrationCtrl.getRecapOrganisateur)
 
-/*
-REGISTRATION STEP 1
-*/
+// Set other paiement captured  => VERIFIE OK
+router.get('/checkout/:id/other-captured', ensureAuthenticated, registrationCtrl.getOtherPaiementCaptured)
 
-// Get user all inscription recap
-router.get('/cart/:id', ensureAuthenticated, registrationCtrl.getPreinscription)
-
-// Post Ajax pre-inscription
-router.post('/cart/:id/post', registrationCtrl.postAjaxCart)
-
-/*
-REGISTRATION STEP 2
-*/
-
-// Get user all inscription recap
-router.get('/cart/:id/participant', ensureAuthenticated, registrationCtrl.cartParticipantUpdate)
-
-// Post Ajax pre-inscription
-router.post('/cart/:id/participant/post', registrationCtrl.postAjaxCartParticipantUpdate)
-
-// Get user all inscription recap
-router.get('/cart/:id/team', ensureAuthenticated, registrationCtrl.cartTeamUpdate)
-
-// Post Ajax pre-inscription
-router.post('/cart/:id/team/post', registrationCtrl.postAjaxCartTeamUpdate)
-/*
-REGISTRATION STEP 3
-*/
-
-// Get a other paiement
-router.get('/checkout/:id/other-paiement', ensureAuthenticated, registrationCtrl.getOtherPaiement)
-
-// Get a other paiement captured
-router.get('/checkout/:id/other-captured', ensureAuthenticated, registrationCtrl.getOtherCaptured)
-
-// Get a file excell
-router.get('/checkout/:id', ensureAuthenticated, registrationCtrl.getCheckout)
-
-// Post a paiement
-router.post('/checkout/:id', registrationCtrl.postCheckout)
-
-/*
-REGISTRATION STEP 4
-*/
-
-// Get render certificat update form
-router.get('/cart/:id/certificat', ensureAuthenticated, registrationCtrl.getCertificat)
-// Get render certificat update form
-router.get('/cart/:id/certificat/team', ensureAuthenticated, registrationCtrl.getCertificatTeam)
-
-// Post a certificat
-router.post('/cart/:id/certificat/post', registrationCtrl.postCertificat)
-// Post a certificat
-router.post('/cart/:id/certificat/team/:member/post', registrationCtrl.postCertificatTeam)
-
-/*
-REGISTRATION STEP 5
-*/
-
-// Get confirmation page
-router.get('/checkout/:id/confirmation', ensureAuthenticated, registrationCtrl.getConfirmation)
-
-/*
-Organisateur actions
-*/
-router.get('/cart/:id/certificat/reject', ensureAuthenticated, registrationCtrl.setCertificatReject)
+router.get('/:id/certificat/reject', ensureAuthenticated, registrationCtrl.setCertificatReject)
 
 router.get('/checkout/:id/validate', ensureAuthenticated, registrationCtrl.setCheckoutValidate)
 

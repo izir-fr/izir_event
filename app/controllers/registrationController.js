@@ -652,11 +652,6 @@ var registrationCtrl = {
             .populate('cart')
             .sort({ 'participant.nom': 1 })
             .exec((err, registrations) => {
-              var search = registrations.find((query) => {
-                return query.id === '5c7d006a7a368d1d7c821a41'
-              })
-              console.log(search.cart.products)
-
               var data = {}
               // construction de l'objet renvoyé à l'api
               data.event = event
@@ -667,14 +662,35 @@ var registrationCtrl = {
               }
 
               if (registrations.length >= 1) {
+                var cleanedRegistrations = []
+                registrations.forEach((registration) => {
+                  if (registration.orderAmount >= 0) {
+                    cleanedRegistrations.push(registration)
+                  } else {
+                    var element = registration
+                    try {
+                      if (element.cart.products.length >= 1) {
+                        var search = element.cart.products.find((query) => {
+                          if (String(query.event) === String(req.params.id)) {
+                            return query
+                          }
+                        })
+                        element.orderAmount = search.price
+                      }
+                      element.orderAmount = 0
+                    }
+                    cleanedRegistrations.push(element)
+                  }
+                })
+
                 // convert dossiers to inscriptions
-                data.inscriptions = require('../../custom_modules/app/chronometrage').registrationToTeam(registrations)
+                data.inscriptions = require('../../custom_modules/app/chronometrage').registrationToTeam(cleanedRegistrations)
 
                 // calcul des dons
                 data.dons = tableauDons(data.inscriptions)
 
                 // calcul des dossiers payés
-                data.paiements = tableauPaiements(registrations)
+                data.paiements = tableauPaiements(cleanedRegistrations)
 
                 data.dossiers_complets = dossiersValides(data.inscriptions)
               }

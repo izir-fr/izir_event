@@ -147,7 +147,7 @@
 		<div class="col-lg-3 order-xs-1 order-sm-1 order-lg-2 text-justify">
 			<div class="">
 				<div id="spacer-box"></div>
-				<div id="" class="bg-light border border-muted p-5">
+				<div id="" class="bg-light border border-muted shadow p-5">
 					<div class="row border-bottom-box">
 						<div class="col-12">
 							<p>
@@ -185,7 +185,7 @@
 										<div class="form-check">
 											{{#if this.active}}
 											  <input class="form-check-input" type="checkbox" value="{{this.id}}" name="race">
-											  <label class="form-check-label ml-4 d-block" for="defaultCheck1">
+											  <label class="form-check-label ml-2 d-block" for="defaultCheck1">
 											    {{this.name}}
 											    <small class="text-muted">
 											    	{{this.distance}}km -
@@ -226,7 +226,7 @@
 								{{#each result.event.options}}
 									<div class="form-check">
 									  <input class="form-check-input" type="checkbox" value="{{this._id}}" name="option">
-									  <label class="form-check-label ml-4 d-block" for="defaultCheck1">
+									  <label class="form-check-label ml-2 d-block" for="defaultCheck1">
 									    {{this.name}}
 									    <span class="text-muted">{{this.reference}} - {{this.prix}}€</span>
 									  </label>
@@ -243,7 +243,9 @@
 							{{/if}}
 						</div>										
 					</form>
-
+					<small class="my-3 d-block text-muted">
+						Merci de cocher course(s) et/ou option(s) que vous souhaitez ajouter au panier.
+					</small>
 					<!-- BUTTON -->
 					<div class="row" id="inscriptionButton">
 						<div class="col-12 mb-5">

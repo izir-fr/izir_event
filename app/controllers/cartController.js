@@ -12,6 +12,8 @@ var credentials = require('../config/credentials')
 // STRIPE
 var stripe = require('stripe')(credentials.stripeKey.serveur)
 
+var dateNow = new Date(Date.now())
+
 var raceData = (query) => {
   return new Promise((resolve, reject) => {
     Race
@@ -46,21 +48,29 @@ var optionData = (query) => {
         if (err) {
           reject(err)
         }
-        event.options.forEach((option) => {
-          if (String(option._id) === String(query.ref)) {
-            var res = {
-              ref: query.ref,
-              qty: query.qty,
-              event: event._id,
-              name: option.reference,
-              price: option.prix,
-              option: true,
-              paiement_cb_required: event.paiement_cb_required,
-              subtotal: query.qty * option.prix
-            }
-            resolve(res)
+        if (event) {
+          if (event.options.length >= 1) {
+            event.options.forEach((option) => {
+              if (String(option._id) === String(query.ref)) {
+                var res = {
+                  ref: query.ref,
+                  qty: query.qty,
+                  event: event._id,
+                  name: option.reference,
+                  price: option.prix,
+                  option: true,
+                  paiement_cb_required: event.paiement_cb_required,
+                  subtotal: query.qty * option.prix
+                }
+                resolve(res)
+              }
+            })
+          } else {
+            resolve(null)
           }
-        })
+        } else {
+          resolve(null)
+        }
       })
   })
 }
@@ -69,7 +79,9 @@ var cartCalc = (products) => {
   var total = 0
   if (products.length >= 1) {
     products.forEach((product) => {
-      total += product.price * product.qty
+      if (product !== null && product !== undefined) {
+        total += product.price * product.qty
+      }
     })
   }
   return total
@@ -91,7 +103,6 @@ var formatProducts = (products) => {
       }
     })
   }
-
   return reachedProducts
 }
 
@@ -144,7 +155,15 @@ var finalCart = (req) => {
     Promise
       .all(reachedProducts)
       .then((products) => {
-        resolve({ products: products, totalPrice: cartCalc(products) })
+        var cleanedProducts = []
+        if (products.length >= 1) {
+          products.forEach((product) => {
+            if (product !== null && product !== undefined) {
+              cleanedProducts.push(product)
+            }
+          })
+        }
+        resolve({ products: cleanedProducts, totalPrice: cartCalc(cleanedProducts) })
       })
       .catch((err) => {
         reject(err)
@@ -329,8 +348,23 @@ var cartCtrl = {
     finalCart(request)
       .then((cart) => {
         var config = {}
+        var products = []
+
         config.paiement_cb_required = checkIfCreditRequired(cart)
 
+        // ne conserver que les inscriptions ouvertes
+        if (cart.products.length >= 1) {
+          cart.products.forEach((product) => {
+            if (product.race) {
+              if (product.event.date_cloture_inscription >= dateNow) {
+                products.push(product)
+              }
+            } else {
+              products.push(product)
+            }
+          })
+        }
+        cart.products = products
         req.session.cart = { products: cart.products }
         res.render('partials/cart/panier', { checkout: cart, config: config })
       })

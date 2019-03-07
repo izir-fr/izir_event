@@ -193,7 +193,7 @@ var registrationCtrl = {
       }
     }
   },
-  cartParticipantUpdate: (req, res) => {
+  getParticipantUpdate: (req, res) => {
     var data
     var user = req.user.id
     var birthday = {
@@ -221,9 +221,9 @@ var registrationCtrl = {
       .exec((err, registration) => {
         if (err) {
           req.flash('error_msg', 'Une erreur est survenue lors du choix de l\'épreuve')
-          res.redirect('/inscription/recap-user/' + user)
+          res.redirect('/inscription/recap/user/' + user)
         }
-
+        var races = 0
         data = {
           results: registration,
           birthday: birthday,
@@ -232,13 +232,17 @@ var registrationCtrl = {
           discipline_list: disList
         }
 
-        registration.produits.forEach((race) => {
-          if (race.team) {
-            res.redirect('/inscription/' + req.params.registration + '/team')
+        registration.produits.forEach((produit) => {
+          if (produit.race.team === true) {
+            races++
           }
         })
 
-        res.render('partials/registration/step-participant', data)
+        if (races >= 1) {
+          res.redirect('/inscription/' + req.params.registration + '/team')
+        } else {
+          res.render('partials/registration/step-participant', data)
+        }
       })
   },
   postParticipantUpdate: (req, res) => {
@@ -283,27 +287,39 @@ var registrationCtrl = {
         }
       })
   },
-  cartTeamUpdate: (req, res) => {
+  getCartTeamUpdate: (req, res) => {
     var data
 
     Registration
-      .find({_id: req.params.id})
+      .findById(req.params.id)
       .populate('event')
+      .populate('produits.race')
       .exec((err, registration) => {
         if (err) {
           req.flash('error_msg', 'Une erreur est survenue lors du chargement de l\'événement')
           res.redirect('/inscription/' + registration[0].event.id)
         }
         data = {
-          results: registration[0],
+          results: registration,
           date_list: dateList,
           category_list: catList,
           discipline_list: disList
         }
+        var teamLimits = {}
+        if (registration.produits.length >= 1) {
+          registration.produits.forEach((produit) => {
+            if (produit.race.team === true) {
+              teamLimits.max = produit.race.team_qty_max
+              teamLimits.min = produit.race.team_qty_min
+            }
+          })
+        }
+        data.results.options.team_limits = teamLimits
+        // console.log(registration.produits)
         res.render('partials/registration/step-team', data)
       })
   },
-  postAjaxCartTeamUpdate: (req, res) => {
+  postCartTeamUpdate: (req, res) => {
     var id = req.params.id
     var capitaine = {
       nom: req.body.capitaine_name,
@@ -341,21 +357,14 @@ var registrationCtrl = {
           res.redirect('/inscription/' + id + '/team')
         } else {
           Registration
-            .find({_id: id})
+            .findById(id)
             .populate('event')
             .exec((err, registration) => {
               if (err) {
                 req.flash('error_msg', 'Une erreur est survenue lors de la saisie de vos informations')
                 res.redirect('/inscription/' + id + '/team')
               } else {
-                var eventConfig = registration[0].event
-                if (eventConfig.paiement) {
-                  res.redirect('/inscription/' + id)
-                } else if (eventConfig.certificat_required) {
-                  res.redirect('/inscription/' + id + '/certificat')
-                } else {
-                  res.redirect('/inscription/' + id + '/confirmation')
-                }
+                res.redirect('/inscription/recap/user/' + req.user.id)
               }
             })
         }
@@ -402,7 +411,7 @@ var registrationCtrl = {
           req.flash('error_msg', 'Une erreur est survenue lors de la saisie de vos informations')
           res.redirect('/inscription/' + id + '/certificat')
         } else {
-          res.redirect('/inscription/recap-user/' + req.user.id)
+          res.redirect('/inscription/recap/user/' + req.user.id)
         }
       }
     )

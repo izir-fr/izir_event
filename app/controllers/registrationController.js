@@ -813,7 +813,9 @@ var registrationCtrl = {
         res.redirect(origine)
       } else {
         Registration
-          .findOne({_id: req.params.id}, (err, registration) => {
+          .findById(req.params.id)
+          .populate('event')
+          .exec((err, registration) => {
             if (err) {
               req.flash('error_msg', 'Une erreur est survenue')
               res.redirect(origine)
@@ -821,7 +823,7 @@ var registrationCtrl = {
               var notification = new Notification({
                 sender: req.user.id,
                 receiver: [registration.user],
-                message: 'Votre inscription N°' + registration.id + ' à ' + registration.eventName + ' vient d\'être validée par l\'organisateur.'
+                message: 'Votre inscription N°' + registration.id + ' à ' + registration.event.name + ' vient d\'être validée par l\'organisateur.'
               })
 
               notification.save((err, notification) => {

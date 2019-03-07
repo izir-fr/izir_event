@@ -677,6 +677,7 @@ var registrationCtrl = {
                         })
                         element.orderAmount = search.price
                       }
+                    } catch (err) {
                       element.orderAmount = 0
                     }
                     cleanedRegistrations.push(element)

@@ -17,7 +17,7 @@
   <div class="row">
     <div class="col-md-2 pt-5 bg-light text-center">
       <div class="d-block">
-        <a href="/inscription/cart/{{event.id}}" class="d-block btn btn-default rounded-0 border-0">Ajouter un participant</a>
+        <a href="/event/{{event.id}}" class="d-block btn btn-default rounded-0 border-0">Ajouter un participant</a>
         <a href="/organisateur/event/{{event.id}}/messages" class="d-block btn btn-default rounded-0 border-0">Contacter les participants</a>
       </div>
       
@@ -214,7 +214,7 @@
                           <a href="/inscription/checkout/{{this.id}}/other-captured" title="Confirmer la réception du paiement" class="dropdown-item organisateur-dashboard-confirm-action">Confirmer le paiement</a>
                         {{/if}}
                       {{/if}}
-                      <a class="dropdown-item organisateur-dashboard-confirm-action" href="/inscription/cart/{{this.id}}/certificat/reject">Rejeter le certificat</a>
+                      <a class="dropdown-item organisateur-dashboard-confirm-action" href="/inscription/{{this.id}}/certificat/reject">Rejeter le certificat</a>
                       {{#if this.organisateur_validation.all}}
                       {{else}}
                         <a class="dropdown-item organisateur-dashboard-confirm-action" href="/inscription/checkout/{{this.id}}/validate">Valider le dossier</a>

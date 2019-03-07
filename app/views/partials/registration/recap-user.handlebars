@@ -70,7 +70,7 @@
             <!-- Participant -->
             <div class="col-md-3">
               {{#if this.config.participant}}
-              <a class="btn" href="/inscription/{{this.id}}/participant"><i class="fa fa-check mr-2 text-success" aria-hidden="true"></i><span class="text-uppercase">{{utf8 this.participant.nom}}</span>{{utf8 this.participant.prenom}}</a>
+              <a class="btn" href="/inscription/{{this.id}}/participant"><i class="fa fa-check mr-2 text-success" aria-hidden="true"></i><span class="text-uppercase">{{utf8 this.participant.nom}}</span> {{utf8 this.participant.prenom}}</a>
                 
               {{else}}
                 <a href="/inscription/{{this.id}}/participant" class="btn btn-danger shadow">Ajouter le participant<i class="fa fa-arrow-right ml-2" aria-hidden="true"></i></a>

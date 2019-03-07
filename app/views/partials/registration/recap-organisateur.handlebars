@@ -94,44 +94,33 @@
       </div>
       <div class="row">
         <div class="col-12">
-          <div class="row text-center bg-dark-blue text-white mt-2 pt-3 pb-3">
-            <div class="col-md-3">
-              Inscription
-            </div>
-            <div class="col-md-3">
-              Participant
-            </div>
-            <div class="col-md-2">
-              Paiement
-            </div>
-            <div class="col-md-2">
-              Certificat
-            </div>
-            <div class="col-md-1">
-              Dossier validé
-            </div>
-            <div class="col-md-1">
-              Actions
-            </div>
-          </div>
           {{#if inscriptions}}
 
             {{#each inscriptions}}  
               
-              <div class="row  pb-2 pt-2 border border-top-0 border-right-0 border-left-0">
+              <div class="row m-3 pb-2 pt-2 border border-muted shadow">
 
                 <!-- dossier d'inscription -->
                 <div class="col-md-3 text-uppercase">
+                  {{#if this.organisateur_validation.all}}
+                    <small class="badge badge-success">
+                      Dossier validé
+                    </small>
+                  {{else}}
+                    <small class="">
+                      <a class="badge badge-warning organisateur-dashboard-confirm-action font-weight-bold" href="/inscription/checkout/{{this.id}}/validate">Dossier non validé</a>
+                    </small>
+                  {{/if}}  
                   {{#each this.produits}}
-                    <div class="font-weight-bold text-lowercase">
+                    <div class="font-weight-bold text-lowercase d-block">
                       <div>
-                          {{#if this.race.name}}
-                            {{this.race.name}}
-                          {{else}}
-                            {{produitsRef}}
-                            <span class="subtotal hidde">{{produitsSubTotal}}</span>
-                            <span class="ref hidde">{{produitsRef}}</span>             
-                          {{/if}}                    
+                        {{#if this.race.name}}
+                          {{this.race.name}}
+                        {{else}}
+                          {{produitsRef}}
+                          <span class="subtotal hidde">{{produitsSubTotal}}</span>
+                          <span class="ref hidde">{{produitsRef}}</span>             
+                        {{/if}}                    
                       </div>
                     </div>
                   {{/each}}            
@@ -159,25 +148,19 @@
                 <!-- paiement -->
                 <div class="col-md-3">
                   {{#if this.paiement.captured}}
-                    <span class="paiementNumber">Validé <i class="fa fa-check text-success" aria-hidden="true"></i></span>
+                    <span class=" badge badge-success paiementNumber"><i class="fa fa-check text-white mx-2" aria-hidden="true"></i>Paiement validé</span>
                     <br>
-                    <span class="text-muted">CB</span>
-                    <br>
-                    <span class="text-muted">{{this.orderAmount}}€</span>
+                    <small class="text-muted">{{this.orderAmount}}€ - CB</small>
                   {{else}}
                     {{#if this.paiement.other_captured}}
-                    <span class="paiementNumber">Validé <i class="fa fa-check text-success" aria-hidden="true"></i></span>
+                    <span class=" badge badge-success paiementNumber"><i class="fa fa-check text-white mx-2" aria-hidden="true"></i>Paiement validé</span>
                     <br>
-                    <span class="text-muted">Chèque / Espèce</span>
-                    <br>
-                    <span class="text-muted">{{this.orderAmount}}€</span>
+                    <small class="text-muted">{{this.orderAmount}}€ - Chèque / Espèce</small>
                     {{else}}
-                      <span class="text-warning text-capitalize">à Confirmer</span>
+                      <span class="badge badge-warning">Paiement à confirmer</span>
                       <!-- <span class="btn btn-warning">Confirmer</span> -->
                       <br>
-                      <span class="text-muted">Chèque / Espèce</span>
-                      <br>
-                      <span class="text-muted">{{this.orderAmount}}€</span>
+                      <small class="text-muted">{{this.orderAmount}}€ - Chèque / Espèce</small>
                     {{/if}}
                   {{/if}}        
                 </div>
@@ -185,26 +168,21 @@
                 <!-- certificat -->
                 <div class="col-md-1">
                   {{#if this.docs.certificat}}
-                    <a href="{{this.docs.certificat}}" target="_blank"><i class="fa fa-file text-success" aria-hidden="true"></i></a>
+                    <a href="{{this.docs.certificat}}" target="_blank" class="badge badge-success">
+                      <i class="fa fa-file text-white mx-2" aria-hidden="true"></i>Certificat
+                    </a>
                   {{else}}
-                    <i class="fa fa-times text-danger" aria-hidden="true"></i>
-                  {{/if}}          
-                </div>
-
-                <!-- dossier complet -->
-                <div class="col-md-1 text-center">
-                  {{#if this.organisateur_validation.all}}
-                    <i class="fa fa-check text-success complet" aria-hidden="true"></i>
-                  {{else}}
-                    <i class="fa fa-pause text-warning" aria-hidden="true"></i>
+                    <span class="badge badge-danger">
+                      <i class="fa fa-times text-white mx-2" aria-hidden="true"></i>Certificat
+                    </span>
                   {{/if}}          
                 </div>
 
                 <!-- actions -->
-                <div class="col-md-1 text-center">
+                <div class="col-md-2 text-center">
                   <div class="btn-group w-80" role="group">
                     <button id="btnGroupDrop1" type="button" class="btn btn-outline-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      <i class="fa fa-ellipsis-v mr-2" aria-hidden="true"></i>
+                      Actions
                     </button>
                     <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
                       {{#if this.paiement.captured}}

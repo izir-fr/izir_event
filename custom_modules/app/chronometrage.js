@@ -51,7 +51,14 @@ var exportModules = {
             docs: {
               certificat: member.docs.certificat
             },
-            team: true
+            team: true,
+            organisateur_validation: {
+              participant: val.organisateur_validation.participant,
+              team: val.organisateur_validation.team,
+              paiement: val.organisateur_validation.paiement,
+              certificat: val.organisateur_validation.certificat,
+              all: val.organisateur_validation.all
+            }
           }
 
           // export team member formated

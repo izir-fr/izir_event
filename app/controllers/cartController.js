@@ -140,18 +140,18 @@ var cleanProducts = (products) => {
 }
 
 var finalCart = (req) => {
-  var products
-  var reachedProducts = []
-
-  if (!req.session.cart) {
-    return { products: null }
-  } else {
-    products = cleanProducts(req.session.cart.products)
-  }
-
-  reachedProducts = formatProducts(products)
-
   return new Promise((resolve, reject) => {
+    var products
+    var reachedProducts = []
+
+    if (!req.session.cart) {
+      resolve({ products: null })
+    } else {
+      products = cleanProducts(req.session.cart.products)
+    }
+
+    reachedProducts = formatProducts(products)
+
     Promise
       .all(reachedProducts)
       .then((products) => {

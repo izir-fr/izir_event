@@ -180,13 +180,32 @@
               {{/if}}
               <span class="d-inline-block mx-5 mb-3">Autorisez-vous les paiements en ligne ?</span>
               <em class="legend text-muted">
-                <p>En cochant cette case les participants pourront payer et finaliser leurs inscriptions à vos épreuves directement en ligne. Sinon, ils ne pourront que se pré-inscrire à votre évènement. </p>
+                <p>En cochant cette case les participants pourront payer et finaliser leurs inscriptions à vos épreuves directement en ligne. Sinon, ils ne pourront que se pré-inscrire à votre événement. </p>
                 <p>Les frais de dossier de 0,50€ seront réglés lors de l' inscription par le participant si celui-ci choisi de régler en ligne. Les inscriptions sont sans frais pour l'organisation.</p>
                 <p>Les fonds sont reversés à l'organisation, 15 jours après la date de clôture des inscriptions.</p>
               </em>
             </div>
           </div>
         </div>
+
+        <!-- PAIEMENT REQUIRED-->
+<!--         <div class="row mt-5">
+          <div class="col-12 bg-light border boder-muted pb-3">
+            <div class="col-sm-12 spacer-sm-top">
+              {{#if event.paiement_cb_required}}
+                <input type="checkbox" class="form-check-input" name="paiement_cb_required" id="paiement_cb_required" checked>
+              {{else}}
+                <input type="checkbox" class="form-check-input" name="paiement_cb_required" id="paiement_cb_required">
+              {{/if}}
+              <span class="d-inline-block mx-5 mb-3">Les paiement en ligne sont-ils obligatoires ?</span>
+              <em class="legend text-muted">
+                <p>En cochant cette case les participants pourront payer et finaliser leurs inscriptions à vos épreuves directement en ligne. Sinon, ils auront le choix entre un paiement en ligne et un paiement sur place. </p>
+                <p>Les frais de dossier de 0,50€ seront réglés lors de l' inscription par le participant si celui-ci choisi de régler en ligne. Les inscriptions sont sans frais pour l'organisation.</p>
+                <p>Les fonds sont reversés à l'organisation, 15 jours après la date de clôture des inscriptions.</p>
+              </em>
+            </div>
+          </div>
+        </div> -->
 
         <!-- DONS-->
         <div class="row mt-5">

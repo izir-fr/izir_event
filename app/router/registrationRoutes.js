@@ -18,7 +18,7 @@ router.get('/recap/user/:user', ensureAuthenticated, registrationCtrl.getRecapUs
 router.get('/:registration/delete', ensureAuthenticated, registrationCtrl.postDelete)
 
 // Get user all inscription recap =>  VERIFIE OK
-router.get('/:registration/participant', ensureAuthenticated, registrationCtrl.cartParticipantUpdate)
+router.get('/:registration/participant', ensureAuthenticated, registrationCtrl.getParticipantUpdate)
 
 // Post Ajax pre-inscription  => VERIFIE OK
 router.post('/:registration/participant/post', registrationCtrl.postParticipantUpdate)
@@ -29,11 +29,11 @@ router.get('/:id/certificat', ensureAuthenticated, registrationCtrl.getCertifica
 // Post a certificat  => VERIFIE OK
 router.post('/:id/certificat/post', registrationCtrl.postCertificat)
 
-// Get user all inscription recap
-router.get('/:id/team', ensureAuthenticated, registrationCtrl.cartTeamUpdate)
+// Get user all inscription recap => VERIFIE OK
+router.get('/:id/team', ensureAuthenticated, registrationCtrl.getCartTeamUpdate)
 
-// Post Ajax pre-inscription
-router.post('/:id/team/post', registrationCtrl.postAjaxCartTeamUpdate)
+// Post Ajax pre-inscription => VERIFIE OK
+router.post('/:id/team/post', registrationCtrl.postCartTeamUpdate)
 
 // Get render certificat update form
 router.get('/:id/certificat/team', ensureAuthenticated, registrationCtrl.getCertificatTeam)

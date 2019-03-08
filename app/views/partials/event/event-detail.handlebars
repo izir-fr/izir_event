@@ -1,328 +1,297 @@
-<div class="container-fluid">
+<div class="container">
+  <div class="row">
+  	<div class="col-12 py-3 d-flex py-2">
+  		<!-- date -->
+      <div class="d-inline-block ml-3 text-center">
+        <small class="d-block text-uppercase text-danger font-weight-bold">{{dateMonthText result.event.epreuves.0.date_debut}}</small>
+        <span class="d-block h3 text-dark font-weight-bold my-2">
+          {{dateDay result.event.epreuves.0.date_debut}}
+        </span>
+        <small class="d-block text-muted">
+          {{dateFullYear result.event.epreuves.0.date_debut}}
+        </small>                
+      </div>
+      <!-- event name -->
+      <div class="d-inline-block px-5">
+      	<h1 class="text-center font-weight-bold">{{utf8 result.event.name}}</h1>
+      </div>
+  	</div>
+  </div> 
 
-	<div class="row">
+  <div class="row">
+   	<div class="col-12 mb-5 bg-light border border-muted shadow p-5">
+			<div class="row border-bottom-box">
+				<div class="col-12 d-flex justify-content-between pb-3">
+					<div class="d-block">
+					{{#if result.event.paiement}}
+						<i class="fa fa-credit-card-alt text-success spacer-xs-left" aria-hidden="true" title="le paiement en ligne est accepté"></i>
+					{{else}}
+						<i class="fa fa-credit-card-alt text-muted spacer-xs-left" aria-hidden="true" title="le paiement en ligne n'est pas accepté"></i>
+					{{/if}}
+					{{#if result.event.certificat_required}}
+						<i class="fa fa-file text-success spacer-xs-left" title="le certificat médical est requis pour s'inscrire"></i>
+					{{else}}
+						<i class="fa fa-file text-muted spacer-xs-left" title="le certificat médical n'est pas requis pour s'inscrire"></i>
+					{{/if}}										
+					{{#if result.event.dons}}
+						<i class="fa fa-gratipay text-success spacer-xs-left" aria-hidden="true" title="L'événement accepte les dons"></i>
+					{{else}}
+						<i class="fa fa-gratipay text-muted spacer-xs-left" aria-hidden="true" title="L'événement n'accepte pas les dons"></i>
+					{{/if}}
+						<strong class="spacer-sm-left">
+							<a href="/event/finder?year=&city={{result.event.adresse.ville}}&month=&discipline=&activate=">
+								<span class="text-capitalize city"><i class="fa fa-map-marker" aria-hidden="true"></i> {{result.event.adresse.codePostal}} {{result.event.adresse.ville}} </span>
+							</a>
+						</strong>
 
-		<!-- left column -->
-		<div class="col-lg-9 order-xs-2 order-sm-2 order-lg-1">
-	    <div class="row">
-	    	<div class="col-12 py-3 d-flex py-5 mb-5">
-	    		<!-- date -->
-	        <div class="d-inline-block ml-3 text-center">
-	          <small class="d-block text-uppercase text-danger font-weight-bold">{{dateMonthText result.event.epreuves.0.date_debut}}</small>
-	          <span class="d-block h3 text-dark font-weight-bold my-2">
-	            {{dateDay result.event.epreuves.0.date_debut}}
-	          </span>
-	          <small class="d-block text-muted">
-	            {{dateFullYear result.event.epreuves.0.date_debut}}
-	          </small>                
-	        </div>
-	        <!-- event name -->
-	        <div class="d-inline-block px-5">
-	        	<h1 class="text-center font-weight-bold">{{utf8 result.event.name}}</h1>
-	        </div>
-	    	</div>
-	    </div>    
-			<div class="row">
-				<div class="col-md-6">
-					<!-- slider -->
-					<div id="event-detail-slider">
-						<div id="carouselExampleControls" class="carousel slide spacer-xs-top" data-ride="carousel">
-						  <div class="carousel-inner">
-						    {{#each result.event.docs.img}}
-							   	{{#if @first}}
-							    	<div class="carousel-item active">
-							    {{else}}
-							    	<div class="carousel-item">
-							    {{/if}}
-							      <a href="{{this}}" target="_blank">
-							      	<img class="d-block w-100" src="{{this}}" alt="{{this.index}}">
-							      </a>
-							    </div>
-						    {{/each}}
-						  </div>
-						  <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
-						    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-						    <span class="sr-only">Previous</span>
-						  </a>
-						  <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
-						    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-						    <span class="sr-only">Next</span>
-						  </a>
-						</div>
 					</div>
-				</div>
-				<div class="col-md-6">
-					<!-- map -->
-					<div id="map"></div>
-				</div>
-			</div>
-			<!-- DESCRIPTION -->
-			<div class="row spacer-sm-top">
-				<div class="col-12">
-					<h3 class="font-weight-bold my-5">Description</h3>
-					<p class="text-lowercase text-justify text-muted mb-3">{{utf8 result.event.description}}</p>
+					<span class="d-inline-block text-muted">Clôture des inscriptions le {{dateDay result.event.date_cloture_inscription}}/{{dateMonth result.event.date_cloture_inscription}}/{{dateFullYear result.event.date_cloture_inscription}} à {{dateHours result.event.date_cloture_inscription}}h{{dateMinutes result.event.date_cloture_inscription}}</span>						
 				</div>
 			</div>
 
-			<!-- EPREUVES -->
-			<div class="row spacer-sm-top">
-				<div class="col-12">
-					<h3 class="font-weight-bold">Les épreuves</h3>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-12">
-					{{#each result.event.epreuves}}
-					<div class="row spacer-sm-top px-3">
-						<div class="col-12 bg-light">
-							<span class="badge badge-light m-3"><i class="fa fa-calendar-check-o" > </i> {{date this.date_debut}} à {{dateHours this.date_debut}}h{{dateMinutes this.date_debut}}</span>
-							<h4 class="spacer-sm-top text-lowercase d-inline-block font-weight-bold">{{this.name}}</h4>
-							
-							{{#if description}}
-							<p class="text-lowercase text-justify my-5">{{ utf8 this.description }}</p>
-							{{/if}}
-							<div class="d-block my-3 py-3">
-								<span class="border border-muted text-muted text-capitalize p-3 mx-2">{{this.discipline}}</span>
-								<span class="border border-muted text-muted p-3 mx-2">Distance: {{this.distance}}Km</span>
-								<span class="border border-muted text-muted p-3 mx-2">Denivelé +: {{this.denivele}} mètres</span>
-								<span class="border border-muted text-muted p-3 mx-2">Tarif: {{this.tarif}}€</span></p>								
-							</div>
-						</div>
-					</div>
-					{{/each}}					
-				</div>
-
-			</div>
-
-			<!-- PARTICPANTS -->
-			<div class="row spacer-md-top" id="inscrits">
-				<div class="col-sm-12">
-					<h3 class="font-weight-bold">Liste des participants</h3>
-				</div>
-
-		    <div class="col-12 spacer-xs-top">
-		      <span class="text-muted d-block w-100 py-3"><strong>Filtrer par épreuve</strong></span>
-		      <form id="org-dashboard-filter" class="row" action="#inscrits">
-		        <div class="col-9">
-		          <select class="form-control" id="epreuve-filter" name="epreuve">
-		            <option>Toutes</option>
-		            {{#each result.event.epreuves}}
-		              <option value="{{this.id}}">{{utf8 this.name}}</option>
-		            {{/each}}
-		          </select>             
-		        </div>
-		        <div class="col-3">
-		          <button type="submit" class="btn btn-secondary d-block w-100">Filtrer</button> 
-		        </div>         
-		      </form>
-		    </div>   			
-				<div class="col-sm-12 spacer-sm-top">
-					<table class="table">
-						<thead>
-							<tr>
-							  <th>Nom</th>
-							  <th>Prénom</th>
-							  <th>Team</th>
-							  <th>Catégorie</th>
-							  <th>Sexe</th>
-							  <!--<th>Epreuve</th>-->
-							</tr>
-						</thead>
-						<tbody>
-							{{#each result.participants}}
-							    <tr>
-							    	<td class="text-uppercase"><strong>{{utf8 this.participant.nom}}</strong></td>
-							    	<td class="text-capitalize">{{utf8 this.participant.prenom}}</td>
-							    	<td>{{utf8 this.participant.team}}</td>
-							    	<td>{{this.participant.categorie}}</td>
-							    	<td class="text-lowercase">{{this.participant.sex}}</td>
-							    </tr>
-							{{/each}}
-						</tbody>
-					</table>
-				</div>
-			</div>			
-		</div>
-		<!-- right column -->
-		<div class="col-lg-3 order-xs-1 order-sm-1 order-lg-2 text-justify">
-			<div class="">
-				<div id="spacer-box"></div>
-				<div id="" class="bg-light border border-muted shadow p-5">
-					<div class="row border-bottom-box">
-						<div class="col-12">
-							<p>
-							{{#if result.event.paiement}}
-								<i class="fa fa-credit-card-alt text-success spacer-xs-left" aria-hidden="true" title="le paiement en ligne est accepté"></i>
-							{{else}}
-								<i class="fa fa-credit-card-alt text-muted spacer-xs-left" aria-hidden="true" title="le paiement en ligne n'est pas accepté"></i>
-							{{/if}}
-							{{#if result.event.certificat_required}}
-								<i class="fa fa-file text-success spacer-xs-left" title="le certificat médical est requis pour s'inscrire"></i>
-							{{else}}
-								<i class="fa fa-file text-muted spacer-xs-left" title="le certificat médical n'est pas requis pour s'inscrire"></i>
-							{{/if}}										
-							{{#if result.event.dons}}
-								<i class="fa fa-gratipay text-success spacer-xs-left" aria-hidden="true" title="L'événement accepte les dons"></i>
-							{{else}}
-								<i class="fa fa-gratipay text-muted spacer-xs-left" aria-hidden="true" title="L'événement n'accepte pas les dons"></i>
-							{{/if}}
-								<strong class="spacer-sm-left">
-									<a href="/event/finder?year=&city={{result.event.adresse.ville}}&month=&discipline=&activate=">
-										<span class="text-capitalize city"><i class="fa fa-map-marker" aria-hidden="true"></i> {{result.event.adresse.codePostal}} {{result.event.adresse.ville}} </span>
-									</a>
-								</strong>
-							</p>						
-						</div>
-					</div>
-					
-					<form method="post" action="/cart/add/registration?event={{result.event._id}}" >
-						<!-- tarif -->
-						<div class="row">
-							<div class="col-12 py-3">
-								<span class="d-block font-weight-bold py-3 text-muted">Tarifs</span>
-								{{#each result.races}}
-									<div class="d-block py-2">
-										<div class="form-check">
-											{{#if this.active}}
-											  <input class="form-check-input" type="checkbox" value="{{this.id}}" name="race">
-											  <label class="form-check-label ml-2 d-block" for="defaultCheck1">
-											    {{this.name}}
-											    <small class="text-muted">
-											    	{{this.distance}}km -
-											    	{{#if this.team}} 
-											    		Equipe
-											    	{{else}}
-															Individuel
-											    	{{/if}}
-											    	 - {{this.tarif}}€
-											    </small>
-											  </label>											  
-											 {{else}}
-												 	<span class="text-muted d-block">
-												 		{{this.name}} 
-												 		<small>
-												    	{{this.distance}}km -
-												    	{{#if this.team}} 
-												    		Equipe
-												    	{{else}}
-																Individuel
-												    	{{/if}}
-												    	- {{this.tarif}}€
-													 		- <u>Complet</u>												 	
-												 		</small>
-												 	</span>
-											 {{/if}}
-										</div>
-									</div>
-								{{/each}}
-							</div>
-						</div>
-						
-						<!-- OPTIONS -->
-						{{#if result.event.options}}
-						<div class="row">
-							<div class="col-12 pb-3">
-								<span class="d-block font-weight-bold py-3 text-muted">Options</span>
-								{{#each result.event.options}}
-									<div class="form-check">
-									  <input class="form-check-input" type="checkbox" value="{{this._id}}" name="option">
+			<small class="mt-2 d-block text-muted">
+				Cocher course(s) et/ou option(s) que vous souhaitez ajouter au panier.
+			</small>
+			
+			<form method="post" action="/cart/add/registration?event={{result.event._id}}" >
+				<!-- tarif -->
+				<div class="row">
+					<div class="col-12 py-3">
+						<span class="d-block font-weight-bold py-3 text-muted">Tarifs</span>
+						{{#each result.races}}
+							<div class="d-block py-2">
+								<div class="form-check">
+									{{#if this.active}}
+									  <input class="form-check-input" type="checkbox" value="{{this.id}}" name="race">
 									  <label class="form-check-label ml-2 d-block" for="defaultCheck1">
-									    {{this.name}}
-									    <span class="text-muted">{{this.reference}} - {{this.prix}}€</span>
-									  </label>
-									</div>
-								{{/each}}
-							</div>						
-						</div>
-						{{/if}}		
-						<div class="d-block">
-							{{#if config.registration.active}}
-								<button class="btn btn-danger mt-3 d-block w-100" type="submit">Ajouter au panier</button>
-							{{else}}
-								<div class="alert alert-warning">Les inscriptions à cette événement sont closes</div>	
-							{{/if}}
-						</div>										
-					</form>
-					<small class="my-3 d-block text-muted">
-						Merci de cocher course(s) et/ou option(s) que vous souhaitez ajouter au panier.
-					</small>
-					<!-- BUTTON -->
-					<div class="row" id="inscriptionButton">
-						<div class="col-12 mb-5">
-							<div class="d-block">
-								<a class="btn btn-outline-primary spacer-xs-top d-block" href="#inscrits">Liste des {{result.participants.length}} inscrits</a>
+									    <a href="#{{@index}}">{{this.name}}</a>
+									    <small class="text-muted">
+									    	{{this.distance}}km -
+									    	{{#if this.team}} 
+									    		Equipe
+									    	{{else}}
+													Individuel
+									    	{{/if}}
+									    	 - {{this.tarif}}€
+									    </small>
+									  </label>											  
+									 {{else}}
+										 	<span class="text-muted d-block">
+										 		{{this.name}} 
+										 		<small>
+										    	{{this.distance}}km -
+										    	{{#if this.team}} 
+										    		Equipe
+										    	{{else}}
+														Individuel
+										    	{{/if}}
+										    	- {{this.tarif}}€
+											 		- <u>Complet</u>												 	
+										 		</small>
+										 	</span>
+									 {{/if}}
+								</div>
 							</div>
-						</div>
+						{{/each}}
 					</div>
-					<div class="row border-top-box border-bottom-box pb-2">
-						<div class="col-12">
-							<span class="d-block font-weight-bold text-muted my-3">Clôture des inscriptions le {{dateDay result.event.date_cloture_inscription}}/{{dateMonth result.event.date_cloture_inscription}}/{{dateFullYear result.event.date_cloture_inscription}} à {{dateHours result.event.date_cloture_inscription}}h{{dateMinutes result.event.date_cloture_inscription}}</span>
-						</div>
-					</div>
-
-					<div class="row">
-						<div class="col-12 spacer-sm-top">
-							<strong class="py-3 d-block">Adresse</strong>
-							<p>
-							{{utf8 result.event.adresse.adresse1}}<br>
-							{{utf8 result.event.adresse.adresse2}}<br>
-							{{utf8 result.event.adresse.codePostal}} {{utf8 result.event.adresse.ville}}<br>
-							{{utf8 result.event.adresse.region}}<br>
-							{{utf8 result.event.adresse.pays}}
-							</p>
-							<input type="hidden" name="latitude" id="latitude" value="{{result.event.adresse.latitude}}">
-					    <input type="hidden" name="longitude" id="longitude" value="{{result.event.adresse.longitude}}">
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-12 spacer-sm-top">
-							<strong class="py-3 d-block">Permanence</strong>
-							{{#if result.event.permanence.email}}
-								<div class="d-block my-2">
-									<span class="text-muted font-weight-bold">Email</span>
-								</div>							
-								<div class="d-block my-2">{{result.event.permanence.email}}</div>
-							{{/if}}
-
-							{{#if result.event.permanence.telephone}}
-								<div class="d-block mb-2 mt-4">
-									<span class="text-muted font-weight-bold">Téléphone</span>
-								</div>
-							
-								<div class="d-block my-2"> {{result.event.permanence.telephone}}</div>
-							{{/if}}
-							{{#if result.event.permanence.siteWeb}}		
-								<div class="d-block mb-2 mt-4">
-									<span class="text-muted font-weight-bold">www</span>
-								</div>
-								
-								<div class="d-block my-2">
-									<a href="{{utf8 result.event.permanence.siteWeb}}" target="_blank" rel="nofollow">{{utf8 result.event.permanence.siteWeb}}</a>
-								</div>
-							{{/if}}	
-							{{#if result.event.permanence.facebook}}	
-								<div class="d-block mb-2 mt-4">
-									<span class="text-muted font-weight-bold">Facebook</span>
-								</div>
-								<div class="d-block my-2">
-									<a href="{{utf8 result.event.permanence.facebook}}" target="_blank" rel="nofollow">{{utf8 result.event.permanence.facebook}}</a>
-								</div>
-							{{/if}}	
-							</ul>							
-						</div>	
-		
-					</div>
-					<div class="row border-top-box">
-						<div class="col-12 pt-3">
-						{{#if result.event.docs.legales.[0]}}
-							<p>Règlement de l'épreuve : <strong><a href="{{result.event.docs.legales.[0]}}" target="_blank">télécharger</a></p></strong>
-							{{else}}
-							<p>Règlement de l'épreuve : <strong>NON FOURNI</strong></p>
-						{{/if}}
-						</div>
+				</div>
+				
+				<!-- OPTIONS -->
+				{{#if result.event.options}}
+				<div class="row">
+					<div class="col-12 pb-3">
+						<span class="d-block font-weight-bold py-3 text-muted">Options</span>
+						{{#each result.event.options}}
+							<div class="form-check">
+							  <input class="form-check-input" type="checkbox" value="{{this._id}}" name="option">
+							  <label class="form-check-label ml-2 d-block" for="defaultCheck1">
+							    {{this.name}}
+							    <span class="text-muted">{{this.reference}} - {{this.prix}}€</span>
+							  </label>
+							</div>
+						{{/each}}
 					</div>						
 				</div>
+				{{/if}}
+				<div class="row">
+					<div class="col-md-6 my-2">
+						<a class="btn btn-outline-primary d-block" href="#inscrits">Liste des {{result.participants.length}} inscrits</a>
+					</div>
+					<div class="col-md-6 my-2">
+						{{#if config.registration.active}}
+							<button class="btn btn-danger d-block w-100" type="submit">M'inscrire →</button>
+						{{else}}
+							<div class="alert alert-warning">Les inscriptions à cette événement sont closes</div>	
+						{{/if}}
+					</div>
+				</div>									
+				<div class="d-block mt-2">								
+					{{#if result.event.docs.legales.[0]}}							
+						<a href="{{result.event.docs.legales.[0]}}" target="_blank" class="btn font-weight-bold text-muted">Voir le règlement de l'épreuve</a>
+					{{else}}
+						<p>Règlement de l'épreuve : <strong>NON FOURNI</strong></p>
+					{{/if}}
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-6">
+			<h3 class="font-weight-bold my-5">Adresse</h3>
+			<p>
+			{{utf8 result.event.adresse.adresse1}}<br>
+			{{utf8 result.event.adresse.adresse2}}<br>
+			{{utf8 result.event.adresse.codePostal}} {{utf8 result.event.adresse.ville}}<br>
+			{{utf8 result.event.adresse.region}}<br>
+			{{utf8 result.event.adresse.pays}}
+			</p>
+			<input type="hidden" name="latitude" id="latitude" value="{{result.event.adresse.latitude}}">
+	    <input type="hidden" name="longitude" id="longitude" value="{{result.event.adresse.longitude}}">
+		</div>
+		<div class="col-md-6">
+			<!-- map -->
+			<div id="map"></div>
+					
+		</div>
+	</div>
+
+
+	<div class="row">
+		<div class="col-md-6 my-2">
+			<h3 class="font-weight-bold my-3">Permanence</h3>
+			{{#if result.event.permanence.email}}
+				<div class="d-block my-2">
+					<span class="text-muted font-weight-bold">Email: </span>{{result.event.permanence.email}}
+				</div>
+			{{/if}}
+
+			{{#if result.event.permanence.telephone}}
+				<div class="d-block my-2">
+					<span class="text-muted font-weight-bold">Téléphone: </span>{{result.event.permanence.telephone}}
+				</div>
+			{{/if}}
+			{{#if result.event.permanence.siteWeb}}		
+				<div class="d-block my-2">
+					<span class="text-muted font-weight-bold">www → </span>
+					<a href="{{utf8 result.event.permanence.siteWeb}}" target="_blank" rel="nofollow">{{utf8 result.event.permanence.siteWeb}}</a>
+				</div>
+			{{/if}}	
+			{{#if result.event.permanence.facebook}}	
+				<div class="d-block my-2">
+					<span class="text-muted font-weight-bold">Facebook → </span>
+					<a href="{{utf8 result.event.permanence.facebook}}" target="_blank" rel="nofollow">{{utf8 result.event.permanence.facebook}}</a>
+				</div>
+			{{/if}}	
+			<h3 class="font-weight-bold  mt-5 mb-3">Description</h3>
+			<p class="text-lowercase text-justify text-muted mb-3">{{utf8 result.event.description}}</p>
+
+		</div>
+		<div class="col-md-6 my-2">
+			<!-- slider -->
+			<div id="carouselExampleControls" class="carousel slide spacer-xs-top h-100" data-ride="carousel">
+			  <div class="carousel-inner h-100">
+			    {{#each result.event.docs.img}}
+				   	{{#if @first}}
+				    	<div class="carousel-item active">
+				    {{else}}
+				    	<div class="carousel-item">
+				    {{/if}}
+				      <a href="{{this}}" target="_blank">
+				      	<img class="d-block w-100" src="{{this}}" alt="{{this.index}}">
+				      </a>
+				    </div>
+			    {{/each}}
+			  </div>
+			  <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+			    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+			    <span class="sr-only">Previous</span>
+			  </a>
+			  <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+			    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+			    <span class="sr-only">Next</span>
+			  </a>
 			</div>
 		</div>
+	</div>
+
+	<!-- EPREUVES -->
+	<div class="row spacer-sm-top">
+		<div class="col-12">
+			<h3 class="font-weight-bold">Les épreuves</h3>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-12">
+			{{#each result.event.epreuves}}
+			<div class="row spacer-sm-top px-3 bg-light shadow" id="{{@index}}">
+				<div class="col-12 ">
+					<span class="badge badge-light m-3"><i class="fa fa-calendar-check-o" > </i> {{date this.date_debut}} à {{dateHours this.date_debut}}h{{dateMinutes this.date_debut}}</span>
+					<h4 class="spacer-sm-top text-lowercase d-inline-block font-weight-bold">{{this.name}}</h4>
+					
+					{{#if description}}
+					<p class="text-lowercase text-justify my-5">{{ utf8 this.description }}</p>
+					{{/if}}
+					<div class="d-block my-3 py-3">
+						<span class="border border-muted text-muted text-capitalize p-3 mx-2">{{this.discipline}}</span>
+						<span class="border border-muted text-muted p-3 mx-2">Distance: {{this.distance}}Km</span>
+						<span class="border border-muted text-muted p-3 mx-2">Denivelé +: {{this.denivele}} mètres</span>
+						<span class="border border-muted text-muted p-3 mx-2">Tarif: {{this.tarif}}€</span></p>								
+					</div>
+				</div>
+			</div>
+			{{/each}}					
+		</div>
+	</div>
+
+	<!-- PARTICPANTS -->
+	<div class="row spacer-md-top" id="inscrits">
+		<div class="col-sm-12">
+			<h3 class="font-weight-bold">Liste des participants</h3>
+		</div>
+
+    <div class="col-12 spacer-xs-top">
+      <span class="text-muted d-block w-100 py-3"><strong>Filtrer par épreuve</strong></span>
+      <form id="org-dashboard-filter" class="row" action="#inscrits">
+        <div class="col-9">
+          <select class="form-control" id="epreuve-filter" name="epreuve">
+            <option>Toutes</option>
+            {{#each result.event.epreuves}}
+              <option value="{{this.id}}">{{utf8 this.name}}</option>
+            {{/each}}
+          </select>             
+        </div>
+        <div class="col-3">
+          <button type="submit" class="btn btn-secondary d-block w-100">Filtrer</button> 
+        </div>         
+      </form>
+    </div>   			
+		<div class="col-sm-12 spacer-sm-top">
+			<table class="table">
+				<thead>
+					<tr>
+					  <th>Nom</th>
+					  <th>Prénom</th>
+					  <th>Team</th>
+					  <th>Catégorie</th>
+					  <th>Sexe</th>
+					  <!--<th>Epreuve</th>-->
+					</tr>
+				</thead>
+				<tbody>
+					{{#each result.participants}}
+					    <tr>
+					    	<td class="text-uppercase"><strong>{{utf8 this.participant.nom}}</strong></td>
+					    	<td class="text-capitalize">{{utf8 this.participant.prenom}}</td>
+					    	<td>{{utf8 this.participant.team}}</td>
+					    	<td>{{this.participant.categorie}}</td>
+					    	<td class="text-lowercase">{{this.participant.sex}}</td>
+					    </tr>
+					{{/each}}
+				</tbody>
+			</table>
+		</div>
+	</div>			
 </div>
+
 <input type="hidden" value="{{result.event.date_cloture_inscription}}" name="dateClotureInscription">

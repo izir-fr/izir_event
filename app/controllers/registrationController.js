@@ -233,8 +233,10 @@ var registrationCtrl = {
         }
 
         registration.produits.forEach((produit) => {
-          if (produit.race.team === true) {
-            races++
+          if (produit.race !== undefined) {
+            if (produit.race.team === true) {
+              races++
+            }
           }
         })
 

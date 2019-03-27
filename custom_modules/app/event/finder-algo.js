@@ -65,7 +65,9 @@ var eventFinderForm = (req, res, callback, error) => {
         }
 
         Event
-          .find({ _id: eventsId })
+          .find({
+            _id: eventsId
+          })
           .populate('epreuves')
           .exec((err, events) => {
             if (err) {

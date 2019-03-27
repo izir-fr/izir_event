@@ -7,9 +7,15 @@
       </div>
     </div>
 
-    {{#if registrations}}
+    <div class="row">
+      <div class="col-12">
+        <h2>Evenements à venir</h2>
+      </div>
+    </div>
 
-      {{#each registrations}}
+    {{#if registrations.next}}
+
+      {{#each registrations.next}}
         <div class="d-block shadow bg-white my-3 p-3">
           <div class="row">
             <div class="col-12 text-left my-3">
@@ -73,7 +79,7 @@
               <a class="btn" href="/inscription/{{this.id}}/participant"><i class="fa fa-check mr-2 text-success" aria-hidden="true"></i><span class="text-uppercase">{{utf8 this.participant.nom}}</span> {{utf8 this.participant.prenom}}</a>
                 
               {{else}}
-                <a href="/inscription/{{this.id}}/participant" class="btn btn-danger shadow">Ajouter le participant<i class="fa fa-arrow-right ml-2" aria-hidden="true"></i></a>
+                <a href="/inscription/{{this.id}}/participant" class="btn btn-danger shadow">Fiche participant(s)<i class="fa fa-arrow-right ml-2" aria-hidden="true"></i></a>
               {{/if}}
             </div>
 
@@ -103,10 +109,117 @@
     {{else}}
       <div class="row pt-3">
         <div class="col-12">
-          <p class="alert alert-danger">Vous ne vous êtes pas encore inscrit à une épreuve</p>
+          <p class="alert alert-danger">Vous n'avez aucun événement à venir</p>
         </div>
       </div>
     {{/if}}
+    <div class="row">
+      <div class="col-12 mt-5">
+        <h2>Evenements passés</h2>
+      </div>
+    </div>
+
+    {{#if registrations.past}}
+
+      {{#each registrations.past}}
+        <div class="d-block shadow bg-light my-3 p-3">
+          <div class="row">
+            <div class="col-12 text-left my-3">
+              <div class="text-secondary d-block">
+                {{#if this.organisateur_validation.all}}
+                  <span class="badge badge-success mr-2">Validé</span>
+                {{else}}
+                  <span class="badge badge-warning mr-2">En attente *</span>
+                {{/if}}
+                <span class="text-dark"><i class="fa fa-folder-open mr-2 text-muted" aria-hidden="true"></i>N°: {{this.id}} <i class="fa fa-calendar-o mx-2 text-muted" aria-hidden="true"></i> {{date this.created_at}}</span>
+
+                <span class="float-right">
+                  <div class="fb-share-button mx-2" data-href="https://event.izir.fr/event/{{this.event.id}}" data-layout="button_count" data-size="large"data-mobile-iframe="true">
+                    <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Partager</a>
+                  </div>
+                  {{#if this.config.paiement}}
+                  {{else}}
+                    <a href="/inscription/{{this.id}}/delete" class="btn btn-outline-dark border-0">
+                      <i class="fa fa-trash-o text-muted" aria-hidden="true"></i>
+                    </a>
+                  {{/if}}
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <div class="progress" style="height: 5px;">
+                <div class="progress-bar {{ config.progress_bar.color }}" role="progressbar" style="width: {{ config.progress_bar.pourcentage }}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+            </div>
+          </div>
+          <div class="row my-auto pt-3">
+            <div class="col-md-3">
+              <!-- événement & Dossier -->
+              <strong class="d-block"><a href="/event/{{this.event.id}}">{{this.event.name}}</a></strong>
+              <small class="text-muted d-block">{{this.produits.0.race.name}}</small>
+            </div>
+
+            <!-- Paiement -->
+            <div class="col-md-3">
+              {{#if this.event.paiement}}
+                {{#if this.config.paiement}}
+                  <i class="fa fa-check mr-2 text-success" aria-hidden="true"></i> Payé 
+                {{else}}
+                  <div class="text-danger d-block">
+                    <i class="fa fa-times mr-2 text-danger" aria-hidden="true"></i>Non-payé
+                    <small class="text-muted d-block">
+                      l'organisateur attend votre paiement
+                    </small>
+                  </div>           
+                {{/if}} 
+              {{else}}
+                <small class="text-muted">L'organisateur n'a pas activé les paiements en ligne</small>
+              {{/if}}            
+            </div>
+
+            <!-- Participant -->
+            <div class="col-md-3">
+              {{#if this.config.participant}}
+              <a class="btn" href="/inscription/{{this.id}}/participant"><i class="fa fa-check mr-2 text-success" aria-hidden="true"></i><span class="text-uppercase">{{utf8 this.participant.nom}}</span> {{utf8 this.participant.prenom}}</a>
+                
+              {{else}}
+                <a href="/inscription/{{this.id}}/participant" class="btn btn-danger shadow">Fiche participant(s)<i class="fa fa-arrow-right ml-2" aria-hidden="true"></i></a>
+              {{/if}}
+            </div>
+
+
+            <!-- Docs -->
+            <div class="col-md-3">
+              {{#if this.event.certificat_required}}
+                {{#if this.config.certificat}}
+                  <a href="/inscription/{{this.id}}/certificat" class="btn"><i class="fa fa-check mr-2 text-success" aria-hidden="true"></i>Documents</a>
+                {{else}}
+                  <a href="/inscription/{{this.id}}/certificat" class="btn btn-danger shadow">Ajouter le certificat<i class="fa fa-arrow-right ml-2" aria-hidden="true"></i></a>
+                {{/if}}
+              {{/if}}            
+            </div>  
+          </div>
+          <div class="row">
+            <div class="col-12 py-2">
+              {{#if this.organisateur_validation.all}}
+              {{else}}
+                <small class="text-muted">* Si votre dossier est complet, merci d'attendre la validation de celui-ci par l'organisateur de l'événement.</small>
+              {{/if}}
+              
+            </div>
+          </div>
+        </div>
+      {{/each}}
+    {{else}}
+      <div class="row pt-3">
+        <div class="col-12">
+          <p class="alert alert-danger">Vous ne vous êtes pas encore inscrit à un événement</p>
+        </div>
+      </div>
+    {{/if}}
+
     <div class="row">
       <div class="col-sm-3 text-center mx-auto mt-3 mb-5 text-center">
         <a href="/event/finder" class="btn btn-default">Trouver une épreuve maintenant</a>

@@ -419,6 +419,7 @@ var cartCtrl = {
 
         res.redirect('/cart')
       } else {
+        req.flash('error_msg', 'Vous n\'avez sélectionné aucune épreuve et/ou option. Merci de cocher la case à gauche de l\'épreuve/option à laquelle vous souhaitez vous inscrire.')
         res.redirect(req.headers.referer)
       }
     }

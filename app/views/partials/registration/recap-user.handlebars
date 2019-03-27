@@ -52,34 +52,53 @@
             <div class="col-md-3">
               <!-- événement & Dossier -->
               <strong class="d-block"><a href="/event/{{this.event.id}}">{{this.event.name}}</a></strong>
-              <small class="text-muted d-block">{{this.produits.0.race.name}}</small>
+              <small class="text-muted d-block pt-2">{{this.produits.0.race.name}}</small>
             </div>
 
             <!-- Paiement -->
             <div class="col-md-3">
               {{#if this.event.paiement}}
                 {{#if this.config.paiement}}
-                  <i class="fa fa-check mr-2 text-success" aria-hidden="true"></i> Payé 
+                  <span class="text-success">
+                    <i class="fa fa-check mr-2" aria-hidden="true"></i> Payé 
+                  </span>
                 {{else}}
                   <div class="text-danger d-block">
                     <i class="fa fa-times mr-2 text-danger" aria-hidden="true"></i>Non-payé
-                    <small class="text-muted d-block">
+                    <small class="text-muted d-block pt-2">
                       l'organisateur attend votre paiement
                     </small>
                   </div>           
                 {{/if}} 
               {{else}}
-                <small class="text-muted">L'organisateur n'a pas activé les paiements en ligne</small>
+                <small class="d-block text-muted pt-2">L'organisateur n'a pas activé les paiements en ligne</small>
               {{/if}}            
             </div>
 
             <!-- Participant -->
             <div class="col-md-3">
               {{#if this.config.participant}}
-              <a class="btn" href="/inscription/{{this.id}}/participant"><i class="fa fa-check mr-2 text-success" aria-hidden="true"></i><span class="text-uppercase">{{utf8 this.participant.nom}}</span> {{utf8 this.participant.prenom}}</a>
-                
+                <div class="d-block ">
+                  <a class="d-block" href="/inscription/{{this.id}}/participant">
+                    <span class="d-block text-success">
+                      <i class="fa fa-check mr-2 " aria-hidden="true"></i>Fiche participant(s)
+                    </span>
+                    <div class="btn">
+                      <small class="text-muted d-block">{{utf8 this.participant.nom}}</span> {{utf8 this.participant.prenom}}</small>
+                      {{#each this.team}}
+                        <small class="text-muted d-block">{{utf8 this.nom}}</span> {{utf8 this.prenom}}</small>
+                      {{/each}}
+                    </div>
+                  </a>
+                </div>              
               {{else}}
-                <a href="/inscription/{{this.id}}/participant" class="btn btn-danger shadow">Fiche participant(s)<i class="fa fa-arrow-right ml-2" aria-hidden="true"></i></a>
+                <div class="d-block text-danger">
+                  <i class="fa fa-times mr-2 " aria-hidden="true"></i>Fiche participant(s)
+                </div>
+                <a href="/inscription/{{this.id}}/participant" class="btn btn-danger shadow">
+                  Compléter la fiche
+                  <i class="fa fa-arrow-right ml-2" aria-hidden="true"></i>
+                </a>
               {{/if}}
             </div>
 
@@ -88,8 +107,14 @@
             <div class="col-md-3">
               {{#if this.event.certificat_required}}
                 {{#if this.config.certificat}}
-                  <a href="/inscription/{{this.id}}/certificat" class="btn"><i class="fa fa-check mr-2 text-success" aria-hidden="true"></i>Documents</a>
+                  <span class="d-block text-success">
+                    <i class="fa fa-check mr-2 " aria-hidden="true"></i>Documents
+                  </span>
+                  <a href="/inscription/{{this.id}}/certificat" class="btn"><small class="text-muted">Certificat</small></a>
                 {{else}}
+                  <span class="d-block text-danger">
+                    <i class="fa fa-times mr-2 " aria-hidden="true"></i>Documents
+                  </span>
                   <a href="/inscription/{{this.id}}/certificat" class="btn btn-danger shadow">Ajouter le certificat<i class="fa fa-arrow-right ml-2" aria-hidden="true"></i></a>
                 {{/if}}
               {{/if}}            
@@ -122,7 +147,7 @@
     {{#if registrations.past}}
 
       {{#each registrations.past}}
-        <div class="d-block shadow bg-light my-3 p-3">
+        <div class="d-block shadow bg-white my-3 p-3">
           <div class="row">
             <div class="col-12 text-left my-3">
               <div class="text-secondary d-block">
@@ -158,34 +183,53 @@
             <div class="col-md-3">
               <!-- événement & Dossier -->
               <strong class="d-block"><a href="/event/{{this.event.id}}">{{this.event.name}}</a></strong>
-              <small class="text-muted d-block">{{this.produits.0.race.name}}</small>
+              <small class="text-muted d-block pt-2">{{this.produits.0.race.name}}</small>
             </div>
 
             <!-- Paiement -->
             <div class="col-md-3">
               {{#if this.event.paiement}}
                 {{#if this.config.paiement}}
-                  <i class="fa fa-check mr-2 text-success" aria-hidden="true"></i> Payé 
+                  <span class="text-success">
+                    <i class="fa fa-check mr-2" aria-hidden="true"></i> Payé 
+                  </span>
                 {{else}}
                   <div class="text-danger d-block">
                     <i class="fa fa-times mr-2 text-danger" aria-hidden="true"></i>Non-payé
-                    <small class="text-muted d-block">
+                    <small class="text-muted d-block pt-2">
                       l'organisateur attend votre paiement
                     </small>
                   </div>           
                 {{/if}} 
               {{else}}
-                <small class="text-muted">L'organisateur n'a pas activé les paiements en ligne</small>
+                <small class="d-block text-muted pt-2">L'organisateur n'a pas activé les paiements en ligne</small>
               {{/if}}            
             </div>
 
             <!-- Participant -->
             <div class="col-md-3">
               {{#if this.config.participant}}
-              <a class="btn" href="/inscription/{{this.id}}/participant"><i class="fa fa-check mr-2 text-success" aria-hidden="true"></i><span class="text-uppercase">{{utf8 this.participant.nom}}</span> {{utf8 this.participant.prenom}}</a>
-                
+                <div class="d-block ">
+                  <a class="d-block" href="/inscription/{{this.id}}/participant">
+                    <span class="d-block text-success">
+                      <i class="fa fa-check mr-2 " aria-hidden="true"></i>Fiche participant(s)
+                    </span>
+                    <div class="btn">
+                      <small class="text-muted d-block">{{utf8 this.participant.nom}}</span> {{utf8 this.participant.prenom}}</small>
+                      {{#each this.team}}
+                        <small class="text-muted d-block">{{utf8 this.nom}}</span> {{utf8 this.prenom}}</small>
+                      {{/each}}
+                    </div>
+                  </a>
+                </div>              
               {{else}}
-                <a href="/inscription/{{this.id}}/participant" class="btn btn-danger shadow">Fiche participant(s)<i class="fa fa-arrow-right ml-2" aria-hidden="true"></i></a>
+                <div class="d-block text-danger">
+                  <i class="fa fa-times mr-2 " aria-hidden="true"></i>Fiche participant(s)
+                </div>
+                <a href="/inscription/{{this.id}}/participant" class="btn btn-danger shadow">
+                  Compléter la fiche
+                  <i class="fa fa-arrow-right ml-2" aria-hidden="true"></i>
+                </a>
               {{/if}}
             </div>
 
@@ -194,8 +238,14 @@
             <div class="col-md-3">
               {{#if this.event.certificat_required}}
                 {{#if this.config.certificat}}
-                  <a href="/inscription/{{this.id}}/certificat" class="btn"><i class="fa fa-check mr-2 text-success" aria-hidden="true"></i>Documents</a>
+                  <span class="d-block text-success">
+                    <i class="fa fa-check mr-2 " aria-hidden="true"></i>Documents
+                  </span>
+                  <a href="/inscription/{{this.id}}/certificat" class="btn"><small class="text-muted">Certificat</small></a>
                 {{else}}
+                  <span class="d-block text-danger">
+                    <i class="fa fa-times mr-2 " aria-hidden="true"></i>Documents
+                  </span>
                   <a href="/inscription/{{this.id}}/certificat" class="btn btn-danger shadow">Ajouter le certificat<i class="fa fa-arrow-right ml-2" aria-hidden="true"></i></a>
                 {{/if}}
               {{/if}}            

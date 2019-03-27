@@ -672,7 +672,7 @@ var cartCtrl = {
                         // créer la notification de paiement
                         var notification = new Notification({
                           receiver: [user],
-                          message: 'Nous vous confirmons le paiement N°' + paiement.stripe_id + ' pour la commande N°' + id + '.'
+                          message: 'Nous avons bien transmis l\'inscription correspondant à la commande N°' + id + ' à  son organisateur. Notez cependant que pour valider votre inscription celui-ci attendra désormais votre paiement en direct, si possible avant le jour de l\'évenement.'
                         })
 
                         // save notification
@@ -688,7 +688,7 @@ var cartCtrl = {
                           })
 
                         // REDIRECTION + HEADERS
-                        req.flash('success_msg', 'Votre paiement à bien été pris en compte')
+                        req.flash('success_msg', 'Votre inscription à bien été prise en compte')
                         res.redirect('/inscription/recap/user/' + user)
                       }
                     })

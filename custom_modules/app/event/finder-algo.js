@@ -4,10 +4,51 @@ var Post = require('../../../app/models/post')
 var dateNow = new Date(Date.now())
 var Promise = require('bluebird')
 
-// event finder
-var eventFinderForm = (req, res, callback, error) => {
-  var allEvents = []
+var featuredPosts = new Promise((resolve, reject) => {
+  Post
+    .find({ 'published_date': { $lte: Date(Date.now()) }, 'featured': true })
+    .sort({ 'published_date': -1 })
+    .limit(2)
+    .exec((err, posts) => {
+      if (err) {
+        reject(err)
+      }
+      resolve(posts)
+    })
+})
+
+var dbRaces = (query) => {
+  return new Promise((resolve, reject) => {
+    Race
+      .find(query)
+      .exec((err, races) => {
+        if (err) {
+          reject(err)
+        }
+        resolve(races)
+      })
+  })
+}
+
+var dbEvents = (query) => {
+  return new Promise((resolve, reject) => {
+    Event
+      .find(query)
+      .populate('epreuves')
+      .exec((err, events) => {
+        if (err) {
+          reject(err)
+        }
+        resolve(events)
+      })
+  })
+}
+
+var query = (req) => {
+  var queryDate, queryDiscipline, citySearch
+
   var discipline = req.query.discipline
+
   var date = {
     month: req.query.month,
     year: req.query.year,
@@ -15,7 +56,6 @@ var eventFinderForm = (req, res, callback, error) => {
   }
 
   // var activate = req.query.activate
-  var queryDate, queryDiscipline, citySearch
 
   if (date.year === '') {
     date.year = dateNow.getFullYear()
@@ -30,6 +70,7 @@ var eventFinderForm = (req, res, callback, error) => {
 
   // date query
   queryDate = { date_debut: { $gte: new Date(date.year, date.month, date.day), $lt: new Date(date.year + 1, date.month, date.day) } }
+
   // city query
   if (req.query.city) {
     citySearch = req.query.city.toLowerCase()
@@ -44,19 +85,19 @@ var eventFinderForm = (req, res, callback, error) => {
     queryDiscipline = { $ne: '' }
   }
 
-  var dbEvents = new Promise((resolve, reject) => {
-    Race
-      .find({
-        $and: [
-          queryDate,
-          { discipline: queryDiscipline }
-        ]
-      })
-      .exec((err, races) => {
-        if (err) {
-          reject(err)
-        }
+  return {
+    date: queryDate,
+    discipline: queryDiscipline,
+    city: citySearch
+  }
+}
 
+var events = (req) => {
+  return new Promise((resolve, reject) => {
+    var allEvents = []
+
+    dbRaces({ $and: [ query(req).date, { discipline: query(req).discipline } ] })
+      .then((races) => {
         var eventsId = []
         if (races.length >= 1) {
           races.forEach((race) => {
@@ -64,22 +105,18 @@ var eventFinderForm = (req, res, callback, error) => {
           })
         }
 
-        Event
-          .find({
-            _id: eventsId
-          })
-          .populate('epreuves')
-          .exec((err, events) => {
-            if (err) {
-              reject(err)
-            }
+        return eventsId
+      })
+      .then((eventsId) => {
+        dbEvents({_id: eventsId})
+          .then((events) => {
             // city filter
             if (events !== undefined && events.length >= 1) {
-              if (citySearch !== '' || citySearch !== null) {
+              if (query(req).city !== '' || query(req).city !== null) {
                 events.forEach((val) => {
                   // city query filter
                   if (val.adresse.ville) {
-                    if (val.adresse.ville.toLowerCase().indexOf(citySearch) !== -1) {
+                    if (val.adresse.ville.toLowerCase().indexOf(query(req).city) !== -1) {
                       allEvents.push(val)
                     }
                   }
@@ -91,27 +128,38 @@ var eventFinderForm = (req, res, callback, error) => {
                 return a.epreuves[0].date_debut - b.epreuves[0].date_debut
               })
             }
-            resolve(allEvents)
+            return allEvents
+          })
+          .then((allEvents) => {
+            var cleanedEvents = []
+            if (allEvents.length >= 1) {
+              allEvents.forEach((event) => {
+                if (event.name.toLowerCase() !== 'test') {
+                  cleanedEvents.push(event)
+                }
+              })
+            }
+            resolve(cleanedEvents)
+          })
+          .catch((err) => {
+            if (err) {
+              reject(err)
+            }
           })
       })
-  })
-
-  var featuredPosts = new Promise((resolve, reject) => {
-    Post
-      .find({ 'published_date': { $lte: Date(Date.now()) }, 'featured': true })
-      .sort({ 'published_date': -1 })
-      .limit(2)
-      .exec((err, posts) => {
+      .catch((err) => {
         if (err) {
           reject(err)
         }
-        resolve(posts)
       })
   })
+}
 
+// event finder
+var eventFinderForm = (req, res, callback, error) => {
   Promise
     .props({
-      events: dbEvents,
+      events: events(req),
       posts: featuredPosts
     })
     .then((val) => {

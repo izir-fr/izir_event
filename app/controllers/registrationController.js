@@ -512,7 +512,11 @@ var registrationCtrl = {
           res.redirect('/')
         }
 
-        var api = []
+        var formatedRegistrations = []
+        var api = {
+          next: [],
+          past: []
+        }
 
         if (registrations.length >= 1) {
           registrations.forEach((registration) => {
@@ -600,7 +604,25 @@ var registrationCtrl = {
               registration.config.progress_bar.color = 'bg-success'
             }
 
-            api.push(registration)
+            formatedRegistrations.push(registration)
+          })
+        }
+
+        if (formatedRegistrations.length >= 1) {
+          formatedRegistrations.forEach((registration) => {
+            if (registration.produits.length >= 1) {
+              if (registration.produits[0].race !== null && registration.produits[0].race !== undefined) {
+                if (new Date(registration.produits[0].race.date_debut) >= new Date(Date.now())) {
+                  api.next.push(registration)
+                } else {
+                  api.past.push(registration)
+                }
+              } else {
+                api.past.push(registration)
+              }
+            } else {
+              api.past.push(registration)
+            }
           })
         }
 

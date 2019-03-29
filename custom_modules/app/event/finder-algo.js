@@ -8,7 +8,7 @@ var featuredPosts = new Promise((resolve, reject) => {
   Post
     .find({ 'published_date': { $lte: Date(Date.now()) }, 'featured': true })
     .sort({ 'published_date': -1 })
-    .limit(2)
+    .limit(1)
     .exec((err, posts) => {
       if (err) {
         reject(err)

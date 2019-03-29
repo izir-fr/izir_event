@@ -8,8 +8,8 @@
 		<div class="col-sm-6">
 			<h2>Vos informations</h2>
 			<ul>
-				<li><strong>Nom : </strong>{{user.surname}}</li>
-				<li><strong>Prénom : </strong>{{user.name}} </li>
+				<li><strong>Nom : </strong>{{utf8 user.surname}}</li>
+				<li><strong>Prénom : </strong>{{utf8 user.name}} </li>
 				<li><strong>Pseudo : </strong>{{user.username}} </li>
 				<li><strong>Date de naissance : </strong>{{user.birthday}} </li>
 				<li><strong>Je suis : </strong>{{user.sex}} </li>
@@ -25,62 +25,18 @@
 				<li><strong>Ville</strong> : {{user.city}} </li>
 			</ul>
 			<h2 class="spacer-md-top">Certificat</h3>
-				{{#if user.certificat.file}}
-					<li><strong>Valide jusqu'au</strong> : {{user.certificat.expiration_month}}/{{user.certificat.expiration_year}} </li>
-					<a href="/user/certificat/{{user.id}}/" class="btn btn-outline-warning spacer-xs-top">Modifier mon certificat médical</a>
-				{{else}}
-					<a href="/user/certificat/{{user.id}}/" class="btn btn-warning">Enregistrer un certificat médical</a>
-				{{/if}}
-			<ul>
-				
-			</ul>					
+			{{#if user.certificat.file}}
+				<li><strong>Valide jusqu'au</strong> : {{user.certificat.expiration_month}}/{{user.certificat.expiration_year}} </li>
+				<a href="/user/certificat/{{user.id}}/" class="btn btn-outline-warning spacer-xs-top">Modifier mon certificat médical</a>
+			{{else}}
+				<a href="/user/certificat/{{user.id}}/" class="btn btn-warning">Enregistrer un certificat médical</a>
+			{{/if}}
 			<h2 class="spacer-md-top">Contact</h3>
 			<ul>
 				<li><strong>Email</strong> : {{user.email}} </li>
 				<li><strong>Téléphone Fix</strong> : {{user.phoneFix}} </li>
 				<li><strong>Téléphone port.</strong> : {{user.phonePort}} </li>
 			</ul>
-		</div>
-		<div id="partenaires" class="col-3 ml-auto bg-light">
-		    <div class="row">
-		      <div class="col-12">
-		        <h2 class="text-center spacer-xs-top">Ils nous font confiance</h2>
-		      </div>
-		    </div>            
-			<div class="row spacer-md-top">
-			  <div class="col-sm-4">
-			    <figure class="figure">
-			      <img src="/img/g121.png" class="figure-img img-fluid rounded" alt="Runner breizh">
-			    </figure>
-			  </div>
-			  <div class="col-md-4 ">
-			    <figure class="figure mx-auto d-block">
-			      <img src="/img/g86.png" class="figure-img img-fluid rounded" alt="triskell challenge trail">
-			    </figure>
-			  </div> 
-			  <div class="col-sm-4">
-			    <figure class="figure">
-			      <img src="/img/g72.png" class="figure-img img-fluid rounded" alt="La littorale 56">
-			    </figure>
-			  </div>
-			  <div class="col-sm-4 mx-auto">
-			    <figure class="figure">
-			      <img src="/img/image29.png" class="figure-img img-fluid rounded" alt="Gaël Le Bellec">
-			    </figure>
-			  </div>
-
- 
-			</div>
-			<div class="row">
-			  <div class="col-12">
-			    <h2 class="text-center spacer-md-top">Soutenu par</h2>
-			  </div>
-			</div>
-				<div class="row spacer-md-top spacer-lg-bottom">
-				  <div class="col-12">
-				      <img src="/img/GO_Sport.png" class="mx-auto d-block" alt="La littorale 56" style="max-width: 200px; height: auto;">
-				  </div>            
-			</div>
 		</div>
 	</div>
 </div>

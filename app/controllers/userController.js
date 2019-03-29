@@ -150,12 +150,11 @@ var userCtrl = {
   },
   // Get profil page redirect to a user profil
   getProfil: function (req, res) {
-    var user = req.user
-    res.redirect('/user/profil/' + user.id + '/')
+    res.redirect('/user/profil/edit/' + req.user.id + '/')
   },
   // Get a user profil
   getProfilById: function (req, res) {
-    res.render('partials/user/profil')
+    res.redirect('/user/profil/edit/' + req.user.id + '/')
   },
   // Get edit page a user profil edit page based on :id
   getProfilEditById: function (req, res) {

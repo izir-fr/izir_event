@@ -110,10 +110,17 @@ var events = (req) => {
       .then((eventsId) => {
         dbEvents({_id: eventsId})
           .then((events) => {
+            var cleandedEvents = []
             // city filter
             if (events !== undefined && events.length >= 1) {
+              events.forEach((event) => {
+                if (event.epreuves.length >= 1) {
+                  cleandedEvents.push(event)
+                }
+              })
+
               if (query(req).city !== '' || query(req).city !== null) {
-                events.forEach((val) => {
+                cleandedEvents.forEach((val) => {
                   // city query filter
                   if (val.adresse.ville) {
                     if (val.adresse.ville.toLowerCase().indexOf(query(req).city) !== -1) {
@@ -122,10 +129,12 @@ var events = (req) => {
                   }
                 })
               } else {
-                allEvents = events
+                allEvents = cleandedEvents
               }
               allEvents.sort((a, b) => {
-                return a.epreuves[0].date_debut - b.epreuves[0].date_debut
+                if (a.epreuves[0] !== undefined && b.epreuves[0] !== undefined) {
+                  return a.epreuves[0].date_debut - b.epreuves[0].date_debut
+                }
               })
             }
             return allEvents

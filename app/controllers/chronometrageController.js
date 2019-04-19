@@ -6,7 +6,9 @@ var Event = require('../models/event')
 var Registration = require('../models/registration')
 var User = require('../models/user')
 
-var chronometrageModules = require('../../custom_modules/app/chronometrage')
+var chronometrageModules = require('../../custom_modules/app/registration/chronometrage')
+
+var fields = ['NOM', 'PRENOM', 'ADRESSE1', 'ADRESSE2', 'CODE', 'VILLE', 'ETAT', 'PAYS', 'EMAIL', 'TEL', 'SEXE', 'NUMERO', 'HANDICAP', 'LICENCE', 'NAISSANCE', 'CATEGORIE', 'TEMPS', 'CLUB', 'CODECLUB', 'ORGANISME', 'NATION', 'COURSE', 'DISTANCE', 'PAYE', 'INVITE', 'ENVOICLASST', 'CERTIF_MEDICAL']
 
 var chronometrageCtrl = {
   getAllChronometrageEvent: (req, res) => {
@@ -80,79 +82,47 @@ var chronometrageCtrl = {
       })
   },
   // Get a file excell
-  getFileExcell: function (req, res) {
-    Registration
-      .find({
-        event: req.params.id,
-        $or: [ { 'participant.nom': { $gt: [] } }, { 'participant.prenom': { $gt: [] } }, { 'paiement.captured': { $eq: true } }, { 'paiement.other_captured': { $eq: true } } ]
-      })
-      .populate('event')
-      .populate('produits.race')
-      .exec((err, results) => {
+  getFileExcell: (req, res) => {
+    Registration.chronometrageQuery(req.params.id, (err, registrations) => {
+      if (err) {
+        req.flash('error_msg', 'Une erreur est survenue')
+        res.redirect('/')
+      }
+
+      var inscriptions = chronometrageModules.registrationFormated(registrations, 'excel')
+
+      fields.push('DOSSIER', 'ANNEE_NAISSANCE', 'MOIS_NAISSANCE', 'JOURS_NAISSANCE')
+
+      var csv = json2csv({ data: inscriptions, fields: fields, unwindPath: ['COURSE'], del: ';', quotes: '' })
+      fs.writeFile(req.params.id + '.csv', csv, 'ascii', (err) => {
         if (err) {
           req.flash('error_msg', 'Une erreur est survenue')
-          res.redirect('/')
+          res.redirect('/inscription/recap/organisateur/' + req.user.id)
+        } else {
+          res.download('./' + req.params.id + '.csv')
         }
-
-        var event = chronometrageModules.registrationToTeam(results)
-
-        var inscriptions = []
-        event.forEach((val) => {
-          var inscription = chronometrageModules.inscriptionSetup('excel', val)
-          inscriptions.push(inscription)
-        })
-
-        var fields = ['DOSSIER', 'NOM', 'PRENOM', 'ADRESSE1', 'ADRESSE2', 'CODE', 'VILLE', 'ETAT', 'PAYS', 'EMAIL', 'TEL', 'SEXE', 'NUMERO', 'HANDICAP', 'LICENCE', 'ANNEE_NAISSANCE', 'MOIS_NAISSANCE', 'JOURS_NAISSANCE', 'CATEGORIE', 'TEMPS', 'CLUB', 'CODECLUB', 'ORGANISME', 'NATION', 'COURSE', 'DISTANCE', 'PAYE', 'INVITE', 'ENVOICLASST', 'CERTIF MEDICAL']
-
-        var csv = json2csv({ data: inscriptions, fields: fields, unwindPath: ['COURSE'], del: ';', quotes: '' })
-        fs.writeFile(req.params.id + '.csv', csv, 'ascii', (err) => {
-          if (err) {
-            req.flash('error_msg', 'Une erreur est survenue')
-            res.redirect('/inscription/recap/organisateur/' + req.user.id)
-          } else {
-            res.download('./' + req.params.id + '.csv')
-          }
-        })
       })
+    })
   },
   // Get a file GmCAP
   getFileGmcap: (req, res) => {
-    var inscriptions = []
+    Registration.chronometrageQuery(req.params.id, (err, registrations) => {
+      if (err) {
+        req.flash('error_msg', 'Une erreur est survenue')
+        res.redirect('/')
+      }
 
-    Registration
-      .find({
-        'event': req.params.id,
-        $or: [ { 'participant.nom': { $gt: [] } }, { 'participant.prenom': { $gt: [] } }, { 'paiement.captured': { $eq: true } }, { 'paiement.other_captured': { $eq: true } } ]
-      })
-      .populate('event')
-      .populate('produits.race')
-      .exec((err, results) => {
+      var inscriptions = chronometrageModules.registrationFormated(registrations, 'gmcap')
+
+      var csv = json2csv({ data: inscriptions, fields: fields, unwindPath: ['COURSE'], del: '\t', quotes: '' })
+      fs.writeFile(req.params.id + '.txt', csv, 'ascii', (err) => {
         if (err) {
           req.flash('error_msg', 'Une erreur est survenue')
-          res.redirect('/')
+          res.redirect('/inscription/recap/organisateur/' + req.user.id)
         }
-
-        var event = chronometrageModules.registrationToTeam(results)
-
-        event.forEach((val) => {
-          var inscription = chronometrageModules.inscriptionSetup('gmcap', val)
-
-          if (inscription !== 'error') {
-            inscriptions.push(inscription)
-          }
-
-          var fields = ['NOM', 'PRENOM', 'ADRESSE1', 'ADRESSE2', 'CODE', 'VILLE', 'ETAT', 'PAYS', 'EMAIL', 'TEL', 'SEXE', 'NUMERO', 'HANDICAP', 'LICENCE', 'NAISSANCE', 'CATEGORIE', 'TEMPS', 'CLUB', 'CODECLUB', 'ORGANISME', 'NATION', 'COURSE', 'DISTANCE', 'PAYE', 'INVITE', 'ENVOICLASST', 'CERTIF MEDICAL']
-
-          var csv = json2csv({ data: inscriptions, fields: fields, unwindPath: ['COURSE'], del: '\t', quotes: '' })
-          fs.writeFile(req.params.id + '.txt', csv, 'ascii', (err) => {
-            if (err) {
-              req.flash('error_msg', 'Une erreur est survenue')
-              res.redirect('/inscription/recap/organisateur/' + req.user.id)
-            }
-            res.download('./' + req.params.id + '.txt')
-          })
-        })
+        res.download('./' + req.params.id + '.txt')
       })
+    })
   }
 }
 

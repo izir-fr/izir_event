@@ -12,13 +12,18 @@ var disList = require('../../custom_modules/lists/discipline-list')
 var Event = require('../models/event')
 var Registration = require('../models/registration')
 var Race = require('../models/race')
-var Product = require('../models/product')
 
-// event finder
+// event model constructor
 var eventFinderForm = require('../../custom_modules/app/event/finder-algo')
+var eventConstructor = require('../models/event').eventConstructor
+var optionConstructor = require('../models/event').optionConstructor
+var reqBolleanTest = require('../../custom_modules/app/test/reqBolleanTest')
+
 /* ==========
 START APP =>
 ========== */
+
+var product = require('../models/product').productSuggestion
 
 var getOneEvent = (eventId) => {
   return new Promise((resolve, reject) => {
@@ -120,82 +125,6 @@ var getOpenRaces = (query) => {
       resolve(uniqueProduit)
     })
   })
-}
-
-/// ///OPTIONS//////
-var optionConstructor = (req, res, next) => {
-  var options = []
-  var option
-  // req.body
-  var optionId = req.body.option_id
-  var optionsRef = req.body.optionsRef
-  var optionsPrix = req.body.optionsPrix
-
-  // Ajout des options de l'évènement
-  if (optionId !== undefined) {
-    if (optionId.constructor === Array) {
-      for (var i = 0; i < optionId.length; i++) {
-        // config de l'option
-        option = {
-          reference: optionsRef[i],
-          prix: optionsPrix[i]
-        }
-        options.push(option)
-      }
-    } else {
-      option = {
-        reference: optionsRef,
-        prix: optionsPrix
-      }
-      options.push(option)
-    }
-  }
-  return options
-}
-
-var reqBolleanTest = (value) => {
-  if (value === 'on' || value === 'true') {
-    return true
-  } else {
-    return false
-  }
-}
-
-/// ///EVENTS//////
-var eventConstructor = (req, options, res, next) => {
-  var event = {
-    name: req.body.name,
-    author: req.user.id,
-    adresse: {
-      adresse1: req.body.adresse1,
-      adresse2: req.body.adresse2,
-      ville: req.body.ville,
-      region: req.body.region,
-      codePostal: req.body.codePostal,
-      pays: req.body.pays,
-      latitude: req.body.latitude,
-      longitude: req.body.longitude
-    },
-    description: req.body.description,
-    dons: reqBolleanTest(req.body.dons),
-    certificat_required: reqBolleanTest(req.body.certificat_required),
-    paiement: reqBolleanTest(req.body.paiement),
-    docs: {
-      img: req.body.img,
-      legales: req.body.legales
-    },
-    options: options,
-    date_cloture_inscription: new Date(Date.UTC(req.body.anneeCloture, (req.body.moisCloture - 1), req.body.jourCloture, req.body.heureCloture, req.body.minuteCloture)),
-    permanence: {
-      email: req.body.email,
-      telephone: req.body.telephone,
-      siteWeb: req.body.siteWeb,
-      facebook: req.body.facebook
-    },
-    updated: new Date()
-  }
-
-  return event
 }
 
 var eventCtrl = {
@@ -358,19 +287,13 @@ var eventCtrl = {
       })
   },
   postCreateRace: (req, res) => {
-    var jourDebut = req.body.jourDebut
-    var moisDebut = req.body.moisDebut
-    var anneeDebut = req.body.anneeDebut
-    var heureDebut = req.body.heureDebut
-    var minuteDebut = req.body.minuteDebut
-
     var epreuve = new Race({
       name: req.body.name, // req.body.epreuveName,
       event: req.params.event,
       author: req.user._id,
       discipline: req.body.discipline, // req.body.discipline,
       description: req.body.description, // req.body.epreuveDescription,
-      date_debut: new Date(Date.UTC(anneeDebut, (moisDebut - 1), jourDebut, heureDebut, minuteDebut)),
+      date_debut: new Date(Date.UTC(req.body.anneeDebut, (req.body.moisDebut - 1), req.body.jourDebut, req.body.heureDebut, req.body.minuteDebut)),
       tarif: req.body.tarif, // req.body.tarif,
       distance: req.body.distance, // req.body.distance,
       denivele: req.body.denivele, // req.body.denivele,
@@ -414,19 +337,13 @@ var eventCtrl = {
       })
   },
   postEditRace: (req, res) => {
-    var jourDebut = req.body.jourDebut
-    var moisDebut = req.body.moisDebut
-    var anneeDebut = req.body.anneeDebut
-    var heureDebut = req.body.heureDebut
-    var minuteDebut = req.body.minuteDebut
-
     var epreuve = {
       name: req.body.name, // req.body.epreuveName,
       event: req.params.event,
       author: req.user._id,
       discipline: req.body.discipline, // req.body.discipline,
       description: req.body.description, // req.body.epreuveDescription,
-      date_debut: new Date(Date.UTC(anneeDebut, (moisDebut - 1), jourDebut, heureDebut, minuteDebut)),
+      date_debut: new Date(Date.UTC(req.body.anneeDebut, (req.body.moisDebut - 1), req.body.jourDebut, req.body.heureDebut, req.body.minuteDebut)),
       tarif: req.body.tarif, // req.body.tarif,
       distance: req.body.distance, // req.body.distance,
       denivele: req.body.denivele, // req.body.denivele,
@@ -473,18 +390,6 @@ var eventCtrl = {
       })
   },
   getDashboardEvent: (req, res) => {
-    var product = new Promise((resolve, reject) => {
-      Product
-        .find({ featured: true, published: true })
-        .limit(1)
-        .exec((err, product) => {
-          if (err) {
-            reject(err)
-          }
-          resolve(product[0])
-        })
-    })
-
     Promise
       .props({
         event: getOneEvent(req.params.event),

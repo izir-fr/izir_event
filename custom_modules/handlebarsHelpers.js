@@ -76,14 +76,6 @@ module.exports = {
   userDateMonth: (val) => { return val.split('/')[1] },
   userDateYear: (val) => { return val.split('/')[2] },
   utf8: (val) => {
-    if (val) {
-      try {
-        return decodeURIComponent(val)
-      } catch (err) {
-        return val
-      }
-    } else {
-      return ''
-    }
+    return require('./format/utf8')(val)
   }
 }

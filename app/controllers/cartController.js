@@ -7,7 +7,7 @@ var Notification = require('../models/notification')
 var Promise = require('bluebird')
 
 // Credentials
-var credentials = require('../config/credentials')
+var credentials = require('../../config/credentials')
 
 // STRIPE
 var stripe = require('stripe')(credentials.stripeKey.serveur)

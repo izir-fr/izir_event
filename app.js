@@ -20,7 +20,7 @@ var app = express()
 var port = 3000
 
 // Credentials
-var credentials = require('./app/config/credentials')
+var credentials = require('./config/credentials')
 
 // MongoDB
 mongoose.Promise = require('bluebird')

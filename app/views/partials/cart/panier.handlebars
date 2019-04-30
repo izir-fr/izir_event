@@ -156,22 +156,26 @@
               </div>
             </div>
             <div class="hidde paiement_option_sub">
-              <div class="row">
-                <div class="col-12">
-                  <p>Informations sur ce moyen de paiement</p>
-                  <p>Ce règlement sera à envoyer à l'adresse de la permanance de l'organisation de l'évènement (si le delai postal le permet) ou à donner en main propre au guichet de l'organisation lorsque que vous vous présenterez à l'évènement. L'organisateur validera votre inscription après réception de son paiement.</p>
-                  <p><strong>Ce moyen de paiement ne vous garantie pas votre place pour cet événement.</strong></p>
+              {{#if config.paiement_cb_required}}
+                <div class="row">
+                  <div class="col-12">
+                    Les articles signalés par cette icone: <i class="fa fa-credit-card-alt mx-2" aria-hidden="true"></i>rendent le paiement par carte bancaire obligatoire.
+                  </div>
                 </div>
-              </div>
-              <div class="row">
-                <div class="col-12">
-                	{{#if config.paiement_cb_required}}
-                		Les articles signalés par cette icone: <i class="fa fa-credit-card-alt mx-2" aria-hidden="true"></i>rendent le paiement par carte bancaire obligatoire.
-      						{{else}}
-                  	<a href="/cart/checkout/check" class="btn btn-secondary p-3 my-3 text-center rounded-0 d-block shadow" id="other-checkout">Valider mon paiement</a>
-                  {{/if}}
+              {{else}}
+                <div class="row">
+                  <div class="col-12">
+                    <p>Informations sur ce moyen de paiement</p>
+                    <p>Ce règlement sera à envoyer à l'adresse de la permanance de l'organisation de l'évènement (si le delai postal le permet) ou à donner en main propre au guichet de l'organisation lorsque que vous vous présenterez à l'évènement. L'organisateur validera votre inscription après réception de son paiement.</p>
+                    <p><strong>Ce moyen de paiement ne vous garantie pas votre place pour cet événement.</strong></p>
+                  </div>
                 </div>
-              </div>                          
+                <div class="row">
+                  <div class="col-12">
+                    <a href="/cart/checkout/check" class="btn btn-secondary p-3 my-3 text-center rounded-0 d-block shadow" id="other-checkout">Valider mon paiement</a>
+                  </div>
+                </div>
+              {{/if}}
             </div>
           </div>
         </div>

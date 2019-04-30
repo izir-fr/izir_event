@@ -83,6 +83,7 @@ module.exports.eventConstructor = (req, options) => {
     dons: reqBolleanTest(req.body.dons),
     certificat_required: reqBolleanTest(req.body.certificat_required),
     paiement: reqBolleanTest(req.body.paiement),
+    paiement_cb_required: reqBolleanTest(req.body.paiement_cb_required),
     docs: {
       img: req.body.img,
       legales: req.body.legales

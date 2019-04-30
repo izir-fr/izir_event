@@ -522,15 +522,31 @@ var cartCtrl = {
           total_price: Number(checkout.totalPrice)
         })
 
+        var comission = 0
+
+        if (checkout.products.length >= 1) {
+          checkout.products.forEach((product) => {
+            if (product.race === true) {
+              comission += (product.qty) * 50
+            }
+          })
+        }
+
         newCart.save((err, cart) => {
           if (err) {
             res.redirect('/cart')
           }
           config.stripe = {
-            amount: parseInt(cart.total_price * 100 + 50),
+            amount: parseInt(cart.total_price * 100 + comission),
             key: credentials.stripeKey.front,
             cart_id: cart._id,
-            checkout_amout: cart.total_price + 0.50
+            checkout_amout: cart.total_price + (comission / 100)
+          }
+
+          if (comission > 0) {
+            config.comission = comission / 100
+          } else {
+            config.comission = comission
           }
 
           req.session.cart = { products: cart.products }

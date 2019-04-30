@@ -85,6 +85,22 @@ var dossiersValides = (inscriptions) => {
   return dossiers
 }
 
+var userBirthday = (val) => {
+  var date = {
+    jour: '',
+    mois: '',
+    annee: ''
+  }
+  if (val !== undefined && val !== null && val !== '') {
+    if (val.split('/').length === 3) {
+      date.jour = val.split('/')[0]
+      date.mois = val.split('/')[1]
+      date.annee = val.split('/')[2]
+    }
+  }
+  return date
+}
+
 var registrationCtrl = {
   postAjaxCart: (req, res) => {
     var registration
@@ -301,6 +317,18 @@ var registrationCtrl = {
           req.flash('error_msg', 'Une erreur est survenue lors du chargement de l\'événement')
           res.redirect('/inscription/' + registration[0].event.id)
         }
+
+        var team = []
+        if (registration.team.length >= 1) {
+          registration.team.forEach((val) => {
+            var member = val
+            member.birthday = userBirthday(member.dateNaissance)
+            team.push(member)
+          })
+        }
+
+        registration.team = team
+
         data = {
           results: registration,
           date_list: dateList,

@@ -42,8 +42,13 @@ module.exports = {
     }
   },
   dateMonthText: (val) => {
-    if (val !== undefined) {
-      var month = parseInt(val.getMonth()) + 1
+    var month
+    if (val !== undefined && val !== null && val !== '') {
+      if (val.constructor === Date) {
+        month = parseInt(val.getMonth()) + 1
+      } else {
+        month = Number(val)
+      }
     }
 
     if (month === 1) {

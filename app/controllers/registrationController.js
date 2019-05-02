@@ -10,14 +10,14 @@ var Notification = require('../models/notification')
 
 var tableauDons = (inscriptions) => {
   var tableauFinal = []
-  if (inscriptions.length >= 1) {
+
+  if (inscriptions.length >= 1 && inscriptions !== undefined && inscriptions !== null) {
     inscriptions.forEach((inscription) => {
-      if (inscription.paiement.captured || inscription.paiement.other_captured) {
+      console.log(inscription)
+      if (inscription.paiement.captured || inscription.paiement.othetr_captured) {
         inscription.produits.forEach((produit) => {
-          if (produit.produitsRef === 'dons') {
-            if (produit.produitsSubTotal > 0) {
-              tableauFinal.push(produit)
-            }
+          if (produit !== 'dons') {
+            tableauFinal.push(produit)
           }
         })
       }
@@ -737,7 +737,7 @@ var registrationCtrl = {
                 })
 
                 // convert dossiers to inscriptions
-                data.inscriptions = require('../../custom_modules/app/chronometrage').registrationToTeam(cleanedRegistrations)
+                data.inscriptions = cleanedRegistrations // require('../../custom_modules/app/registration/chronometrage').registrationFormated(cleanedRegistrations)
 
                 // calcul des dons
                 data.dons = tableauDons(data.inscriptions)

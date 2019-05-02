@@ -748,26 +748,28 @@ var registrationCtrl = {
                 data.dossiers_complets = dossiersValides(data.inscriptions)
               }
 
-              if (data.inscriptions.length >= 1 && req.query !== undefined) {
-                // filter init
-                if (req.query.epreuve !== 'all' && req.query.epreuve !== undefined) {
-                  data.inscriptions = data.inscriptions.filter((inscription) => {
-                    var validation = 0
-                    inscription.produits.forEach((produit) => {
-                      if (produit.race !== undefined) {
-                        if (String(produit.race) === String(req.query.epreuve)) {
-                          validation++
+              if (data.inscriptions !== null && data.inscriptions !== undefined) {
+                if (data.inscriptions.length >= 1 && req.query !== undefined) {
+                  // filter init
+                  if (req.query.epreuve !== 'all' && req.query.epreuve !== undefined) {
+                    data.inscriptions = data.inscriptions.filter((inscription) => {
+                      var validation = 0
+                      inscription.produits.forEach((produit) => {
+                        if (produit.race !== undefined) {
+                          if (String(produit.race) === String(req.query.epreuve)) {
+                            validation++
+                          }
                         }
+                      })
+
+                      if (validation > 0) {
+                        return true
                       }
                     })
-
-                    if (validation > 0) {
-                      return true
-                    }
-                  })
+                  }
                 }
 
-                // trie les dissuer par ordre alphanétique
+                // trie les dossier par ordre alphanétique
                 if (req.query.sort === 'alpha') {
                   data.inscriptions.sort((a, b) => {
                     if (a.participant.nom !== undefined) {

@@ -11,21 +11,21 @@
       <a href="/organisateur/event/{{event.id}}/messages" class="btn btn-outline-light m-2"><i class="fa fa-comments mr-2" aria-hidden="true"></i>Messagerie</a>
       <a href="/chronometrage/event/{{event.id}}" class="btn btn-outline-light m-2"><i class="fa fa-file mr-2"></i>Chronométrage</a>
       <a href="/organisateur/comptabilite/{{user.id}}" class="btn btn-outline-light m-2"><i class="fa fa-university mr-2"></i>Comptabilité</a>
-      <a href="/catalogue" class="btn btn-outline-light m-2"><i class="fa fa-shopping-cart mr-2" aria-hidden="true"></i>Lots</a>
+      <a href="https://shop.izir.fr" class="btn btn-outline-light m-2"><i class="fa fa-shopping-cart mr-2" aria-hidden="true"></i>Lots</a>
     </div>
   </div>
 </div>
-<div class="container pb-5">
+<div class="container-fluid pb-5">
   <div class="row">
-    <div class="col-md-3 mt-5">
+    <div class="col-md-3 py-5 bg-light">
       <div class="d-block">
-        <a href="/event/edit/{{event.id}}" class="d-block btn btn-default rounded-0 border-0"><i class="fa fa-pencil mr-2"></i>Modifier l'événement</a>
-        <a href="/organisateur/event/{{event.id}}/messages" class="d-block btn btn-default rounded-0 border-0"><i class="fa fa-comments mr-2" aria-hidden="true"></i>Contacter les participants</a>
+        <a href="/event/edit/{{event.id}}" class="d-block btn btn-secondary shadow rounded-0 border-0 shadow"><i class="fa fa-pencil mr-2"></i>Modifier l'événement</a>
+        <a href="/organisateur/event/{{event.id}}/messages" class="d-block btn btn-secondary shadow rounded-0 border-0 my-3 shadow"><i class="fa fa-comments mr-2" aria-hidden="true"></i>Contacter les participants</a>
       </div>      
-      <a href="/catalogue/" class="d-block mx-auto border p-3 bg-light rounded">
+      <a href="/catalogue/" class="d-block mx-auto p-3 ">
         <h3 class="h5">Avez-vous pensez à vos lots ?</h3>
         <div class="d-block">
-          <span class="d-block border border-top-0 border-right-0 border-left-0 text-muted">
+          <span class="d-block text-muted">
             L'exemple du moment
           </span>
           <div class="d-block mt-3">
@@ -37,15 +37,15 @@
         </div>
       </a>
     </div>
-    <div class="col-md-9 mx-auto mb-4">
+    <div class="col-md-9 mx-auto mb-4 px-5">
       <div class="row">
         <div class="col-12 mt-5 mb-4 text-center text-md-left">
           <h3 class="">Les épreuves de {{event.name}}</h3>
         </div>
       </div>
       {{#each event.epreuves}}
-        <div class="row my-2">
-          <div class="col-12 bg-light p-3 border border-muted">
+        <div class="row my-3">
+          <div class="col-12 bg-light p-3 shadow rounded border">
             <span class="d-inline-block font-weight-bold mt-2">
               {{this.name}}
             </span>
@@ -59,7 +59,7 @@
         </div>        
       {{/each}}
       <div class="row my-2">
-        <div class="col-12 bg-light p-3 border border-muted">
+        <div class="col-12 p-3">
           <span class="d-block mx-2 text-center">
             <a href="/event/{{event.id}}/race/create" class="btn btn-danger btn-sm"><i class="fa fa-plus mr-2"></i>Créer une épreuve</a>
           </span>

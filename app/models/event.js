@@ -62,7 +62,10 @@ module.exports.getEventByName = function (name, callback) {
 }
 
 module.exports.getEventById = function (id, callback) {
-  Event.findById(id, callback)
+  Event
+    .findById(id)
+    .populate('epreuves')
+    .exec(callback)
 }
 
 module.exports.eventConstructor = (req, options) => {

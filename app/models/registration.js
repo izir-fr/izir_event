@@ -94,5 +94,8 @@ module.exports.chronometrageQuery = (id, callback) => {
     })
     .populate('event')
     .populate('produits.race')
+    .populate('user')
+    .populate('cart')
+    .sort({ 'participant.nom': 1 })
     .exec(callback)
 }

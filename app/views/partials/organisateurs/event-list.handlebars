@@ -4,12 +4,28 @@
       <a href="/organisateur/events" class="btn btn-light border-0 m-2"><i class="fa fa-calendar-o mr-2" aria-hidden="true"></i>Mes événements</a>
       <span class="d-inline-block mx-3 text-white"><i class="fa fa-angle-right" aria-hidden="true"></i></span>
       <a href="/organisateur/comptabilite/{{user.id}}" class="btn btn-outline-light m-2"><i class="fa fa-university mr-2"></i>Comptabilité</a>
-      <a href="/catalogue" class="btn btn-outline-light m-2"><i class="fa fa-shopping-cart mr-2" aria-hidden="true"></i>Lots</a>
+      <a href="https://shop.izir.fr" class="btn btn-outline-light m-2"><i class="fa fa-shopping-cart mr-2" aria-hidden="true"></i>Lots</a>
     </div>
   </div>
 </div>
 <div class="container pb-5">
 	<div class="row">
+		<div class="col-md-3 bg-light">
+			<a href="/catalogue/" class="d-block mx-auto px-3 py-5">
+				<h3 class="h5">Avez-vous pensez à vos lots ?</h3>
+				<div class="d-block">
+					<span class="d-block border border-top-0 border-right-0 border-left-0 text-muted">
+						L'exemple du moment
+					</span>
+					<div class="d-block mt-3">
+						<strong class="d-block text-dark pb-2">{{product.name}}</strong>
+						{{product.image.0.url}}
+					</div>
+					<img src="{{product.images.0.url}}" alt="{{product.title}}" class="img-fluid">
+					<span class="text-muted">à partir de : </span><span class="h5 text-danger font-weight-bold">{{product.public_price}}€</span>
+				</div>
+			</a>
+		</div>
 		<div class="col-md-9 mx-auto mb-4">
 			<div class="row">
 				<div class="col-12 mt-5 mb-4 text-center text-md-left">
@@ -20,7 +36,7 @@
 				{{#if event}}
 					{{#each event}}
 						<div class="col-md-4 p-3">
-							<a href="/event/{{this.id}}/dashboard" class="d-block h-100 w-100 bg-light border border-muted p-3 rounded">
+							<a href="/event/{{this.id}}/dashboard" class="d-block h-100 w-100 bg-light shadow p-3 rounded border">
 								<span class="d-block font-weight-bold mb-3">{{this.name}}</span>
 								<div class="d-block">
 									{{#if this.paiement}}
@@ -64,22 +80,6 @@
 				<p class="alert alert-danger">Vous n'avez pas encore créé d'épreuve</p>
 				<a href="/event/create" class="btn btn-default">Créer maintenant</a>
 			{{/if}}					
-			</div>
-		<div class="col-md-3 mt-5">
-			<a href="/catalogue/" class="d-block mx-auto border p-3 bg-light rounded">
-				<h3 class="h5">Avez-vous pensez à vos lots ?</h3>
-				<div class="d-block">
-					<span class="d-block border border-top-0 border-right-0 border-left-0 text-muted">
-						L'exemple du moment
-					</span>
-					<div class="d-block mt-3">
-						<strong class="d-block text-dark pb-2">{{product.name}}</strong>
-						{{product.image.0.url}}
-					</div>
-					<img src="{{product.images.0.url}}" alt="{{product.title}}" class="img-fluid">
-					<span class="text-muted">à partir de : </span><span class="h5 text-danger font-weight-bold">{{product.public_price}}€</span>
-				</div>
-			</a>
 		</div>
 	</div>
 </div>

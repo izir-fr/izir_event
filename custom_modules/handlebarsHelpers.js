@@ -42,8 +42,13 @@ module.exports = {
     }
   },
   dateMonthText: (val) => {
-    if (val !== undefined) {
-      var month = parseInt(val.getMonth()) + 1
+    var month
+    if (val !== undefined && val !== null && val !== '') {
+      if (val.constructor === Date) {
+        month = parseInt(val.getMonth()) + 1
+      } else {
+        month = Number(val)
+      }
     }
 
     if (month === 1) {
@@ -76,14 +81,6 @@ module.exports = {
   userDateMonth: (val) => { return val.split('/')[1] },
   userDateYear: (val) => { return val.split('/')[2] },
   utf8: (val) => {
-    if (val) {
-      try {
-        return decodeURIComponent(val)
-      } catch (err) {
-        return val
-      }
-    } else {
-      return ''
-    }
+    return require('./format/utf8')(val)
   }
 }

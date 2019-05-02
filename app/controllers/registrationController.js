@@ -85,6 +85,22 @@ var dossiersValides = (inscriptions) => {
   return dossiers
 }
 
+var userBirthday = (val) => {
+  var date = {
+    jour: '',
+    mois: '',
+    annee: ''
+  }
+  if (val !== undefined && val !== null && val !== '') {
+    if (val.split('/').length === 3) {
+      date.jour = val.split('/')[0]
+      date.mois = val.split('/')[1]
+      date.annee = val.split('/')[2]
+    }
+  }
+  return date
+}
+
 var registrationCtrl = {
   postAjaxCart: (req, res) => {
     var registration
@@ -301,6 +317,18 @@ var registrationCtrl = {
           req.flash('error_msg', 'Une erreur est survenue lors du chargement de l\'événement')
           res.redirect('/inscription/' + registration[0].event.id)
         }
+
+        var team = []
+        if (registration.team.length >= 1) {
+          registration.team.forEach((val) => {
+            var member = val
+            member.birthday = userBirthday(member.dateNaissance)
+            team.push(member)
+          })
+        }
+
+        registration.team = team
+
         data = {
           results: registration,
           date_list: dateList,
@@ -720,26 +748,28 @@ var registrationCtrl = {
                 data.dossiers_complets = dossiersValides(data.inscriptions)
               }
 
-              if (data.inscriptions.length >= 1 && req.query !== undefined) {
-                // filter init
-                if (req.query.epreuve !== 'all' && req.query.epreuve !== undefined) {
-                  data.inscriptions = data.inscriptions.filter((inscription) => {
-                    var validation = 0
-                    inscription.produits.forEach((produit) => {
-                      if (produit.race !== undefined) {
-                        if (String(produit.race) === String(req.query.epreuve)) {
-                          validation++
+              if (data.inscriptions !== null && data.inscriptions !== undefined) {
+                if (data.inscriptions.length >= 1 && req.query !== undefined) {
+                  // filter init
+                  if (req.query.epreuve !== 'all' && req.query.epreuve !== undefined) {
+                    data.inscriptions = data.inscriptions.filter((inscription) => {
+                      var validation = 0
+                      inscription.produits.forEach((produit) => {
+                        if (produit.race !== undefined) {
+                          if (String(produit.race) === String(req.query.epreuve)) {
+                            validation++
+                          }
                         }
+                      })
+
+                      if (validation > 0) {
+                        return true
                       }
                     })
-
-                    if (validation > 0) {
-                      return true
-                    }
-                  })
+                  }
                 }
 
-                // trie les dissuer par ordre alphanétique
+                // trie les dossier par ordre alphanétique
                 if (req.query.sort === 'alpha') {
                   data.inscriptions.sort((a, b) => {
                     if (a.participant.nom !== undefined) {

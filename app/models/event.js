@@ -1,6 +1,8 @@
 var mongoose = require('mongoose')
 var Schema = mongoose.Schema
 
+var reqBolleanTest = require('../../custom_modules/app/test/reqBolleanTest')
+
 // Event Schema
 var EventSchema = mongoose.Schema({
   name: { type: String, index: true },
@@ -61,4 +63,71 @@ module.exports.getEventByName = function (name, callback) {
 
 module.exports.getEventById = function (id, callback) {
   Event.findById(id, callback)
+}
+
+module.exports.eventConstructor = (req, options) => {
+  var event = {
+    name: req.body.name,
+    author: req.user.id,
+    adresse: {
+      adresse1: req.body.adresse1,
+      adresse2: req.body.adresse2,
+      ville: req.body.ville,
+      region: req.body.region,
+      codePostal: req.body.codePostal,
+      pays: req.body.pays,
+      latitude: req.body.latitude,
+      longitude: req.body.longitude
+    },
+    description: req.body.description,
+    dons: reqBolleanTest(req.body.dons),
+    certificat_required: reqBolleanTest(req.body.certificat_required),
+    paiement: reqBolleanTest(req.body.paiement),
+    paiement_cb_required: reqBolleanTest(req.body.paiement_cb_required),
+    docs: {
+      img: req.body.img,
+      legales: req.body.legales
+    },
+    options: options,
+    date_cloture_inscription: new Date(Date.UTC(req.body.anneeCloture, (req.body.moisCloture - 1), req.body.jourCloture, req.body.heureCloture, req.body.minuteCloture)),
+    permanence: {
+      email: req.body.email,
+      telephone: req.body.telephone,
+      siteWeb: req.body.siteWeb,
+      facebook: req.body.facebook
+    },
+    updated: new Date()
+  }
+
+  return event
+}
+
+module.exports.optionConstructor = (req) => {
+  var options = []
+  var option
+  // req.body
+  var optionId = req.body.option_id
+  var optionsRef = req.body.optionsRef
+  var optionsPrix = req.body.optionsPrix
+
+  // Ajout des options de l'évènement
+  if (optionId !== undefined) {
+    if (optionId.constructor === Array) {
+      for (var i = 0; i < optionId.length; i++) {
+        // config de l'option
+        option = {
+          reference: optionsRef[i],
+          prix: optionsPrix[i]
+        }
+        options.push(option)
+      }
+    } else {
+      option = {
+        reference: optionsRef,
+        prix: optionsPrix
+      }
+      options.push(option)
+    }
+  }
+  return options
 }

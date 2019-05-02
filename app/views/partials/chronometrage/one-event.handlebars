@@ -27,11 +27,10 @@
 </div>
 <div class="container-fluid">
   <div class="row">
-    <div class="col-12 bg-light">
-      <div class="row">
-        <div class="col-10 mx-auto">
-          <h2 class="mt-4 mb-4">Chronométreur de l'épreuve</h2>
-          {{#if event.chronometreur}}
+    <div class="col-md-3 bg-light py-5">
+      <div class="d-block border shadow p-3 my-3 rounded">
+        <h3 class="h4 text-center">Chronométreur</h3>
+        {{#if event.chronometreur}}
           <ul>
             <li>Pseudo : {{event.chronometreur.username}}</li>
             <li>Nom : {{event.chronometreur.name}}</li>
@@ -40,42 +39,48 @@
             <li>Téléphone fixe : {{event.chronometreur.foneFix}}</li>
             <li>Téléphone portable : {{event.chronometreur.fonePort}}</li>
           </ul>
-          {{else}}
-            <div class="alert alert-warning text-center" role="alert">
-              Aucun chronométreur n'est actuelement rattaché à votre évévement. En rattachant un chronométreur à votre épreuve, celui aura accès directement au fichier de chronométrage.
-            </div>
-            <form method="post" action="/chronometrage/event/{{event.id}}/chronometreur/add">
-              <div class="row">
-                <div class="col-md-8">
-                  <div class="form-group">
-                    <label for="chronometreur_email">Email "pro" du chronométreur</label>
-                    <input type="email" class="form-control" name="chronometreur_email" placeholder="name@example.com">
-                  </div>
+        {{else}}
+          <div class="alert alert-warning text-center" role="alert">
+            Aucun chronométreur n'est rattaché à votre évévement. En rattachant un chronométreur à votre épreuve, celui-ci aura un accès directement au fichier de chronométrage.
+          </div>
+          <form method="post" action="/chronometrage/event/{{event.id}}/chronometreur/add">
+            <div class="d-block">
+              <label for="chronometreur_email">Email "pro" du chronométreur</label>
+              <div class="d-flex">
+                <div class="form-group">
+                  <input type="email" class="form-control rounded-0" name="chronometreur_email" placeholder="name@example.com">
                 </div>
-                <div class="col-md-4">
-                  <button type="submit" class="btn btn-primary mt-4">Ajouter</button>
+                <div class="d-block">
+                  <button type="submit" class="btn btn-secondary rounded-0"><i class="fa fa-check" aria-hidden="true"></i></button>
                 </div>
               </div>
-            </form>
-          {{/if}}          
-        </div>
+            </div>
+          </form>
+        {{/if}}
+      </div> 
+    </div>
+    <div class="col-md-8">
+      <h2 class="mt-4 mb-4 h3">Chronométrage de l'épreuve</h2>
+      <div class="d-block alert alert-info text-center">
+        Les inscriptions de cet événement sont cloturées le : {{date event.date_cloture_inscription}} à {{dateHours event.date_cloture_inscription}}h{{dateMinutes event.date_cloture_inscription}}    
       </div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-8 mx-auto mt-5">
-      <div class="alert alert-info text-center" role="alert">
-        Les inscriptions de cet événement sont cloturées le : {{date event.date_cloture_inscription}} à {{dateHours event.date_cloture_inscription}}h{{dateMinutes event.date_cloture_inscription}}
-      </div>      
-    </div>
-  </div>
-  <div class="row"> 
-    <div class="col-10 mx-auto">
-      <h2 class="mt-4 mb-5">Choisissez votre fichier de chronométrage :</h2>
-      <div class="row">
-        <div class="col-md-6">
-          <span class="h4 d-block"><i class="fa fa-file spacer-xs-right"></i>GMCAP</span>
-          <a href="/chronometrage/file/gmcap/{{event.id}}" class="mt-2 d-block"><i class="fa fa-cloud-download spacer-xs-right mt-4" aria-hidden="true"></i>{{event.id}}.txt</a>
+      <div class="d-block border shadow p-5 my-3 rounded">
+        <h3 class="h4 pb-5 text-center">Téléchargement du fichier de chronométrage</h3>
+
+        <div class="d-block text-center">
+          <div class="d-inline"> 
+            <a href="/chronometrage/file/gmcap/{{event.id}}" class="btn btn-secondary"><i class="fa fa-cloud-download spacer-xs-right" aria-hidden="true"></i>GMCAP</a>
+          </div>
+          <div class="d-inline">
+            <a href="/chronometrage/file/excel/{{event.id}}" class="btn btn-secondary"><i class="fa fa-cloud-download spacer-xs-right" aria-hidden="true"></i>EXCEL</a>          
+          </div>
+        </div>
+
+      </div> 
+      <div class="d-block">
+        <h3 class="my-5">Aide</h3>
+        <h4 class="h5 my-3"><i class="fa fa-file spacer-xs-right"></i>GMCAP</h4>
+        <div class="d-block" id="gmcap">
           <strong class="d-block mt-4 mb-4">Difficulté : <i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star-o" aria-hidden="true"></i></strong>
           <strong class="d-block mt-4">Utilisation :</strong>
           <div class="alert alert-light">
@@ -85,7 +90,7 @@
           </div>          
           <div class="alert alert-light">
             <ul>
-              <li>1. Cliquez sur le fichier "XXX.txt" pour démarer le téléchargement.</li>
+              <li>1. Cliquez sur le bouton "GMCAP" pour démarer le téléchargement.</li>
               <li>2. Ouvrir GMCap. </li>
               <li>3. Cliquer sur fichier > importer > fichier texte... </li>
               <li>4. Selectionner le fichier téléchargé à l'étape "1."</li>
@@ -93,11 +98,10 @@
           </div>  
           <div class="alert alert-light">
             Si vous vez déjà un évènement de crée, il faut veuiller à ce que les noms d'épreuve soit identique à la virgule et accent prêt pour que les fichiers soient fusionnés.
-          </div> 
+          </div>           
         </div>
-        <div class="col-md-6">
-          <span class="h4 d-block"><i class="fa fa-file spacer-xs-right"></i>EXCEL</span>
-          <a href="/chronometrage/file/excel/{{event.id}}" class="mt-2 d-block"><i class="fa fa-cloud-download spacer-xs-right mt-4" aria-hidden="true"></i>{{event.id}}.csv</a>
+        <div class="d-block" id="excel">
+          <h4 class="h5 my-3"><i class="fa fa-file spacer-xs-right"></i>EXCEL</h4>
           <strong class="d-block mt-4 mb-4">Difficulté : <i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star-o" aria-hidden="true"></i><i class="fa fa-star-o" aria-hidden="true"></i></strong>
           <strong class="d-block mt-4">Utilisation :</strong>
           <div class="alert alert-light">
@@ -105,15 +109,22 @@
           </div>          
           <div class="alert alert-light">
             <ul>
-              <li>1. Cliquer sur le fichier "XXX.csv" pour démarer le téléchargement.</li>
+              <li>1. Cliquer sur le bouton "EXCEL" pour démarer le téléchargement.</li>
               <li>2. Ouvrir Excel. </li>
               <li>3. Cliquer sur fichier > ouvrir > aller à votre dossier de téléchargement</li>
               <li>3.bis. Si le fichier n'apparait pas, sélectionner "Tous les fichiers (*.*)" dans le menu déroulant au dessous de ouvrir</li>
               <li>4. Sélectionner le fichier téléchargé à l'étape "1.", puis cliquer sur "ouvrir"</li>
             </ul>
-          </div>  
+          </div>           
         </div>
-      </div>
+      </div> 
     </div>
   </div>
+
+
+
+
+
+
+
 </div>

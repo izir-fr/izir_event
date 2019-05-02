@@ -1,5 +1,10 @@
 var mongoose = require('mongoose')
 var bcrypt = require('bcryptjs')
+var Promise = require('bluebird')
+
+// Helpers
+var userErrorsHelpers = require('../helpers/user_error_helpers')
+var userSuccessHelpers = require('../helpers/user_success_helpers')
 
 // User Schema
 var UserSchema = mongoose.Schema({
@@ -53,12 +58,37 @@ module.exports.createUser = function (newUser, callback) {
 }
 
 module.exports.getUserByUsername = function (username, callback) {
-  var query = {username: username}
-  User.findOne(query, callback)
+  User.findOne({username: username}, callback)
 }
 
 module.exports.getUserById = function (id, callback) {
   User.findById(id, callback)
+}
+
+module.exports.userExist = function (user, callback) {
+  User.findOne({ $or: [ { email: user.email }, { username: user.username } ] }, callback)
+}
+
+module.exports.userCreateAction = (user) => {
+  return new Promise((resolve, reject) => {
+    User.userExist(user, (err, data) => {
+      if (err) {
+        reject(userErrorsHelpers.globalMsg)
+      } else {
+        if (data === null || data.length > 0) {
+          User.createUser(user, function (err, user) {
+            if (err) {
+              reject(userErrorsHelpers.globalMsg)
+            } else {
+              resolve(userSuccessHelpers.globalMsg)
+            }
+          })
+        } else {
+          reject(userErrorsHelpers.userAlreadyExist)
+        }
+      }
+    })
+  })
 }
 
 module.exports.comparePassword = function (candidatePassword, hash, callback) {

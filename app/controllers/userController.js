@@ -1,11 +1,14 @@
 var async = require('async')
 var bcrypt = require('bcryptjs')
 var crypto = require('crypto')
-var SibApiV3Sdk = require('sib-api-v3-sdk')
 var nodemailer = require('nodemailer')
 
 // Credentials
-var credentials = require('../config/credentials')
+var credentials = require('../../config/credentials')
+
+// Helpers
+var userErrorsHelpers = require('../helpers/user_error_helpers')
+var userSuccessHelpers = require('../helpers/user_success_helpers')
 
 // Models
 var User = require('../models/user')
@@ -16,11 +19,6 @@ var dateList = require('../../custom_modules/lists/date-list')
 
 // Email nodemailer config
 var smtpTransport = nodemailer.createTransport(credentials.smtpCredits)
-
-// Sendinblue
-var defaultClient = SibApiV3Sdk.ApiClient.instance
-var apiKey = defaultClient.authentications['api-key']
-apiKey.apiKey = credentials.sendinblueCredits
 
 // Controllers
 var userCtrl = {
@@ -34,72 +32,7 @@ var userCtrl = {
   },
   // Post a register
   postRegister: (req, res) => {
-    var errorsExplenations = {
-      userAlreadyExist: 'Ce non d\'utilisateur ou cet email est déjà utilisé. Si vous avez oublié votre mot de passe, merci de cliquez sur mot de passe oublié.',
-      globalMsg: 'Une erreur est survenue lors de la création de votre profil, si l\'erreur persiste merci de contacter le service client'
-    }
-
-    var sendinblueCreateAction = (user) => {
-      // Create sendinblue contact
-      var apiInstance = new SibApiV3Sdk.ContactsApi()
-      var createContact = new SibApiV3Sdk.CreateContact({
-        email: user.email,
-        attributes: {
-          'PRENOM': user.name,
-          'NOM': user.surname
-        },
-        listIds: [21, 18],
-        updateEnabled: true
-      })
-
-      apiInstance
-        .createContact(createContact)
-        .then((data) => {
-        }, function (error) {
-          if (error) throw error
-        })
-    }
-
-    var userCreateAction = (query) => {
-      User
-        .findOne({ $or: [ { email: query.email }, { username: query.username } ] })
-        .exec((err, data) => {
-          if (err) {
-            req.flash('error_msg', errorsExplenations.globalMsg)
-            res.redirect('/user/register')
-          } else {
-            if (data === null || data.length > 0) {
-              var newUser = new User({
-                name: query.name,
-                surname: query.surname,
-                email: query.email,
-                username: query.username,
-                password: query.password
-              })
-
-              User.createUser(newUser, function (err, user) {
-                if (err) {
-                  req.flash('error_msg', errorsExplenations.globalMsg)
-                  res.render('partials/user/register')
-                } else {
-                  if (user) {
-                    sendinblueCreateAction(user)
-                  }
-                  req.flash('success_msg', 'Vous êtes enregistré et pouvez vous connecter')
-                  if (req.query.event_id) {
-                    res.redirect('/user/login?event_id=' + req.query.event_id)
-                  } else {
-                    res.redirect('/user/login')
-                  }
-                }
-              })
-            } else {
-              req.flash('error_msg', errorsExplenations.userAlreadyExist)
-              res.redirect('/user/register')
-            }
-          }
-        })
-    }
+    var userCreateAction = require('../models/user').userCreateAction
 
     // Validation
     req.checkBody('name', 'Prénom requis').notEmpty()
@@ -118,14 +51,27 @@ var userCtrl = {
       })
       res.redirect('/user/register')
     } else {
-      var user = {
+      var user = new User({
         name: req.body.name.toLowerCase(),
         surname: req.body.surname.toLowerCase(),
         username: req.body.username.toLowerCase(),
         email: req.body.email.toLowerCase(),
         password: req.body.password
-      }
+      })
+
       userCreateAction(user)
+        .then((success) => {
+          req.flash('success_msg', success)
+          if (req.query.event_id) {
+            res.redirect('/user/login?event_id=' + req.query.event_id)
+          } else {
+            res.redirect('/user/login')
+          }
+        })
+        .catch((err) => {
+          req.flash('error_msg', err)
+          res.redirect('/user/register')
+        })
     }
   },
   // Get login form
@@ -158,31 +104,10 @@ var userCtrl = {
   },
   // Get edit page a user profil edit page based on :id
   getProfilEditById: function (req, res) {
-    var jourNaissance,
-      moisNaissance,
-      anneeNaissance,
-      data
-
     if (req.user.id === req.params.id) {
       User.findById(req.user.id, function (err, user) {
         if (err) throw err
-
-        if (user.birthday) {
-          jourNaissance = user.birthday.split('/')[0]
-          moisNaissance = user.birthday.split('/')[1]
-          anneeNaissance = user.birthday.split('/')[2]
-        } else {
-          jourNaissance = ''
-          moisNaissance = ''
-          anneeNaissance = ''
-        }
-
-        data = {
-          jourNaissance: jourNaissance,
-          moisNaissance: moisNaissance,
-          anneeNaissance: anneeNaissance
-        }
-
+        var data = require('../../custom_modules/app/user/birthdayFormat')(user.birthday)
         res.render('partials/user/edit-profil', { data: data, date_list: dateList, category_list: catList })
       })
     } else {
@@ -217,10 +142,10 @@ var userCtrl = {
 
     User.findByIdAndUpdate(req.user.id, updateUser, function (err, user) {
       if (err) {
-        req.flash('error_msg', 'Une erreur est survenue lors de la mise à jour de votre profil')
+        req.flash('error_msg', userErrorsHelpers.profilUpdateError)
         res.redirect('/user/edit-profil/' + req.user.id)
       } else {
-        req.flash('success_msg', 'Votre profil a été mis à jour')
+        req.flash('success_msg', userSuccessHelpers.profilUPdate)
         res.redirect('/user/profil/' + req.user.id + '/')
       }
     })
@@ -242,7 +167,7 @@ var userCtrl = {
         User.findOne({ email: req.body.email }, function (err, user) {
           if (err) throw err
           if (!user) {
-            req.flash('error_msg', 'Aucun compte n\'existe avec cette adresse e-mail')
+            req.flash('error_msg', userErrorsHelpers.emailAccountNotExist)
             return res.redirect('/user/password-forgot')
           }
 
@@ -280,7 +205,7 @@ var userCtrl = {
     User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, function (err, user) {
       if (err) throw err
       if (!user) {
-        req.flash('error_msg', 'Votre demande changement de mot de passe n\'est pas valide ou à expiré.')
+        req.flash('error_msg', userErrorsHelpers.passwordChangeError)
         return res.redirect('/user/password-forgot')
       } else {
         var data = {user: user, resetPasswordToken: user.resetPasswordToken}
@@ -295,7 +220,7 @@ var userCtrl = {
         User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, function (err, user) {
           if (err) throw err
           if (!user) {
-            req.flash('error_msg', 'Votre demande changement de mot de passe n\'est pas valide ou à expiré.')
+            req.flash('error_msg', userErrorsHelpers.passwordChangeError)
             return res.redirect('back')
           }
 
@@ -339,7 +264,7 @@ var userCtrl = {
         }
         smtpTransport.sendMail(mailOptions, function (err) {
           if (err) throw err
-          req.flash('success_msg', 'Bravo! Votre mot de passe a été changé.')
+          req.flash('success_msg', userSuccessHelpers.passwordSuccessChanged)
           done(err)
         })
       }
@@ -350,18 +275,14 @@ var userCtrl = {
   },
   // Get user certificat based on :id
   getCertificatByUserId: function (req, res) {
-    var cart = {}
-    if (req.query.cart) {
-      cart.id = req.query.cart
-    }
-    res.render('partials/user/certificat', cart)
+    res.render('partials/user/certificat')
   },
   // Post user certificat based on :id
   postCertificatByUserId: function (req, res) {
     var certificat = req.body.certificat_file
 
     if (certificat === '' || certificat === undefined) {
-      req.flash('error_msg', 'Aucun certificat n\'a été joint')
+      req.flash('error_msg', userErrorsHelpers.certificatNotExist)
       res.redirect('/user/certificat/' + req.user.id)
     } else {
       try {
@@ -381,10 +302,10 @@ var userCtrl = {
 
       User.findByIdAndUpdate(req.user.id, updateUser, function (err, user) {
         if (err) {
-          req.flash('error_msg', 'Une erreur est survenue lors de la mise à jour de votre certificat')
+          req.flash('error_msg', userErrorsHelpers.certificatUpdateError)
           res.redirect('/user/certificat/' + req.user.id)
         } else {
-          req.flash('success_msg', 'Votre certificat a été mis à jour')
+          req.flash('success_msg', userSuccessHelpers.certificatSuccessUpdated)
           if (req.query.cart) {
             res.redirect('/inscription/cart/' + req.query.cart + '/certificat')
           } else {
@@ -425,13 +346,13 @@ var userCtrl = {
       })
     })
 
-    req.flash('success_msg', 'Vos amis ont été invités')
+    req.flash('success_msg', userSuccessHelpers.friendSuccessInvited)
     res.redirect('/user/profil/' + req.user.id + '/')
   },
   // Get user logout
   getLogout: function (req, res) {
     req.logout()
-    req.flash('success_msg', 'Vous êtes déconnecté')
+    req.flash('success_msg', userSuccessHelpers.deconexionSuccess)
     res.redirect('/')
   }
 }

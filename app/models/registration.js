@@ -84,4 +84,15 @@ var registrationSchema = mongoose.Schema({
   updated: { type: Date }
 })
 
-module.exports = mongoose.model('Registration', registrationSchema)
+var Registration = module.exports = mongoose.model('Registration', registrationSchema)
+
+module.exports.chronometrageQuery = (id, callback) => {
+  Registration
+    .find({
+      event: id,
+      $or: [ { 'participant.nom': { $gt: [] } }, { 'participant.prenom': { $gt: [] } }, { 'paiement.captured': { $eq: true } }, { 'paiement.other_captured': { $eq: true } } ]
+    })
+    .populate('event')
+    .populate('produits.race')
+    .exec(callback)
+}

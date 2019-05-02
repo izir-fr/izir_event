@@ -3,9 +3,9 @@ var Event = require('../models/event')
 var Registration = require('../models/registration')
 var User = require('../models/user')
 var Notification = require('../models/notification')
-var Product = require('../models/product')
 
 var Promise = require('bluebird')
+var product = require('../models/product').productSuggestion
 
 // Controllers
 var organsisateurCtrl = {
@@ -21,18 +21,6 @@ var organsisateurCtrl = {
             reject(err)
           }
           resolve(event)
-        })
-    })
-
-    var product = new Promise((resolve, reject) => {
-      Product
-        .find({ featured: true, published: true })
-        .limit(1)
-        .exec((err, product) => {
-          if (err) {
-            reject(err)
-          }
-          resolve(product[0])
         })
     })
 

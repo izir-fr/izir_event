@@ -1,3 +1,5 @@
+var Promise = require('bluebird')
+
 // custom modules
 var catList = require('../../custom_modules/lists/category-list')
 var dateList = require('../../custom_modules/lists/date-list')
@@ -13,7 +15,6 @@ var tableauDons = (inscriptions) => {
 
   if (inscriptions.length >= 1 && inscriptions !== undefined && inscriptions !== null) {
     inscriptions.forEach((inscription) => {
-      console.log(inscription)
       if (inscription.paiement.captured || inscription.paiement.othetr_captured) {
         inscription.produits.forEach((produit) => {
           if (produit !== 'dons') {
@@ -682,148 +683,180 @@ var registrationCtrl = {
       })
   },
   // Get organisateur a recap
-  getRecapOrganisateur: function (req, res) {
-    Event
-      .findById(req.params.id)
-      .populate('epreuves')
-      .exec((err, event) => {
-        if (err) {
-          req.flash('error_msg', 'Une erreur est survenue, si le problème persiste merci de nous contacter à serviceclient@izir.fr')
-          res.redirect('/organisateur/epreuves')
-        }
-        if (String(req.user.id) === String(event.author) || String(req.user.id) === String(process.env.ADMIN)) {
-          var query = {
-            event: req.params.id,
-            $or: [ { 'participant.nom': { $gt: [] } }, { 'participant.prenom': { $gt: [] } }, { 'paiement.captured': { $eq: true } }, { 'paiement.other_captured': { $eq: true } } ]
-          }
+  getRecapOrganisateur: (req, res) => {
+    var getEventData = (id) => {
+      return new Promise((resolve, reject) => {
+        Event
+          .getEventById(id, (err, event) => {
+            if (err) {
+              reject(err)
+            } else {
+              resolve(event)
+            }
+          })
+      })
+    }
 
-          Registration
-            .find(query)
-            .populate('user')
-            .populate('produits.race')
-            .populate('cart')
-            .sort({ 'participant.nom': 1 })
-            .exec((err, registrations) => {
-              var data = {}
-              // construction de l'objet renvoyé à l'api
-              data.event = event
+    var getRegistrationsData = (id) => {
+      return new Promise((resolve, reject) => {
+        Registration
+          .chronometrageQuery(id, (err, registrations) => {
+            if (err) {
+              reject(err)
+            } else {
+              resolve(registrations)
+            }
+          })
+      })
+    }
 
-              if (err) {
-                req.flash('error_msg', 'Si l\'erreur persiste merci de contacter le service client')
-                res.redirect('/organisateur/epreuves')
-              }
+    var isRegistrationManager = (user, author) => {
+      if (String(user) === String(author) || String(user) === String(process.env.ADMIN)) {
+        return true
+      } else {
+        return false
+      }
+    }
 
-              if (registrations.length >= 1) {
-                var cleanedRegistrations = []
-                registrations.forEach((registration) => {
-                  if (registration.orderAmount >= 0) {
-                    cleanedRegistrations.push(registration)
-                  } else {
-                    var element = registration
-                    try {
-                      if (element.cart.products.length >= 1) {
-                        var search = element.cart.products.find((query) => {
-                          if (String(query.event) === String(req.params.id)) {
-                            return query
-                          }
-                        })
-                        element.orderAmount = search.price
-                      }
-                    } catch (err) {
-                      element.orderAmount = 0
-                    }
-                    cleanedRegistrations.push(element)
+    var cleaningRegistrations = (registrations) => {
+      var data = []
+      if (registrations !== undefined && registrations !== null && registrations.length >= 1) {
+        registrations.forEach((registration) => {
+          if (registration.orderAmount >= 0) {
+            data.push(registration)
+          } else {
+            var element = registration
+            try {
+              if (element.cart.products.length >= 1) {
+                var search = element.cart.products.find((query) => {
+                  if (String(query.event) === String(req.params.id)) {
+                    return query
                   }
                 })
-
-                // convert dossiers to inscriptions
-                data.inscriptions = cleanedRegistrations // require('../../custom_modules/app/registration/chronometrage').registrationFormated(cleanedRegistrations)
-
-                // calcul des dons
-                data.dons = tableauDons(data.inscriptions)
-
-                // calcul des dossiers payés
-                data.paiements = tableauPaiements(cleanedRegistrations)
-
-                data.dossiers_complets = dossiersValides(data.inscriptions)
+                element.orderAmount = search.price
               }
+            } catch (err) {
+              element.orderAmount = 0
+            }
+            data.push(element)
+          }
+        })
+      }
+      if (data.length > 0) {
+        return data
+      } else {
+        return false
+      }
+    }
 
-              if (data.inscriptions !== null && data.inscriptions !== undefined) {
-                if (data.inscriptions.length >= 1 && req.query !== undefined) {
-                  // filter init
-                  if (req.query.epreuve !== 'all' && req.query.epreuve !== undefined) {
-                    data.inscriptions = data.inscriptions.filter((inscription) => {
-                      var validation = 0
-                      inscription.produits.forEach((produit) => {
-                        if (produit.race !== undefined) {
-                          if (String(produit.race) === String(req.query.epreuve)) {
-                            validation++
-                          }
-                        }
-                      })
+    var sortRegistration = (registrations, query) => {
+      // trie les dossier par ordre alphanétique
+      if (query === 'alpha') {
+        registrations.sort((a, b) => {
+          if (a.participant.nom !== undefined) {
+            return a.participant.nom.localeCompare(b.participant.nom)
+          }
+        })
+      } else if (query === 'date') {
+        registrations.sort((a, b) => {
+          if (a.created_at !== undefined) {
+            return new Date(b.created_at) - new Date(a.created_at)
+          }
+        })
+      } else if (query === 'certificats') {
+        registrations.sort((a, b) => {
+          if (a.docs.certificat === '' || a.docs.certificat === undefined) {
+            a.test = 1
+          } else {
+            a.test = 0
+          }
+          if (b.docs.certificat === '' || b.docs.certificat === undefined) {
+            b.test = 1
+          } else {
+            b.test = 0
+          }
+          return b.test - a.test
+        })
+      } else if (query === 'paiements') {
+        registrations.sort((a, b) => {
+          if (a.paiement.captured === true || a.paiement.other_captured === true) {
+            a.test = 1
+          } else {
+            a.test = 0
+          }
+          if (b.paiement.captured === true || b.paiement.other_captured === true) {
+            b.test = 1
+          } else {
+            b.test = 0
+          }
+          return a.test - b.test
+        })
+      } else {
+        registrations.sort((a, b) => {
+          if (a.participant.nom !== undefined) {
+            return a.participant.nom.localeCompare(b.participant.nom)
+          }
+        })
+      }
+      return registrations
+    }
 
-                      if (validation > 0) {
-                        return true
+    Promise
+      .props({
+        event: getEventData(req.params.id),
+        inscriptions: getRegistrationsData(req.params.id)
+      })
+      .then((data) => {
+        var admin = isRegistrationManager(req.user.id, data.event.author)
+
+        if (admin) {
+          var cleanedRegistrations = cleaningRegistrations(data.inscriptions)
+
+          if (cleanedRegistrations !== false) {
+            // convert dossiers to inscriptions
+            data.inscriptions = cleanedRegistrations // require('../../custom_modules/app/registration/chronometrage').registrationFormated(cleanedRegistrations)
+
+            // calcul des dons
+            data.dons = tableauDons(data.inscriptions)
+
+            // calcul des dossiers payés
+            data.paiements = tableauPaiements(cleanedRegistrations)
+
+            data.dossiers_complets = dossiersValides(data.inscriptions)
+
+            if (req.query !== undefined) {
+              // filter init
+              if (req.query.epreuve !== 'all' && req.query.epreuve !== undefined) {
+                data.inscriptions = data.inscriptions.filter((inscription) => {
+                  var validation = 0
+                  inscription.produits.forEach((produit) => {
+                    if (produit.race !== undefined) {
+                      if (String(produit.race) === String(req.query.epreuve)) {
+                        validation++
                       }
-                    })
+                    }
+                  })
+
+                  if (validation > 0) {
+                    return true
                   }
-                }
-
-                // trie les dossier par ordre alphanétique
-                if (req.query.sort === 'alpha') {
-                  data.inscriptions.sort((a, b) => {
-                    if (a.participant.nom !== undefined) {
-                      return a.participant.nom.localeCompare(b.participant.nom)
-                    }
-                  })
-                } else if (req.query.sort === 'date') {
-                  data.inscriptions.sort((a, b) => {
-                    if (a.created_at !== undefined) {
-                      return new Date(b.created_at) - new Date(a.created_at)
-                    }
-                  })
-                } else if (req.query.sort === 'certificats') {
-                  data.inscriptions.sort((a, b) => {
-                    if (a.docs.certificat === '' || a.docs.certificat === undefined) {
-                      a.test = 1
-                    } else {
-                      a.test = 0
-                    }
-                    if (b.docs.certificat === '' || b.docs.certificat === undefined) {
-                      b.test = 1
-                    } else {
-                      b.test = 0
-                    }
-                    return b.test - a.test
-                  })
-                } else if (req.query.sort === 'paiements') {
-                  data.inscriptions.sort((a, b) => {
-                    if (a.paiement.captured === true || a.paiement.other_captured === true) {
-                      a.test = 1
-                    } else {
-                      a.test = 0
-                    }
-                    if (b.paiement.captured === true || b.paiement.other_captured === true) {
-                      b.test = 1
-                    } else {
-                      b.test = 0
-                    }
-                    return a.test - b.test
-                  })
-                } else {
-                  data.inscriptions.sort((a, b) => {
-                    if (a.participant.nom !== undefined) {
-                      return a.participant.nom.localeCompare(b.participant.nom)
-                    }
-                  })
-                }
+                })
               }
+            }
 
-              res.render('partials/registration/recap-organisateur', data)
-            })
+            data.inscriptions = sortRegistration(data.inscriptions, req.query.sort)
+          }
+
+          res.render('partials/registration/recap-organisateur', data)
         } else {
-          req.flash('error_msg', 'Vous n\'êtes pas l\'administrateur de cet événement')
-          res.redirect('/organisateur/epreuves')
+          req.flash('error_msg', 'Impossible de charger les inscriptions de cet événement')
+          res.redirect('/organisateur/events')
+        }
+      })
+      .catch((err) => {
+        if (err) {
+          req.flash('error_msg', 'Impossible de charger les inscriptions de cet événement')
+          res.redirect('/organisateur/events')
         }
       })
   },

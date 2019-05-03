@@ -2,7 +2,7 @@ var nodemailer = require('nodemailer')
 
 var User = require('./../../../app/models/user')
 // Credentials
-var credentials = require('./../../../app/config/credentials')
+var credentials = require('./../../../config/credentials')
 // Email config
 var smtpTransport = nodemailer.createTransport(credentials.smtpCredits)
 

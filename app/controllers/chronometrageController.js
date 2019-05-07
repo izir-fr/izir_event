@@ -10,6 +10,22 @@ var chronometrageModules = require('../../custom_modules/app/registration/chrono
 
 var fields = ['NOM', 'PRENOM', 'ADRESSE1', 'ADRESSE2', 'CODE', 'VILLE', 'ETAT', 'PAYS', 'EMAIL', 'TEL', 'SEXE', 'NUMERO', 'HANDICAP', 'LICENCE', 'NAISSANCE', 'CATEGORIE', 'TEMPS', 'CLUB', 'CODECLUB', 'ORGANISME', 'NATION', 'COURSE', 'DISTANCE', 'PAYE', 'INVITE', 'ENVOICLASST', 'CERTIF_MEDICAL']
 
+var isAdmin = (user, adminId) => {
+  return String(user.id) === String(adminId)
+}
+
+var isUser = (user, eventUserId) => {
+  return String(user.id) === String(eventUserId)
+}
+
+var isChronometreur = (user, chronometreurEvent) => {
+  if (chronometreurEvent !== null & chronometreurEvent !== undefined) {
+    return String(user.id) === String(chronometreurEvent.id)
+  } else {
+    return false
+  }
+}
+
 var chronometrageCtrl = {
   getAllChronometrageEvent: (req, res) => {
     Event
@@ -34,7 +50,8 @@ var chronometrageCtrl = {
         if (err) {
           res.redirect('/')
         }
-        if (String(req.user.id) === String(event.author) || String(req.user.id) === String(event.chronometreur.id)) {
+
+        if (isUser(req.user, event.author) === true || isChronometreur(req.user, event.chronometreur) === true || isAdmin(req.user, process.env.ADMIN) === true) {
           var profil
           if (String(req.user.id) === String(event.author)) {
             profil = {

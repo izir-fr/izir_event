@@ -37,6 +37,12 @@ var exportModules = {
         })
       } else {
         var participant = val.participant
+        if (participant.nom === '' || participant.nom === null || participant.nom === undefined) {
+          participant.nom = val.user.surname
+        }
+        if (participant.prenom === '' || participant.prenom === null || participant.prenom === undefined) {
+          participant.prenom = val.user.name
+        }
         var dossier = new Dossier({
           id: val.id,
           email: participant.email,

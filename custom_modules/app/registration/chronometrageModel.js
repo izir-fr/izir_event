@@ -18,10 +18,18 @@ module.exports = function Dossier (init) {
     }
   }
   this.ADRESSE1 = (adresse1) => {
-    return utf8(adresse1)
+    var val = ''
+    if (adresse1 !== undefined && adresse1 !== null && adresse1 !== '') {
+      val = utf8(adresse1).split(',').join(' ')
+    }
+    return val
   }
   this.ADRESSE2 = (adresse2) => {
-    return utf8(adresse2)
+    var val = ''
+    if (adresse2 !== undefined && adresse2 !== null && adresse2 !== '') {
+      val = utf8(adresse2).split(',').join(' ')
+    }
+    return val
   }
   this.CODE = (codePostal) => {
     return Number(codePostal)

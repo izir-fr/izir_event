@@ -106,18 +106,36 @@ module.exports = function Dossier (init) {
   this.NATION = ''
   this.COURSE = (produits) => {
     var courses = []
-    produits.forEach((produit) => {
-      if (produit.produitsQuantite > 0 && produit.produitsRef !== 'don') {
-        if (produit.race !== undefined) {
+    var races = JSON.parse(JSON.stringify(produits))
+    if (races.length >= 1) {
+      races.forEach((produit) => {
+        if (produit.race !== undefined && produit.race !== undefined && produit.race !== '') {
           courses.push(utf8(produit.race.name))
-        } else {
-          courses.push(utf8(produit.produitsRef))
         }
-      }
-    })
-    return courses
+      })
+    }
+
+    if (courses !== null && courses !== undefined && courses !== '') {
+      return courses
+    }
   }
-  this.DISTANCE = ''
+  this.DISTANCE = (produits) => {
+    var courses = []
+    var races = JSON.parse(JSON.stringify(produits))
+    if (races.length >= 1) {
+      races.forEach((produit) => {
+        if (produit.race !== undefined && produit.race !== undefined && produit.race !== '') {
+          courses.push(utf8(produit.race.distance))
+        }
+      })
+    }
+
+    if (courses !== null && courses !== undefined && courses !== '') {
+      if (courses.length >= 1) {
+        return courses[0]
+      }
+    }
+  }
   this.PAYE = (format, paiement) => {
     if (format === 'gmcap') {
       if (paiement.captured === true || paiement.other_captured === true) {
@@ -173,7 +191,7 @@ module.exports = function Dossier (init) {
       'ORGANISME': this.ORGANISME(dossier.teamConfig, dossier.participantTeam),
       'NATION': this.NATION,
       'COURSE': this.COURSE(dossier.produits),
-      'DISTANCE': this.DISTANCE,
+      'DISTANCE': this.DISTANCE(dossier.produits),
       'PAYE': this.PAYE(dossier.format, dossier.paiement),
       'INVITE': this.INVITE,
       'ENVOICLASST': this.ENVOICLASST,

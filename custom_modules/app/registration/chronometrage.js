@@ -43,6 +43,9 @@ var exportModules = {
         if (participant.prenom === '' || participant.prenom === null || participant.prenom === undefined) {
           participant.prenom = val.user.name
         }
+        if (participant.email === '' || participant.email === null || participant.email === undefined) {
+          participant.email = val.user.email
+        }
         var dossier = new Dossier({
           id: val.id,
           email: participant.email,

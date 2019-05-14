@@ -861,7 +861,7 @@ var registrationCtrl = {
       })
   },
   setCertificatReject: (req, res) => {
-    var origine = req.headers.referer
+    var origine = req.headers.referer + '#' + req.params.id
     Registration.update({_id: req.params.id}, {
       $set: {
         'docs.certificat': '',
@@ -905,7 +905,7 @@ var registrationCtrl = {
     })
   },
   setCheckoutValidate: (req, res) => {
-    var origine = req.headers.referer
+    var origine = req.headers.referer + '#' + req.params.id
     Registration.update({_id: req.params.id}, {
       $set: {
         'organisateur_validation.all': true,

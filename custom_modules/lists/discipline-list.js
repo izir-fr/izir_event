@@ -5,6 +5,6 @@ module.exports = [
   { name: 'triathlon' },
   { name: 'cyclisme' },
   { name: 'vtt' },
-  { name: 'multi-activités' },
+  { name: 'natation' },
   { name: 'billeterie' }
 ]

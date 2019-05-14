@@ -1,6 +1,7 @@
 var messages = () => {
   if ($('#receivers').length >= 1) {
     var url = $(document)[0].URL
+
     // var event = $('input[name=event]')[0].value
     var receiverHtml = $('#receivers')[0].innerHTML
 
@@ -121,14 +122,16 @@ var messages = () => {
       var querry = url.split('?')[1]
       var querries = []
 
-      querry.split('&').forEach((val) => {
-        if (val.split('=')[0] === 'contact') {
-          querries.push({ contact: val.split('=')[1] })
-        }
-        if (val.split('=')[0] === 'registration') {
-          querries.push({ registration: val.split('=')[1] })
-        }
-      })
+      if (querry !== undefined) {
+        querry.split('&').forEach((val) => {
+          if (val.split('=')[0] === 'contact') {
+            querries.push({ contact: val.split('=')[1] })
+          }
+          if (val.split('=')[0] === 'registration') {
+            querries.push({ registration: val.split('=')[1] })
+          }
+        })
+      }
 
       if (querries.length >= 1) {
         querries.forEach((querry) => {
@@ -153,25 +156,32 @@ var messages = () => {
 
     $('#group_no_certificat').on('click', (e) => {
       cleanReceivers()
+      receiverHelperTest()
       $.get('messages/group/no-certificat', (data) => {
         data.forEach((contact) => {
-          var handle = '@' + contact.participant.nom + '.' + contact.participant.prenom
-          var html = receiverContructor(handle, contact.user)
-          $('#receivers').append(html)
+          if (contact.participant !== undefined && contact.participant !== null) {
+            var handle = '@' + utf8(contact.participant.nom) + '.' + utf8(contact.participant.prenom)
+            var html = receiverContructor(handle, contact.user)
+            $('#receivers').append(html)
+          }
+          receiverHelperTest()
         })
-        receiverHelperTest()
       })
     })
 
     $('#group_no_paiement').on('click', (e) => {
       cleanReceivers()
+      receiverHelperTest()
       $.get('messages/group/no-paiement', (data) => {
         data.forEach((contact) => {
-          var handle = '@' + utf8(contact.participant.nom) + '.' + utf8(contact.participant.prenom)
-          var html = receiverContructor(handle, contact.user)
-          $('#receivers').append(html)
+          if (contact.participant !== undefined && contact.participant !== null) {
+            var handle = '@' + utf8(contact.participant.nom) + '.' + utf8(contact.participant.prenom)
+            var html = receiverContructor(handle, contact.user)
+            $('#receivers').append(html)
+          }
+
+          receiverHelperTest()
         })
-        receiverHelperTest()
       })
     })
 

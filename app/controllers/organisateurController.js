@@ -136,7 +136,7 @@ var organsisateurCtrl = {
         notifications: notifications
       })
       .then((data) => {
-        if (String(data.event.author) === String(req.user._id)) {
+        if (String(data.event.author) === String(req.user._id) || String(req.user._id) === process.env.ADMIN) {
           res.render('partials/organisateurs/messages', data)
         } else {
           req.flash('error_msg', 'Vous n\'êtes pas autorisé à accéder à cette page')
@@ -210,18 +210,30 @@ var organsisateurCtrl = {
   },
   getGroupNoCertificat: (req, res) => {
     Registration
-      .find({ event: req.params.event, 'docs.certificat': '' })
-      .select({ 'participant.nom': 1, 'participant.prenom': 1, user: 1 })
+      .find({ event: req.params.event })
+      .select({ 'participant.nom': 1, 'participant.prenom': 1, user: 1, 'docs.certificat': 1 })
       .exec((err, registrations) => {
         if (err) {
           res.send({ error: true })
         }
-        res.send(registrations)
+        var cleanedData = []
+        if (registrations.length >= 1) {
+          registrations.forEach((registration) => {
+            if (registration.docs !== undefined && registration.docs !== null && registration.docs !== '') {
+              if (registration.docs.certificat === '' || registration.docs.certificat === null || registration.docs.certificat === undefined) {
+                cleanedData.push(registration)
+              }
+            }
+          })
+        }
+        res.send(cleanedData)
       })
   },
   getGroupNoPaiement: (req, res) => {
     Registration
-      .find({ event: req.params.event, 'paiement.captured': false, 'paiement.other_captured': false })
+      .find({
+        event: req.params.event, 'paiement.captured': false, 'paiement.other_captured': false
+      })
       .select({ 'participant.nom': 1, 'participant.prenom': 1, user: 1 })
       .exec((err, registrations) => {
         if (err) {

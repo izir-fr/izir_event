@@ -830,8 +830,8 @@ var registrationCtrl = {
                 data.inscriptions = data.inscriptions.filter((inscription) => {
                   var validation = 0
                   inscription.produits.forEach((produit) => {
-                    if (produit.race !== undefined) {
-                      if (String(produit.race) === String(req.query.epreuve)) {
+                    if (produit.race !== undefined && produit.race !== null) {
+                      if (String(produit.race._id) === String(req.query.epreuve)) {
                         validation++
                       }
                     }

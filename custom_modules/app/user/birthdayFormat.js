@@ -4,7 +4,8 @@ module.exports = (birthday) => {
     moisNaissance: '',
     anneeNaissance: ''
   }
-  if (birthday !== undefined && birthday !== null) {
+
+  if (birthday !== undefined && birthday !== null && birthday !== '') {
     if (birthday.split('/').length === 3) {
       result.jourNaissance = birthday.split('/')[0]
       result.moisNaissance = birthday.split('/')[1]

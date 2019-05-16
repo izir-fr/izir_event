@@ -42,21 +42,38 @@ module.exports = function Dossier (init) {
   this.EMAIL = init.email || ''
   this.TEL = init.phone || ''
   this.SEXE = init.sex || ''
-  this.NUMERO = ''
-  this.HANDICAP = ''
-  this.LICENCE = init.licence || ''
-  this.NAISSANCE = init.dateNaissance
-  this.ANNEE_NAISSANCE = () => {
-    var birthday = birthdayFormat(this.NAISSANCE)
-    return birthday.anneeNaissance
+  this.NUMERO = 0
+  this.HANDICAP = 'aucun handicap'
+  this.LICENCE = init.licence || 'Non licencié'
+  this.NAISSANCE = (format) => {
+    if (format === 'gmcap') {
+      if (init.dateNaissance !== undefined && init.dateNaissance !== null && init.dateNaissance !== '') {
+        var birthday = birthdayFormat(init.dateNaissance)
+        return birthday.anneeNaissance
+      } else {
+        return null
+      }
+    } else if (format === 'excel') {
+      return init.dateNaissance
+    }
   }
-  this.MOIS_NAISSANCE = () => {
-    var birthday = birthdayFormat(this.NAISSANCE)
-    return birthday.moisNaissance
+  this.ANNEE_NAISSANCE = (format) => {
+    if (format === 'excel') {
+      var birthday = birthdayFormat(init.dateNaissance)
+      return birthday.anneeNaissance
+    }
   }
-  this.JOURS_NAISSANCE = () => {
-    var birthday = birthdayFormat(this.NAISSANCE)
-    return birthday.jourNaissance
+  this.MOIS_NAISSANCE = (format) => {
+    if (format === 'excel') {
+      var birthday = birthdayFormat(init.dateNaissance)
+      return birthday.moisNaissance
+    }
+  }
+  this.JOURS_NAISSANCE = (format) => {
+    if (format === 'excel') {
+      var birthday = birthdayFormat(init.dateNaissance)
+      return birthday.jourNaissance
+    }
   }
   this.CATEGORIE = (categorie) => {
     if (categorie === "EA - École d'Athlétisme") {
@@ -180,10 +197,10 @@ module.exports = function Dossier (init) {
       'NUMERO': this.NUMERO,
       'HANDICAP': this.HANDICAP,
       'LICENCE': this.LICENCE,
-      'NAISSANCE': this.NAISSANCE,
-      'ANNEE_NAISSANCE': this.ANNEE_NAISSANCE(),
-      'MOIS_NAISSANCE': this.MOIS_NAISSANCE(),
-      'JOURS_NAISSANCE': this.JOURS_NAISSANCE(),
+      'NAISSANCE': this.NAISSANCE(dossier.format),
+      'ANNEE_NAISSANCE': this.ANNEE_NAISSANCE(dossier.format),
+      'MOIS_NAISSANCE': this.MOIS_NAISSANCE(dossier.format),
+      'JOURS_NAISSANCE': this.JOURS_NAISSANCE(dossier.format),
       'CATEGORIE': this.CATEGORIE(dossier.categorie),
       'TEMPS': this.TEMPS,
       'CLUB': this.CLUB,

@@ -108,9 +108,15 @@ var chronometrageCtrl = {
 
       var inscriptions = chronometrageModules.registrationFormated(registrations, 'excel')
 
-      fields.push('DOSSIER', 'ANNEE_NAISSANCE', 'MOIS_NAISSANCE', 'JOURS_NAISSANCE')
+      var excelFeilds = []
 
-      var csv = json2csv({ data: inscriptions, fields: fields, unwindPath: ['COURSE'], del: ';', quotes: '' })
+      fields.forEach((val) => {
+        excelFeilds.push(val)
+      })
+
+      excelFeilds.push('DOSSIER', 'ANNEE_NAISSANCE', 'MOIS_NAISSANCE', 'JOURS_NAISSANCE')
+
+      var csv = json2csv({ data: inscriptions, fields: excelFeilds, unwindPath: ['COURSE'], del: ';', quotes: '' })
       fs.writeFile(req.params.id + '.csv', csv, 'ascii', (err) => {
         if (err) {
           req.flash('error_msg', 'Une erreur est survenue')
@@ -131,7 +137,9 @@ var chronometrageCtrl = {
 
       var inscriptions = chronometrageModules.registrationFormated(registrations, 'gmcap')
 
-      var csv = json2csv({ data: inscriptions, fields: fields, unwindPath: ['COURSE'], del: '\t', quotes: '' })
+      var gmcapFeilds = fields
+
+      var csv = json2csv({ data: inscriptions, fields: gmcapFeilds, unwindPath: ['COURSE'], del: '\t', quotes: '' })
       fs.writeFile(req.params.id + '.txt', csv, 'ascii', (err) => {
         if (err) {
           req.flash('error_msg', 'Une erreur est survenue')

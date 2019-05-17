@@ -3,6 +3,7 @@ var Event = require('../models/event')
 var Registration = require('../models/registration')
 var User = require('../models/user')
 var Notification = require('../models/notification')
+var Cart = require('../models/cart')
 
 var Promise = require('bluebird')
 var product = require('../models/product').productSuggestion
@@ -240,6 +241,65 @@ var organsisateurCtrl = {
           res.send({ error: true })
         }
         res.send(registrations)
+      })
+  },
+  getOptions: (req, res) => {
+    Cart
+      .find({'products.event': req.params.event, 'paiement.captured': true})
+      .populate('products.event')
+      .populate('user')
+      .exec((err, carts) => {
+        if (err) {
+          console.log(err)
+        }
+
+        var event
+
+        var options = []
+
+        var config = {}
+        config.qty = 0
+        config.total = 0
+
+        if (carts !== undefined && carts !== null) {
+          if (carts.length >= 1) {
+            carts.forEach((cart) => {
+              if (cart.products !== undefined && cart.products !== null) {
+                if (cart.products.length >= 1) {
+                  cart.products.forEach((product, key) => {
+                    if (key === 1) {
+                      event = product.event
+                    }
+                    if (product.option === true) {
+                      var editedProduct = {
+                        name: product.name,
+                        qty: product.qty,
+                        price: product.price,
+                        total: product.qty * product.price,
+                        userName: cart.user.name,
+                        userLastname: cart.user.surname,
+                        userEmail: cart.user.email
+                      }
+                      config.qty += Number(editedProduct.qty)
+                      config.total += Number(editedProduct.qty) * Number(editedProduct.price)
+                      options.push(editedProduct)
+                    }
+                  })
+                }
+              }
+            })
+          }
+        }
+
+        if (options.length >= 1) {
+          options.sort((a, b) => {
+            if (a.userLastname < b.userLastname) { return -1 }
+            if (a.userLastname > b.userLastname) { return 1 }
+            return 0
+          })
+        }
+
+        res.render('partials/organisateurs/options', { datas: options, event: event, config: config })
       })
   }
 }

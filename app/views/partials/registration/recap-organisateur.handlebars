@@ -19,6 +19,9 @@
       <div class="d-block">
         <a href="/event/{{event.id}}" class="d-block btn btn-secondary shadow rounded-0 border-0 my-2">Ajouter un participant</a>
         <a href="/organisateur/event/{{event.id}}/messages" class="d-block btn btn-secondary shadow rounded-0 border-0 my-3">Contacter les participants</a>
+        {{#if event.options}}
+          <a href="/organisateur/event/{{event.id}}/options" class="d-block btn btn-secondary shadow rounded-0 border-0 my-3">Options</a>
+        {{/if}}
       </div>
       
       <div class="d-block">

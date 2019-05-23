@@ -485,30 +485,11 @@ var cartCtrl = {
   },
   // Get add to cart a product
   getAllProduct: (req, res) => {
-    Product
-      .find({published: {$ne: false}})
-      .exec(function (err, dbProducts) {
-        if (err) {
-          req.flash('error_msg', 'Une erreur est survenue')
-          res.redirect('/')
-        }
-        res.render('partials/shop/catalogue', {products: dbProducts})
-      })
+    res.redirect('https://shop.izir.fr')
   },
   // Get cart
   getProductById: (req, res) => {
-    Product
-      .findById(req.params.id, (err, produit) => {
-        if (err) {
-          req.flash('error_msg', 'Une erreur est survenue')
-          res.redirect('/')
-        }
-        if (produit.published) {
-          res.render('partials/shop/produit', {product: produit})
-        } else {
-          res.redirect('/catalogue/')
-        }
-      })
+    res.redirect('https://shop.izir.fr')
   },
   getPaiementCredit: (req, res) => {
     var request = req

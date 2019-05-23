@@ -324,14 +324,16 @@ var userCtrl = {
     var invitations = []
     var emails = req.body.email
 
-    if (emails.constructor === Array) {
-      emails.forEach((val) => {
-        if (val !== '') {
-          invitations.push(val)
-        }
-      })
-    } else {
-      invitations.push(emails)
+    if (emails !== undefined) {
+      if (emails.constructor === Array) {
+        emails.forEach((val) => {
+          if (val !== '') {
+            invitations.push(val)
+          }
+        })
+      } else {
+        invitations.push(emails)
+      }
     }
 
     invitations.forEach((val) => {

@@ -253,7 +253,7 @@ var organsisateurCtrl = {
           console.log(err)
         }
 
-        var event
+        var event = req.params.event
 
         var options = []
 

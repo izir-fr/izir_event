@@ -64,9 +64,9 @@ module.exports = function Dossier (init) {
     if (sexe !== null) {
       formatedSexe = sexe.toLowerCase()
       if (formatedSexe === 'm' || formatedSexe === 'masculin' || formatedSexe === 'homme') {
-        formatedSexe = 'masculin'
+        formatedSexe = 'M'
       } else if (formatedSexe === 'f' || formatedSexe === 'feminin' || formatedSexe === 'femme') {
-        formatedSexe = 'feminin'
+        formatedSexe = 'F'
       }
     }
     return formatedSexe

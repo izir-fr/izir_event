@@ -130,7 +130,11 @@
                 <div class="col-md-3">
                   <span class="text-capitalize"><strong>{{this.NOM}}</strong> {{this.PRENOM}}</span>
                   <br>
-                  <small class="d-block text-muted text-uppercase">{{this.CLUB}}</small>
+                  {{#if this.ORGANISME}}
+                    <small class="d-block text-muted text-uppercase">TEAM: {{this.ORGANISME}}</small>
+                  {{else}}
+                    <small class="d-block text-muted text-uppercase">CLUB: {{this.CLUB}}</small>
+                  {{/if}}
                   <small class="d-block text-muted">{{this.SEXE}}</small>
                   <small class="d-block text-muted">Licence N°:
                     {{#if this.LICENSE}}

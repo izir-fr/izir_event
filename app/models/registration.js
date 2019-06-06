@@ -89,8 +89,7 @@ var Registration = module.exports = mongoose.model('Registration', registrationS
 module.exports.chronometrageQuery = (id, callback) => {
   Registration
     .find({
-      event: id,
-      $or: [ { 'participant.nom': { $gt: [] } }, { 'participant.prenom': { $gt: [] } }, { 'paiement.captured': { $eq: true } }, { 'paiement.other_captured': { $eq: true } } ]
+      event: id
     })
     .populate('event')
     .populate('produits.race')

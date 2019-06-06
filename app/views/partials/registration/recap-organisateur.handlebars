@@ -105,43 +105,36 @@
 
                 <!-- dossier d'inscription -->
                 <div class="col-md-3 text-uppercase">
-                  {{#if this.organisateur_validation.all}}
+                  {{#if this.DOSSIER_VALIDATE}}
                     <small class="badge badge-success">
                       Dossier validé
                     </small>
                   {{else}}
                     <small class="">
-                      <a class="badge badge-warning organisateur-dashboard-confirm-action font-weight-bold" href="/inscription/checkout/{{this.id}}/validate">Dossier non validé</a>
+                      <a class="badge badge-warning organisateur-dashboard-confirm-action font-weight-bold" href="/inscription/checkout/{{this.DOSSIER}}/validate">Dossier non validé</a>
                     </small>
                   {{/if}}  
-                  {{#each this.produits}}
+                  {{#each this.COURSE}}
                     <div class="font-weight-bold text-lowercase d-block">
                       <div>
-                        {{#if this.race.name}}
-                          {{this.race.name}}
-                        {{else}}
-                          {{produitsRef}}
-                          <span class="subtotal hidde">{{produitsSubTotal}}</span>
-                          <span class="ref hidde">{{produitsRef}}</span>             
-                        {{/if}}                    
+                        {{this.name}}               
                       </div>
                     </div>
                   {{/each}}            
-                  <small class="d-block text-muted">N°: {{this.id}}</small>
-                  <small class="d-block text-muted">Du : {{date this.created_at}}</small>  
-                  <small class="d-block mr-2 text-muted nom">CONTACT: <span class="text-lowercase">@{{utf8 this.user.surname}}.{{utf8 this.user.name}}</span></small>        
+                  <small class="d-block text-muted">N°: {{this.DOSSIER}}</small>
+                  <small class="d-block text-muted">Du : {{date this.CREATED_AT}}</small>  
+                  <small class="d-block mr-2 text-muted nom">CONTACT: <span class="text-lowercase">{{this.CONTACT}}</span></small>        
                 </div>
 
                 <!-- participant -->
                 <div class="col-md-3">
-                  <span class="text-capitalize"><strong>{{utf8 this.participant.nom}}</strong> {{utf8 this.participant.prenom}}</span>
+                  <span class="text-capitalize"><strong>{{this.NOM}}</strong> {{this.PRENOM}}</span>
                   <br>
-                  <small class="d-block text-muted text-uppercase">{{utf8 this.participant.team}}</small>
-                  <small class="d-block text-muted">{{this.participant.categorie}}</small>
-                  <small class="d-block text-muted">{{this.participant.sex}}</small>
+                  <small class="d-block text-muted text-uppercase">{{this.CLUB}}</small>
+                  <small class="d-block text-muted">{{this.SEXE}}</small>
                   <small class="d-block text-muted">Licence N°:
-                    {{#if this.numLicence}}
-                      {{this.numLicence}}
+                    {{#if this.LICENSE}}
+                      {{this.LICENSE}}
                     {{else}}
                       NC
                     {{/if}}
@@ -150,28 +143,28 @@
 
                 <!-- paiement -->
                 <div class="col-md-3">
-                  {{#if this.paiement.captured}}
+                  {{#if this.PAYE.cb}}
                     <span class=" badge badge-success paiementNumber"><i class="fa fa-check text-white mx-2" aria-hidden="true"></i>Paiement validé</span>
                     <br>
-                    <small class="text-muted">{{this.orderAmount}}€ - CB</small>
+                    <small class="text-muted">{{this.ORDER_AMOUNT}}€ - CB</small>
                   {{else}}
-                    {{#if this.paiement.other_captured}}
-                    <span class=" badge badge-success paiementNumber"><i class="fa fa-check text-white mx-2" aria-hidden="true"></i>Paiement validé</span>
-                    <br>
-                    <small class="text-muted">{{this.orderAmount}}€ - Chèque / Espèce</small>
+                    {{#if this.PAYE.other_captured}}
+                      <span class=" badge badge-success paiementNumber"><i class="fa fa-check text-white mx-2" aria-hidden="true"></i>Paiement validé</span>
+                      <br>
+                      <small class="text-muted">{{this.ORDER_AMOUNT}}€ - Chèque / Espèce</small>
                     {{else}}
                       <span class="badge badge-warning">Paiement à confirmer</span>
                       <!-- <span class="btn btn-warning">Confirmer</span> -->
                       <br>
-                      <small class="text-muted">{{this.orderAmount}}€ - Chèque / Espèce</small>
+                      <small class="text-muted">{{this.ORDER_AMOUNT}}€ - Chèque / Espèce</small>
                     {{/if}}
                   {{/if}}        
                 </div>
 
                 <!-- certificat -->
                 <div class="col-md-1">
-                  {{#if this.docs.certificat}}
-                    <a href="{{this.docs.certificat}}" target="_blank" class="badge badge-success">
+                  {{#if this.CERTIF_MEDICAL}}
+                    <a href="{{this.CERTIF_MEDICAL}}" target="_blank" class="badge badge-success">
                       <i class="fa fa-file text-white mx-2" aria-hidden="true"></i>Certificat
                     </a>
                   {{else}}
@@ -182,25 +175,26 @@
                 </div>
 
                 <!-- actions -->
-                <div class="col-md-2 text-center">
+                <div class="col-md-2 text-center my-auto">
                   <div class="btn-group w-80" role="group">
                     <button id="btnGroupDrop1" type="button" class="btn btn-outline-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                       Actions
                     </button>
                     <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                      {{#if this.paiement.captured}}
+                      {{#if this.PAYE.cb}}
                       {{else}}
-                        {{#if this.paiement.other_captured}}
+                        {{#if this.PAYE.other_captured}}
                         {{else}}
-                          <a href="/inscription/checkout/{{this.id}}/other-captured" title="Confirmer la réception du paiement" class="dropdown-item organisateur-dashboard-confirm-action">Confirmer le paiement</a>
+                          <a href="/inscription/checkout/{{this.DOSSIER}}/other-captured" title="Confirmer la réception du paiement" class="dropdown-item organisateur-dashboard-confirm-action">Confirmer le paiement</a>
                         {{/if}}
                       {{/if}}
-                      <a class="dropdown-item organisateur-dashboard-confirm-action" href="/inscription/{{this.id}}/certificat/reject">Rejeter le certificat</a>
-                      {{#if this.organisateur_validation.all}}
+
+                      {{#if this.DOSSIER_VALIDATE}}
                       {{else}}
-                        <a class="dropdown-item organisateur-dashboard-confirm-action" href="/inscription/checkout/{{this.id}}/validate">Valider le dossier</a>
+                        <a class="dropdown-item organisateur-dashboard-confirm-action" href="/inscription/{{this.DOSSIER}}/certificat/reject">Rejeter le certificat</a>
+                        <a class="dropdown-item organisateur-dashboard-confirm-action" href="/inscription/checkout/{{this.DOSSIER}}/validate">Valider le dossier</a>
                       {{/if}}
-                      <a class="dropdown-item" href="/organisateur/event/{{../event.id}}/messages?contact={{this.user._id}}&registration={{this.id}}">Contacter le participant</a>
+                      <a class="dropdown-item" href="/organisateur/event/{{../event.id}}/messages?contact={{this.CONTACT_ID}}&registration={{this.DOSSIER}}">Contacter le participant</a>
                     </div>
                   </div>
                 </div>

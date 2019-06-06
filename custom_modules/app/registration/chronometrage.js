@@ -1,4 +1,5 @@
 var Dossier = require('./chronometrageModel')
+var utf8 = require('../../format/utf8')
 
 var exportModules = {
   registrationFormated: (dbRegistrations, format) => {
@@ -10,12 +11,20 @@ var exportModules = {
           var participant = val.participant
           var dossier = new Dossier({
             id: val.id,
+            format: format,
             email: member.email,
+            contact: '@' + utf8(val.user.name) + '.' + utf8(val.user.surname),
+            contactId: val.user._id,
             phone: member.phone,
             sex: member.sex,
             licence: member.numLicence,
             dateNaissance: member.dateNaissance,
-            team: participant.team
+            produits: val.produits,
+            team: participant.team,
+            date: val.created_at,
+            organisateur_validation: val.organisateur_validation.all,
+            cart: val.cart,
+            event: val.event
           })
 
           var formatedDossier = dossier.formatedDossied({
@@ -26,10 +35,8 @@ var exportModules = {
             codePostal: participant.codePostal,
             city: participant.city,
             categorie: participant.categorie,
-            format: format,
             teamConfig: true,
             participantTeam: participant.team,
-            produits: val.produits,
             paiement: val.paiement,
             certificat: member.docs.certificat
           })
@@ -48,12 +55,20 @@ var exportModules = {
         }
         var dossier = new Dossier({
           id: val.id,
+          format: format,
           email: participant.email,
+          contact: '@' + utf8(val.user.name) + '.' + utf8(val.user.surname),
+          contactId: val.user._id,
           phone: participant.phone,
           sex: participant.sex,
           licence: participant.numLicence,
           dateNaissance: participant.dateNaissance,
-          team: participant.team
+          produits: val.produits,
+          team: participant.team,
+          date: val.created_at,
+          organisateur_validation: val.organisateur_validation.all,
+          cart: val.cart,
+          event: val.event
         })
 
         var formatedDossier = dossier.formatedDossied({
@@ -64,10 +79,8 @@ var exportModules = {
           codePostal: participant.codePostal,
           city: participant.city,
           categorie: participant.categorie,
-          format: format,
           teamConfig: false,
           participantTeam: participant.team,
-          produits: val.produits,
           paiement: val.paiement,
           certificat: val.docs.certificat
         })

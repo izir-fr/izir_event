@@ -3,6 +3,13 @@ var birthdayFormat = require('../user/birthdayFormat')
 
 module.exports = function Dossier (init) {
   this.DOSSIER = init.id
+
+  this.CART = init.cart
+
+  this.EVENT = init.event
+
+  this.FORMAT = init.format || null
+
   this.NOM = (nom) => {
     if (nom !== null && nom !== undefined && nom !== '') {
       return utf8(nom.toUpperCase())
@@ -10,6 +17,7 @@ module.exports = function Dossier (init) {
       return ''
     }
   }
+
   this.PRENOM = (prenom) => {
     if (prenom !== null && prenom !== undefined && prenom !== '') {
       return utf8(prenom.toUpperCase())
@@ -17,6 +25,7 @@ module.exports = function Dossier (init) {
       return ''
     }
   }
+
   this.ADRESSE1 = (adresse1) => {
     var val = ''
     if (adresse1 !== undefined && adresse1 !== null && adresse1 !== '') {
@@ -24,6 +33,7 @@ module.exports = function Dossier (init) {
     }
     return val
   }
+
   this.ADRESSE2 = (adresse2) => {
     var val = ''
     if (adresse2 !== undefined && adresse2 !== null && adresse2 !== '') {
@@ -31,50 +41,77 @@ module.exports = function Dossier (init) {
     }
     return val
   }
+
   this.CODE = (codePostal) => {
     return Number(codePostal)
   }
+
   this.VILLE = (city) => {
     return utf8(city)
   }
+
   this.ETAT = ''
+
   this.PAYS = ''
+
   this.EMAIL = init.email || ''
+
   this.TEL = init.phone || ''
-  this.SEXE = init.sex || ''
+
+  this.SEXE = () => {
+    var sexe = init.sex || null
+    var formatedSexe = ''
+    if (sexe !== null) {
+      formatedSexe = sexe.toLowerCase()
+      if (formatedSexe === 'm' || formatedSexe === 'masculin' || formatedSexe === 'homme') {
+        formatedSexe = 'M'
+      } else if (formatedSexe === 'f' || formatedSexe === 'feminin' || formatedSexe === 'femme') {
+        formatedSexe = 'F'
+      }
+    }
+    return formatedSexe
+  }
+
   this.NUMERO = 0
+
   this.HANDICAP = 'aucun handicap'
+
   this.LICENCE = init.licence || 'Non licencié'
-  this.NAISSANCE = (format) => {
-    if (format === 'gmcap') {
+
+  this.NAISSANCE = () => {
+    if (this.FORMAT === 'gmcap' || this.FORMAT === 'web') {
       if (init.dateNaissance !== undefined && init.dateNaissance !== null && init.dateNaissance !== '') {
         var birthday = birthdayFormat(init.dateNaissance)
         return birthday.anneeNaissance
       } else {
         return null
       }
-    } else if (format === 'excel') {
+    } else if (this.FORMAT === 'excel') {
       return init.dateNaissance
     }
   }
-  this.ANNEE_NAISSANCE = (format) => {
-    if (format === 'excel') {
+
+  this.ANNEE_NAISSANCE = () => {
+    if (this.FORMAT === 'excel') {
       var birthday = birthdayFormat(init.dateNaissance)
       return birthday.anneeNaissance
     }
   }
-  this.MOIS_NAISSANCE = (format) => {
-    if (format === 'excel') {
+
+  this.MOIS_NAISSANCE = () => {
+    if (this.FORMAT === 'excel') {
       var birthday = birthdayFormat(init.dateNaissance)
       return birthday.moisNaissance
     }
   }
-  this.JOURS_NAISSANCE = (format) => {
-    if (format === 'excel') {
+
+  this.JOURS_NAISSANCE = () => {
+    if (this.FORMAT === 'excel') {
       var birthday = birthdayFormat(init.dateNaissance)
       return birthday.jourNaissance
     }
   }
+
   this.CATEGORIE = (categorie) => {
     if (categorie === "EA - École d'Athlétisme") {
       return 1 // EA
@@ -110,9 +147,13 @@ module.exports = function Dossier (init) {
       return ''
     }
   }
+
   this.TEMPS = ''
+
   this.CLUB = utf8(init.team)
+
   this.CODECLUB = ''
+
   this.ORGANISME = (teamConfig, participantTeam) => {
     if (teamConfig === true) {
       return utf8(participantTeam + '-' + this.DOSSIER)
@@ -120,14 +161,22 @@ module.exports = function Dossier (init) {
       return ''
     }
   }
+
   this.NATION = ''
-  this.COURSE = (produits) => {
+
+  this.PRODUITS = JSON.parse(JSON.stringify(init.produits)) || null
+
+  this.COURSE = () => {
     var courses = []
-    var races = JSON.parse(JSON.stringify(produits))
+    var races = this.PRODUITS
     if (races.length >= 1) {
       races.forEach((produit) => {
         if (produit.race !== undefined && produit.race !== undefined && produit.race !== '') {
-          courses.push(utf8(produit.race.name))
+          if (this.FORMAT === 'web') {
+            courses.push(produit.race)
+          } else {
+            courses.push(utf8(produit.race.name))
+          }
         }
       })
     }
@@ -136,9 +185,26 @@ module.exports = function Dossier (init) {
       return courses
     }
   }
-  this.DISTANCE = (produits) => {
+
+  this.DONS = () => {
+    var dons = []
+    var races = this.PRODUITS
+    if (races.length >= 1) {
+      races.forEach((produit) => {
+        if (produit.race !== undefined && produit.race !== undefined && produit.race !== '') {
+          if (produit.race.name === 'dons') {
+            dons.push(produit)
+          }
+        }
+      })
+    }
+
+    return dons
+  }
+
+  this.DISTANCE = () => {
     var courses = []
-    var races = JSON.parse(JSON.stringify(produits))
+    var races = this.PRODUITS
     if (races.length >= 1) {
       races.forEach((produit) => {
         if (produit.race !== undefined && produit.race !== undefined && produit.race !== '') {
@@ -153,14 +219,15 @@ module.exports = function Dossier (init) {
       }
     }
   }
-  this.PAYE = (format, paiement) => {
-    if (format === 'gmcap') {
+
+  this.PAYE = (paiement) => {
+    if (this.FORMAT === 'gmcap') {
       if (paiement.captured === true || paiement.other_captured === true) {
         return 'O'
       } else {
         return 'N'
       }
-    } else if (format === 'excel') {
+    } else if (this.FORMAT === 'excel') {
       if (paiement.captured === true) {
         return 'CB'
       } else if (paiement.other_captured === true) {
@@ -168,17 +235,59 @@ module.exports = function Dossier (init) {
       } else {
         return 'NON'
       }
+    } else if (this.FORMAT === 'web') {
+      if (paiement.captured === true || paiement.other_captured === true) {
+        return {
+          cb: paiement.captured,
+          other_captured: paiement.other_captured
+        }
+      } else {
+        return false
+      }
     }
   }
-  this.INVITE = 'N'
-  this.ENVOICLASST = 'N'
-  this.CERTIF_MEDICAL = (certificat) => {
-    if (certificat === null || certificat === undefined || certificat === '') {
-      return 'N'
+
+  this.CONTACT = init.contact
+
+  this.CONTACT_ID = init.contactId
+
+  this.DOSSIER_VALIDATE = init.organisateur_validation
+
+  this.ORDER_AMOUNT = () => {
+    var cart = this.CART
+    if (cart.products.length >= 1) {
+      var search = cart.products.find((query) => {
+        if (String(query.event) === String(this.EVENT._id)) {
+          return query
+        }
+      })
+      return search.price
     } else {
-      return 'O'
+      return 0
     }
   }
+
+  this.INVITE = 'N'
+
+  this.ENVOICLASST = 'N'
+
+  this.CERTIF_MEDICAL = (certificat) => {
+    if (this.FORMAT === 'web') {
+      if (certificat === null || certificat === undefined || certificat === '') {
+        return false
+      } else {
+        return certificat
+      }
+    } else {
+      if (certificat === null || certificat === undefined || certificat === '') {
+        return 'N'
+      } else {
+        return 'O'
+      }
+    }
+  }
+
+  this.CREATED_AT = init.date
 
   this.formatedDossied = (dossier) => {
     return {
@@ -193,26 +302,33 @@ module.exports = function Dossier (init) {
       'PAYS': this.PAYS,
       'EMAIL': this.EMAIL,
       'TEL': this.TEL,
-      'SEXE': this.SEXE,
+      'SEXE': this.SEXE(),
       'NUMERO': this.NUMERO,
+      'CONTACT': this.CONTACT,
+      'CONTACT_ID': this.CONTACT_ID,
       'HANDICAP': this.HANDICAP,
       'LICENCE': this.LICENCE,
-      'NAISSANCE': this.NAISSANCE(dossier.format),
-      'ANNEE_NAISSANCE': this.ANNEE_NAISSANCE(dossier.format),
-      'MOIS_NAISSANCE': this.MOIS_NAISSANCE(dossier.format),
-      'JOURS_NAISSANCE': this.JOURS_NAISSANCE(dossier.format),
+      'NAISSANCE': this.NAISSANCE(),
+      'ANNEE_NAISSANCE': this.ANNEE_NAISSANCE(),
+      'MOIS_NAISSANCE': this.MOIS_NAISSANCE(),
+      'JOURS_NAISSANCE': this.JOURS_NAISSANCE(),
       'CATEGORIE': this.CATEGORIE(dossier.categorie),
       'TEMPS': this.TEMPS,
       'CLUB': this.CLUB,
       'CODECLUB': this.CODECLUB,
       'ORGANISME': this.ORGANISME(dossier.teamConfig, dossier.participantTeam),
       'NATION': this.NATION,
-      'COURSE': this.COURSE(dossier.produits),
-      'DISTANCE': this.DISTANCE(dossier.produits),
-      'PAYE': this.PAYE(dossier.format, dossier.paiement),
+      'PRODUITS': this.PRODUITS,
+      'COURSE': this.COURSE(),
+      'DONS': this.DONS(),
+      'DISTANCE': this.DISTANCE(),
+      'PAYE': this.PAYE(dossier.paiement),
       'INVITE': this.INVITE,
       'ENVOICLASST': this.ENVOICLASST,
-      'CERTIF_MEDICAL': this.CERTIF_MEDICAL(dossier.certificat)
+      'ORDER_AMOUNT': this.ORDER_AMOUNT(),
+      'CERTIF_MEDICAL': this.CERTIF_MEDICAL(dossier.certificat),
+      'DOSSIER_VALIDATE': this.DOSSIER_VALIDATE,
+      'CREATED_AT': this.CREATED_AT
     }
   }
 }

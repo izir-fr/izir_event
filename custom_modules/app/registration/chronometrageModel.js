@@ -255,13 +255,17 @@ module.exports = function Dossier (init) {
 
   this.ORDER_AMOUNT = () => {
     var cart = this.CART
-    if (cart.products.length >= 1) {
-      var search = cart.products.find((query) => {
-        if (String(query.event) === String(this.EVENT._id)) {
-          return query
-        }
-      })
-      return search.price
+    if (cart !== undefined && cart.products !== undefined) {
+      if (cart.products.length >= 1) {
+        var search = cart.products.find((query) => {
+          if (String(query.event) === String(this.EVENT._id)) {
+            return query
+          }
+        })
+        return search.price
+      } else {
+        return 0
+      }
     } else {
       return 0
     }

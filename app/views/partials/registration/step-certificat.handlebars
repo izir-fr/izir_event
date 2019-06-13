@@ -31,41 +31,39 @@
 
                 <!-- nav certificat -->
                 <div class="col-12 border border-left-0 border-right-0 border-top-0 text-center">
-                  <div class="row text-left">
-                    <div class="col-12">
-                      <span class="d-block mt-2 mb-2">
                         <strong class="text-muted ">
                           Certificat
                         </strong>                          
                       </span>
-                    </div>
-                  </div>
                   <div class="row">
                     <div class="col-12 mb-3">
-                      1. Choisir votre document
+                      <h3 class="h4 mt-5 mb-3">1. Choisir votre certificat / licence</h3>
                     </div>
                   </div>
                   <div class="row">
                     {{#if user.certificat.file}}
                     <div class="col-md-5 mx-auto">
                       <!-- user certificat -->
-                      <span id="user_certificat" class="btn btn-outline-primary">
-                        Utiliser mon certificat / licence
+                      <span id="user_certificat" class="btn btn-secondary shadow">
+                        Utiliser le document <br>de mon compte →
                       </span>
                       <input type="hidden" name="user_certificat_document" value="{{user.certificat.file}}">
+                    </div>
+                    <div class="col-md-2 m-auto text-center">
+                      <strong>OU</strong>
                     </div>
                     {{/if}}
                     <div class="col-md-5 mx-auto">
                       <!-- other certificat -->
-                      <span class="btn btn-outline-primary" id="upload_cart_certificats_opener">
-                        Télécharger un document
+                      <span class="btn btn-secondary shadow" id="upload_cart_certificats_opener">
+                        Télécharger <br>un document →
                       </span>
                       <input type="hidden" name="other_certificat_document" value="">
                     </div>
                   </div>
                   <div class="row">
                     <div class="col-12 mt-3 mb-3">
-                      2. Vérifier votre document
+                      <h3 class="h4 mt-5 mb-3">2. Vérifier votre document</h3>
                     </div>
                   </div>
                   <div class="row">
@@ -83,13 +81,16 @@
                   </div>
                   <div class="row">
                     <div class="col-12 mt-3 mb-3">
-                      3. Valider votre document
+                      <h3 class="h4 mt-5 mb-3">3. Valider votre document</h3>
                     </div>
                   </div>
                   <div class="row">
                     <div class="col-11 mx-auto">
                       <p><input class="form-check-input input-participant-validation" type="checkbox" name="certificatCondition" id="certificatCondition" required> Je déclare sur l'honneur que le certificat transmis est authentique et valide. Je décharge ainsi la société REF SPORT PONTIVY et l'organisateur de toute responsabilité liée à celui-ci.</p>
                     </div>
+                  </div>
+                  <div class="row text-muted">
+                    <small><span class="font-weight-bold">Un problème pour ajouter votre certificat ?</span> Envoyé le nous par e-mail à serviceclient@izir.fr avec l'objet suivant: "certificat inscription n°{{results.id}}". Les demandes sont traitées du lundi au vendredi 17h. Pour les inscriptions de dernières minutes, merci de prendre contact directement avec l'organisateur.</small>
                   </div>
                 </div>
               </div>

@@ -269,7 +269,9 @@ module.exports = function Dossier (init) {
               return query
             }
           })
-          return search.price
+          if (search !== undefined) {
+            return search.price
+          }
         } else if (cart.products.length === 1) {
           return cart.products[0].price
         } else {

@@ -342,7 +342,8 @@ module.exports = function Dossier (init) {
       'INVITE': this.INVITE,
       'ENVOICLASST': this.ENVOICLASST,
       'ORDER_AMOUNT': this.ORDER_AMOUNT(),
-      'CERTIF_MEDICAL': this.CERTIF_MEDICAL(dossier.certificat),
+      'CERTIF_MEDICAL': this.CERTIF_MEDICAL(dossier.certificat), // handlebarJS data
+      'Certif Médical': this.CERTIF_MEDICAL(dossier.certificat), // Gmcap Data
       'DOSSIER_VALIDATE': this.DOSSIER_VALIDATE,
       'CREATED_AT': this.CREATED_AT
     }

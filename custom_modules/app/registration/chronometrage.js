@@ -1,11 +1,19 @@
-var Dossier = require('./chronometrageModel')
+var Dossier = require('../../../app/models/chronometrage')
 var utf8 = require('../../format/utf8')
 
 var exportModules = {
   registrationFormated: (dbRegistrations, format) => {
     var inscriptions = []
 
-    dbRegistrations.forEach((val) => {
+    dbRegistrations.forEach((dbRegistration) => {
+      var val = dbRegistration
+      var cartBeta = false
+      if (val.paiement !== undefined) {
+        if (val.paiement.id !== undefined && val.paiement.object !== undefined) {
+          cartBeta = true
+        }
+      }
+
       if (val.team && val.team.length >= 1) {
         val.team.forEach((member) => {
           var participant = val.participant
@@ -23,7 +31,9 @@ var exportModules = {
             team: participant.team,
             date: val.created_at,
             organisateur_validation: val.organisateur_validation.all,
+            cart_beta: cartBeta,
             cart: val.cart,
+            orderAmount: val.orderAmount,
             event: val.event
           })
 
@@ -67,7 +77,9 @@ var exportModules = {
           team: participant.team,
           date: val.created_at,
           organisateur_validation: val.organisateur_validation.all,
+          cart_beta: cartBeta,
           cart: val.cart,
+          orderAmount: val.orderAmount,
           event: val.event
         })
 

@@ -52,7 +52,6 @@ if ($('#certificat-form').length >= 1) {
 
   $(document).on('submit', '#certificat-form', (e) => {
     var certificat = $('input[name=certificat_file]').val()
-    console.log(certificat)
     if (certificat === '' || certificat === undefined || certificat === null) {
       window.alert('Votre certificat n\'est pas conforme')
       e.preventDefault()

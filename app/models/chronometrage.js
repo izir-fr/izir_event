@@ -1,5 +1,5 @@
-var utf8 = require('../../format/utf8')
-var birthdayFormat = require('../user/birthdayFormat')
+var utf8 = require('./../../custom_modules/format/utf8')
+var birthdayFormat = require('./../../custom_modules/app/user/birthdayFormat')
 
 module.exports = function Dossier (init) {
   this.DOSSIER = init.id
@@ -9,6 +9,10 @@ module.exports = function Dossier (init) {
   this.EVENT = init.event
 
   this.FORMAT = init.format || null
+
+  this.CART_BETA = init.cart_beta || false
+
+  this.CART_AMOUT = init.orderAmount || null
 
   this.NOM = (nom) => {
     if (nom !== null && nom !== undefined && nom !== '') {
@@ -254,20 +258,26 @@ module.exports = function Dossier (init) {
   this.DOSSIER_VALIDATE = init.organisateur_validation
 
   this.ORDER_AMOUNT = () => {
-    var cart = this.CART
-    if (cart !== undefined && cart.products !== undefined) {
-      if (cart.products.length >= 1) {
-        var search = cart.products.find((query) => {
-          if (String(query.event) === String(this.EVENT._id)) {
-            return query
-          }
-        })
-        return search.price
+    if (this.CART_BETA) {
+      return this.CART_AMOUT
+    } else {
+      var cart = this.CART
+      if (cart !== undefined && cart.products !== undefined) {
+        if (cart.products.length >= 2) {
+          var search = cart.products.find((query) => {
+            if (String(query.event) === String(this.EVENT._id) && String(query.ref) === String(this.COURSE()[0]._id)) {
+              return query
+            }
+          })
+          return search.price
+        } else if (cart.products.length === 1) {
+          return cart.products[0].price
+        } else {
+          return 0
+        }
       } else {
         return 0
       }
-    } else {
-      return 0
     }
   }
 

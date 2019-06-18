@@ -2,7 +2,7 @@ var express = require('express')
 var router = express.Router()
 
 // Custom Modules
-var ensureAuthenticated = require('../../custom_modules/app/router/ensureAuthenticated')
+var ensureAuthenticated = require('../../middleware/app/router/ensureAuthenticated')
 
 // Controllers
 var notificationCtrl = require('../controllers/notificationController')

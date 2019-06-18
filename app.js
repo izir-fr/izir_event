@@ -52,7 +52,7 @@ var hbs = exphbs.create({
   defaultLayout: 'main',
   layoutsDir: 'app/views/layouts',
   partialsDir: 'app/views/partials',
-  helpers: require('./custom_modules/handlebarsHelpers')
+  helpers: require('./middleware/handlebarsHelpers')
 })
 
 app.engine('handlebars', hbs.engine)

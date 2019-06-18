@@ -1,5 +1,5 @@
-var utf8 = require('./../../custom_modules/format/utf8')
-var birthdayFormat = require('./../../custom_modules/app/user/birthdayFormat')
+var utf8 = require('./../../middleware/format/utf8')
+var birthdayFormat = require('./../../middleware/app/user/birthdayFormat')
 
 module.exports = function Dossier (init) {
   this.DOSSIER = init.id

@@ -1,16 +1,16 @@
 var Promise = require('bluebird')
 
 // custom modules
-var catList = require('../../custom_modules/lists/category-list')
-var dateList = require('../../custom_modules/lists/date-list')
-var disList = require('../../custom_modules/lists/discipline-list')
-var chronometrageModules = require('../../custom_modules/app/registration/chronometrage')
+var catList = require('../../middleware/lists/category-list')
+var dateList = require('../../middleware/lists/date-list')
+var disList = require('../../middleware/lists/discipline-list')
+var chronometrageModules = require('../../middleware/app/registration/chronometrage')
 
 // Models
 var Event = require('../models/event')
 var Registration = require('../models/registration')
 var Notification = require('../models/notification')
-var Dashboard = require('../../custom_modules/app/registration/dashboardRegistrationModel')
+var Dashboard = require('../../middleware/app/registration/dashboardRegistrationModel')
 
 var userBirthday = (val) => {
   var date = {
@@ -162,7 +162,7 @@ var registrationCtrl = {
               .save((err, notification) => {
                 if (err) throw err
                 // EMAIL NOTIFICATION
-                require('../../custom_modules/app/notification/notification-email')(registration.user)
+                require('../../middleware/mailer')({user: registration.user})
               })
             res.send({ redirect: '/inscription/' + registration.id + '/participant' })
           }
@@ -475,7 +475,7 @@ var registrationCtrl = {
                   .save((err, notification) => {
                     if (err) throw err
                     // EMAIL NOTIFICATION
-                    require('../../custom_modules/app/notification/notification-email')(registration.user)
+                    require('../../middleware/mailer')({user: registration.user})
                   })
 
                 // set headers
@@ -704,7 +704,7 @@ var registrationCtrl = {
                 if (err) {
                   req.flash('error_msg', 'Une erreur est survenue')
                 } else {
-                  require('../../custom_modules/app/notification/notification-email')(registration.user)
+                  require('../../middleware/mailer')({user: registration.user})
                   req.flash('success_msg', 'Vous venez de refuser le certificat médical du dossier N°' + req.params.id + ', une notification a été envoyée au participant')
                 }
                 res.redirect(origine)
@@ -744,7 +744,7 @@ var registrationCtrl = {
                 if (err) {
                   req.flash('error_msg', 'Une erreur est survenue')
                 } else {
-                  require('../../custom_modules/app/notification/notification-email')(registration.user)
+                  require('../../middleware/mailer')({user: registration.user})
                   req.flash('success_msg', 'Le dossier N°' + req.params.id + ' a été mis à jour avec une validation du dossier')
                 }
                 res.redirect(origine)

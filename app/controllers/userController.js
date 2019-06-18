@@ -1,10 +1,6 @@
 var async = require('async')
 var bcrypt = require('bcryptjs')
 var crypto = require('crypto')
-var nodemailer = require('nodemailer')
-
-// Credentials
-var credentials = require('../../config/credentials')
 
 // Helpers
 var userErrorsHelpers = require('../helpers/user_error_helpers')
@@ -13,12 +9,10 @@ var userSuccessHelpers = require('../helpers/user_success_helpers')
 // Models
 var User = require('../models/user')
 
-// custom modules
-var catList = require('../../custom_modules/lists/category-list')
-var dateList = require('../../custom_modules/lists/date-list')
-
-// Email nodemailer config
-var smtpTransport = nodemailer.createTransport(credentials.smtpCredits)
+// Middleware
+var catList = require('../../middleware/lists/category-list')
+var dateList = require('../../middleware/lists/date-list')
+var mailer = require('../../middleware/mailer')
 
 // Controllers
 var userCtrl = {
@@ -107,7 +101,7 @@ var userCtrl = {
     if (req.user.id === req.params.id) {
       User.findById(req.user.id, function (err, user) {
         if (err) throw err
-        var data = require('../../custom_modules/app/user/birthdayFormat')(user.birthday)
+        var data = require('../../middleware/app/user/birthdayFormat')(user.birthday)
         res.render('partials/user/edit-profil', { data: data, date_list: dateList, category_list: catList })
       })
     } else {
@@ -182,18 +176,23 @@ var userCtrl = {
       function (token, user, done) {
         var mailOptions = {
           to: user.email,
-          from: 'Event Izir <event@izir.fr>',
           subject: 'Réinitialisation du mot de passe',
           text: 'Vous recevez cet email car vous (ou quelqu\'un d\'autre) à demander de réinitialiser le mode de passe de votre compte.\n\n' +
             'Merci de cliquer sur le lien suivant ou de le copier-coller dans votre navigateure pour continuer le processus:\n\n' +
             'http://' + req.headers.host + '/user/reset/' + token + '\n\n' +
             'Si vous n\'êtes pas à l\'origine de cette demande merci d\'ignorer cet email, ainsi votre mot de passe restera inchangé.\n'
         }
-        smtpTransport.sendMail(mailOptions, function (err) {
-          if (err) throw err
-          req.flash('info_msg', 'Un email a été envoyé à ' + user.email + ' avec toutes les instructions.')
-          done(err, 'done')
-        })
+
+        mailer(mailOptions)
+          .then((val) => {
+            req.flash('info_msg', 'Un email a été envoyé à ' + user.email + ' avec toutes les instructions.')
+            done(null, 'done')
+          })
+          .catch((err) => {
+            if (err) {
+              done(err, 'done')
+            }
+          })
       }
     ], function (err) {
       if (err) return next(err)
@@ -257,16 +256,21 @@ var userCtrl = {
       function (user, done) {
         var mailOptions = {
           to: user.email,
-          from: 'Event Izir <event@izir.fr>',
           subject: 'Votre mot de passe a été changé',
           text: 'Bonjour,\n\n' +
             'Ceci est une confirmation que le mot de passe pour le compte ' + user.email + ' a bien été changé.\n'
         }
-        smtpTransport.sendMail(mailOptions, function (err) {
-          if (err) throw err
-          req.flash('success_msg', userSuccessHelpers.passwordSuccessChanged)
-          done(err)
-        })
+
+        mailer(mailOptions)
+          .then((val) => {
+            req.flash('success_msg', userSuccessHelpers.passwordSuccessChanged)
+            done(null, 'done')
+          })
+          .catch((err) => {
+            if (err) {
+              done(err, 'done')
+            }
+          })
       }
     ], function (err) {
       if (err) throw err
@@ -339,13 +343,17 @@ var userCtrl = {
     invitations.forEach((val) => {
       var mailOptions = {
         to: val,
-        from: req.user.name + ' ' + req.user.surname + ' <' + req.user.email + '>',
         subject: 'Connais-tu Event Izir',
         text: req.body.description + '\n\n'
       }
-      smtpTransport.sendMail(mailOptions, (err) => {
-        if (err) throw err
-      })
+
+      mailer(mailOptions)
+        .then((val) => {
+          console.log(val)
+        })
+        .catch((err) => {
+          if (err) throw err
+        })
     })
 
     req.flash('success_msg', userSuccessHelpers.friendSuccessInvited)

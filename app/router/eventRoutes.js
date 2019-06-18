@@ -5,7 +5,7 @@ var router = express.Router()
 var eventCtrl = require('../controllers/eventController')
 
 // Custom Modules
-var ensureAuthenticated = require('../../custom_modules/app/router/ensureAuthenticated')
+var ensureAuthenticated = require('../../middleware/app/router/ensureAuthenticated')
 
 /* ==========
 START APP =>

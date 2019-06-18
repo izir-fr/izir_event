@@ -1,7 +1,7 @@
 var mongoose = require('mongoose')
 var Schema = mongoose.Schema
 
-var reqBolleanTest = require('../../custom_modules/app/test/reqBolleanTest')
+var reqBolleanTest = require('../../middleware/app/test/reqBolleanTest')
 
 // Event Schema
 var EventSchema = mongoose.Schema({

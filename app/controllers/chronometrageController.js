@@ -6,7 +6,7 @@ var Event = require('../models/event')
 var Registration = require('../models/registration')
 var User = require('../models/user')
 
-var chronometrageModules = require('../../custom_modules/app/registration/chronometrage')
+var chronometrageModules = require('../../middleware/app/registration/chronometrage')
 
 var fields = ['NOM', 'PRENOM', 'ADRESSE1', 'ADRESSE2', 'CODE', 'VILLE', 'ETAT', 'PAYS', 'EMAIL', 'TEL', 'SEXE', 'NUMERO', 'HANDICAP', 'LICENCE', 'NAISSANCE', 'CATEGORIE', 'TEMPS', 'CLUB', 'CODECLUB', 'ORGANISME', 'NATION', 'COURSE', 'DISTANCE', 'PAYE', 'INVITE', 'ENVOICLASST', 'Certif Médical']
 

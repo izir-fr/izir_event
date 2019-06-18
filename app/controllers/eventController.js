@@ -4,9 +4,9 @@ var Promise = require('bluebird')
 var dateNow = new Date(Date.now())
 
 // custom modules
-var catList = require('../../custom_modules/lists/category-list')
-var dateList = require('../../custom_modules/lists/date-list')
-var disList = require('../../custom_modules/lists/discipline-list')
+var catList = require('../../middleware/lists/category-list')
+var dateList = require('../../middleware/lists/date-list')
+var disList = require('../../middleware/lists/discipline-list')
 
 // Models
 var Event = require('../models/event')
@@ -14,10 +14,10 @@ var Registration = require('../models/registration')
 var Race = require('../models/race')
 
 // event model constructor
-var eventFinderForm = require('../../custom_modules/app/event/finder-algo')
+var eventFinderForm = require('../../middleware/app/event/finder-algo')
 var eventConstructor = require('../models/event').eventConstructor
 var optionConstructor = require('../models/event').optionConstructor
-var reqBolleanTest = require('../../custom_modules/app/test/reqBolleanTest')
+var reqBolleanTest = require('../../middleware/app/test/reqBolleanTest')
 
 /* ==========
 START APP =>

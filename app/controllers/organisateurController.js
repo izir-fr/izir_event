@@ -189,8 +189,8 @@ var organsisateurCtrl = {
               .save((err, notification) => {
                 if (err) { req.flash('error_msg', 'Une erreur est survenue') }
                 // EMAIL NOTIFICATION
-                receivers.forEach((val) => {
-                  require('../../custom_modules/app/notification/notification-email')(val)
+                receivers.forEach((receiver) => {
+                  require('../../middleware/mailer')({user: receiver})
                 })
 
                 // set headers

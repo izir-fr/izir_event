@@ -268,7 +268,7 @@ var createNotificationAndSendEmail = (notification, userId) => {
     .save((err, notification) => {
       if (err) throw err
       // EMAIL NOTIFICATION
-      require('../../custom_modules/app/notification/notification-email')(userId)
+      require('../../middleware/mailer')({user: userId})
     })
 }
 

@@ -5,7 +5,7 @@ var router = express.Router()
 var chronometrageCtrl = require('../controllers/chronometrageController')
 
 // Custom Modules
-var ensureAuthenticated = require('../../custom_modules/app/router/ensureAuthenticated')
+var ensureAuthenticated = require('../../middleware/app/router/ensureAuthenticated')
 
 // Get chronometrage download choice
 router.get('/epreuves', ensureAuthenticated, chronometrageCtrl.getAllChronometrageEvent)

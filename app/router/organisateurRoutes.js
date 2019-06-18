@@ -5,7 +5,7 @@ var router = express.Router()
 var organisateurCtrl = require('../controllers/organisateurController')
 
 // Custom Modules
-var ensureAuthenticated = require('../../custom_modules/app/router/ensureAuthenticated')
+var ensureAuthenticated = require('../../middleware/app/router/ensureAuthenticated')
 
 // Get all épreuves
 router.get('/events', ensureAuthenticated, organisateurCtrl.getEpreuves)

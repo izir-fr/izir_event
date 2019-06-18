@@ -12,7 +12,7 @@ var User = require('../models/user')
 var userCtrl = require('../controllers/userController')
 
 // Custom Modules
-var ensureAuthenticated = require('../../custom_modules/app/router/ensureAuthenticated')
+var ensureAuthenticated = require('../../middleware/app/router/ensureAuthenticated')
 
 // Passport config
 passport.use(

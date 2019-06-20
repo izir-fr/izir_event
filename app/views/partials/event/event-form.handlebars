@@ -164,14 +164,27 @@
         </div>
 
         <div class="row">
-          <div class="col-12 mt-5">
+          <div class="col-12 mt-5 pb-2">
             <h2 class="text-muted">Paramêtres</h2>
+          </div>
+        </div>
+
+        <div class="row bg-light shadow p-5">
+          <div class="col-12">
+            <label>Nombre de participants maximum pour l'événement *</label>
+            <div class="input-group">
+              <input type="number" name="racers_limit" class="form-control" placeholder="ex: 500" required value="{{event.racers_limit}}">
+            </div> 
+            <span class="d-block text-muted mt-2">
+              <small>Attention, une fois le nombre de participants atteint les inscriptions à votre événement seront closes.</small>
+              <small>Si vos épreuves se cours en équipe, ce numéro devra correspondre au nombre total d'équipe acceptées pour votre événement.</small>
+            </span>           
           </div>
         </div>
 
         <!-- PAIEMENT ACCEPTED-->
         <div class="row mt-5">
-          <div class="col-12 bg-light border boder-muted pb-3">
+          <div class="col-12 bg-light shadow pb-3">
             <div class="col-sm-12 spacer-sm-top">
               {{#if event.paiement}}
                 <input type="checkbox" class="form-check-input" name="paiement" id="paiement" checked required>
@@ -179,19 +192,19 @@
                 <input type="checkbox" class="form-check-input" name="paiement" id="paiement" required>
               {{/if}}
               <span class="d-inline-block mx-5 mb-3">Autorisez-vous event.izir.fr à récupérer les paiements en ligne ?</span>
-              <em class="legend text-muted">
-                <p>En cochant cette case les participants pourront payer et finaliser leurs inscriptions à vos épreuves directement en ligne.</p>
-                <p>Les frais de dossier de 0,50€ seront réglés lors de l' inscription par le participant si celui-ci choisi de régler en ligne. Les inscriptions sont sans frais pour l'organisation.</p>
-                <p>Les fonds sont reversés à l'organisation, 15 jours après la date de clôture des inscriptions.</p>
-                <p>Notre service incluant le paiement des inscriptions à la charge seule des participants, son acceptation est obligatoire pour utiliser l'intégralité de nos services.</p>
-              </em>
+              <span class="d-block text-muted mt-2">
+                <small>En cochant cette case les participants pourront payer et finaliser leurs inscriptions à vos épreuves directement en ligne.</small>
+                <small>Les frais de dossier de 0,50€ seront réglés lors de l' inscription par le participant si celui-ci choisi de régler en ligne. Les inscriptions sont sans frais pour l'organisation.</small>
+                <small>Les fonds sont reversés à l'organisation, 15 jours après la date de clôture des inscriptions.</small>
+                <small>Notre service incluant le paiement des inscriptions à la charge seule des participants, son acceptation est obligatoire pour utiliser l'intégralité de nos services.</small>
+              </span>
             </div>
           </div>
         </div>
 
         <!-- PAIEMENT REQUIRED-->
         <div class="row mt-5">
-          <div class="col-12 bg-light border boder-muted pb-3">
+          <div class="col-12 bg-light shadow pb-3">
             <div class="col-sm-12 spacer-sm-top">
               {{#if event.paiement_cb_required}}
                 <input type="checkbox" class="form-check-input" name="paiement_cb_required" id="paiement_cb_required" checked>
@@ -199,18 +212,18 @@
                 <input type="checkbox" class="form-check-input" name="paiement_cb_required" id="paiement_cb_required">
               {{/if}}
               <span class="d-inline-block mx-5 mb-3">Les paiement en ligne sont-ils obligatoires ?</span>
-              <em class="legend text-muted">
-                <p>En cochant cette case les participants ne pourront pas finaliser leurs inscriptions à vos épreuves sans l'avoir au préalable, et obligatoirement, payé en ligne. </p>
-                <p>Les frais de dossier de 0,50€/inscription seront réglés lors de l'inscription par le participant. Les inscriptions sont sans frais pour l'organisation.</p>
-                <p>Les fonds sont reversés à l'organisation, 15 jours après la date de clôture des inscriptions.</p>
-              </em>
+              <span class="d-block text-muted mt-2">
+                <small>En cochant cette case les participants ne pourront pas finaliser leurs inscriptions à vos épreuves sans l'avoir au préalable, et obligatoirement, payé en ligne.</small>
+                <small>Les frais de dossier de 0,50€/inscription seront réglés lors de l'inscription par le participant. Les inscriptions sont sans frais pour l'organisation.</small>
+                <small>Les fonds sont reversés à l'organisation, 15 jours après la date de clôture des inscriptions.</small>
+              </span>
             </div>
           </div>
         </div>
 
         <!-- DONS-->
         <div class="row mt-5">
-          <div class="col-12 bg-light border boder-muted pb-3">
+          <div class="col-12 bg-light shadow pb-3">
             <div class="col-sm-12 spacer-sm-top">
               {{#if event.dons}}
                 <input type="checkbox" class="form-check-input" name="dons" id="dons" checked>
@@ -218,14 +231,16 @@
                 <input type="checkbox" class="form-check-input" name="dons" id="dons">
               {{/if}}
               <span class="d-inline-block mx-5 mb-3">Cet évènement récolte-t-il des dons ?</span>
-              <p><em class="legend text-muted"> En cochant cette case les participants pourront réaliser un don ou une promesse de don (s'ils ne payent pas leur sincription en ligne), en plus de leur inscription à l'épreuve.</em></p>
+              <span class="d-block text-muted mt-2">
+                <small>En cochant cette case les participants pourront réaliser un don ou une promesse de don (s'ils ne payent pas leur sincription en ligne), en plus de leur inscription à l'épreuve.</small>
+              </span>
             </div>    
           </div>
         </div>
 
         <!-- Certificats medicaux-->
         <div class="row mt-5">
-          <div class="col-12 bg-light border boder-muted pb-3">
+          <div class="col-12 bg-light shadow pb-3">
             <div class="col-sm-12 spacer-sm-top">
               {{#if event.certificat_required}}
               <input type="checkbox" class="form-check-input" name="certificat_required" id="certificat_required" checked>
@@ -233,7 +248,9 @@
               <input type="checkbox" class="form-check-input" name="certificat_required" id="certificat_required">
               {{/if}}
               <span class="d-inline-block mx-5 mb-3">Cet évènement requiert-il les certificats medicaux des participants ?</span>
-              <p><em class="legend text-muted"> En cochant cette case les participants devront joindre un certificat medical lors de leur inscription à l'épreuve.</em></p>
+              <span class="d-block text-muted mt-2">
+                <small>En cochant cette case les participants devront joindre un certificat medical lors de leur inscription à l'épreuve.</small>
+              </span>
             </div>    
           </div>
         </div>

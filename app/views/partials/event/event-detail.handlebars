@@ -117,12 +117,14 @@
 					<div class="col-md-6 my-2">
 						<a class="btn btn-outline-primary d-block" href="#inscrits">Liste des {{result.participants.length}} inscrits</a>
 					</div>
-					<div class="col-md-6 my-2">
-						{{#if config.registration.active}}
+
+					{{#if config.registration.active}}
+						<div class="col-md-6 my-2">
 							<button class="btn btn-danger d-block w-100" type="submit">M'inscrire →</button>
-						{{else}}
-							<div class="alert alert-warning">Les inscriptions à cet événement sont closes</div>	
-						{{/if}}
+					{{else}}
+						<div class="col-12 my-2">
+							<div class="alert alert-warning">{{ config.registration.helper }}</div>	
+					{{/if}}
 					</div>
 				</div>									
 				<div class="d-block mt-2">								

@@ -35,6 +35,7 @@ var EventSchema = mongoose.Schema({
       prix: { type: Number }
     }
   ],
+  racers_limit: { type: Number },
   date_cloture_inscription: { type: Date },
   permanence: {
     email: { type: String },
@@ -91,6 +92,7 @@ module.exports.eventConstructor = (req, options) => {
       img: req.body.img,
       legales: req.body.legales
     },
+    racers_limit: req.body.racers_limit,
     options: options,
     date_cloture_inscription: new Date(Date.UTC(req.body.anneeCloture, (req.body.moisCloture - 1), req.body.jourCloture, req.body.heureCloture, req.body.minuteCloture)),
     permanence: {

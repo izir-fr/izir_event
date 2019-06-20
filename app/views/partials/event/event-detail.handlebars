@@ -282,6 +282,7 @@
 				</thead>
 				<tbody>
 					{{#each result.participants}}
+						{{#if this.participant.nom}}
 					    <tr>
 					    	<td class="text-uppercase"><strong>{{utf8 this.participant.nom}}</strong></td>
 					    	<td class="text-capitalize">{{utf8 this.participant.prenom}}</td>
@@ -289,6 +290,7 @@
 					    	<td>{{this.participant.categorie}}</td>
 					    	<td class="text-lowercase">{{this.participant.sex}}</td>
 					    </tr>
+						{{/if}}
 					{{/each}}
 				</tbody>
 			</table>

@@ -465,7 +465,6 @@ var cartCtrl = {
     Promise
       .all(productsCart)
       .then((datas) => {
-        console.log(datas)
         req.session.cart = { products: cleanProducts(datas) }
         res.redirect('/cart/')
       })

@@ -57,9 +57,12 @@ module.exports.updateProduct = function Product (item) {
           var registrationEstimation = registrations.length + Number(quantity)
           if (registrationEstimation >= eventRacersLimit) {
             // set product quantity
-            maxQuantityAutorized = registrationEstimation - eventRacersLimit
+            maxQuantityAutorized = eventRacersLimit - registrations.length
           } else {
             maxQuantityAutorized = Number(quantity)
+          }
+          if (maxQuantityAutorized < 0) {
+            maxQuantityAutorized = 0
           }
           this.displayProduct.qty = maxQuantityAutorized
           resolve(this.displayProduct)

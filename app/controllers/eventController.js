@@ -252,16 +252,42 @@ var eventCtrl = {
         races: getOpenRaces(req.params.id)
       })
       .then((api) => {
+        var racersLimit = null
         var active = new Date(api.event.date_cloture_inscription) > dateNow
 
         var data = {
           result: api,
           config: {
             registration: {
-              active: active
+              active: active,
+              helper: 'La date de clôture des inscriptions est dépassée. Merci de votre compréhension.'
             }
           }
         }
+
+        // check racers_limit default value and set this if undefined
+        if (api.event.racers_limit === undefined || api.event.racers_limit === null) {
+          racersLimit = 0
+          if (api.event.epreuves !== undefined && api.event.epreuves !== null) {
+            if (api.event.epreuves.length >= 1) {
+              api.event.epreuves.forEach((race) => {
+                racersLimit += race.placesDispo
+              })
+            }
+          }
+        } else {
+          racersLimit = api.event.racers_limit
+        }
+
+        // lock subscribe whrn limit racers is reached
+        if (racersLimit > 0) {
+          // console.log(api.event.racers_limit)
+          if (Number(api.participants.length) >= Number(racersLimit)) {
+            data.config.registration.active = false
+            data.config.registration.helper = 'Cet événement a été victime de son succès !'
+          }
+        }
+
         res.render('partials/event/event-detail', data)
       })
       .catch((err) => {

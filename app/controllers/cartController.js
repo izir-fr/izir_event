@@ -454,14 +454,26 @@ var cartCtrl = {
           if (Number(req.body.quantity) === 0) {
             delete productsCart[key]
           } else {
-            productsCart[key].qty = req.body.quantity
+            var Product = Cart.updateProduct
+            var updatedProduct = new Product(product)
+            productsCart[key] = updatedProduct.newQuantity(req.body.quantity)
           }
         }
       })
     }
 
-    req.session.cart = { products: cleanProducts(productsCart) }
-    res.redirect('/cart/')
+    Promise
+      .all(productsCart)
+      .then((datas) => {
+        console.log(datas)
+        req.session.cart = { products: cleanProducts(datas) }
+        res.redirect('/cart/')
+      })
+      .catch((err) => {
+        if (err) {
+          req.flash('error_msg', 'Une erreur est survenue lors de la mise à jour de votre panier')
+        }
+      })
   },
   // Remove a product
   getRemoveProductCart: (req, res) => {

@@ -1,5 +1,8 @@
 var mongoose = require('mongoose')
 var Schema = mongoose.Schema
+var Promise = require('bluebird')
+
+var Registration = require('./registration')
 
 // Notification Schema
 var cartSchema = mongoose.Schema({
@@ -34,6 +37,36 @@ var cartSchema = mongoose.Schema({
 
 module.exports = mongoose.model('Cart', cartSchema)
 
+module.exports.updateProduct = function Product (item) {
+  this.init = item
+
+  this.displayProduct = this.init
+
+  this.newQuantity = (quantity) => {
+    var eventId = this.init.event._id
+    var eventRacersLimit = this.init.event.racers_limit
+    var maxQuantityAutorized
+
+    return new Promise((resolve, reject) => {
+      Registration
+        .find({event: eventId})
+        .exec((err, registrations) => {
+          if (err) {
+            reject(err) // 'error_msg',
+          }
+          var registrationEstimation = registrations.length + Number(quantity)
+          if (registrationEstimation >= eventRacersLimit) {
+            // set product quantity
+            maxQuantityAutorized = registrationEstimation - eventRacersLimit
+          } else {
+            maxQuantityAutorized = Number(quantity)
+          }
+          this.displayProduct.qty = maxQuantityAutorized
+          resolve(this.displayProduct)
+        })
+    })
+  }
+}
 // module.exports = function Cart (oldCart) {
 //   this.items = oldCart.items || {}
 //   this.totalQty = oldCart.totalQty || 0

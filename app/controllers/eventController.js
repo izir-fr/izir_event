@@ -284,7 +284,7 @@ var eventCtrl = {
           // console.log(api.event.racers_limit)
           if (Number(api.participants.length) >= Number(racersLimit)) {
             data.config.registration.active = false
-            data.config.registration.helper = 'Cet événement a été victime de son succès !'
+            data.config.registration.helper = 'Cet événement a été victime de son succès, son organisateur est fier de vous dire qu\'il est complet !'
           }
         }
 
